@@ -6,7 +6,7 @@ export default defineManifest({
   name: EXTENSION_NAME,
   version: "0.1.0",
   description: "Claude usage overlay with privacy-safe usage metadata.",
-  permissions: ["storage", "cookies"],
+  permissions: ["storage"],
   host_permissions: ["https://claude.ai/*"],
   background: {
     service_worker: "src/background/background.ts",
@@ -15,11 +15,16 @@ export default defineManifest({
   action: {
     default_title: EXTENSION_NAME,
     default_popup: "src/popup/popup.html",
+    default_icon: {
+      16: "icons/icon16.png",
+      48: "icons/icon48.png",
+      128: "icons/icon128.png",
+    },
   },
   icons: {
-    16: "public/icons/icon16.svg",
-    48: "public/icons/icon48.svg",
-    128: "public/icons/icon128.svg",
+    16: "icons/icon16.png",
+    48: "icons/icon48.png",
+    128: "icons/icon128.png",
   },
   content_scripts: [
     {

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1280, initial-scale=1" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 800px;
+        font-family: Inter, Arial, sans-serif;
+        color: #23211f;
+        background: #f7f5f1;
+      }
+      .stage {
+        width: 1280px;
+        height: 800px;
+        padding: 72px 86px;
+        display: grid;
+        grid-template-columns: 370px 1fr;
+        gap: 58px;
+        align-items: center;
+      }
+      .brand {
+        display: grid;
+        gap: 24px;
+        align-content: center;
+      }
+      .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .brand-row img {
+        width: 82px;
+        height: 82px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 54px;
+        line-height: 1.04;
+        font-weight: 760;
+        letter-spacing: 0;
+      }
+      p {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.35;
+        color: #5e5a55;
+      }
+      .window {
+        border: 1px solid #dfdad3;
+        border-radius: 8px;
+        background: #fffdfa;
+        box-shadow: 0 24px 70px rgba(35, 33, 31, 0.16);
+        overflow: hidden;
+      }
+      .topbar {
+        height: 52px;
+        border-bottom: 1px solid #ebe7df;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 20px;
+        color: #77716a;
+        font-size: 18px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #d9d2c8;
+      }
+      .chat {
+        height: 560px;
+        padding: 34px 44px;
+        display: grid;
+        align-content: space-between;
+      }
+      .bubble {
+        max-width: 560px;
+        padding: 18px 22px;
+        border: 1px solid #eee9e1;
+        border-radius: 8px;
+        background: #f9f7f2;
+        font-size: 21px;
+        line-height: 1.42;
+      }
+      .bubble.assistant {
+        justify-self: end;
+        background: #fff;
+      }
+      .composer {
+        height: 138px;
+        border: 1px solid #e5dfd6;
+        border-radius: 8px;
+        background: #fff;
+        padding: 20px;
+        display: grid;
+        gap: 18px;
+      }
+      .placeholder {
+        color: #8b857e;
+        font-size: 20px;
+      }
+      .usage-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .bar-wrap {
+        flex: 1;
+        height: 12px;
+        border-radius: 8px;
+        background: #ece7df;
+        overflow: hidden;
+      }
+      .bar {
+        width: 58%;
+        height: 100%;
+        background: #c96342;
+      }
+      .ring {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: conic-gradient(#c96342 0 62%, #ece7df 62% 100%);
+        position: relative;
+      }
+      .ring::after {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border-radius: 50%;
+        background: #fff;
+      }
+      .label {
+        font-size: 18px;
+        color: #5e5a55;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage">
+      <section class="brand">
+        <div class="brand-row">
+          <img src="icon128.png" alt="" />
+          <h1>Claude Usage Bar</h1>
+        </div>
+        <p>See Claude plan usage and current chat context directly in the composer, without storing conversation text.</p>
+      </section>
+      <section class="window">
+        <div class="topbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>claude.ai</span></div>
+        <div class="chat">
+          <div class="bubble">Can you help me refine this product proposal?</div>
+          <div class="bubble assistant">Absolutely. I can review structure, tone, tradeoffs, and the strongest next steps.</div>
+          <div class="composer">
+            <div class="placeholder">Reply to Claude...</div>
+            <div class="usage-row">
+              <span class="label">5-hour usage</span>
+              <div class="bar-wrap"><div class="bar"></div></div>
+              <span class="label">58%</span>
+              <div class="ring"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

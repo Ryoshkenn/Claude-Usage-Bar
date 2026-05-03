@@ -17,11 +17,6 @@ const jsonHeaders = {
 const isFresh = (snapshot?: RealUsageSnapshot): boolean =>
   Boolean(snapshot && Date.now() - snapshot.capturedAt < FETCH_COOLDOWN_MS);
 
-const hasClaudeSessionCookie = async (): Promise<boolean> => {
-  const cookies = await chrome.cookies.getAll({ url: "https://claude.ai/" });
-  return cookies.length > 0;
-};
-
 const getJson = async (url: string): Promise<unknown> => {
   const response = await fetch(url, {
     method: "GET",
@@ -79,10 +74,6 @@ const fetchApiUsage = async (force = false): Promise<ApiUsageResponse> => {
     return { ok: true, snapshot: current.realUsageSnapshot };
   }
 
-  if (!(await hasClaudeSessionCookie())) {
-    return { ok: false, error: "Please log in to Claude.ai" };
-  }
-
   try {
     const organizationId = await getOrganizationId();
     const snapshot = await getUsageMetrics(organizationId);
@@ -100,10 +91,6 @@ const fetchApiUsage = async (force = false): Promise<ApiUsageResponse> => {
 };
 
 const fetchConversationContext = async (conversationId: string): Promise<ConversationContextResponse> => {
-  if (!(await hasClaudeSessionCookie())) {
-    return { ok: false, error: "Please log in to Claude.ai" };
-  }
-
   try {
     const organizationId = await getOrganizationId();
     const payload = await getJson(
