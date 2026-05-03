@@ -7,30 +7,21 @@ import {
   saveDailyUsage,
   saveRealUsageSnapshot,
 } from "../shared/storage";
-import type { RealUsageSnapshot, StorageShape, UsageMetadata } from "../shared/types";
+import type { RealUsageSnapshot, StorageShape } from "../shared/types";
 import { readClaudeDomSnapshot } from "./claudeDom";
 import { ContentApp } from "./ContentApp";
+import "./pageOverrides.css";
 import "./styles.css";
 import { buildChatUsage, rollDailyUsageForward } from "./usageEstimator";
 import { messageToSnapshot } from "./usageProbeBridge";
 
 let storageState: StorageShape | null = null;
-let metadata: UsageMetadata = {};
 let root: ReturnType<typeof createRoot> | null = null;
 let host: HTMLElement | null = null;
 let updateTimer: number | undefined;
 let mountedComposer: HTMLElement | null = null;
-
-const hasRealUsageValue = (metadata: UsageMetadata): boolean =>
-  typeof metadata.percentageUsed === "number" ||
-  typeof metadata.weeklyAllModelsPercentageUsed === "number" ||
-  typeof metadata.claudeDesignPercentageUsed === "number" ||
-  typeof metadata.routinesText === "string" ||
-  (typeof metadata.totalMessages === "number" &&
-    (typeof metadata.usedMessages === "number" || typeof metadata.remainingMessages === "number"));
-
-const compactMetadata = (metadata: UsageMetadata): UsageMetadata =>
-  Object.fromEntries(Object.entries(metadata).filter(([, value]) => value !== undefined)) as UsageMetadata;
+let lastSentCount = 0;
+let lastApiRefreshUrl = "";
 
 const injectPageProbe = () => {
   if (location.origin !== CLAUDE_ORIGIN) {
@@ -44,6 +35,23 @@ const injectPageProbe = () => {
   (document.documentElement || document.head).appendChild(script);
 };
 
+// Detect whether Claude's UI is currently in light mode.
+// Checks Claude's explicit theme class/attribute first, falls back to the OS preference.
+const isLightMode = (): boolean => {
+  const el = document.documentElement;
+  if (el.classList.contains("dark") || el.getAttribute("data-theme") === "dark" || el.getAttribute("data-color-scheme") === "dark") {
+    return false;
+  }
+  if (el.classList.contains("light") || el.getAttribute("data-theme") === "light" || el.getAttribute("data-color-scheme") === "light") {
+    return true;
+  }
+  return !window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
+
+const syncTheme = () => {
+  host?.classList.toggle("cub-theme-light", isLightMode());
+};
+
 const ensureHost = () => {
   if (host && root) {
     return;
@@ -51,6 +59,8 @@ const ensureHost = () => {
 
   host = document.createElement("div");
   host.id = "claude-usage-bar-root";
+  // Apply theme class before first render so there is no flash
+  syncTheme();
   root = createRoot(host);
 };
 
@@ -135,39 +145,41 @@ const render = () => {
   );
 };
 
+const requestApiUsageRefresh = (force = false) => {
+  chrome.runtime.sendMessage({ type: MESSAGE_TYPES.fetchApiUsage, force }, () => {
+    void chrome.runtime.lastError;
+  });
+};
+
 const refreshUsage = async () => {
   if (!storageState || !document.body) {
     return;
   }
 
   const snapshot = readClaudeDomSnapshot();
-  metadata = { ...metadata, ...compactMetadata(snapshot.metadata) };
   const now = new Date();
   const dailyUsage = rollDailyUsageForward(storageState.dailyUsage, snapshot.visibleSentCount, now);
   const chatUsage = buildChatUsage(snapshot.visibleText, snapshot.visibleMessageCount, now.getTime());
-  const previousRealUsageSnapshot = storageState.realUsageSnapshot;
-  const realUsageSnapshot: RealUsageSnapshot | undefined = hasRealUsageValue(metadata)
-    ? {
-        source: "real",
-        capturedAt: now.getTime(),
-        ...metadata,
-      }
-    : storageState.realUsageSnapshot;
+
+  // Trigger a forced API refresh when a new message is sent or the URL changes (new chat).
+  const currentUrl = location.href;
+  const messageSent = snapshot.visibleSentCount > lastSentCount;
+  const urlChanged = currentUrl !== lastApiRefreshUrl;
+
+  if (messageSent || urlChanged) {
+    lastSentCount = snapshot.visibleSentCount;
+    lastApiRefreshUrl = currentUrl;
+    // Delay after a message send so the server usage counter has time to update.
+    window.setTimeout(() => requestApiUsageRefresh(true), messageSent ? 2000 : 0);
+  }
 
   storageState = {
     ...storageState,
     dailyUsage,
     chatUsage,
-    realUsageSnapshot,
   };
 
-  await Promise.all([
-    saveDailyUsage(dailyUsage),
-    saveChatUsage(chatUsage),
-    realUsageSnapshot && realUsageSnapshot !== previousRealUsageSnapshot
-      ? saveRealUsageSnapshot(realUsageSnapshot)
-      : Promise.resolve(),
-  ]);
+  await Promise.all([saveDailyUsage(dailyUsage), saveChatUsage(chatUsage)]);
   render();
 };
 
@@ -184,24 +196,31 @@ const handleRealUsageMessage = async (event: MessageEvent) => {
     return;
   }
 
+  // Merge with existing snapshot so a partial probe result (e.g. only modelLabel)
+  // doesn't wipe percentage data that came from the background API fetch.
+  const merged: RealUsageSnapshot = {
+    ...storageState.realUsageSnapshot,
+    ...snapshot,
+  };
+
   storageState = {
     ...storageState,
-    realUsageSnapshot: snapshot,
+    realUsageSnapshot: merged,
   };
-  await saveRealUsageSnapshot(snapshot);
+  await saveRealUsageSnapshot(merged);
   render();
-};
-
-const requestApiUsageRefresh = () => {
-  chrome.runtime.sendMessage({ type: MESSAGE_TYPES.fetchApiUsage }, () => {
-    void chrome.runtime.lastError;
-  });
 };
 
 const init = async () => {
   injectPageProbe();
   storageState = await getStorage();
   render();
+
+  // Capture initial state so the first refreshUsage call doesn't spuriously trigger a refresh.
+  const initialSnapshot = readClaudeDomSnapshot();
+  lastSentCount = initialSnapshot.visibleSentCount;
+  lastApiRefreshUrl = location.href;
+
   requestApiUsageRefresh();
 
   window.addEventListener("message", (event) => {
@@ -218,9 +237,16 @@ const init = async () => {
       settings: (changes.settings?.newValue ?? storageState.settings) as StorageShape["settings"],
       dailyUsage: (changes.dailyUsage?.newValue ?? storageState.dailyUsage) as StorageShape["dailyUsage"],
       chatUsage: (changes.chatUsage?.newValue ?? storageState.chatUsage) as StorageShape["chatUsage"],
-      realUsageSnapshot: changes.realUsageSnapshot?.newValue as RealUsageSnapshot | undefined,
+      realUsageSnapshot: (changes.realUsageSnapshot?.newValue ?? storageState.realUsageSnapshot) as RealUsageSnapshot | undefined,
     };
     render();
+  });
+
+  // Watch Claude's html element for theme class/attribute changes
+  const themeObserver = new MutationObserver(syncTheme);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class", "data-theme", "data-color-scheme"],
   });
 
   const observer = new MutationObserver(scheduleRefresh);

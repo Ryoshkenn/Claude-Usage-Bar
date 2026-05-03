@@ -16,7 +16,7 @@ const isFresh = (snapshot?: RealUsageSnapshot): boolean =>
   Boolean(snapshot && Date.now() - snapshot.capturedAt < FETCH_COOLDOWN_MS);
 
 const hasClaudeSessionCookie = async (): Promise<boolean> => {
-  const cookies = await chrome.cookies.getAll({ domain: "claude.ai" });
+  const cookies = await chrome.cookies.getAll({ url: "https://claude.ai/" });
   return cookies.length > 0;
 };
 
@@ -62,6 +62,9 @@ const getOrganizationId = async (): Promise<string> => {
 
 const getUsageMetrics = async (organizationId: string): Promise<RealUsageSnapshot> => {
   const payload = await getJson(`${CLAUDE_API_ORIGIN}/api/organizations/${organizationId}/usage`);
+  // DEBUG: log raw API response so the actual shape is visible in service worker devtools.
+  // Remove this console.log once the API shape is confirmed correct.
+  console.log("[CUB] raw usage payload:", JSON.stringify(payload));
   const snapshot = normalizeUsagePayload(payload);
 
   if (!snapshot) {

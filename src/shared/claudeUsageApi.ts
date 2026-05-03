@@ -98,6 +98,7 @@ const normalizeKnownClaudeUsageSchema = (payload: unknown, now: number): UsageMe
 
   applyLimit(output, object.five_hour, now, "percentageUsed", "resetText");
   applyLimit(output, object.seven_day, now, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText");
+  applyLimit(output, object.seven_day_omelette, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
   applyLimit(output, object.seven_day_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
   applyLimit(output, object.weekly_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
   applyLimit(output, object.claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");

@@ -1,0 +1,87 @@
+/* ── Replace Claude accent blue rgb(65 119 208) → orange rgb(204 124 94) ──
+   Injected as content-script CSS so it applies page-wide on claude.ai.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 1. CSS design-token overrides – cascade to any var()-based usage */
+:root {
+  --color-accent-secondary-100: rgb(204 124 94) !important;
+  --color-accent-secondary-000: rgb(234 185 159) !important;
+  --color-accent-secondary-200: rgb(174 94 64) !important;
+}
+
+/* 2. Toggle switches (on state) – Radix UI / headless UI patterns */
+[role="switch"][aria-checked="true"],
+[role="switch"][data-state="checked"],
+[role="switch"][data-state="on"] {
+  background-color: rgb(204 124 94) !important;
+}
+
+/* 3. Native progress / meter bars (usage page) */
+progress::-webkit-progress-value {
+  background-color: rgb(204 124 94) !important;
+}
+progress::-moz-progress-bar {
+  background-color: rgb(204 124 94) !important;
+}
+
+/* 4. Div-based progress fills (usage bars built from divs) */
+[role="progressbar"] > *,
+[role="meter"] > * {
+  background-color: rgb(204 124 94) !important;
+}
+
+/* 5. Inline-style blue matches (usage bar fills, selected highlights) */
+[style*="background-color: rgb(65, 119, 208)"],
+[style*="background-color:rgb(65, 119, 208)"],
+[style*="background-color: rgb(65,119,208)"],
+[style*="background-color:rgb(65,119,208)"],
+[style*="background: rgb(65, 119, 208)"],
+[style*="background:rgb(65, 119, 208)"] {
+  background-color: rgb(204 124 94) !important;
+}
+
+[style*="color: rgb(65, 119, 208)"],
+[style*="color:rgb(65, 119, 208)"],
+[style*="color: rgb(65,119,208)"],
+[style*="color:rgb(65,119,208)"] {
+  color: rgb(204 124 94) !important;
+}
+
+[style*="border-color: rgb(65, 119, 208)"],
+[style*="border-color:rgb(65, 119, 208)"] {
+  border-color: rgb(204 124 94) !important;
+}
+
+/* 6. Tailwind blue utility classes */
+.bg-blue-400, .bg-blue-500, .bg-blue-600, .bg-blue-700,
+.hover\:bg-blue-400:hover, .hover\:bg-blue-500:hover, .hover\:bg-blue-600:hover {
+  background-color: rgb(204 124 94) !important;
+}
+
+.text-blue-400, .text-blue-500, .text-blue-600, .text-blue-700,
+.hover\:text-blue-400:hover, .hover\:text-blue-500:hover {
+  color: rgb(204 124 94) !important;
+}
+
+.border-blue-400, .border-blue-500, .border-blue-600,
+.focus\:border-blue-500:focus, .focus\:border-blue-600:focus {
+  border-color: rgb(204 124 94) !important;
+}
+
+.ring-blue-400, .ring-blue-500, .ring-blue-600,
+.focus\:ring-blue-500:focus, .focus\:ring-blue-600:focus {
+  --tw-ring-color: rgb(204 124 94) !important;
+}
+
+/* 7. Focus ring */
+:focus-visible {
+  outline-color: rgb(204 124 94) !important;
+}
+
+/* 8. Checkboxes and radio buttons */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  accent-color: rgb(204 124 94);
+  background-color: rgb(204 124 94) !important;
+  border-color: rgb(204 124 94) !important;
+}

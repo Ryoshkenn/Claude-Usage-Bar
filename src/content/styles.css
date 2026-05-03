@@ -24,15 +24,18 @@
   font: 14px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* ── Bar ──────────────────────────────────────────────────── */
+
 .cub-meter {
   height: 4px;
   overflow: visible;
   border-radius: 999px;
-  background: rgb(0 0 0 / 48%);
+  background: rgb(31 31 30);
   cursor: pointer;
   position: relative;
 }
 
+/* Invisible hover-bridge above the bar so the tooltip doesn't flicker */
 .cub-meter::before {
   content: "";
   position: absolute;
@@ -49,17 +52,20 @@
   background: rgb(204 124 94);
 }
 
+/* ── Ring ─────────────────────────────────────────────────── */
+
 .cub-token-ring {
   --cub-token-percentage: 0%;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(0 0 0 / 48%) 0);
+  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(31 31 30) 0);
   cursor: pointer;
   position: relative;
   pointer-events: auto;
 }
 
+/* Centre hole – must approximate the Claude toolbar background */
 .cub-token-ring::after {
   content: "";
   position: absolute;
@@ -67,6 +73,8 @@
   border-radius: inherit;
   background: rgb(38 38 36);
 }
+
+/* ── Tooltips (shared) ────────────────────────────────────── */
 
 .cub-usage-tooltip,
 .cub-token-tooltip {
@@ -80,7 +88,7 @@
   padding: 10px 14px 12px;
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 8px;
-  background: rgb(43 43 41);
+  background: rgb(44 44 43);
   box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
   color: rgb(245 245 241);
   font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -88,18 +96,23 @@
   pointer-events: none;
   text-align: center;
   transform: translateX(-50%) translateY(3px);
+  /* No delay on hide */
   transition: opacity 120ms ease, transform 120ms ease;
   white-space: nowrap;
 }
 
+/* Bar tooltip – left-aligned, shifted slightly left so the rounded corner
+   lines up with the start of the bar rather than floating mid-air */
 .cub-usage-tooltip {
-  left: 0;
+  left: -8px;
   gap: 5px;
   min-width: 330px;
   padding: 10px 12px 12px;
   text-align: left;
   transform: translateY(3px);
 }
+
+/* ── Tooltip internals ────────────────────────────────────── */
 
 .cub-usage-title,
 .cub-usage-row {
@@ -150,18 +163,24 @@
   color: rgb(165 164 156);
 }
 
+/* ── Hover triggers – delay on show, instant on hide ─────── */
+
 .cub-meter:hover .cub-usage-tooltip,
 .cub-meter:focus-visible .cub-usage-tooltip {
   opacity: 1;
   pointer-events: auto;
   transform: none;
+  transition-delay: 250ms;
 }
 
 .cub-token-ring:hover .cub-token-tooltip,
 .cub-token-ring:focus-visible .cub-token-tooltip {
   opacity: 1;
   transform: translateX(-50%);
+  transition-delay: 250ms;
 }
+
+/* ── Responsive ───────────────────────────────────────────── */
 
 @media (max-width: 760px) {
   #claude-usage-bar-root {
@@ -173,4 +192,58 @@
     min-width: 104px;
     gap: 14px;
   }
+}
+
+/* ── Light mode ───────────────────────────────────────────────────────────
+   Applied via a JS-added class so it works for both the OS auto setting
+   and Claude's explicit "Light" theme picker (not just prefers-color-scheme).
+   ───────────────────────────────────────────────────────────────────────── */
+
+#claude-usage-bar-root.cub-theme-light .cub-root {
+  color: rgb(80 78 72);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-meter {
+  background: rgb(220 220 218);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-token-ring {
+  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(220 220 218) 0);
+}
+
+/* Centre hole – slightly off-white to read cleanly on light backgrounds */
+#claude-usage-bar-root.cub-theme-light .cub-token-ring::after {
+  background: rgb(250 250 248);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-tooltip,
+#claude-usage-bar-root.cub-theme-light .cub-token-tooltip {
+  background: rgb(255 255 255);
+  border: 1px solid rgb(0 0 0 / 10%);
+  color: rgb(40 40 38);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-title {
+  color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-link {
+  color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row {
+  color: rgb(55 53 50);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row span:last-child {
+  color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-track {
+  background: rgb(0 0 0 / 10%);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-token-tooltip span:first-child {
+  color: rgb(120 118 112);
 }

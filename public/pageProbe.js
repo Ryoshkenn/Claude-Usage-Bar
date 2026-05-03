@@ -11,6 +11,11 @@
     "totalMessages",
     "limitText",
     "percentageUsed",
+    "weeklyAllModelsPercentageUsed",
+    "weeklyAllModelsResetText",
+    "claudeDesignPercentageUsed",
+    "claudeDesignResetText",
+    "routinesText",
   ]);
 
   const applyUsageText = (text, output) => {
@@ -38,8 +43,66 @@
     }
   };
 
+  const normalizePercentage = (value) => {
+    if (!Number.isFinite(value) || value < 0) return undefined;
+    const pct = value <= 1 ? value * 100 : value;
+    return Math.min(100, Math.max(0, Math.round(pct)));
+  };
+
+  const formatTimeUntil = (timestamp, now) => {
+    const diff = Math.max(0, timestamp - now);
+    const minutes = Math.ceil(diff / 60000);
+    if (minutes < 60) return `resets ${minutes}m`;
+    const hours = Math.ceil(minutes / 60);
+    if (hours < 24) return `resets ${hours}h`;
+    return `resets ${Math.ceil(hours / 24)}d`;
+  };
+
+  const parseResetText = (value, now) => {
+    if (typeof value !== "string" && typeof value !== "number") return undefined;
+    const ts = typeof value === "number" ? value : new Date(value).getTime();
+    return Number.isFinite(ts) ? formatTimeUntil(ts, now) : undefined;
+  };
+
+  const applyKnownClaudeSchema = (input, output) => {
+    if (!input || typeof input !== "object" || Array.isArray(input)) return;
+    const now = Date.now();
+
+    const applyLimit = (obj, pctKey, resetKey) => {
+      if (!obj || typeof obj !== "object" || Array.isArray(obj)) return;
+      const utilization = obj.utilization ?? obj.percent_used ?? obj.percentage_used ?? obj.percentageUsed ?? obj.used_ratio ?? obj.usage;
+      const reset = obj.resets_at ?? obj.resetsAt ?? obj.reset_at ?? obj.resetAt;
+      if (typeof utilization === "number") {
+        const pct = normalizePercentage(utilization);
+        if (pct !== undefined) output[pctKey] = pct;
+      }
+      if (resetKey) {
+        const rt = parseResetText(reset, now);
+        if (rt) output[resetKey] = rt;
+      }
+    };
+
+    applyLimit(input.five_hour, "percentageUsed", "resetText");
+    applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText");
+
+    const designKey = input.seven_day_omelette ?? input.seven_day_claude_design ?? input.weekly_claude_design ?? input.claude_design ?? input.design;
+    applyLimit(designKey, "claudeDesignPercentageUsed", "claudeDesignResetText");
+
+    const routines = input.routines ?? input.routine_usage ?? input.routineUsage;
+    if (routines && typeof routines === "object" && !Array.isArray(routines)) {
+      const used = routines.used ?? routines.current ?? routines.count;
+      const limit = routines.limit ?? routines.max ?? routines.total ?? routines.allowed;
+      if (typeof used === "number" && typeof limit === "number") {
+        output.routinesText = `${used} / ${limit}`;
+      }
+    }
+  };
+
   const coerceMetadata = (input) => {
     const output = {};
+
+    // Apply known Claude usage API schema first (handles structured /usage responses).
+    applyKnownClaudeSchema(input, output);
 
     const visit = (value, depth) => {
       if (!value || typeof value !== "object" || depth > 4) {
@@ -113,10 +176,20 @@
     }
   };
 
+  // Only inspect responses from the usage endpoint to avoid false positives from chat API calls.
+  const isUsageEndpoint = (input) => {
+    try {
+      const url = typeof input === "string" || input instanceof URL ? new URL(input, location.href) : new URL(input.url);
+      return /\/api\/organizations\/[^/]+\/usage(\?|$)/.test(url.pathname + url.search);
+    } catch {
+      return false;
+    }
+  };
+
   const originalFetch = window.fetch.bind(window);
   window.fetch = async (...args) => {
     const response = await originalFetch(...args);
-    if (sameOrigin(args[0])) {
+    if (sameOrigin(args[0]) && isUsageEndpoint(args[0])) {
       response
         .clone()
         .json()
@@ -135,7 +208,7 @@
 
     send(body) {
       this.addEventListener("load", () => {
-        if (!sameOrigin(this.requestUrl)) {
+        if (!sameOrigin(this.requestUrl) || !isUsageEndpoint(this.requestUrl)) {
           return;
         }
         const contentType = this.getResponseHeader("content-type") ?? "";
