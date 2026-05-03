@@ -22,21 +22,24 @@ Load from `dist/` in Chrome (`chrome://extensions`, Developer Mode, Load unpacke
 
 Data flows in one direction: **background worker → storage → content script UI**.
 
-- `src/background/background.ts` — service worker. Owns all Claude API calls (`/api/organizations`, `/api/organizations/{id}/usage` with `credentials: "include"`). Throttles to 60 s, caches org id in `chrome.storage.local`, deduplicates in-flight requests.
+- `src/background/background.ts` — service worker. Owns all Claude API calls (`/api/organizations`, `/api/organizations/{id}/usage`, and current conversation JSON with `credentials: "include"`). Throttles usage refreshes to 60 s, caches org id in `chrome.storage.local`, deduplicates in-flight requests.
+- `src/shared/claudeConversationContext.ts` — reconstructs the active branch from Claude conversation JSON and estimates current context from messages, attachments, files, concrete connectors/sync metadata, and prompt-cache metadata. It also calculates compounded input usage by summing the context present at each user prompt; `estimatedTokens` is the compounded display value, while `currentContextTokens` is diagnostic. It returns only numeric `ChatUsage` for storage; counted text is only returned transiently for local console debugging.
 - `src/shared/claudeUsageApi.ts` — normalizes raw `/usage` JSON into `RealUsageSnapshot`. Also extracts org UUID from `/api/organizations` response.
 - `src/shared/storage.ts` — allowlist-gated storage. Rejects unsafe fields (cookies, auth, raw payloads, conversation text).
 - `src/shared/types.ts` — all shared TypeScript types (`RealUsageSnapshot`, `UsageMetadata`, `AppStorage`, etc.).
 - `src/content/content.tsx` — mounts overlay into composer, triggers background refresh, bridges page-probe events.
 - `src/content/ContentApp.tsx` — renders plan usage bar, usage hover panel, context ring, context hover panel.
-- `src/content/claudeDom.ts` — extracts transcript text from DOM for token estimation. Strict selector list; do not broaden to generic textareas.
-- `src/content/usageEstimator.ts` — local `text.length / 4` token approximation. Never stores text.
+- `src/content/claudeDom.ts` — fallback transcript extraction and sent-message counting. Strict selector list; do not broaden to generic textareas.
+- `src/content/usageEstimator.ts` — DOM fallback token approximation. Current chat pages should prefer the background conversation JSON result.
 - `src/popup/popup.tsx` — extension popup; shows status, manual refresh button.
 - `public/pageProbe.js` — injected into page world; intercepts same-origin JSON, sanitizes to usage metadata, posts to content script. Fallback path, not primary.
 
 ## Key Constraints
 
 - **Composer mounting**: find controls near the "Add files, connectors, and more" button; reject `#conversation-preferences` and settings containers.
-- **Storage allowlist**: only percentages, reset display strings, routines counters, numeric token estimates, settings, and cached org id. Never raw payloads, cookies, or conversation text.
+- **Storage allowlist**: only percentages, reset display strings, routines counters, numeric token estimates/cache metadata, settings, and cached org id. Never raw payloads, cookies, or conversation text.
+- **Context counting**: prefer Claude conversation JSON over DOM text. Avoid broad fixed feature overhead from settings alone; count tool/connector/file/project data when concrete JSON evidence is present. Use a modest Claude chat prompt overhead, not Claude Code overhead. The displayed compounded usage is not discounted for prompt caching; cache metadata is stored separately as numbers.
 - **Usage API shape**: `five_hour.utilization` (5-hour %), `seven_day.utilization` (weekly %), `resets_at` timestamps. See `AGENTS.md` § "Claude Usage API" for full field list.
 - **No third-party calls**: only `https://claude.ai` endpoints.
+- **Future tokenizer work**: README mentions planned optional Anthropic API-key support for official token counting. It is not implemented yet.
 - **Tests**: `src/test/` with Vitest/jsdom. Run `npm test` + `npm run build` before any PR.

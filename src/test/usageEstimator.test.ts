@@ -2,7 +2,12 @@ import { describe, expect, it } from "vitest";
 import { sanitizeUsageMetadata } from "../content/usageProbeBridge";
 import { readClaudeDomSnapshot } from "../content/claudeDom";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
-import { estimateTokensFromText, rollDailyUsageForward } from "../content/usageEstimator";
+import {
+  buildChatUsage,
+  estimateCumulativeContextTokens,
+  estimateTokensFromText,
+  rollDailyUsageForward,
+} from "../content/usageEstimator";
 import type { DailyUsage } from "../shared/types";
 
 describe("estimateTokensFromText", () => {
@@ -23,6 +28,20 @@ describe("estimateTokensFromText", () => {
 
   it("normalizes whitespace before counting", () => {
     expect(estimateTokensFromText("hello      world")).toBe(3);
+  });
+});
+
+describe("estimateCumulativeContextTokens", () => {
+  it("adds each message to the running context before accumulating total usage", () => {
+    expect(estimateCumulativeContextTokens(["a".repeat(1200), "b".repeat(2400)])).toBe(1200);
+  });
+
+  it("uses ordered user and assistant transcript parts", () => {
+    const chatUsage = buildChatUsage(["abcd", "abcdefgh", "abcdefghijkl"], 123);
+
+    expect(chatUsage.visibleMessageCount).toBe(3);
+    expect(chatUsage.updatedAt).toBe(123);
+    expect(chatUsage.estimatedTokens).toBe(10);
   });
 });
 
@@ -85,6 +104,7 @@ describe("Claude transcript reader", () => {
 
     expect(snapshot.visibleSentCount).toBe(1);
     expect(snapshot.visibleMessageCount).toBe(2);
+    expect(snapshot.visibleMessageTexts).toEqual(["Hello how are you", "I'm doing well, thanks for asking!"]);
     expect(snapshot.visibleText).toBe("Hello how are you\n\nI'm doing well, thanks for asking!");
     expect(snapshot.visibleText).not.toContain("Copy");
     expect(snapshot.visibleText).not.toContain("Hidden duplicate");

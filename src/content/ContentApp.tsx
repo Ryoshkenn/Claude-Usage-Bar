@@ -50,8 +50,10 @@ const formatCompactNumber = (value: number): string => {
   return String(value);
 };
 
-const getTokenPercentage = (chatUsage: ChatUsage): number =>
-  clampPercentage((chatUsage.estimatedTokens / TOKEN_CONTEXT_LIMIT) * 100);
+// The ring fill shows how full the context window is (context length vs 200k limit).
+// Total tokens used (compounded across all inferences) can exceed the window size.
+const getContextFillPercentage = (chatUsage: ChatUsage): number =>
+  clampPercentage(((chatUsage.currentContextTokens ?? chatUsage.estimatedTokens) / TOKEN_CONTEXT_LIMIT) * 100);
 
 export const ContentApp = ({ settings, chatUsage, realUsageSnapshot }: ContentAppProps) => {
   if (!settings.showOverlay) {
@@ -61,8 +63,9 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot }: ContentAp
   const percentage = getRealUsagePercentage(realUsageSnapshot);
   const percentageDisplay = typeof percentage === "number" ? `${percentage}%` : "—";
   const meterWidth = typeof percentage === "number" ? percentage : 0;
-  const tokenPercentage = getTokenPercentage(chatUsage);
-  const estimatedTokens = chatUsage.estimatedTokens;
+  const contextFillPercentage = getContextFillPercentage(chatUsage);
+  const totalTokensUsed = chatUsage.estimatedTokens;
+  const contextLengthTokens = chatUsage.currentContextTokens;
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
   const claudeDesignPercentage = realUsageSnapshot?.claudeDesignPercentageUsed;
   const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
@@ -128,16 +131,19 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot }: ContentAp
       </div>
       <span
         className="cub-token-ring"
-        aria-label={`Current chat token usage ${tokenPercentage}%`}
+        aria-label={`Context window ${contextFillPercentage}% full`}
         style={{
-          "--cub-token-percentage": `${tokenPercentage}%`,
+          "--cub-token-percentage": `${contextFillPercentage}%`,
         } as CSSProperties}
       >
         <span className="cub-token-tooltip" role="tooltip">
-          <span>Context window:</span>
-          <span>{tokenPercentage}% used</span>
+          <span>Context &amp; token usage:</span>
+          <span>{contextFillPercentage}% of context window used</span>
           <span>
-            {formatCompactNumber(estimatedTokens)} / {formatCompactNumber(TOKEN_CONTEXT_LIMIT)} tokens used
+            {formatCompactNumber(contextLengthTokens ?? totalTokensUsed)} / {formatCompactNumber(TOKEN_CONTEXT_LIMIT)} context length
+          </span>
+          <span>
+            {formatCompactNumber(totalTokensUsed)} total tokens used
           </span>
         </span>
       </span>

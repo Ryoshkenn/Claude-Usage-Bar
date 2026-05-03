@@ -7,7 +7,7 @@ import {
   saveDailyUsage,
   saveRealUsageSnapshot,
 } from "../shared/storage";
-import type { RealUsageSnapshot, StorageShape } from "../shared/types";
+import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } from "../shared/types";
 import { readClaudeDomSnapshot } from "./claudeDom";
 import { ContentApp } from "./ContentApp";
 import "./pageOverrides.css";
@@ -22,6 +22,7 @@ let updateTimer: number | undefined;
 let mountedComposer: HTMLElement | null = null;
 let lastSentCount = 0;
 let lastApiRefreshUrl = "";
+let lastConversationContextUrl = "";
 
 const injectPageProbe = () => {
   if (location.origin !== CLAUDE_ORIGIN) {
@@ -151,6 +152,27 @@ const requestApiUsageRefresh = (force = false) => {
   });
 };
 
+const getConversationId = (): string | null => location.pathname.match(/\/chat\/([^/?]+)/)?.[1] ?? null;
+
+const requestConversationContextRefresh = (conversationId: string) => {
+  chrome.runtime.sendMessage(
+    { type: MESSAGE_TYPES.fetchConversationContext, conversationId },
+    (response: ConversationContextResponse | undefined) => {
+      void chrome.runtime.lastError;
+      if (!response?.ok || !response.chatUsage || !storageState) {
+        return;
+      }
+
+      storageState = {
+        ...storageState,
+        chatUsage: response.chatUsage,
+      };
+
+      render();
+    },
+  );
+};
+
 const refreshUsage = async () => {
   if (!storageState || !document.body) {
     return;
@@ -159,10 +181,11 @@ const refreshUsage = async () => {
   const snapshot = readClaudeDomSnapshot();
   const now = new Date();
   const dailyUsage = rollDailyUsageForward(storageState.dailyUsage, snapshot.visibleSentCount, now);
-  const chatUsage = buildChatUsage(snapshot.visibleText, snapshot.visibleMessageCount, now.getTime());
+  const chatUsage = buildChatUsage(snapshot.visibleMessageTexts, now.getTime());
 
   // Trigger a forced API refresh when a new message is sent or the URL changes (new chat).
   const currentUrl = location.href;
+  const conversationId = getConversationId();
   const messageSent = snapshot.visibleSentCount > lastSentCount;
   const urlChanged = currentUrl !== lastApiRefreshUrl;
 
@@ -173,13 +196,21 @@ const refreshUsage = async () => {
     window.setTimeout(() => requestApiUsageRefresh(true), messageSent ? 2000 : 0);
   }
 
+  if (conversationId && (currentUrl !== lastConversationContextUrl || messageSent)) {
+    lastConversationContextUrl = currentUrl;
+    window.setTimeout(() => requestConversationContextRefresh(conversationId), messageSent ? 2500 : 500);
+  }
+
   storageState = {
     ...storageState,
     dailyUsage,
-    chatUsage,
+    chatUsage: conversationId ? storageState.chatUsage : chatUsage,
   };
 
-  await Promise.all([saveDailyUsage(dailyUsage), saveChatUsage(chatUsage)]);
+  await Promise.all([
+    saveDailyUsage(dailyUsage),
+    conversationId ? Promise.resolve() : saveChatUsage(chatUsage),
+  ]);
   render();
 };
 

@@ -17,6 +17,12 @@ export interface ChatUsage {
   estimatedTokens: number;
   visibleMessageCount: number;
   updatedAt: number;
+  source?: "dom" | "conversation_api";
+  currentContextTokens?: number;
+  compoundedInputTokens?: number;
+  cachedPrefixTokens?: number;
+  cacheExpiresAt?: number;
+  lengthIsEstimate?: boolean;
 }
 
 export interface RealUsageSnapshot {
@@ -42,6 +48,12 @@ export interface ApiUsageResponse {
   snapshot?: RealUsageSnapshot;
   error?: string;
   status?: number;
+}
+
+export interface ConversationContextResponse {
+  ok: boolean;
+  chatUsage?: ChatUsage;
+  error?: string;
 }
 
 export interface UsageMetadata {

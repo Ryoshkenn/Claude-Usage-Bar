@@ -1,11 +1,25 @@
 import type { ChatUsage, DailyUsage } from "../shared/types";
 
+const ESTIMATED_CHARACTERS_PER_TOKEN = 4;
+
 export const estimateTokensFromText = (text: string): number => {
   const normalized = text.replace(/\s+/g, " ").trim();
   if (!normalized) {
     return 0;
   }
-  return Math.ceil(normalized.length / 4);
+  return Math.ceil(normalized.length / ESTIMATED_CHARACTERS_PER_TOKEN);
+};
+
+export const estimateCumulativeContextTokens = (messageTexts: string[]): number => {
+  let runningContextTokens = 0;
+  let cumulativeContextTokens = 0;
+
+  messageTexts.forEach((messageText) => {
+    runningContextTokens += estimateTokensFromText(messageText);
+    cumulativeContextTokens += runningContextTokens;
+  });
+
+  return cumulativeContextTokens;
 };
 
 export const getLocalDateKey = (date = new Date()): string => date.toLocaleDateString("en-CA");
@@ -36,8 +50,9 @@ export const rollDailyUsageForward = (
   };
 };
 
-export const buildChatUsage = (visibleText: string, visibleMessageCount: number, now = Date.now()): ChatUsage => ({
-  estimatedTokens: estimateTokensFromText(visibleText),
-  visibleMessageCount,
+export const buildChatUsage = (messageTexts: string[], now = Date.now()): ChatUsage => ({
+  estimatedTokens: estimateCumulativeContextTokens(messageTexts),
+  visibleMessageCount: messageTexts.length,
   updatedAt: now,
+  source: "dom",
 });

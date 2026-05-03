@@ -19,6 +19,7 @@ export interface ClaudeDomSnapshot {
   visibleSentCount: number;
   visibleMessageCount: number;
   visibleText: string;
+  visibleMessageTexts: string[];
   metadata: UsageMetadata;
 }
 
@@ -73,7 +74,7 @@ const transcriptTextOf = (element: Element): string => {
   return (clone.innerText ?? clone.textContent ?? "").replace(/\s+/g, " ").trim();
 };
 
-const readConversationText = (): { text: string; messageCount: number; sentCount: number } => {
+const readConversationText = (): { text: string; messageTexts: string[]; messageCount: number; sentCount: number } => {
   const messageElements = uniqueOuterElements(
     uniqueElements(TRANSCRIPT_MESSAGE_SELECTORS).filter((element) => !isExtensionElement(element)),
   );
@@ -84,6 +85,7 @@ const readConversationText = (): { text: string; messageCount: number; sentCount
 
   return {
     text: messageTexts.join("\n\n"),
+    messageTexts,
     messageCount: messageTexts.length,
     sentCount: userElements.map(transcriptTextOf).filter(Boolean).length,
   };
@@ -240,6 +242,7 @@ export const readClaudeDomSnapshot = (): ClaudeDomSnapshot => {
     visibleSentCount: conversation.sentCount,
     visibleMessageCount: conversation.messageCount,
     visibleText: conversation.text,
+    visibleMessageTexts: conversation.messageTexts,
     metadata: {
       modelLabel,
       resetText,
