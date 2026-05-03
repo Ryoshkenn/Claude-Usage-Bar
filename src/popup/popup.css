@@ -1,0 +1,99 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+  background: #20201e;
+  color: #f4f4f2;
+  font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.popup {
+  padding: 16px;
+}
+
+header {
+  margin-bottom: 16px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+p {
+  margin: 4px 0 0;
+  color: rgb(244 244 242 / 64%);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.metric-grid div {
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgb(255 255 255 / 4%);
+}
+
+.metric-grid span,
+.toggle span {
+  display: block;
+  color: rgb(244 244 242 / 62%);
+}
+
+.metric-grid strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 20px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+input[type="checkbox"] {
+  width: 38px;
+  height: 22px;
+  accent-color: #2f8fed;
+}
+
+.mode-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 5%);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background: rgb(255 255 255 / 9%);
+}
+
+button.active {
+  border-color: #2f8fed;
+  background: rgb(47 143 237 / 22%);
+}
+
+.reset {
+  width: 100%;
+}

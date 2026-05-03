@@ -1,0 +1,176 @@
+.cub-composer-host {
+  position: relative !important;
+}
+
+#claude-usage-bar-root {
+  flex: 0 1 210px;
+  min-width: 120px;
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color-scheme: light dark;
+}
+
+.cub-root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  width: min(100%, 204px);
+  min-width: 184px;
+  box-sizing: border-box;
+  color: rgb(195 194 184);
+  font: 14px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cub-meter {
+  height: 4px;
+  overflow: visible;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 48%);
+  cursor: pointer;
+  position: relative;
+}
+
+.cub-meter::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  width: 330px;
+  height: 14px;
+}
+
+.cub-meter > .cub-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: rgb(204 124 94);
+}
+
+.cub-token-ring {
+  --cub-token-percentage: 0%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(0 0 0 / 48%) 0);
+  cursor: pointer;
+  position: relative;
+  pointer-events: auto;
+}
+
+.cub-token-ring::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: inherit;
+  background: rgb(38 38 36);
+}
+
+.cub-usage-tooltip,
+.cub-token-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  z-index: 2147483647;
+  display: grid;
+  gap: 8px;
+  min-width: 188px;
+  padding: 10px 14px 12px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 8px;
+  background: rgb(43 43 41);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
+  color: rgb(245 245 241);
+  font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transform: translateX(-50%) translateY(3px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  white-space: nowrap;
+}
+
+.cub-usage-tooltip {
+  left: 0;
+  gap: 5px;
+  min-width: 330px;
+  padding: 10px 12px 12px;
+  text-align: left;
+  transform: translateY(3px);
+}
+
+.cub-usage-title,
+.cub-usage-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.cub-usage-title {
+  color: rgb(165 164 156);
+  font-size: 14px;
+}
+
+.cub-usage-link {
+  color: rgb(165 164 156);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  pointer-events: auto;
+  text-decoration: none;
+}
+
+.cub-usage-row {
+  color: rgb(225 225 219);
+  font-size: 14px;
+}
+
+.cub-usage-row span:last-child {
+  color: rgb(165 164 156);
+}
+
+.cub-usage-track {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.cub-usage-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: rgb(204 124 94);
+}
+
+.cub-token-tooltip span:first-child {
+  color: rgb(165 164 156);
+}
+
+.cub-meter:hover .cub-usage-tooltip,
+.cub-meter:focus-visible .cub-usage-tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.cub-token-ring:hover .cub-token-tooltip,
+.cub-token-ring:focus-visible .cub-token-tooltip {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 760px) {
+  #claude-usage-bar-root {
+    min-width: 80px;
+  }
+
+  .cub-root {
+    width: min(100%, 118px);
+    min-width: 104px;
+    gap: 14px;
+  }
+}

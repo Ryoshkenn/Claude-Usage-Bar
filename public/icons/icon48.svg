@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" role="img" aria-label="Claude Usage Bar icon">
+  <rect width="48" height="48" rx="10" fill="#20201e"/>
+  <path d="M10 34h28" stroke="#2f8fed" stroke-width="6" stroke-linecap="round"/>
+  <path d="M10 16h28" stroke="#f4f4f2" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+  <circle cx="32" cy="34" r="4" fill="#f4f4f2"/>
+</svg>
