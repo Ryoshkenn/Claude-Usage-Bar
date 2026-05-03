@@ -9,7 +9,7 @@ import {
 } from "../shared/storage";
 import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } from "../shared/types";
 import { readClaudeDomSnapshot } from "./claudeDom";
-import { ContentApp } from "./ContentApp";
+import { CacheTimer, ContentApp } from "./ContentApp";
 import "./pageOverrides.css";
 import "./styles.css";
 import { buildChatUsage, rollDailyUsageForward } from "./usageEstimator";
@@ -23,6 +23,13 @@ let mountedComposer: HTMLElement | null = null;
 let lastSentCount = 0;
 let lastApiRefreshUrl = "";
 let lastConversationContextUrl = "";
+
+// Cache timer state
+let cacheTimerRoot: ReturnType<typeof createRoot> | null = null;
+let cacheTimerHost: HTMLElement | null = null;
+let cacheTimerParent: HTMLElement | null = null;
+let streamingEndedAt: number | null = null;
+let wasStreaming = false;
 
 const injectPageProbe = () => {
   if (location.origin !== CLAUDE_ORIGIN) {
@@ -81,6 +88,58 @@ const isPreferencesComposer = (element: HTMLElement): boolean =>
     element.querySelector("#conversation-preferences") ||
       element.closest('[data-testid*="preferences"], [aria-label*="preferences" i]'),
   );
+
+// Selector for Claude's stop-generation button (appears while streaming)
+const STOP_BTN_SELECTOR = 'button[aria-label*="Stop"]';
+
+const findChatMenuParent = (): HTMLElement | null => {
+  const chatMenuBtn = document.querySelector<HTMLElement>('[data-testid="chat-menu-trigger"]');
+  // The innermost flex group that contains the title rename button + separator + chevron
+  return chatMenuBtn?.parentElement ?? null;
+};
+
+const mountCacheTimerInHeader = (): boolean => {
+  const parent = findChatMenuParent();
+  if (!parent) {
+    return false;
+  }
+
+  if (parent !== cacheTimerParent) {
+    cacheTimerHost?.remove();
+    cacheTimerHost = null;
+    cacheTimerRoot = null;
+    cacheTimerParent = parent;
+  }
+
+  if (!cacheTimerHost) {
+    cacheTimerHost = document.createElement("span");
+    cacheTimerHost.id = "claude-cache-timer-host";
+    parent.appendChild(cacheTimerHost);
+    cacheTimerRoot = createRoot(cacheTimerHost);
+  }
+
+  return true;
+};
+
+const renderCacheTimer = () => {
+  if (!mountCacheTimerInHeader()) {
+    return;
+  }
+  cacheTimerRoot?.render(
+    <React.StrictMode>
+      <CacheTimer streamingEndedAt={streamingEndedAt} />
+    </React.StrictMode>,
+  );
+};
+
+const checkStreamingState = () => {
+  const isStreaming = !!document.querySelector(STOP_BTN_SELECTOR);
+  if (wasStreaming && !isStreaming) {
+    streamingEndedAt = Date.now();
+    renderCacheTimer();
+  }
+  wasStreaming = isStreaming;
+};
 
 const findComposer = (): HTMLElement | null => {
   const controls = findComposerControls();
@@ -183,11 +242,25 @@ const refreshUsage = async () => {
   const dailyUsage = rollDailyUsageForward(storageState.dailyUsage, snapshot.visibleSentCount, now);
   const chatUsage = buildChatUsage(snapshot.visibleMessageTexts, now.getTime());
 
+  checkStreamingState();
+
   // Trigger a forced API refresh when a new message is sent or the URL changes (new chat).
   const currentUrl = location.href;
   const conversationId = getConversationId();
   const messageSent = snapshot.visibleSentCount > lastSentCount;
   const urlChanged = currentUrl !== lastApiRefreshUrl;
+
+  if (urlChanged) {
+    streamingEndedAt = null;
+    renderCacheTimer();
+  }
+
+  // On a page with existing messages but no known stream end (e.g. navigated to an old chat),
+  // treat cache as already expired rather than hiding the timer entirely.
+  if (streamingEndedAt === null && !wasStreaming && snapshot.visibleSentCount > 0) {
+    streamingEndedAt = 0;
+    renderCacheTimer();
+  }
 
   if (messageSent || urlChanged) {
     lastSentCount = snapshot.visibleSentCount;

@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { ChatUsage, RealUsageSnapshot, Settings } from "../shared/types";
 
 interface ContentAppProps {
@@ -54,6 +54,71 @@ const formatCompactNumber = (value: number): string => {
 // Total tokens used (compounded across all inferences) can exceed the window size.
 const getContextFillPercentage = (chatUsage: ChatUsage): number =>
   clampPercentage(((chatUsage.currentContextTokens ?? chatUsage.estimatedTokens) / TOKEN_CONTEXT_LIMIT) * 100);
+
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
+export const CacheTimer = ({ streamingEndedAt }: { streamingEndedAt: number | null }) => {
+  const [now, setNow] = useState(Date.now());
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    if (streamingEndedAt === null) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [streamingEndedAt]);
+
+  if (streamingEndedAt === null) return null;
+
+  const remaining = Math.max(0, CACHE_TTL_MS - (now - streamingEndedAt));
+  const expired = remaining === 0;
+  const minutes = Math.floor(remaining / 60000);
+  const seconds = Math.floor((remaining % 60000) / 1000);
+  const display = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const warning = !expired && remaining < 60_000;
+
+  return (
+    <span
+      className="cub-cache-timer"
+      data-expired={String(expired)}
+      data-warning={String(warning)}
+      role="timer"
+      aria-label={expired ? "Prompt cache expired" : `Prompt cache expires in ${display}`}
+    >
+      <span
+        className="cub-cache-timer-trigger"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <svg
+          className="cub-cache-timer-icon"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 22h14" />
+          <path d="M5 2h14" />
+          <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
+          <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
+        </svg>
+        <span className="cub-cache-timer-text">{expired ? "expired" : display}</span>
+      </span>
+      <span
+        className={`cub-cache-timer-tooltip${hovered ? " cub-cache-timer-tooltip--visible" : ""}`}
+        role="tooltip"
+      >
+        {expired ? "Prompt cache has expired" : `Prompt cache expires in ${display}`}
+        <br />
+        Cached tokens save ~90% input cost
+      </span>
+    </span>
+  );
+};
 
 export const ContentApp = ({ settings, chatUsage, realUsageSnapshot }: ContentAppProps) => {
   if (!settings.showOverlay) {

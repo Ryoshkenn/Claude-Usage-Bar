@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { sanitizeUsageMetadata } from "../content/usageProbeBridge";
 import { readClaudeDomSnapshot } from "../content/claudeDom";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
+import { applyConservativeTokenBias } from "../shared/tokenBias";
 import {
   buildChatUsage,
   estimateCumulativeContextTokens,
@@ -19,29 +20,39 @@ describe("estimateTokensFromText", () => {
   it("rounds short text up", () => {
     expect(estimateTokensFromText("abc")).toBe(1);
     expect(estimateTokensFromText("abcd")).toBe(1);
-    expect(estimateTokensFromText("abcde")).toBe(2);
+    expect(estimateTokensFromText("abcde")).toBe(1);
   });
 
   it("handles long text", () => {
-    expect(estimateTokensFromText("a".repeat(401))).toBe(101);
+    expect(estimateTokensFromText("a".repeat(401))).toBe(26);
   });
 
-  it("normalizes whitespace before counting", () => {
-    expect(estimateTokensFromText("hello      world")).toBe(3);
+  it("tokenizes visible text with the Claude tokenizer", () => {
+    expect(estimateTokensFromText("hello      world")).toBe(2);
+  });
+});
+
+describe("applyConservativeTokenBias", () => {
+  it("biases positive token counts upward and leaves zero alone", () => {
+    expect(applyConservativeTokenBias(0)).toBe(0);
+    expect(applyConservativeTokenBias(5)).toBe(6);
+    expect(applyConservativeTokenBias(50)).toBe(60);
   });
 });
 
 describe("estimateCumulativeContextTokens", () => {
   it("adds each message to the running context before accumulating total usage", () => {
-    expect(estimateCumulativeContextTokens(["a".repeat(1200), "b".repeat(2400)])).toBe(1200);
+    expect(estimateCumulativeContextTokens(["hello world", "hello world"])).toBe(6);
   });
 
   it("uses ordered user and assistant transcript parts", () => {
-    const chatUsage = buildChatUsage(["abcd", "abcdefgh", "abcdefghijkl"], 123);
+    const messageTexts = ["Hello how are you", "I'm doing well, thanks for asking!"];
+    const exactTokens = estimateCumulativeContextTokens(messageTexts);
+    const chatUsage = buildChatUsage(messageTexts, 123);
 
-    expect(chatUsage.visibleMessageCount).toBe(3);
+    expect(chatUsage.visibleMessageCount).toBe(2);
     expect(chatUsage.updatedAt).toBe(123);
-    expect(chatUsage.estimatedTokens).toBe(10);
+    expect(chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(exactTokens));
   });
 });
 

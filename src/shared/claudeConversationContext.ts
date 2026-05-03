@@ -1,11 +1,11 @@
 import type { ChatUsage } from "./types";
+import { countClaudeTokens } from "./claudeTokenizer";
+import { applyConservativeTokenBias } from "./tokenBias";
 
 const ROOT_MESSAGE_UUID = "00000000-0000-4000-8000-000000000000";
 const BASE_CONVERSATION_OVERHEAD_TOKENS = 1_000;
 const MESSAGE_OVERHEAD_TOKENS = 4;
 const ENGLISH_CHARS_PER_TOKEN = 3.7;
-const CJK_CHARS_PER_TOKEN = 1.5;
-const CODE_CHARS_PER_TOKEN = 3.2;
 const IMAGE_MAX_TOKENS = 1_700;
 const IMAGE_PIXELS_PER_TOKEN = 700;
 const DOCUMENT_TOKENS_PER_PAGE = 2_300;
@@ -51,39 +51,6 @@ const asArray = (value: unknown): unknown[] => (Array.isArray(value) ? value : [
 const asString = (value: unknown): string | undefined => (typeof value === "string" ? value : undefined);
 
 const isUserSender = (sender: unknown): boolean => sender === "human" || sender === "user";
-
-const estimateTokensFromText = (text: string): number => {
-  const normalized = text.replace(/\s+/g, " ").trim();
-  if (!normalized) {
-    return 0;
-  }
-
-  let tokens = 0;
-  let asciiRun = "";
-
-  const flushAsciiRun = () => {
-    if (!asciiRun) {
-      return;
-    }
-
-    const codeLikeCharacters = asciiRun.match(/[{}()[\];=<>_*#/$\\|`]/g)?.length ?? 0;
-    const ratio = codeLikeCharacters / asciiRun.length > 0.08 ? CODE_CHARS_PER_TOKEN : ENGLISH_CHARS_PER_TOKEN;
-    tokens += asciiRun.length / ratio;
-    asciiRun = "";
-  };
-
-  for (const char of normalized) {
-    if (/[\u3400-\u9fff\u3040-\u30ff\uac00-\ud7af]/u.test(char)) {
-      flushAsciiRun();
-      tokens += 1 / CJK_CHARS_PER_TOKEN;
-    } else {
-      asciiRun += char;
-    }
-  }
-
-  flushAsciiRun();
-  return Math.max(1, Math.ceil(tokens));
-};
 
 const estimateImageTokens = (file: Record<string, unknown>): number => {
   const preview = asRecord(file.preview_asset);
@@ -243,7 +210,7 @@ const estimateMessageTokens = (message: ClaudeMessage, debugTexts: string[]): { 
   const textPieces = getMessageText(message);
 
   textPieces.forEach(({ text }) => {
-    tokens += estimateTokensFromText(text);
+    tokens += countClaudeTokens(text);
     debugTexts.push(text);
   });
 
@@ -328,11 +295,13 @@ export const buildChatUsageFromConversationPayload = (payload: unknown, now = Da
 
   const compoundedInputTokens = calculateCompoundedInputTokens(messageTokenInfos);
   const displayedUsageTokens = compoundedInputTokens || currentContextTokens;
+  const biasedCurrentContextTokens = applyConservativeTokenBias(currentContextTokens);
+  const biasedDisplayedUsageTokens = applyConservativeTokenBias(displayedUsageTokens);
 
   return {
     chatUsage: {
-      estimatedTokens: Math.round(displayedUsageTokens),
-      currentContextTokens: Math.round(currentContextTokens),
+      estimatedTokens: biasedDisplayedUsageTokens,
+      currentContextTokens: biasedCurrentContextTokens,
       compoundedInputTokens: Math.round(compoundedInputTokens),
       visibleMessageCount: messages.length,
       updatedAt: now,

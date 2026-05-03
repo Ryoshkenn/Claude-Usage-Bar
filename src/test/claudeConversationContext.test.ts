@@ -3,9 +3,16 @@ import {
   buildChatUsageFromConversationPayload,
   calculateCompoundedInputTokens,
 } from "../shared/claudeConversationContext";
+import { applyConservativeTokenBias } from "../shared/tokenBias";
+import { countClaudeTokens } from "../shared/claudeTokenizer";
 
 describe("buildChatUsageFromConversationPayload", () => {
   it("counts the active conversation branch from Claude JSON", () => {
+    const helloTokens = countClaudeTokens("hello");
+    const assistantTokens = countClaudeTokens("assistant answer");
+    const followUpTokens = countClaudeTokens("follow up");
+    const exactCurrentContextTokens =
+      1_000 + (4 + helloTokens) + (4 + assistantTokens) + (4 + followUpTokens);
     const result = buildChatUsageFromConversationPayload(
       {
         current_leaf_message_uuid: "a2",
@@ -47,9 +54,8 @@ describe("buildChatUsageFromConversationPayload", () => {
     expect(result.chatUsage.visibleMessageCount).toBe(3);
     expect(result.chatUsage.updatedAt).toBe(123);
     expect(result.debugTexts).toEqual(["hello", "assistant answer", "follow up"]);
-    expect(result.chatUsage.currentContextTokens).toBeLessThan(result.chatUsage.estimatedTokens);
-    expect(result.chatUsage.estimatedTokens).toBeGreaterThan(2_000);
-    expect(result.chatUsage.estimatedTokens).toBeLessThan(2_200);
+    expect(result.chatUsage.currentContextTokens).toBe(applyConservativeTokenBias(exactCurrentContextTokens));
+    expect(result.chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(result.chatUsage.compoundedInputTokens ?? 0));
     expect(result.chatUsage.compoundedInputTokens).toBeGreaterThan(0);
   });
 
@@ -79,10 +85,9 @@ describe("buildChatUsageFromConversationPayload", () => {
       ],
     });
 
-    expect(result.chatUsage.currentContextTokens).toBeLessThan(1_020);
-    expect(result.chatUsage.estimatedTokens).toBeGreaterThanOrEqual(1_000);
-    expect(result.chatUsage.estimatedTokens).toBeLessThan(1_020);
-    expect(result.chatUsage.compoundedInputTokens).toBe(result.chatUsage.estimatedTokens);
+    expect(result.chatUsage.currentContextTokens).toBe(applyConservativeTokenBias(1_000 + (4 + countClaudeTokens("hi")) + (4 + countClaudeTokens("hi"))));
+    expect(result.chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(result.chatUsage.compoundedInputTokens ?? 0));
+    expect(result.chatUsage.compoundedInputTokens).toBeLessThan(result.chatUsage.estimatedTokens);
   });
 
   it("counts attachments, files, sync sources, and tool inputs from concrete JSON evidence", () => {
@@ -113,7 +118,7 @@ describe("buildChatUsageFromConversationPayload", () => {
     expect(result.debugTexts).toEqual(["search this", "{\"q\":\"claude\"}", "attachment text"]);
     expect(result.chatUsage.currentContextTokens).toBeGreaterThan(6_000);
     expect(result.chatUsage.currentContextTokens).toBeLessThan(8_000);
-    expect(result.chatUsage.estimatedTokens).toBe(result.chatUsage.compoundedInputTokens);
+    expect(result.chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(result.chatUsage.compoundedInputTokens ?? 0));
   });
 
   it("compounds input when user prompts add the chat back into context", () => {

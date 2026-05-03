@@ -89,7 +89,14 @@ The context ring should be driven by the local token estimator, not the Claude p
 
 This is intended to include real message text from paragraphs, headings, lists, code blocks, tables, SVG diagram labels, and other rendered text inside the message. It should exclude Copy/Edit/Retry buttons, timestamps, feedback controls, hidden accessibility summaries, page chrome, settings textareas, and usage overlay text.
 
-The estimator is approximate (`text.length / 4`) and deliberately local. Do not store conversation text; only store numeric estimates in `chatUsage`.
+The estimator is approximate, deliberately local, and now uses the Claude tokenizer with a `text.length / 4` fallback only if tokenizer initialization fails. Do not store conversation text; only store numeric estimates in `chatUsage`.
+
+Recent implementation notes:
+
+- `src/shared/claudeTokenizer.ts` now wraps `@huggingface/tokenizers` around the local `Xenova/claude-tokenizer` assets (`src/shared/claude-tokenizer.json` and `src/shared/claude-tokenizer-config.json`).
+- `src/content/usageEstimator.ts` and `src/shared/claudeConversationContext.ts` now count visible text with the Claude tokenizer and keep the prior heuristic only as a fallback if tokenizer initialization fails.
+- The tokenizer assets are bundled locally so the extension does not fetch model files at runtime.
+- Verification passed with `npm test` and `npm run build`.
 
 ### DOM Page Probe
 

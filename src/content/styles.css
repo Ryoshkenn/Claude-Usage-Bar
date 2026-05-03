@@ -194,6 +194,80 @@
   }
 }
 
+/* ── Cache timer (injected into Claude's header bar) ─────────────────── */
+
+#claude-cache-timer-host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.cub-cache-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font: 12px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: rgb(204 124 94);
+  cursor: default;
+  user-select: none;
+  position: relative;
+  transition: opacity 200ms ease, color 200ms ease;
+}
+
+.cub-cache-timer[data-expired="true"] {
+  color: rgb(120 118 112);
+  opacity: 0.6;
+}
+
+.cub-cache-timer[data-warning="true"] {
+  color: rgb(210 70 50);
+}
+
+.cub-cache-timer-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.cub-cache-timer-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cub-cache-timer-text {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* Tooltip – positioned relative to .cub-cache-timer */
+.cub-cache-timer-tooltip {
+  position: absolute;
+  left: -6px;
+  top: calc(100% + 8px);
+  transform: translateY(-3px);
+  z-index: 2147483647;
+  padding: 10px 14px 12px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 8px;
+  background: rgb(44 44 43);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
+  color: rgb(245 245 241);
+  font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  text-align: left;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.cub-cache-timer-tooltip--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ── Light mode ───────────────────────────────────────────────────────────
    Applied via a JS-added class so it works for both the OS auto setting
    and Claude's explicit "Light" theme picker (not just prefers-color-scheme).
