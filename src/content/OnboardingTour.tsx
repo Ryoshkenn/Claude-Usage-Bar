@@ -19,6 +19,9 @@ interface TourStep {
   postNavDelay?: number;
 }
 
+const MESSAGE_NAV_STEP = 5;
+const CACHE_TIMER_STEP = 6;
+
 const STEPS: TourStep[] = [
   {
     navigateTo: "/new",
@@ -55,30 +58,23 @@ const STEPS: TourStep[] = [
   },
   {
     navigateTo: "/new",
-    selector: "#claude-user-message-rail",
+    selector: null,
     fallbackRect: () => ({
-      top: Math.round(window.innerHeight / 2) - 30,
-      left: window.innerWidth - 36,
-      width: 16,
-      height: 60,
+      top: Math.round(window.innerHeight / 2) - 33,
+      left: window.innerWidth - 56,
+      width: 36,
+      height: 66,
     }),
     title: "Message Navigator",
-    body: "These dots on the right edge let you jump between messages in long conversations with a single click.",
-    postNavDelay: 750,
+    body: "These dash markers on the right edge let you jump between messages in long conversations with a single click. This only appears inside active chats.",
+    postNavDelay: 400,
   },
   {
     navigateTo: "/new",
-    selector: ".cub-cache-timer",
-    fallbackRect: () => {
-      const trigger = document.querySelector<HTMLElement>('[data-testid="chat-menu-trigger"]');
-      if (trigger) {
-        const r = trigger.getBoundingClientRect();
-        return { top: r.top, left: r.right + 12, width: 90, height: 26 };
-      }
-      return { top: 14, left: Math.round(window.innerWidth / 2) - 45, width: 90, height: 26 };
-    },
+    selector: null,
+    fallbackRect: () => ({ top: 16, left: 16, width: 88, height: 28 }),
     title: "Cache Timer",
-    body: "After Claude responds, this countdown shows how long your prompt cache stays warm — saving tokens on follow-up messages.",
+    body: "After Claude responds, this countdown shows how long your prompt cache stays warm — saving tokens on follow-up messages. This only appears in active chats.",
   },
   {
     navigateTo: "/new",
@@ -89,8 +85,9 @@ const STEPS: TourStep[] = [
 ];
 
 const PAD = 10;
+const ARROW_H = 9; // height of the CSS arrow pointer
 const CARD_WIDTH = 268;
-const CARD_HEIGHT_APPROX = 165;
+const CARD_HEIGHT_APPROX = 210;
 
 // Try to find element with up to maxAttempts retries (250ms each)
 async function findElement(
@@ -133,10 +130,10 @@ function computeCardPos(
   let top: number;
   let arrowSide: "top" | "bottom";
   if (spaceAbove >= 80) {
-    top = Math.max(8, rect.top - PAD - CARD_HEIGHT_APPROX);
+    top = Math.max(8, rect.top - PAD - ARROW_H - CARD_HEIGHT_APPROX);
     arrowSide = "bottom";
   } else {
-    top = rect.top + rect.height + PAD;
+    top = rect.top + rect.height + PAD + ARROW_H;
     arrowSide = "top";
   }
 
@@ -181,6 +178,7 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
   const [fading, setFading] = useState(false);
   const [light, setLight] = useState(isLightTheme);
   const [hostOffset, setHostOffset] = useState({ top: 0, left: 0 });
+  const [demoRailDots, setDemoRailDots] = useState(0);
   const cancelRef = useRef(false);
 
   const totalSteps = STEPS.length;
@@ -259,6 +257,21 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     return () => obs.disconnect();
   }, []);
 
+  // Animate fake message-rail dots into existence one per second
+  useEffect(() => {
+    if (step !== MESSAGE_NAV_STEP) {
+      setDemoRailDots(0);
+      return;
+    }
+    setDemoRailDots(1);
+    const t1 = window.setTimeout(() => setDemoRailDots(2), 1000);
+    const t2 = window.setTimeout(() => setDemoRailDots(3), 2000);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [step]);
+
   // Re-measure on resize
   useEffect(() => {
     const remeasure = () => {
@@ -299,6 +312,35 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     }
   };
 
+  // Compute demo element overlay positions (viewport coords → overlay-local coords)
+  const demoRailStyle = {
+    position: "absolute" as const,
+    top: Math.round(window.innerHeight / 2) - 33 - hostOffset.top,
+    left: window.innerWidth - 56 - hostOffset.left,
+    width: 36,
+    height: 66,
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "flex-end",
+    gap: 6,
+    pointerEvents: "none" as const,
+  };
+  const demoCacheStyle = {
+    position: "absolute" as const,
+    top: 16 - hostOffset.top,
+    left: 16 - hostOffset.left,
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 4,
+    height: 28,
+    padding: "0 6px",
+    borderRadius: 6,
+    font: '12px/1 "Anthropic Sans", system-ui, sans-serif',
+    color: "rgb(204 124 94)",
+    pointerEvents: "none" as const,
+    userSelect: "none" as const,
+  };
+
   const cardVp = computeCardPos(targetRect);
   // Adjust for host offset so positioning works even when a parent has CSS transforms
   const spotlightStyle = targetRect
@@ -332,6 +374,37 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
       />
       {spotlightStyle && (
         <div className="cub-tour-spotlight" style={spotlightStyle} />
+      )}
+      {step === MESSAGE_NAV_STEP && demoRailDots > 0 && (
+        <div className="cub-tour-demo-rail" style={demoRailStyle}>
+          {Array.from({ length: demoRailDots }, (_, i) => (
+            <div
+              key={i}
+              className={`cub-message-rail-marker${i === demoRailDots - 1 ? " cub-message-rail-marker--active" : ""}`}
+              style={{ pointerEvents: "none" }}
+            />
+          ))}
+        </div>
+      )}
+      {step === CACHE_TIMER_STEP && (
+        <div className="cub-tour-demo-cache" style={demoCacheStyle}>
+          <svg
+            className="cub-cache-timer-icon"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span className="cub-cache-timer-text">4:32</span>
+        </div>
       )}
       <div
         className="cub-tour-card"

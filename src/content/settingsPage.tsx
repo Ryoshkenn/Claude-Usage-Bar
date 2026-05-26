@@ -387,6 +387,7 @@ const SettingsPage = () => {
             onClick={() => {
               void updateSettings({ hasSeenTour: false });
               history.pushState(null, "", "/new");
+              window.dispatchEvent(new PopStateEvent("popstate", { state: null }));
             }}
           >
             Replay Tour
