@@ -379,6 +379,15 @@ const SettingsPage = () => {
           />
         </Row>
         <Row
+          labelId={id("replay-tour")}
+          label="Feature tour"
+          description="Walk through the extension features step by step."
+        >
+          <CdsButton onClick={() => void updateSettings({ hasSeenTour: false })}>
+            Replay Tour
+          </CdsButton>
+        </Row>
+        <Row
           labelId={id("review")}
           descId={id("review-desc")}
           label="Leave a review"

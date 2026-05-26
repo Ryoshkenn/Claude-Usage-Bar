@@ -15,6 +15,7 @@ export interface Settings {
   showWheelLabel: boolean;
   showPace: boolean;
   paceSurplusFormat: PaceSurplusFormat;
+  hasSeenTour: boolean;
 }
 
 export interface DailyUsage {

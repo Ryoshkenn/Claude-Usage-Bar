@@ -41,7 +41,7 @@ const createAdapter = (initial: Record<string, unknown> = {}): StorageAdapter & 
 describe("storage helpers", () => {
   it("reads defaults", async () => {
     const state = await getStorage(createAdapter());
-    expect(state.settings).toEqual({ showOverlay: true, mode: "compact", barMetric: "session", ringTarget: "context", showBar: true, showBarLabel: false, showWheel: true, showWheelLabel: false, showPace: true, paceSurplusFormat: "percent" });
+    expect(state.settings).toEqual({ showOverlay: true, mode: "compact", barMetric: "session", ringTarget: "context", showBar: true, showBarLabel: false, showWheel: true, showWheelLabel: false, showPace: true, paceSurplusFormat: "percent", hasSeenTour: false });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
   });
@@ -49,7 +49,7 @@ describe("storage helpers", () => {
   it("merges settings", async () => {
     const adapter = createAdapter({ settings: { showOverlay: false, mode: "compact" } });
     const settings = await updateSettings({ mode: "expanded" }, adapter);
-    expect(settings).toEqual({ showOverlay: false, mode: "expanded", barMetric: "session", ringTarget: "context", showBar: true, showBarLabel: false, showWheel: true, showWheelLabel: false, showPace: true, paceSurplusFormat: "percent" });
+    expect(settings).toEqual({ showOverlay: false, mode: "expanded", barMetric: "session", ringTarget: "context", showBar: true, showBarLabel: false, showWheel: true, showWheelLabel: false, showPace: true, paceSurplusFormat: "percent", hasSeenTour: false });
     expect(adapter.data.settings).toEqual(settings);
   });
 

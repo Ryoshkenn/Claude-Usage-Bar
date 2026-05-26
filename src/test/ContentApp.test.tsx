@@ -14,6 +14,7 @@ const settings: Settings = {
   showWheelLabel: false,
   showPace: true,
   paceSurplusFormat: "percent",
+  hasSeenTour: true,
 };
 
 const baseChatUsage: ChatUsage = {

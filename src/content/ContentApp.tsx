@@ -349,9 +349,16 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
           <span className="cub-usage-tooltip" role="tooltip">
             <span className="cub-usage-title">
               <span>Plan usage</span>
-              <a className="cub-usage-link" href={USAGE_PAGE_URL} aria-label="Open Claude usage page">
+              <button
+                className="cub-usage-link"
+                type="button"
+                aria-label="Open extension settings"
+                onClick={() => {
+                  history.pushState(null, "", USAGE_PAGE_URL);
+                }}
+              >
                 →
-              </a>
+              </button>
             </span>
             <span className="cub-usage-row cub-usage-row--stacked">
               <span className="cub-usage-row-label">

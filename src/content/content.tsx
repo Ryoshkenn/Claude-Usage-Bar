@@ -6,10 +6,12 @@ import {
   saveChatUsage,
   saveDailyUsage,
   saveRealUsageSnapshot,
+  updateSettings,
 } from "../shared/storage";
 import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } from "../shared/types";
 import { readClaudeDomSnapshot } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
+import { OnboardingTour } from "./OnboardingTour";
 import {
   hasMeaningfulChatUsageChange,
   hasMeaningfulDailyUsageChange,
@@ -45,6 +47,10 @@ let cacheTimerHost: HTMLElement | null = null;
 let cacheTimerParent: HTMLElement | null = null;
 let streamingEndedAt: number | null = null;
 let wasStreaming = false;
+
+// Onboarding tour state
+let tourRoot: ReturnType<typeof createRoot> | null = null;
+let tourHost: HTMLDivElement | null = null;
 
 const injectPageProbe = () => {
   if (location.origin !== CLAUDE_ORIGIN) {
@@ -166,6 +172,33 @@ const renderCacheTimer = () => {
   );
 };
 
+const ensureTourHost = () => {
+  if (tourHost && document.body.contains(tourHost)) return;
+  tourHost = document.createElement("div");
+  tourHost.id = "claude-usage-bar-tour";
+  document.body.appendChild(tourHost);
+  tourRoot = createRoot(tourHost);
+};
+
+const renderTour = () => {
+  if (!storageState || !isActiveInstance()) return;
+  ensureTourHost();
+  // Only show tour on chat pages (where the overlay elements are mounted)
+  const overlayPresent = !!document.querySelector(".cub-meter");
+  const showTour = storageState.settings.hasSeenTour === false && overlayPresent;
+  tourRoot?.render(
+    <React.StrictMode>
+      {showTour ? (
+        <OnboardingTour
+          onComplete={() => {
+            void updateSettings({ hasSeenTour: true });
+          }}
+        />
+      ) : null}
+    </React.StrictMode>,
+  );
+};
+
 const checkStreamingState = () => {
   const isStreaming = !!document.querySelector(STOP_BTN_SELECTOR);
   if (wasStreaming && !isStreaming) {
@@ -230,9 +263,11 @@ const render = () => {
   renderCacheTimer();
   if (!storageState.settings.showOverlay) {
     removeComposerHost();
+    renderTour();
     return;
   }
   if (!mountHostInComposer()) {
+    renderTour();
     return;
   }
   root?.render(
@@ -245,6 +280,7 @@ const render = () => {
       />
     </React.StrictMode>,
   );
+  renderTour();
 };
 
 const requestApiUsageRefresh = (force = false) => {

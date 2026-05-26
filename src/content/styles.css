@@ -544,3 +544,174 @@
   /* Fills the same space as Claude's .flex.flex-col sections container */
   width: 100%;
 }
+
+/* ── Onboarding tour ─────────────────────────────────────────────────────── */
+
+/* Force bar tooltip visible during tour steps that spotlight it */
+body.cub-tour-bar-open .cub-usage-tooltip {
+  opacity: 1 !important;
+  pointer-events: none !important;
+  transform: translateX(-50%) translateY(0) !important;
+  transition-delay: 0ms !important;
+}
+
+#claude-usage-bar-tour {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  /* Above extension tooltips (2147483647) — relies on later DOM order at same z-index */
+  z-index: 2147483647;
+  font: 14px/1.4 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cub-tour-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cub-tour-backdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: all;
+}
+
+.cub-tour-spotlight {
+  position: fixed;
+  border-radius: 6px;
+  pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.48);
+}
+
+.cub-tour-card {
+  position: fixed;
+  background: rgb(44 44 43);
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 45%);
+  color: rgb(245 245 241);
+  padding: 16px;
+  pointer-events: all;
+  box-sizing: border-box;
+}
+
+.cub-tour-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.cub-tour-arrow--bottom {
+  bottom: -8px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgb(44 44 43);
+}
+
+.cub-tour-arrow--top {
+  top: -8px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgb(44 44 43);
+}
+
+.cub-tour-step-count {
+  font-size: 12px;
+  color: rgb(165 164 156);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.cub-tour-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgb(245 245 241);
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.cub-tour-body {
+  font-size: 13px;
+  color: rgb(195 194 184);
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.cub-tour-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cub-tour-btn-skip {
+  background: none;
+  border: none;
+  padding: 6px 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  color: rgb(165 164 156);
+  pointer-events: all;
+}
+
+.cub-tour-btn-skip:hover {
+  color: rgb(195 194 184);
+}
+
+.cub-tour-btn-next {
+  background: rgb(204 124 94);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(255 255 255);
+  pointer-events: all;
+  transition: background 120ms ease;
+}
+
+.cub-tour-btn-next:hover {
+  background: rgb(218 138 108);
+}
+
+/* ── Light theme overrides ───────────────────────────────────────────────── */
+
+.cub-tour-light .cub-tour-card {
+  background: rgb(255 255 255);
+  border: 1px solid rgb(0 0 0 / 10%);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 15%);
+  color: rgb(40 40 38);
+}
+
+.cub-tour-light .cub-tour-arrow--bottom {
+  border-top-color: rgb(255 255 255);
+}
+
+.cub-tour-light .cub-tour-arrow--top {
+  border-bottom-color: rgb(255 255 255);
+}
+
+.cub-tour-light .cub-tour-step-count {
+  color: rgb(120 118 112);
+}
+
+.cub-tour-light .cub-tour-title {
+  color: rgb(28 28 27);
+}
+
+.cub-tour-light .cub-tour-body {
+  color: rgb(80 78 72);
+}
+
+.cub-tour-light .cub-tour-btn-skip {
+  color: rgb(120 118 112);
+}
+
+.cub-tour-light .cub-tour-btn-skip:hover {
+  color: rgb(80 78 72);
+}

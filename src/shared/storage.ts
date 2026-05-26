@@ -18,6 +18,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showWheelLabel: false,
   showPace: true,
   paceSurplusFormat: "percent",
+  hasSeenTour: false,
 };
 
 const today = () => new Date().toLocaleDateString("en-CA");
