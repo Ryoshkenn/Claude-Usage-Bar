@@ -22,6 +22,16 @@ interface TourStep {
 const MESSAGE_NAV_STEP = 5;
 const CACHE_TIMER_STEP = 6;
 
+// Compute where to render the demo cache timer: centered inside <main> on /new
+function getCacheTimerDemoPos(): TargetRect {
+  const main = document.querySelector<HTMLElement>("main");
+  if (main) {
+    const r = main.getBoundingClientRect();
+    return { top: r.top + 12, left: r.left + r.width / 2 - 44, width: 88, height: 28 };
+  }
+  return { top: Math.round(window.innerHeight * 0.12), left: Math.round(window.innerWidth / 2) - 44, width: 88, height: 28 };
+}
+
 const STEPS: TourStep[] = [
   {
     navigateTo: "/new",
@@ -72,7 +82,7 @@ const STEPS: TourStep[] = [
   {
     navigateTo: "/new",
     selector: null,
-    fallbackRect: () => ({ top: 16, left: 16, width: 88, height: 28 }),
+    fallbackRect: getCacheTimerDemoPos,
     title: "Cache Timer",
     body: "After Claude responds, this countdown shows how long your prompt cache stays warm — saving tokens on follow-up messages. This only appears in active chats.",
   },
@@ -325,10 +335,11 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     gap: 6,
     pointerEvents: "none" as const,
   };
+  const cachePos = step === CACHE_TIMER_STEP ? getCacheTimerDemoPos() : { top: 0, left: 0, width: 0, height: 0 };
   const demoCacheStyle = {
     position: "absolute" as const,
-    top: 16 - hostOffset.top,
-    left: 16 - hostOffset.left,
+    top: cachePos.top - hostOffset.top,
+    left: cachePos.left - hostOffset.left,
     display: "inline-flex",
     alignItems: "center",
     gap: 4,
