@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS: Settings = {
   showBarLabel: false,
   showWheel: true,
   showWheelLabel: false,
+  showPace: true,
+  paceSurplusFormat: "percent",
 };
 
 const today = () => new Date().toLocaleDateString("en-CA");

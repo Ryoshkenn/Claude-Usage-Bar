@@ -76,8 +76,22 @@ export const computeFallbackPace = (
   }
 
   const expectedPercent = (elapsedMs / windowDurationMs) * 100;
+  const elapsedHours = elapsedMs / 3_600_000;
+  const drainRatePerHour = elapsedHours > 0 ? sessionUsedPercent / elapsedHours : 0;
 
   if (sessionUsedPercent <= expectedPercent * 1.1) {
+    if (drainRatePerHour > 0) {
+      const remainingPercent = 100 - sessionUsedPercent;
+      const etaHours = remainingPercent / drainRatePerHour;
+      const etaMs = now + etaHours * 3_600_000;
+      return {
+        status: "lasting_to_reset",
+        etaMs,
+        drainRatePerHour,
+        label: `Lasts ${formatEta(etaMs, now)}`,
+      };
+    }
+
     return { status: "lasting_to_reset", label: "Lasts until reset" };
   }
 
@@ -99,7 +113,12 @@ export const projectUsageDepletion = (
   const etaMs = now + etaHours * 3_600_000;
 
   if (etaMs >= sessionResetsAt) {
-    return { status: "lasting_to_reset", drainRatePerHour, label: "Lasts until reset" };
+    return {
+      status: "lasting_to_reset",
+      etaMs,
+      drainRatePerHour,
+      label: `Lasts ${formatEta(etaMs, now)}`,
+    };
   }
 
   return {
@@ -137,4 +156,78 @@ export const computeSessionProjection = (
   }
 
   return projectUsageDepletion(sessionUsedPercent, sessionResetsAt, rate, now);
+};
+
+const WEEKLY_WINDOW_MS = 7 * 24 * 60 * 60_000;
+
+const getMatchingWeeklyHistory = (history: UsageLogEntry[], resetAt: number): UsageLogEntry[] =>
+  history.filter(
+    (e) =>
+      typeof e.weeklyUsedPercent === "number" &&
+      typeof e.weeklyResetsAt === "number" &&
+      Math.abs(e.weeklyResetsAt - resetAt) <= RESET_TOLERANCE_MS,
+  );
+
+const computeWeeklyDrainRate = (entries: UsageLogEntry[]): number | null => {
+  if (entries.length < 2) return null;
+  const sorted = [...entries].sort((a, b) => a.capturedAt - b.capturedAt);
+  let weightedSum = 0;
+  let totalWeight = 0;
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const prev = sorted[i];
+    const curr = sorted[i + 1];
+    const deltaPercent = (curr.weeklyUsedPercent ?? 0) - (prev.weeklyUsedPercent ?? 0);
+    const deltaHours = (curr.capturedAt - prev.capturedAt) / 3_600_000;
+    if (deltaHours <= 0 || deltaPercent <= 0) continue;
+    const weight = i + 1;
+    weightedSum += (deltaPercent / deltaHours) * weight;
+    totalWeight += weight;
+  }
+  return totalWeight > 0 ? weightedSum / totalWeight : null;
+};
+
+const computeWeeklyFallbackPace = (
+  usedPercent: number,
+  resetsAt: number,
+  now: number,
+): UsageProjection => {
+  const timeUntilResetMs = Math.max(0, resetsAt - now);
+  const elapsedMs = WEEKLY_WINDOW_MS - timeUntilResetMs;
+  if (elapsedMs <= 0) {
+    return { status: "insufficient_data", label: "" };
+  }
+  const elapsedHours = elapsedMs / 3_600_000;
+  const drainRatePerHour = elapsedHours > 0 ? usedPercent / elapsedHours : 0;
+  if (drainRatePerHour <= 0) {
+    return { status: "lasting_to_reset", label: "Lasts until reset" };
+  }
+  return projectUsageDepletion(usedPercent, resetsAt, drainRatePerHour, now);
+};
+
+export const computeWeeklyProjection = (
+  history: UsageLogEntry[],
+  weeklyUsedPercent: number,
+  weeklyResetsAt: number,
+  now = Date.now(),
+): UsageProjection => {
+  if (typeof weeklyUsedPercent !== "number" || typeof weeklyResetsAt !== "number") {
+    return { status: "insufficient_data", label: "" };
+  }
+  if (weeklyResetsAt <= now) {
+    return { status: "insufficient_data", label: "" };
+  }
+
+  const matching = getMatchingWeeklyHistory(history, weeklyResetsAt);
+  const recent = trimForecastEntries(matching);
+
+  if (recent.length < MIN_ENTRIES_FOR_WEIGHTED) {
+    return computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
+  }
+
+  const rate = computeWeeklyDrainRate(recent);
+  if (rate === null) {
+    return computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
+  }
+
+  return projectUsageDepletion(weeklyUsedPercent, weeklyResetsAt, rate, now);
 };

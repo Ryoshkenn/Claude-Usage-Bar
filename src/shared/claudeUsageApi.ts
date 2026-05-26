@@ -23,15 +23,15 @@ const formatTimeUntil = (timestamp: number, now: number): string => {
   const minutes = Math.ceil(diff / 60_000);
 
   if (minutes < 60) {
-    return `resets ${minutes}m`;
+    return `resets in ${minutes}m`;
   }
 
   const hours = Math.ceil(minutes / 60);
   if (hours < 24) {
-    return `resets ${hours}h`;
+    return `resets in ${hours}h`;
   }
 
-  return `resets ${Math.ceil(hours / 24)}d`;
+  return `resets in ${Math.ceil(hours / 24)}d`;
 };
 
 const parseResetText = (value: unknown, now: number): string | undefined => {

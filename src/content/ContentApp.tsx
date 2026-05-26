@@ -1,6 +1,18 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import type { ChatUsage, MetricTarget, RealUsageSnapshot, Settings, UsageLogEntry } from "../shared/types";
-import { computeSessionProjection, formatEta } from "../shared/usageProjection";
+import type {
+  ChatUsage,
+  MetricTarget,
+  PaceSurplusFormat,
+  RealUsageSnapshot,
+  Settings,
+  UsageLogEntry,
+  UsageProjection,
+} from "../shared/types";
+import {
+  computeSessionProjection,
+  computeWeeklyProjection,
+  formatEta,
+} from "../shared/usageProjection";
 
 interface ContentAppProps {
   settings: Settings;
@@ -179,6 +191,53 @@ export const CacheTimer = ({ cacheExpiresAt, fallbackStartedAt = null }: CacheTi
   );
 };
 
+interface PaceSummary {
+  text: string;
+  kind: "good" | "bad";
+}
+
+const buildPaceSummary = (
+  projection: UsageProjection | null,
+  usedPercent: number | undefined,
+  resetsAt: number | undefined,
+  format: PaceSurplusFormat,
+  now: number,
+): PaceSummary | null => {
+  if (!projection) return null;
+
+  if (projection.status === "lasting_to_reset") {
+    if (
+      format === "percent" &&
+      typeof projection.drainRatePerHour === "number" &&
+      projection.drainRatePerHour > 0 &&
+      typeof usedPercent === "number" &&
+      typeof resetsAt === "number"
+    ) {
+      const hoursUntilReset = Math.max(0, (resetsAt - now) / 3_600_000);
+      const projectedPercent = Math.min(
+        100,
+        Math.max(0, Math.round(usedPercent + projection.drainRatePerHour * hoursUntilReset)),
+      );
+      return { text: `${projectedPercent}% at reset`, kind: "good" };
+    }
+
+    if (format === "time" && typeof projection.etaMs === "number" && typeof resetsAt === "number") {
+      const surplusMs = projection.etaMs - resetsAt;
+      if (surplusMs > 60_000) {
+        return { text: `+${formatEta(surplusMs, 0)} past reset`, kind: "good" };
+      }
+    }
+
+    return { text: "lasts to reset", kind: "good" };
+  }
+
+  if (projection.status === "projected_empty" && typeof projection.etaMs === "number") {
+    return { text: `empty in ${formatEta(projection.etaMs, now)}`, kind: "bad" };
+  }
+
+  return null;
+};
+
 const RING_METRIC_LABEL: Record<string, string> = {
   session: "5-hour session",
   weekly: "Weekly · all models",
@@ -197,6 +256,7 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
   const showBarLabel = settings.showBarLabel === true;
   const showWheel = settings.showWheel !== false;
   const showWheelLabel = settings.showWheelLabel === true;
+  const showPace = settings.showPace !== false;
 
   const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage);
   const barWidth = typeof barPercentage === "number" ? barPercentage : 0;
@@ -221,6 +281,33 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
     typeof sessionPercentage === "number" && typeof realUsageSnapshot?.sessionResetsAt === "number"
       ? computeSessionProjection(usageHistory ?? [], sessionPercentage, realUsageSnapshot.sessionResetsAt)
       : null;
+
+  const weeklyProjection =
+    typeof weeklyAllModelsPercentage === "number" &&
+    typeof realUsageSnapshot?.weeklyAllModelsResetsAt === "number"
+      ? computeWeeklyProjection(
+          usageHistory ?? [],
+          weeklyAllModelsPercentage,
+          realUsageSnapshot.weeklyAllModelsResetsAt,
+        )
+      : null;
+
+  const paceFormat: PaceSurplusFormat = settings.paceSurplusFormat ?? "percent";
+  const nowMs = Date.now();
+  const sessionPaceSummary = buildPaceSummary(
+    sessionProjection,
+    sessionPercentage ?? undefined,
+    realUsageSnapshot?.sessionResetsAt,
+    paceFormat,
+    nowMs,
+  );
+  const weeklyPaceSummary = buildPaceSummary(
+    weeklyProjection,
+    weeklyAllModelsPercentage,
+    realUsageSnapshot?.weeklyAllModelsResetsAt,
+    paceFormat,
+    nowMs,
+  );
 
   const ringTooltip = (() => {
     if (ringTarget === "hidden") return null;
@@ -266,22 +353,43 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
                 →
               </a>
             </span>
-            <span className="cub-usage-row">
-              <span>5-hour limit</span>
-              <span>
-                {typeof sessionPercentage === "number" ? `${sessionPercentage}%` : "Usage unavailable"}
-                {realUsageSnapshot?.resetText ? ` · ${realUsageSnapshot.resetText}` : " · reset unknown"}
+            <span className="cub-usage-row cub-usage-row--stacked">
+              <span className="cub-usage-row-label">
+                <span className="cub-usage-row-title">5-hour limit</span>
+                <span className="cub-usage-row-sub">
+                  {realUsageSnapshot?.resetText ?? "reset unknown"}
+                </span>
+              </span>
+              <span className="cub-usage-row-value">
+                <span className="cub-usage-row-pct">
+                  {typeof sessionPercentage === "number" ? `${sessionPercentage}%` : "—"}
+                </span>
+                {showPace && sessionPaceSummary && (
+                  <span className="cub-usage-row-pace" data-kind={sessionPaceSummary.kind}>
+                    {sessionPaceSummary.text}
+                  </span>
+                )}
               </span>
             </span>
             <span className="cub-usage-track">
               <span style={{ width: `${sessionPercentage ?? 0}%` }} />
             </span>
-            <span className="cub-usage-row">
-              <span>Weekly · all models</span>
-              <span>
-                {typeof weeklyAllModelsPercentage === "number"
-                  ? `${weeklyAllModelsPercentage}%${weeklyAllModelsResetText ? ` · ${weeklyAllModelsResetText}` : ""}`
-                  : "—"}
+            <span className="cub-usage-row cub-usage-row--stacked">
+              <span className="cub-usage-row-label">
+                <span className="cub-usage-row-title">Weekly · all models</span>
+                <span className="cub-usage-row-sub">{weeklyAllModelsResetText ?? "—"}</span>
+              </span>
+              <span className="cub-usage-row-value">
+                <span className="cub-usage-row-pct">
+                  {typeof weeklyAllModelsPercentage === "number"
+                    ? `${weeklyAllModelsPercentage}%`
+                    : "—"}
+                </span>
+                {showPace && weeklyPaceSummary && (
+                  <span className="cub-usage-row-pace" data-kind={weeklyPaceSummary.kind}>
+                    {weeklyPaceSummary.text}
+                  </span>
+                )}
               </span>
             </span>
             <span className="cub-usage-track">
@@ -332,55 +440,6 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
           </span>
         </span>
       )}
-      {sessionProjection && sessionProjection.status !== "insufficient_data" && (() => {
-        const now = Date.now();
-
-        if (sessionProjection.status === "projected_empty" && typeof sessionProjection.etaMs === "number") {
-          const eta = formatEta(sessionProjection.etaMs, now);
-          return (
-            <span className="cub-pace" aria-label={eta}>
-              <span className="cub-pace-label">{eta}</span>
-              <span className="cub-pace-tooltip" role="tooltip">
-                <span>Projected empty at current pace</span>
-                <span>{sessionProjection.label}</span>
-              </span>
-            </span>
-          );
-        }
-
-        if (sessionProjection.status === "lasting_to_reset") {
-          let overResetLabel: string | null = null;
-          if (
-            typeof sessionProjection.drainRatePerHour === "number" &&
-            sessionProjection.drainRatePerHour > 0 &&
-            typeof sessionPercentage === "number" &&
-            typeof realUsageSnapshot?.sessionResetsAt === "number"
-          ) {
-            const remainingPercent = 100 - sessionPercentage;
-            const etaHours = remainingPercent / sessionProjection.drainRatePerHour;
-            const timeUntilResetHours = Math.max(0, realUsageSnapshot.sessionResetsAt - now) / 3_600_000;
-            const surplusHours = etaHours - timeUntilResetHours;
-            if (surplusHours > 0) {
-              overResetLabel = formatEta(now + surplusHours * 3_600_000, now);
-            }
-          }
-          return (
-            <span className="cub-pace" aria-label="lasts">
-              <span className="cub-pace-label">lasts</span>
-              <span className="cub-pace-tooltip" role="tooltip">
-                <span>Usage at current pace</span>
-                {overResetLabel ? (
-                  <span>You will last {overResetLabel} over your reset</span>
-                ) : (
-                  <span>Lasts until reset</span>
-                )}
-              </span>
-            </span>
-          );
-        }
-
-        return null;
-      })()}
     </aside>
   );
 };

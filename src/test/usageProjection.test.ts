@@ -141,7 +141,9 @@ describe("computeSessionProjection — weighted rate path", () => {
     ];
     const result = computeSessionProjection(entries, 14, resetAt, now);
     expect(result.status).toBe("lasting_to_reset");
-    expect(result.label).toBe("Lasts until reset");
+    expect(result.label).toMatch(/^Lasts /);
+    expect(result.etaMs).toBeDefined();
+    expect(result.etaMs!).toBeGreaterThan(resetAt);
   });
 
   it("does not use entries from a different reset cycle", () => {

@@ -2,6 +2,7 @@ export type OverlayMode = "compact" | "expanded";
 export type UsageSource = "estimated" | "real";
 export type MetricTarget = "session" | "weekly" | "context" | "design";
 export type RingTarget = MetricTarget | "hidden";
+export type PaceSurplusFormat = "percent" | "time";
 
 export interface Settings {
   showOverlay: boolean;
@@ -12,6 +13,8 @@ export interface Settings {
   showBarLabel: boolean;
   showWheel: boolean;
   showWheelLabel: boolean;
+  showPace: boolean;
+  paceSurplusFormat: PaceSurplusFormat;
 }
 
 export interface DailyUsage {

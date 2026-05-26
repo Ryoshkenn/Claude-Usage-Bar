@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
-import type { MetricTarget, RingTarget, Settings } from "../shared/types";
+import type { MetricTarget, PaceSurplusFormat, RingTarget, Settings } from "../shared/types";
 
 const SETTINGS_PATH = "/settings/usage-bar";
 
@@ -333,6 +333,11 @@ const METRIC_OPTIONS: { value: MetricTarget; label: string }[] = [
 
 const RING_OPTIONS: { value: RingTarget; label: string }[] = [...METRIC_OPTIONS];
 
+const PACE_SURPLUS_OPTIONS: { value: PaceSurplusFormat; label: string }[] = [
+  { value: "percent", label: "Percentage at reset" },
+  { value: "time", label: "Time past reset" },
+];
+
 // ── SettingsPage ─────────────────────────────────────────────────────────────
 
 const SettingsPage = () => {
@@ -431,6 +436,32 @@ const SettingsPage = () => {
             id={id("wheel-label")}
             checked={settings.showWheelLabel}
             onChange={(v) => update({ showWheelLabel: v })}
+          />
+        </Row>
+      </Section>
+
+      <Section title="Pace">
+        <Row
+          labelId={id("show-pace")}
+          label="Show pace"
+          description="Show the pace estimate next to the usage bar when enough recent session data is available."
+        >
+          <Switch
+            id={id("show-pace")}
+            checked={settings.showPace}
+            onChange={(v) => update({ showPace: v })}
+          />
+        </Row>
+        <Row
+          labelId={id("pace-surplus")}
+          label="Pace format past reset"
+          description="When your usage lasts longer than the reset window, show the percentage you'll be at when reset hits, or the extra time you'll have past reset."
+        >
+          <CdsSelect
+            id={id("pace-surplus")}
+            value={settings.paceSurplusFormat}
+            options={PACE_SURPLUS_OPTIONS}
+            onChange={(v) => update({ paceSurplusFormat: v as PaceSurplusFormat })}
           />
         </Row>
       </Section>

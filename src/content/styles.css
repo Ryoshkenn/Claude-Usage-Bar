@@ -64,12 +64,13 @@
 }
 
 .cub-bar-label {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1;
-  color: rgb(165 164 156);
+  color: rgb(195 194 184);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  pointer-events: none;
+  letter-spacing: 0.01em;
+  pointer-events: auto;
+  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -84,12 +85,13 @@
 }
 
 .cub-wheel-label {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1;
-  color: rgb(165 164 156);
+  color: rgb(195 194 184);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  pointer-events: none;
+  letter-spacing: 0.01em;
+  pointer-events: auto;
+  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -137,56 +139,6 @@
   }
 }
 
-/* ── Pace badge ───────────────────────────────────────────── */
-
-.cub-pace {
-  position: relative;
-  cursor: default;
-  pointer-events: auto;
-  line-height: 1;
-}
-
-.cub-pace-label {
-  display: block;
-  font-size: 14px;
-  color: rgb(120 118 112);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
-}
-
-.cub-pace-tooltip {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + 10px);
-  z-index: 2147483647;
-  display: grid;
-  gap: 6px;
-  padding: 10px 14px 12px;
-  border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 8px;
-  background: rgb(44 44 43);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
-  color: rgb(245 245 241);
-  font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  opacity: 0;
-  pointer-events: none;
-  text-align: left;
-  transform: translateY(3px);
-  transition: opacity 120ms ease, transform 120ms ease;
-  white-space: nowrap;
-}
-
-.cub-pace-tooltip span:first-child {
-  color: rgb(165 164 156);
-}
-
-.cub-pace:hover .cub-pace-tooltip {
-  opacity: 1;
-  transform: none;
-  transition-delay: 250ms;
-}
-
 /* ── Tooltips (shared) ────────────────────────────────────── */
 
 .cub-usage-tooltip,
@@ -214,15 +166,13 @@
   white-space: nowrap;
 }
 
-/* Bar tooltip – left-aligned, shifted slightly left so the rounded corner
-   lines up with the start of the bar rather than floating mid-air */
 .cub-usage-tooltip {
-  left: -8px;
+  left: 50%;
   gap: 5px;
   min-width: 330px;
   padding: 10px 12px 12px;
-  text-align: left;
-  transform: translateY(3px);
+  text-align: center;
+  transform: translateX(-50%) translateY(3px);
 }
 
 /* ── Tooltip internals ────────────────────────────────────── */
@@ -254,8 +204,66 @@
   font-size: 14px;
 }
 
-.cub-usage-row span:last-child {
+.cub-usage-row:not(.cub-usage-row--stacked) > span:last-child {
   color: rgb(165 164 156);
+}
+
+/* ── Stacked row variant (used inside plan usage popup) ─────────────────── */
+
+.cub-usage-row--stacked {
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.cub-usage-row-label,
+.cub-usage-row-value {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.cub-usage-row-label {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cub-usage-row-value {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.cub-usage-row-title {
+  color: rgb(225 225 219);
+  font-size: 14px;
+}
+
+.cub-usage-row-sub {
+  color: rgb(140 138 130);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.cub-usage-row-pct {
+  color: rgb(225 225 219);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cub-usage-row-pace {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.cub-usage-row-pace[data-kind="good"] {
+  color: rgb(125 184 121);
+}
+
+.cub-usage-row-pace[data-kind="bad"] {
+  color: rgb(217 119 87);
 }
 
 .cub-usage-track {
@@ -278,14 +286,16 @@
 
 /* ── Hover triggers – delay on show, instant on hide ─────── */
 
+.cub-bar-cell:hover .cub-usage-tooltip,
 .cub-meter:hover .cub-usage-tooltip,
 .cub-meter:focus-visible .cub-usage-tooltip {
   opacity: 1;
   pointer-events: auto;
-  transform: none;
+  transform: translateX(-50%) translateY(0);
   transition-delay: 250ms;
 }
 
+.cub-wheel-wrap:hover .cub-token-tooltip,
 .cub-token-ring:hover .cub-token-tooltip,
 .cub-token-ring:focus-visible .cub-token-tooltip {
   opacity: 1;
@@ -303,10 +313,6 @@
   .cub-root {
     width: max-content;
     gap: 14px;
-  }
-
-  .cub-pace {
-    display: none;
   }
 }
 
@@ -431,8 +437,25 @@
   color: rgb(55 53 50);
 }
 
-#claude-usage-bar-root.cub-theme-light .cub-usage-row span:last-child {
+#claude-usage-bar-root.cub-theme-light .cub-usage-row:not(.cub-usage-row--stacked) > span:last-child {
   color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row-title,
+#claude-usage-bar-root.cub-theme-light .cub-usage-row-pct {
+  color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row-sub {
+  color: rgb(130 128 122);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row-pace[data-kind="good"] {
+  color: rgb(76 138 73);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row-pace[data-kind="bad"] {
+  color: rgb(180 90 60);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-track {
@@ -443,19 +466,9 @@
   color: rgb(120 118 112);
 }
 
-#claude-usage-bar-root.cub-theme-light .cub-pace-label {
-  color: rgb(140 138 132);
-}
-
-#claude-usage-bar-root.cub-theme-light .cub-pace-tooltip {
-  background: rgb(255 255 255);
-  border: 1px solid rgb(0 0 0 / 10%);
-  color: rgb(40 40 38);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
-}
-
-#claude-usage-bar-root.cub-theme-light .cub-pace-tooltip span:first-child {
-  color: rgb(120 118 112);
+#claude-usage-bar-root.cub-theme-light .cub-bar-label,
+#claude-usage-bar-root.cub-theme-light .cub-wheel-label {
+  color: rgb(195 194 184);
 }
 
 /* ── Message rail (right-side user message navigator) ───────────────────── */
