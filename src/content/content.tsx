@@ -183,9 +183,7 @@ const ensureTourHost = () => {
 const renderTour = () => {
   if (!storageState || !isActiveInstance()) return;
   ensureTourHost();
-  // Only show tour on chat pages (where the overlay elements are mounted)
-  const overlayPresent = !!document.querySelector(".cub-meter");
-  const showTour = storageState.settings.hasSeenTour === false && overlayPresent;
+  const showTour = storageState.settings.hasSeenTour === false;
   tourRoot?.render(
     <React.StrictMode>
       {showTour ? (

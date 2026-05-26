@@ -383,7 +383,12 @@ const SettingsPage = () => {
           label="Feature tour"
           description="Walk through the extension features step by step."
         >
-          <CdsButton onClick={() => void updateSettings({ hasSeenTour: false })}>
+          <CdsButton
+            onClick={() => {
+              void updateSettings({ hasSeenTour: false });
+              history.pushState(null, "", "/new");
+            }}
+          >
             Replay Tour
           </CdsButton>
         </Row>
