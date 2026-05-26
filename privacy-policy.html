@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - Claude Usage Bar</title>
+  <style>
+    body {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #111827;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2 {
+      line-height: 1.25;
+    }
+
+    code {
+      padding: 2px 4px;
+      border-radius: 4px;
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy for Claude Usage Bar</h1>
+
+  <p><strong>Last updated:</strong> May 26, 2026</p>
+
+  <p>
+    Claude Usage Bar is a Chrome extension that displays usage, quota, reset,
+    context, and pace information while using Claude at <code>https://claude.ai</code>.
+    Claude Usage Bar is not affiliated with Anthropic.
+  </p>
+
+  <h2>Information the extension accesses</h2>
+
+  <p>
+    Claude Usage Bar runs only on <code>https://claude.ai/*</code>. To provide its
+    usage display features, the extension may access:
+  </p>
+
+  <ul>
+    <li>Visible Claude page content, including conversation text shown in the active Claude page.</li>
+    <li>Claude usage information, such as usage percentages, reset times, message counts, and quota information.</li>
+    <li>Claude conversation metadata used to estimate context window usage, token usage, cache timing, and usage history.</li>
+    <li>Extension settings, such as display preferences for the usage bar, context ring, pace display, and overlay visibility.</li>
+  </ul>
+
+  <h2>Claude account session</h2>
+
+  <p>
+    The extension may send requests directly to <code>https://claude.ai</code> using
+    your existing logged-in Claude browser session. These requests are used only to
+    retrieve usage and conversation-context information needed for the extension's
+    user-facing features.
+  </p>
+
+  <p>
+    Claude Usage Bar does not read, store, copy, sell, or share your Claude cookies,
+    passwords, authorization headers, or authentication tokens. Authentication is
+    handled by the browser and Claude's own website.
+  </p>
+
+  <h2>Information processed locally</h2>
+
+  <p>
+    Claude Usage Bar may read visible Claude conversation content in your browser to
+    estimate token and context usage. This processing happens locally in the extension.
+    The extension is designed not to store the full text of your Claude messages,
+    prompts, responses, uploaded file contents, cookies, authorization headers, or
+    tokens.
+  </p>
+
+  <h2>Information stored locally</h2>
+
+  <p>
+    Claude Usage Bar stores limited information locally using Chrome extension storage
+    (<code>chrome.storage.local</code>). This may include:
+  </p>
+
+  <ul>
+    <li>Usage estimates and sanitized usage snapshots.</li>
+    <li>Message counts and token/context estimates.</li>
+    <li>Usage history used to display trends or pace information.</li>
+    <li>Your Claude organization ID, used to avoid repeated lookup requests.</li>
+    <li>Extension display settings and preferences.</li>
+  </ul>
+
+  <h2>Information transmitted externally</h2>
+
+  <p>
+    Claude Usage Bar does not send your data to the developer's servers. The extension
+    does not use third-party analytics, advertising, telemetry, or tracking services.
+  </p>
+
+  <p>
+    The only external requests made by the extension are requests to
+    <code>https://claude.ai</code>, used to provide usage-related features inside
+    Claude. These requests are sent directly to Claude/Anthropic and are subject to
+    Anthropic's own privacy practices.
+  </p>
+
+  <h2>How information is used</h2>
+
+  <p>
+    Information accessed by the extension is used only to provide Claude Usage Bar's
+    user-facing features, including usage percentages, reset timing, context estimates,
+    cache timing, and local usage history.
+  </p>
+
+  <p>
+    The extension does not use user data for advertising, profiling, resale, unrelated
+    analytics, or any purpose unrelated to the extension's single purpose.
+  </p>
+
+  <h2>Data sharing and sale</h2>
+
+  <p>
+    Claude Usage Bar does not sell, rent, trade, or share user data with third parties.
+    The developer does not operate a backend server that receives user data from the
+    extension.
+  </p>
+
+  <h2>Limited Use disclosure</h2>
+
+  <p>
+    Claude Usage Bar's use of information received from Chrome extension permissions is
+    limited to providing its single user-facing purpose: displaying Claude usage
+    information inside Claude. The extension does not transfer user data except as
+    necessary to provide that purpose, does not use user data for advertising, and does
+    not allow humans to read user data.
+  </p>
+
+  <h2>User control and deletion</h2>
+
+  <p>
+    You can remove locally stored extension data by uninstalling the extension or
+    clearing the extension's stored data in Chrome. You can also disable the extension
+    at any time from Chrome's extension settings.
+  </p>
+
+  <h2>Security</h2>
+
+  <p>
+    Requests made by the extension are sent over HTTPS. Locally stored data remains in
+    Chrome's extension storage on your device.
+  </p>
+
+  <h2>Changes to this policy</h2>
+
+  <p>
+    This policy may be updated if the extension's behavior changes. Updates will be
+    posted on this page with a revised "Last updated" date.
+  </p>
+
+  <h2>Contact</h2>
+
+  <p>
+    For questions about this privacy policy, contact the developer through the project
+    repository at
+    <a href="https://github.com/Ryoshkenn/Claude-Usage-Bar/issues">https://github.com/Ryoshkenn/Claude-Usage-Bar/issues</a>.
+  </p>
+</body>
+</html>
