@@ -1,5 +1,5 @@
 import { STORAGE_KEYS } from "./constants";
-import type { ChatUsage, DailyUsage, RealUsageSnapshot, Settings, StorageShape } from "./types";
+import type { ChatUsage, DailyUsage, RealUsageSnapshot, Settings, StorageShape, UsageLogEntry } from "./types";
 
 export interface StorageAdapter {
   get(keys?: string[] | string | Record<string, unknown> | null): Promise<Record<string, unknown>>;
@@ -10,6 +10,12 @@ export interface StorageAdapter {
 export const DEFAULT_SETTINGS: Settings = {
   showOverlay: true,
   mode: "compact",
+  barMetric: "session",
+  ringTarget: "context",
+  showBar: true,
+  showBarLabel: false,
+  showWheel: true,
+  showWheelLabel: false,
 };
 
 const today = () => new Date().toLocaleDateString("en-CA");
@@ -25,6 +31,7 @@ export const defaultChatUsage = (): ChatUsage => ({
   estimatedTokens: 0,
   visibleMessageCount: 0,
   updatedAt: Date.now(),
+  isRefreshingContext: false,
 });
 
 export const chromeStorageAdapter: StorageAdapter = {
@@ -73,6 +80,7 @@ export const getStorage = async (adapter: StorageAdapter = chromeStorageAdapter)
     STORAGE_KEYS.dailyUsage,
     STORAGE_KEYS.chatUsage,
     STORAGE_KEYS.realUsageSnapshot,
+    STORAGE_KEYS.usageHistory,
   ]);
 
   return {
@@ -80,6 +88,7 @@ export const getStorage = async (adapter: StorageAdapter = chromeStorageAdapter)
     dailyUsage: (data.dailyUsage as DailyUsage | undefined) ?? defaultDailyUsage(),
     chatUsage: (data.chatUsage as ChatUsage | undefined) ?? defaultChatUsage(),
     realUsageSnapshot: data.realUsageSnapshot as RealUsageSnapshot | undefined,
+    usageHistory: Array.isArray(data.usageHistory) ? (data.usageHistory as UsageLogEntry[]) : undefined,
   };
 };
 
@@ -123,4 +132,33 @@ export const resetUsage = async (adapter: StorageAdapter = chromeStorageAdapter)
     [STORAGE_KEYS.chatUsage]: defaultChatUsage(),
   });
   await adapter.remove(STORAGE_KEYS.realUsageSnapshot);
+};
+
+const HISTORY_CAP = 100;
+
+export const getUsageHistory = async (adapter: StorageAdapter = chromeStorageAdapter): Promise<UsageLogEntry[]> => {
+  const data = await adapter.get(STORAGE_KEYS.usageHistory);
+  const raw = data[STORAGE_KEYS.usageHistory];
+  return Array.isArray(raw) ? (raw as UsageLogEntry[]) : [];
+};
+
+export const saveUsageHistory = async (
+  history: UsageLogEntry[],
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<void> => {
+  await adapter.set({ [STORAGE_KEYS.usageHistory]: history });
+};
+
+export const appendUsageHistoryEntry = async (
+  entry: UsageLogEntry,
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<void> => {
+  const history = await getUsageHistory(adapter);
+  const last = history[history.length - 1];
+  if (last && last.capturedAt === entry.capturedAt) {
+    return;
+  }
+  history.push(entry);
+  const trimmed = history.length > HISTORY_CAP ? history.slice(history.length - HISTORY_CAP) : history;
+  await saveUsageHistory(trimmed, adapter);
 };

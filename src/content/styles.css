@@ -3,22 +3,22 @@
 }
 
 #claude-usage-bar-root {
-  flex: 0 1 210px;
-  min-width: 120px;
+  --cub-bar-width: 172px;
+  flex: 0 0 auto;
   margin-left: 12px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   color-scheme: light dark;
+  overflow: visible;
 }
 
 .cub-root {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: var(--cub-bar-width) auto auto;
   align-items: center;
   gap: 16px;
-  width: min(100%, 204px);
-  min-width: 184px;
+  width: max-content;
   box-sizing: border-box;
   color: rgb(195 194 184);
   font: 14px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -33,6 +33,7 @@
   background: rgb(31 31 30);
   cursor: pointer;
   position: relative;
+  flex: 1 1 auto;
 }
 
 /* Invisible hover-bridge above the bar so the tooltip doesn't flicker */
@@ -52,6 +53,47 @@
   background: rgb(204 124 94);
 }
 
+/* ── Bar cell (bar + optional inline label) ───────────────── */
+
+.cub-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: var(--cub-bar-width);
+  min-width: var(--cub-bar-width);
+}
+
+.cub-bar-label {
+  font-size: 10px;
+  line-height: 1;
+  color: rgb(165 164 156);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Wheel wrap (optional label + ring, inline) ───────────── */
+
+.cub-wheel-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.cub-wheel-label {
+  font-size: 10px;
+  line-height: 1;
+  color: rgb(165 164 156);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* ── Ring ─────────────────────────────────────────────────── */
 
 .cub-token-ring {
@@ -65,6 +107,17 @@
   pointer-events: auto;
 }
 
+.cub-token-ring[data-loading="true"] {
+  background:
+    conic-gradient(
+      from 0deg,
+      rgb(204 124 94) 0deg 36deg,
+      rgb(88 87 82) 36deg 140deg,
+      rgb(31 31 30) 140deg 360deg
+    );
+  animation: cub-spinner-rotate 900ms linear infinite;
+}
+
 /* Centre hole – must approximate the Claude toolbar background */
 .cub-token-ring::after {
   content: "";
@@ -72,6 +125,66 @@
   inset: 4px;
   border-radius: inherit;
   background: rgb(38 38 36);
+}
+
+@keyframes cub-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Pace badge ───────────────────────────────────────────── */
+
+.cub-pace {
+  position: relative;
+  cursor: default;
+  pointer-events: auto;
+  line-height: 1;
+}
+
+.cub-pace-label {
+  display: block;
+  font-size: 14px;
+  color: rgb(120 118 112);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.cub-pace-tooltip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  z-index: 2147483647;
+  display: grid;
+  gap: 6px;
+  padding: 10px 14px 12px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 8px;
+  background: rgb(44 44 43);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
+  color: rgb(245 245 241);
+  font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translateY(3px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  white-space: nowrap;
+}
+
+.cub-pace-tooltip span:first-child {
+  color: rgb(165 164 156);
+}
+
+.cub-pace:hover .cub-pace-tooltip {
+  opacity: 1;
+  transform: none;
+  transition-delay: 250ms;
 }
 
 /* ── Tooltips (shared) ────────────────────────────────────── */
@@ -184,13 +297,16 @@
 
 @media (max-width: 760px) {
   #claude-usage-bar-root {
-    min-width: 80px;
+    --cub-bar-width: 172px;
   }
 
   .cub-root {
-    width: min(100%, 118px);
-    min-width: 104px;
+    width: max-content;
     gap: 14px;
+  }
+
+  .cub-pace {
+    display: none;
   }
 }
 
@@ -219,6 +335,11 @@
 .cub-cache-timer[data-expired="true"] {
   color: rgb(120 118 112);
   opacity: 0.6;
+}
+
+.cub-cache-timer[data-unknown="true"] {
+  color: rgb(120 118 112);
+  opacity: 0.75;
 }
 
 .cub-cache-timer[data-warning="true"] {
@@ -320,4 +441,93 @@
 
 #claude-usage-bar-root.cub-theme-light .cub-token-tooltip span:first-child {
   color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-pace-label {
+  color: rgb(140 138 132);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-pace-tooltip {
+  background: rgb(255 255 255);
+  border: 1px solid rgb(0 0 0 / 10%);
+  color: rgb(40 40 38);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-pace-tooltip span:first-child {
+  color: rgb(120 118 112);
+}
+
+/* ── Message rail (right-side user message navigator) ───────────────────── */
+
+#claude-user-message-rail {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2147483646;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  pointer-events: none;
+}
+
+/* Button is the hit area; the visible dash lives in ::before */
+.cub-message-rail-marker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 36px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.78;
+  transition: opacity 0.16s;
+  pointer-events: auto;
+}
+
+.cub-message-rail-marker::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(195, 194, 184, 0.72);
+  transition: width 160ms ease, height 160ms ease, background 160ms ease;
+}
+
+.cub-message-rail-marker:hover {
+  opacity: 1;
+}
+
+.cub-message-rail-marker:hover::before {
+  width: 26px;
+}
+
+.cub-message-rail-marker--active {
+  opacity: 1;
+}
+
+.cub-message-rail-marker--active::before {
+  width: 34px;
+  height: 4px;
+  background: rgb(255, 255, 255);
+}
+
+.cub-message-rail--light .cub-message-rail-marker::before {
+  background: rgba(100, 98, 92, 0.55);
+}
+
+.cub-message-rail--light .cub-message-rail-marker--active::before {
+  background: rgb(40, 40, 38);
+}
+
+/* ── Settings page (injected into claude.ai/settings/usage-bar) ──────────── */
+
+#cub-settings-panel {
+  /* Fills the same space as Claude's .flex.flex-col sections container */
+  width: 100%;
 }

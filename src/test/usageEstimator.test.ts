@@ -20,15 +20,15 @@ describe("estimateTokensFromText", () => {
   it("rounds short text up", () => {
     expect(estimateTokensFromText("abc")).toBe(1);
     expect(estimateTokensFromText("abcd")).toBe(1);
-    expect(estimateTokensFromText("abcde")).toBe(1);
+    expect(estimateTokensFromText("abcde")).toBe(2);
   });
 
   it("handles long text", () => {
-    expect(estimateTokensFromText("a".repeat(401))).toBe(26);
+    expect(estimateTokensFromText("a".repeat(401))).toBe(101);
   });
 
-  it("tokenizes visible text with the Claude tokenizer", () => {
-    expect(estimateTokensFromText("hello      world")).toBe(2);
+  it("uses the lightweight fallback heuristic for visible text", () => {
+    expect(estimateTokensFromText("hello      world")).toBe(3);
   });
 });
 
@@ -42,7 +42,7 @@ describe("applyConservativeTokenBias", () => {
 
 describe("estimateCumulativeContextTokens", () => {
   it("adds each message to the running context before accumulating total usage", () => {
-    expect(estimateCumulativeContextTokens(["hello world", "hello world"])).toBe(6);
+    expect(estimateCumulativeContextTokens(["hello world", "hello world"])).toBe(9);
   });
 
   it("uses ordered user and assistant transcript parts", () => {
@@ -207,10 +207,13 @@ describe("Claude usage API helpers", () => {
       capturedAt: new Date("2026-05-03T05:00:00.000Z").getTime(),
       percentageUsed: 4,
       resetText: "resets 3h",
+      sessionResetsAt: new Date("2026-05-03T08:00:00.000Z").getTime(),
       weeklyAllModelsPercentageUsed: 60,
       weeklyAllModelsResetText: "resets 19h",
+      weeklyAllModelsResetsAt: new Date("2026-05-04T00:00:00.000Z").getTime(),
       claudeDesignPercentageUsed: 9,
       claudeDesignResetText: "resets 19h",
+      claudeDesignResetsAt: new Date("2026-05-04T00:00:00.000Z").getTime(),
       routinesText: "0 / 5",
     });
   });

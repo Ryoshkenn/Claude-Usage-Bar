@@ -6,6 +6,7 @@ export const STORAGE_KEYS = {
   chatUsage: "chatUsage",
   realUsageSnapshot: "realUsageSnapshot",
   organizationId: "organizationId",
+  usageHistory: "usageHistory",
 } as const;
 
 export const MESSAGE_TYPES = {

@@ -1,9 +1,17 @@
 import type { ChatUsage, DailyUsage } from "../shared/types";
-import { countClaudeTokens } from "../shared/claudeTokenizer";
 import { applyConservativeTokenBias } from "../shared/tokenBias";
 
+const ESTIMATED_CHARACTERS_PER_TOKEN = 4;
+
+const normalizeVisibleText = (text: string): string => text.replace(/\s+/g, " ").trim();
+
 export const estimateTokensFromText = (text: string): number => {
-  return countClaudeTokens(text);
+  const normalized = normalizeVisibleText(text);
+  if (!normalized) {
+    return 0;
+  }
+
+  return Math.ceil(normalized.length / ESTIMATED_CHARACTERS_PER_TOKEN);
 };
 
 export const estimateCumulativeContextTokens = (messageTexts: string[]): number => {
@@ -48,7 +56,9 @@ export const rollDailyUsageForward = (
 
 export const buildChatUsage = (messageTexts: string[], now = Date.now()): ChatUsage => ({
   estimatedTokens: applyConservativeTokenBias(estimateCumulativeContextTokens(messageTexts)),
+  currentContextTokens: applyConservativeTokenBias(messageTexts.reduce((total, messageText) => total + estimateTokensFromText(messageText), 0)),
   visibleMessageCount: messageTexts.length,
   updatedAt: now,
   source: "dom",
+  isRefreshingContext: false,
 });

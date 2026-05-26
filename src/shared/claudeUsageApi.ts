@@ -43,7 +43,15 @@ const parseResetText = (value: unknown, now: number): string | undefined => {
   return Number.isFinite(timestamp) ? formatTimeUntil(timestamp, now) : undefined;
 };
 
-const parseLimitObject = (value: unknown, now: number): { percentage?: number; resetText?: string } | null => {
+const parseResetAtMs = (value: unknown): number | undefined => {
+  if (typeof value !== "string" && typeof value !== "number") {
+    return undefined;
+  }
+  const ts = typeof value === "number" ? value : new Date(value).getTime();
+  return Number.isFinite(ts) && ts > 0 ? ts : undefined;
+};
+
+const parseLimitObject = (value: unknown, now: number): { percentage?: number; resetText?: string; resetAtMs?: number } | null => {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
   }
@@ -61,6 +69,7 @@ const parseLimitObject = (value: unknown, now: number): { percentage?: number; r
   return {
     percentage: typeof utilization === "number" ? normalizePercentage(utilization) : undefined,
     resetText: parseResetText(reset, now),
+    resetAtMs: parseResetAtMs(reset),
   };
 };
 
@@ -73,6 +82,7 @@ const applyLimit = (
     "percentageUsed" | "weeklyAllModelsPercentageUsed" | "claudeDesignPercentageUsed"
   >,
   resetKey?: keyof Pick<UsageMetadata, "resetText" | "weeklyAllModelsResetText" | "claudeDesignResetText">,
+  resetAtMsKey?: keyof Pick<UsageMetadata, "sessionResetsAt" | "weeklyAllModelsResetsAt" | "claudeDesignResetsAt">,
 ) => {
   const limit = parseLimitObject(value, now);
   if (!limit) {
@@ -86,6 +96,10 @@ const applyLimit = (
   if (resetKey && limit.resetText) {
     output[resetKey] = limit.resetText as never;
   }
+
+  if (resetAtMsKey && typeof limit.resetAtMs === "number") {
+    output[resetAtMsKey] = limit.resetAtMs as never;
+  }
 };
 
 const normalizeKnownClaudeUsageSchema = (payload: unknown, now: number): UsageMetadata => {
@@ -96,13 +110,13 @@ const normalizeKnownClaudeUsageSchema = (payload: unknown, now: number): UsageMe
   const object = payload as JsonObject;
   const output: UsageMetadata = {};
 
-  applyLimit(output, object.five_hour, now, "percentageUsed", "resetText");
-  applyLimit(output, object.seven_day, now, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText");
-  applyLimit(output, object.seven_day_omelette, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
-  applyLimit(output, object.seven_day_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
-  applyLimit(output, object.weekly_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
-  applyLimit(output, object.claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
-  applyLimit(output, object.design, now, "claudeDesignPercentageUsed", "claudeDesignResetText");
+  applyLimit(output, object.five_hour, now, "percentageUsed", "resetText", "sessionResetsAt");
+  applyLimit(output, object.seven_day, now, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
+  applyLimit(output, object.seven_day_omelette, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
+  applyLimit(output, object.seven_day_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
+  applyLimit(output, object.weekly_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
+  applyLimit(output, object.claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
+  applyLimit(output, object.design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
 
   const routines = object.routines ?? object.routine_usage ?? object.routineUsage;
   if (routines && typeof routines === "object" && !Array.isArray(routines)) {

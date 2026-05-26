@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { MESSAGE_TYPES } from "../shared/constants";
-import {
-  DEFAULT_SETTINGS,
-  getStorage,
-  resetUsage,
-  updateSettings,
-} from "../shared/storage";
+import { getStorage, resetUsage } from "../shared/storage";
 import type { ApiUsageResponse, StorageShape } from "../shared/types";
 
 const formatPercentage = (value?: number): string => (typeof value === "number" ? `${value}%` : "—");
@@ -14,7 +9,6 @@ export const Popup = () => {
   const [state, setState] = useState<StorageShape | null>(null);
   const [apiStatus, setApiStatus] = useState<"idle" | "loading" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
-  const settings = state?.settings ?? DEFAULT_SETTINGS;
 
   const refreshApiUsage = (force = false) => {
     setApiStatus("loading");
@@ -62,16 +56,6 @@ export const Popup = () => {
     return () => chrome.storage.onChanged.removeListener(handleStorageChange);
   }, []);
 
-  const setShowOverlay = async (showOverlay: boolean) => {
-    const next = await updateSettings({ showOverlay });
-    setState((current) => (current ? { ...current, settings: next } : current));
-  };
-
-  const setMode = async (mode: "compact" | "expanded") => {
-    const next = await updateSettings({ mode });
-    setState((current) => (current ? { ...current, settings: next } : current));
-  };
-
   const resetLocalUsage = async () => {
     await resetUsage();
     setState(await getStorage());
@@ -95,7 +79,9 @@ export const Popup = () => {
         </div>
         <div>
           <span>Chat tokens</span>
-          <strong>{(state?.chatUsage.estimatedTokens ?? 0).toLocaleString()}</strong>
+          <strong>
+            {state?.chatUsage.isRefreshingContext ? "Loading..." : (state?.chatUsage.currentContextTokens ?? state?.chatUsage.estimatedTokens ?? 0).toLocaleString()}
+          </strong>
         </div>
         <div>
           <span>5-hour</span>
@@ -107,31 +93,14 @@ export const Popup = () => {
         </div>
       </section>
 
-      <label className="toggle">
-        <span>Show overlay</span>
-        <input
-          type="checkbox"
-          checked={settings.showOverlay}
-          onChange={(event) => void setShowOverlay(event.currentTarget.checked)}
-        />
-      </label>
-
-      <div className="mode-control" role="group" aria-label="Overlay mode">
-        <button
-          type="button"
-          className={settings.mode === "compact" ? "active" : ""}
-          onClick={() => void setMode("compact")}
-        >
-          Compact
-        </button>
-        <button
-          type="button"
-          className={settings.mode === "expanded" ? "active" : ""}
-          onClick={() => void setMode("expanded")}
-        >
-          Expanded
-        </button>
-      </div>
+      <a
+        className="settings-link"
+        href="https://claude.ai/settings/usage-bar"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Customize overlay →
+      </a>
 
       <button type="button" className="reset" onClick={() => void resetLocalUsage()}>
         Reset local usage

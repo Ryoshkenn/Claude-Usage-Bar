@@ -1,10 +1,12 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import type { ChatUsage, RealUsageSnapshot, Settings } from "../shared/types";
+import type { ChatUsage, MetricTarget, RealUsageSnapshot, Settings, UsageLogEntry } from "../shared/types";
+import { computeSessionProjection, formatEta } from "../shared/usageProjection";
 
 interface ContentAppProps {
   settings: Settings;
   chatUsage: ChatUsage;
   realUsageSnapshot?: RealUsageSnapshot;
+  usageHistory?: UsageLogEntry[];
 }
 
 const TOKEN_CONTEXT_LIMIT = 200_000;
@@ -55,21 +57,78 @@ const formatCompactNumber = (value: number): string => {
 const getContextFillPercentage = (chatUsage: ChatUsage): number =>
   clampPercentage(((chatUsage.currentContextTokens ?? chatUsage.estimatedTokens) / TOKEN_CONTEXT_LIMIT) * 100);
 
+const getMetricPercentage = (
+  metric: MetricTarget,
+  realUsageSnapshot: RealUsageSnapshot | undefined,
+  chatUsage: ChatUsage,
+): number | null => {
+  switch (metric) {
+    case "session":
+      return getRealUsagePercentage(realUsageSnapshot);
+    case "weekly":
+      return typeof realUsageSnapshot?.weeklyAllModelsPercentageUsed === "number"
+        ? clampPercentage(realUsageSnapshot.weeklyAllModelsPercentageUsed)
+        : null;
+    case "context":
+      return getContextFillPercentage(chatUsage);
+    case "design":
+      return typeof realUsageSnapshot?.claudeDesignPercentageUsed === "number"
+        ? clampPercentage(realUsageSnapshot.claudeDesignPercentageUsed)
+        : null;
+  }
+};
+
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-export const CacheTimer = ({ streamingEndedAt }: { streamingEndedAt: number | null }) => {
+interface CacheTimerProps {
+  cacheExpiresAt?: number;
+  fallbackStartedAt?: number | null;
+}
+
+export const CacheTimer = ({ cacheExpiresAt, fallbackStartedAt = null }: CacheTimerProps) => {
   const [now, setNow] = useState(Date.now());
   const [hovered, setHovered] = useState(false);
+  const activeExpiresAt =
+    typeof cacheExpiresAt === "number"
+      ? cacheExpiresAt
+      : typeof fallbackStartedAt === "number"
+        ? fallbackStartedAt + CACHE_TTL_MS
+        : null;
 
   useEffect(() => {
-    if (streamingEndedAt === null) return;
+    if (activeExpiresAt === null) return;
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
-  }, [streamingEndedAt]);
+  }, [activeExpiresAt]);
 
-  if (streamingEndedAt === null) return null;
+  if (activeExpiresAt === null) {
+    return (
+      <span className="cub-cache-timer" data-unknown="true" role="status" aria-label="Prompt cache timing unavailable">
+        <span className="cub-cache-timer-trigger">
+          <svg
+            className="cub-cache-timer-icon"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 22h14" />
+            <path d="M5 2h14" />
+            <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
+            <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
+          </svg>
+          <span className="cub-cache-timer-text">cache unknown</span>
+        </span>
+      </span>
+    );
+  }
 
-  const remaining = Math.max(0, CACHE_TTL_MS - (now - streamingEndedAt));
+  const remaining = Math.max(0, activeExpiresAt - now);
   const expired = remaining === 0;
   const minutes = Math.floor(remaining / 60000);
   const seconds = Math.floor((remaining % 60000) / 1000);
@@ -120,98 +179,208 @@ export const CacheTimer = ({ streamingEndedAt }: { streamingEndedAt: number | nu
   );
 };
 
-export const ContentApp = ({ settings, chatUsage, realUsageSnapshot }: ContentAppProps) => {
+const RING_METRIC_LABEL: Record<string, string> = {
+  session: "5-hour session",
+  weekly: "Weekly · all models",
+  context: "Context window",
+  design: "Claude Design",
+};
+
+export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistory }: ContentAppProps) => {
   if (!settings.showOverlay) {
     return null;
   }
 
-  const percentage = getRealUsagePercentage(realUsageSnapshot);
-  const percentageDisplay = typeof percentage === "number" ? `${percentage}%` : "—";
-  const meterWidth = typeof percentage === "number" ? percentage : 0;
-  const contextFillPercentage = getContextFillPercentage(chatUsage);
+  const barMetric = settings.barMetric ?? "session";
+  const ringTarget = settings.ringTarget ?? "context";
+  const showBar = settings.showBar !== false;
+  const showBarLabel = settings.showBarLabel === true;
+  const showWheel = settings.showWheel !== false;
+  const showWheelLabel = settings.showWheelLabel === true;
+
+  const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage);
+  const barWidth = typeof barPercentage === "number" ? barPercentage : 0;
+  const barDisplay = typeof barPercentage === "number" ? `${barPercentage}%` : "—";
+
+  const ringPercentage =
+    ringTarget === "hidden" ? 0 : (getMetricPercentage(ringTarget, realUsageSnapshot, chatUsage) ?? 0);
+
+  const isRefreshingContext = Boolean(chatUsage.isRefreshingContext);
   const totalTokensUsed = chatUsage.estimatedTokens;
-  const contextLengthTokens = chatUsage.currentContextTokens;
+  const contextLengthTokens = chatUsage.currentContextTokens ?? chatUsage.estimatedTokens;
+  const contextFillPercentage = getContextFillPercentage(chatUsage);
+
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
   const claudeDesignPercentage = realUsageSnapshot?.claudeDesignPercentageUsed;
   const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
   const claudeDesignResetText = realUsageSnapshot?.claudeDesignResetText;
   const routinesText = realUsageSnapshot?.routinesText;
+  const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
 
-  return (
-    <aside className="cub-root" aria-label={`Claude usage ${percentageDisplay}`}>
-      <div className="cub-meter" aria-label={`5-hour usage ${percentageDisplay}`} role="button" tabIndex={0}>
-        <span
-          className="cub-meter-fill"
-          style={{
-            width: `${meterWidth}%`,
-          }}
-        />
-        <span className="cub-usage-tooltip" role="tooltip">
-          <span className="cub-usage-title">
-            <span>Plan usage</span>
-            <a className="cub-usage-link" href={USAGE_PAGE_URL} aria-label="Open Claude usage page">
-              →
-            </a>
-          </span>
-          <span className="cub-usage-row">
-            <span>5-hour limit</span>
-            <span>
-              {typeof percentage === "number" ? `${percentage}%` : "Usage unavailable"}
-              {realUsageSnapshot?.resetText ? ` · ${realUsageSnapshot.resetText}` : " · reset unknown"}
-            </span>
-          </span>
-          <span className="cub-usage-track">
-            <span style={{ width: `${meterWidth}%` }} />
-          </span>
-          <span className="cub-usage-row">
-            <span>Weekly · all models</span>
-            <span>
-              {typeof weeklyAllModelsPercentage === "number"
-                ? `${weeklyAllModelsPercentage}%${weeklyAllModelsResetText ? ` · ${weeklyAllModelsResetText}` : ""}`
-                : "—"}
-            </span>
-          </span>
-          <span className="cub-usage-track">
-            <span style={{ width: `${weeklyAllModelsPercentage ?? 0}%` }} />
-          </span>
-          <span className="cub-usage-row">
-            <span>Weekly · Claude Design</span>
-            <span>
-              {typeof claudeDesignPercentage === "number"
-                ? `${claudeDesignPercentage}%${claudeDesignResetText ? ` · ${claudeDesignResetText}` : ""}`
-                : "—"}
-            </span>
-          </span>
-          <span className="cub-usage-track">
-            <span style={{ width: `${claudeDesignPercentage ?? 0}%` }} />
-          </span>
-          <span className="cub-usage-row">
-            <span>Routines</span>
-            <span>{routinesText ?? "—"}</span>
-          </span>
-          <span className="cub-usage-track">
-            <span style={{ width: "0%" }} />
-          </span>
-        </span>
-      </div>
-      <span
-        className="cub-token-ring"
-        aria-label={`Context window ${contextFillPercentage}% full`}
-        style={{
-          "--cub-token-percentage": `${contextFillPercentage}%`,
-        } as CSSProperties}
-      >
-        <span className="cub-token-tooltip" role="tooltip">
+  const sessionProjection =
+    typeof sessionPercentage === "number" && typeof realUsageSnapshot?.sessionResetsAt === "number"
+      ? computeSessionProjection(usageHistory ?? [], sessionPercentage, realUsageSnapshot.sessionResetsAt)
+      : null;
+
+  const ringTooltip = (() => {
+    if (ringTarget === "hidden") return null;
+    if (ringTarget === "context") {
+      return isRefreshingContext ? (
+        <>
+          <span>Calculating context usage...</span>
+          <span>Loading exact token count</span>
+          <span>Spinner means the worker is recounting this chat.</span>
+        </>
+      ) : (
+        <>
           <span>Context &amp; token usage:</span>
           <span>{contextFillPercentage}% of context window used</span>
           <span>
-            {formatCompactNumber(contextLengthTokens ?? totalTokensUsed)} / {formatCompactNumber(TOKEN_CONTEXT_LIMIT)} context length
+            {formatCompactNumber(contextLengthTokens)} / {formatCompactNumber(TOKEN_CONTEXT_LIMIT)} context length
           </span>
-          <span>
-            {formatCompactNumber(totalTokensUsed)} total tokens used
+          <span>{formatCompactNumber(totalTokensUsed)} current context</span>
+        </>
+      );
+    }
+    return (
+      <>
+        <span>{RING_METRIC_LABEL[ringTarget]}:</span>
+        <span>{ringPercentage}%</span>
+      </>
+    );
+  })();
+
+  return (
+    <aside className="cub-root" aria-label={`Claude usage ${barDisplay}`}>
+      {showBar && (
+        <div className="cub-bar-cell">
+          {showBarLabel && (
+            <span className="cub-bar-label" aria-hidden="true">{barDisplay}</span>
+          )}
+          <div className="cub-meter" aria-label={`${RING_METRIC_LABEL[barMetric] ?? "Usage"} ${barDisplay}`} role="button" tabIndex={0}>
+          <span className="cub-meter-fill" style={{ width: `${barWidth}%` }} />
+          <span className="cub-usage-tooltip" role="tooltip">
+            <span className="cub-usage-title">
+              <span>Plan usage</span>
+              <a className="cub-usage-link" href={USAGE_PAGE_URL} aria-label="Open Claude usage page">
+                →
+              </a>
+            </span>
+            <span className="cub-usage-row">
+              <span>5-hour limit</span>
+              <span>
+                {typeof sessionPercentage === "number" ? `${sessionPercentage}%` : "Usage unavailable"}
+                {realUsageSnapshot?.resetText ? ` · ${realUsageSnapshot.resetText}` : " · reset unknown"}
+              </span>
+            </span>
+            <span className="cub-usage-track">
+              <span style={{ width: `${sessionPercentage ?? 0}%` }} />
+            </span>
+            <span className="cub-usage-row">
+              <span>Weekly · all models</span>
+              <span>
+                {typeof weeklyAllModelsPercentage === "number"
+                  ? `${weeklyAllModelsPercentage}%${weeklyAllModelsResetText ? ` · ${weeklyAllModelsResetText}` : ""}`
+                  : "—"}
+              </span>
+            </span>
+            <span className="cub-usage-track">
+              <span style={{ width: `${weeklyAllModelsPercentage ?? 0}%` }} />
+            </span>
+            <span className="cub-usage-row">
+              <span>Weekly · Claude Design</span>
+              <span>
+                {typeof claudeDesignPercentage === "number"
+                  ? `${claudeDesignPercentage}%${claudeDesignResetText ? ` · ${claudeDesignResetText}` : ""}`
+                  : "—"}
+              </span>
+            </span>
+            <span className="cub-usage-track">
+              <span style={{ width: `${claudeDesignPercentage ?? 0}%` }} />
+            </span>
+            <span className="cub-usage-row">
+              <span>Routines</span>
+              <span>{routinesText ?? "—"}</span>
+            </span>
+            <span className="cub-usage-track">
+              <span style={{ width: "0%" }} />
+            </span>
+          </span>
+          </div>
+        </div>
+      )}
+      {showWheel && ringTarget !== "hidden" && (
+        <span className="cub-wheel-wrap">
+          {showWheelLabel && (
+            <span className="cub-wheel-label" aria-hidden="true">{ringPercentage}%</span>
+          )}
+          <span
+            className="cub-token-ring"
+            aria-label={
+              ringTarget === "context"
+                ? isRefreshingContext
+                  ? "Context calculation loading"
+                  : `Context window ${contextFillPercentage}% full`
+                : `${RING_METRIC_LABEL[ringTarget]} ${ringPercentage}%`
+            }
+            data-loading={String(ringTarget === "context" && isRefreshingContext)}
+            style={{ "--cub-token-percentage": `${ringPercentage}%` } as CSSProperties}
+          >
+            <span className="cub-token-tooltip" role="tooltip">
+              {ringTooltip}
+            </span>
           </span>
         </span>
-      </span>
+      )}
+      {sessionProjection && sessionProjection.status !== "insufficient_data" && (() => {
+        const now = Date.now();
+
+        if (sessionProjection.status === "projected_empty" && typeof sessionProjection.etaMs === "number") {
+          const eta = formatEta(sessionProjection.etaMs, now);
+          return (
+            <span className="cub-pace" aria-label={eta}>
+              <span className="cub-pace-label">{eta}</span>
+              <span className="cub-pace-tooltip" role="tooltip">
+                <span>Projected empty at current pace</span>
+                <span>{sessionProjection.label}</span>
+              </span>
+            </span>
+          );
+        }
+
+        if (sessionProjection.status === "lasting_to_reset") {
+          let overResetLabel: string | null = null;
+          if (
+            typeof sessionProjection.drainRatePerHour === "number" &&
+            sessionProjection.drainRatePerHour > 0 &&
+            typeof sessionPercentage === "number" &&
+            typeof realUsageSnapshot?.sessionResetsAt === "number"
+          ) {
+            const remainingPercent = 100 - sessionPercentage;
+            const etaHours = remainingPercent / sessionProjection.drainRatePerHour;
+            const timeUntilResetHours = Math.max(0, realUsageSnapshot.sessionResetsAt - now) / 3_600_000;
+            const surplusHours = etaHours - timeUntilResetHours;
+            if (surplusHours > 0) {
+              overResetLabel = formatEta(now + surplusHours * 3_600_000, now);
+            }
+          }
+          return (
+            <span className="cub-pace" aria-label="lasts">
+              <span className="cub-pace-label">lasts</span>
+              <span className="cub-pace-tooltip" role="tooltip">
+                <span>Usage at current pace</span>
+                {overResetLabel ? (
+                  <span>You will last {overResetLabel} over your reset</span>
+                ) : (
+                  <span>Lasts until reset</span>
+                )}
+              </span>
+            </span>
+          );
+        }
+
+        return null;
+      })()}
     </aside>
   );
 };

@@ -55,7 +55,7 @@ describe("buildChatUsageFromConversationPayload", () => {
     expect(result.chatUsage.updatedAt).toBe(123);
     expect(result.debugTexts).toEqual(["hello", "assistant answer", "follow up"]);
     expect(result.chatUsage.currentContextTokens).toBe(applyConservativeTokenBias(exactCurrentContextTokens));
-    expect(result.chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(result.chatUsage.compoundedInputTokens ?? 0));
+    expect(result.chatUsage.estimatedTokens).toBe(result.chatUsage.currentContextTokens);
     expect(result.chatUsage.compoundedInputTokens).toBeGreaterThan(0);
   });
 
@@ -86,8 +86,8 @@ describe("buildChatUsageFromConversationPayload", () => {
     });
 
     expect(result.chatUsage.currentContextTokens).toBe(applyConservativeTokenBias(1_000 + (4 + countClaudeTokens("hi")) + (4 + countClaudeTokens("hi"))));
-    expect(result.chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(result.chatUsage.compoundedInputTokens ?? 0));
-    expect(result.chatUsage.compoundedInputTokens).toBeLessThan(result.chatUsage.estimatedTokens);
+    expect(result.chatUsage.estimatedTokens).toBe(result.chatUsage.currentContextTokens);
+    expect(result.chatUsage.compoundedInputTokens).toBeLessThanOrEqual(result.chatUsage.estimatedTokens);
   });
 
   it("counts attachments, files, sync sources, and tool inputs from concrete JSON evidence", () => {
@@ -118,7 +118,7 @@ describe("buildChatUsageFromConversationPayload", () => {
     expect(result.debugTexts).toEqual(["search this", "{\"q\":\"claude\"}", "attachment text"]);
     expect(result.chatUsage.currentContextTokens).toBeGreaterThan(6_000);
     expect(result.chatUsage.currentContextTokens).toBeLessThan(8_000);
-    expect(result.chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(result.chatUsage.compoundedInputTokens ?? 0));
+    expect(result.chatUsage.estimatedTokens).toBe(result.chatUsage.currentContextTokens);
   });
 
   it("compounds input when user prompts add the chat back into context", () => {
@@ -194,7 +194,7 @@ describe("buildChatUsageFromConversationPayload", () => {
 
     expect(result.cachedPrefixTokens).toBeGreaterThan(0);
     expect(result.cacheExpiresAt).toBe(new Date("2026-05-03T10:08:00.000Z").getTime());
-    expect(result.chatUsage.estimatedTokens).toBeGreaterThan(result.cachedPrefixTokens);
+    expect(result.chatUsage.estimatedTokens).toBe(result.chatUsage.currentContextTokens);
     vi.useRealTimers();
   });
 });

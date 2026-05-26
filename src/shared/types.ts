@@ -1,9 +1,17 @@
 export type OverlayMode = "compact" | "expanded";
 export type UsageSource = "estimated" | "real";
+export type MetricTarget = "session" | "weekly" | "context" | "design";
+export type RingTarget = MetricTarget | "hidden";
 
 export interface Settings {
   showOverlay: boolean;
   mode: OverlayMode;
+  barMetric: MetricTarget;
+  ringTarget: RingTarget;
+  showBar: boolean;
+  showBarLabel: boolean;
+  showWheel: boolean;
+  showWheelLabel: boolean;
 }
 
 export interface DailyUsage {
@@ -18,6 +26,7 @@ export interface ChatUsage {
   visibleMessageCount: number;
   updatedAt: number;
   source?: "dom" | "conversation_api";
+  isRefreshingContext?: boolean;
   currentContextTokens?: number;
   compoundedInputTokens?: number;
   cachedPrefixTokens?: number;
@@ -36,11 +45,31 @@ export interface RealUsageSnapshot {
   totalMessages?: number;
   limitText?: string;
   percentageUsed?: number;
+  sessionResetsAt?: number;
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
+  weeklyAllModelsResetsAt?: number;
   claudeDesignPercentageUsed?: number;
   claudeDesignResetText?: string;
+  claudeDesignResetsAt?: number;
   routinesText?: string;
+}
+
+export interface UsageLogEntry {
+  capturedAt: number;
+  sessionUsedPercent?: number;
+  sessionResetsAt?: number;
+  weeklyUsedPercent?: number;
+  weeklyResetsAt?: number;
+}
+
+export type ProjectionStatus = "insufficient_data" | "lasting_to_reset" | "projected_empty";
+
+export interface UsageProjection {
+  status: ProjectionStatus;
+  etaMs?: number;
+  drainRatePerHour?: number;
+  label: string;
 }
 
 export interface ApiUsageResponse {
@@ -65,10 +94,13 @@ export interface UsageMetadata {
   totalMessages?: number;
   limitText?: string;
   percentageUsed?: number;
+  sessionResetsAt?: number;
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
+  weeklyAllModelsResetsAt?: number;
   claudeDesignPercentageUsed?: number;
   claudeDesignResetText?: string;
+  claudeDesignResetsAt?: number;
   routinesText?: string;
 }
 
@@ -77,4 +109,5 @@ export interface StorageShape {
   dailyUsage: DailyUsage;
   chatUsage: ChatUsage;
   realUsageSnapshot?: RealUsageSnapshot;
+  usageHistory?: UsageLogEntry[];
 }

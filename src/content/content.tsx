@@ -10,10 +10,25 @@ import {
 import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } from "../shared/types";
 import { readClaudeDomSnapshot } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
+import {
+  hasMeaningfulChatUsageChange,
+  hasMeaningfulDailyUsageChange,
+  mutationsContainPageChanges,
+} from "./contentLifecycle";
 import "./pageOverrides.css";
+import { syncMessageRailTheme, tickMessageRail } from "./messageRail";
+import { initSettingsPage, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
 import { buildChatUsage, rollDailyUsageForward } from "./usageEstimator";
 import { messageToSnapshot } from "./usageProbeBridge";
+
+// Each content-script instance gets a unique ID. When a newer instance starts
+// it writes its ID to the page; older instances see they're displaced and stop.
+const INSTANCE_ATTR = "data-cub-instance";
+const HOST_ATTR = "data-cub-host-instance";
+const myInstanceId = `${Date.now()}-${Math.random()}`;
+const isActiveInstance = () =>
+  document.documentElement.getAttribute(INSTANCE_ATTR) === myInstanceId;
 
 let storageState: StorageShape | null = null;
 let root: ReturnType<typeof createRoot> | null = null;
@@ -57,7 +72,9 @@ const isLightMode = (): boolean => {
 };
 
 const syncTheme = () => {
-  host?.classList.toggle("cub-theme-light", isLightMode());
+  const light = isLightMode();
+  host?.classList.toggle("cub-theme-light", light);
+  syncMessageRailTheme(light);
 };
 
 const ensureHost = () => {
@@ -67,9 +84,26 @@ const ensureHost = () => {
 
   host = document.createElement("div");
   host.id = "claude-usage-bar-root";
+  host.setAttribute(HOST_ATTR, myInstanceId);
   // Apply theme class before first render so there is no flash
   syncTheme();
   root = createRoot(host);
+};
+
+const removeStaleHosts = () => {
+  document.querySelectorAll<HTMLElement>("#claude-usage-bar-root").forEach((element) => {
+    if (element !== host) {
+      element.remove();
+    }
+  });
+};
+
+const removeComposerHost = () => {
+  root?.render(null);
+  host?.remove();
+  mountedComposer?.classList.remove("cub-composer-host");
+  mountedComposer = null;
+  removeStaleHosts();
 };
 
 const findComposerControls = (): HTMLElement | null => {
@@ -127,7 +161,7 @@ const renderCacheTimer = () => {
   }
   cacheTimerRoot?.render(
     <React.StrictMode>
-      <CacheTimer streamingEndedAt={streamingEndedAt} />
+      <CacheTimer cacheExpiresAt={storageState?.chatUsage.cacheExpiresAt} fallbackStartedAt={streamingEndedAt} />
     </React.StrictMode>,
   );
 };
@@ -179,6 +213,8 @@ const mountHostInComposer = (): boolean => {
     mountedComposer.classList.add("cub-composer-host");
   }
 
+  removeStaleHosts();
+
   if (host.parentElement !== composer) {
     const insertionPoint = composer.children[1] ?? null;
     composer.insertBefore(host, insertionPoint);
@@ -188,7 +224,12 @@ const mountHostInComposer = (): boolean => {
 };
 
 const render = () => {
-  if (!storageState) {
+  if (!storageState || !isActiveInstance()) {
+    return;
+  }
+  renderCacheTimer();
+  if (!storageState.settings.showOverlay) {
+    removeComposerHost();
     return;
   }
   if (!mountHostInComposer()) {
@@ -200,6 +241,7 @@ const render = () => {
         settings={storageState.settings}
         chatUsage={storageState.chatUsage}
         realUsageSnapshot={storageState.realUsageSnapshot}
+        usageHistory={storageState.usageHistory}
       />
     </React.StrictMode>,
   );
@@ -218,7 +260,20 @@ const requestConversationContextRefresh = (conversationId: string) => {
     { type: MESSAGE_TYPES.fetchConversationContext, conversationId },
     (response: ConversationContextResponse | undefined) => {
       void chrome.runtime.lastError;
-      if (!response?.ok || !response.chatUsage || !storageState) {
+      if (!storageState) {
+        return;
+      }
+
+      if (!response?.ok || !response.chatUsage) {
+        storageState = {
+          ...storageState,
+          chatUsage: {
+            ...storageState.chatUsage,
+            isRefreshingContext: false,
+          },
+        };
+        void saveChatUsage(storageState.chatUsage);
+        render();
         return;
       }
 
@@ -255,13 +310,6 @@ const refreshUsage = async () => {
     renderCacheTimer();
   }
 
-  // On a page with existing messages but no known stream end (e.g. navigated to an old chat),
-  // treat cache as already expired rather than hiding the timer entirely.
-  if (streamingEndedAt === null && !wasStreaming && snapshot.visibleSentCount > 0) {
-    streamingEndedAt = 0;
-    renderCacheTimer();
-  }
-
   if (messageSent || urlChanged) {
     lastSentCount = snapshot.visibleSentCount;
     lastApiRefreshUrl = currentUrl;
@@ -271,25 +319,43 @@ const refreshUsage = async () => {
 
   if (conversationId && (currentUrl !== lastConversationContextUrl || messageSent)) {
     lastConversationContextUrl = currentUrl;
+    storageState = {
+      ...storageState,
+      chatUsage: {
+        ...storageState.chatUsage,
+        source: "conversation_api",
+        isRefreshingContext: true,
+      },
+    };
+    await saveChatUsage(storageState.chatUsage);
+    render();
     window.setTimeout(() => requestConversationContextRefresh(conversationId), messageSent ? 2500 : 500);
   }
 
+  const shouldSaveDailyUsage = hasMeaningfulDailyUsageChange(storageState.dailyUsage, dailyUsage);
+  const shouldSaveChatUsage = !conversationId && hasMeaningfulChatUsageChange(storageState.chatUsage, chatUsage);
+
   storageState = {
     ...storageState,
-    dailyUsage,
-    chatUsage: conversationId ? storageState.chatUsage : chatUsage,
+    dailyUsage: shouldSaveDailyUsage ? dailyUsage : storageState.dailyUsage,
+    chatUsage: shouldSaveChatUsage ? chatUsage : storageState.chatUsage,
   };
 
   await Promise.all([
-    saveDailyUsage(dailyUsage),
-    conversationId ? Promise.resolve() : saveChatUsage(chatUsage),
+    shouldSaveDailyUsage ? saveDailyUsage(dailyUsage) : Promise.resolve(),
+    shouldSaveChatUsage ? saveChatUsage(chatUsage) : Promise.resolve(),
   ]);
   render();
 };
 
-const scheduleRefresh = () => {
+const scheduleRefresh = (records?: MutationRecord[]) => {
+  if (!mutationsContainPageChanges(records)) return;
+  if (!isActiveInstance()) return;
   window.clearTimeout(updateTimer);
   updateTimer = window.setTimeout(() => {
+    if (!isActiveInstance()) return;
+    tickSettingsPage();
+    tickMessageRail();
     void refreshUsage();
   }, 350);
 };
@@ -316,8 +382,18 @@ const handleRealUsageMessage = async (event: MessageEvent) => {
 };
 
 const init = async () => {
+  // Claim this instance as the active one. Any older content-script instances
+  // will see their ID no longer matches and stop rendering/re-inserting.
+  document.documentElement.setAttribute(INSTANCE_ATTR, myInstanceId);
+
+  // Remove bars left by the now-displaced instance.
+  removeStaleHosts();
+  document.querySelectorAll("#claude-cache-timer-host").forEach((el) => el.remove());
+
   injectPageProbe();
   storageState = await getStorage();
+  initSettingsPage();
+  tickMessageRail();
   render();
 
   // Capture initial state so the first refreshUsage call doesn't spuriously trigger a refresh.
@@ -342,6 +418,9 @@ const init = async () => {
       dailyUsage: (changes.dailyUsage?.newValue ?? storageState.dailyUsage) as StorageShape["dailyUsage"],
       chatUsage: (changes.chatUsage?.newValue ?? storageState.chatUsage) as StorageShape["chatUsage"],
       realUsageSnapshot: (changes.realUsageSnapshot?.newValue ?? storageState.realUsageSnapshot) as RealUsageSnapshot | undefined,
+      usageHistory: Array.isArray(changes.usageHistory?.newValue)
+        ? (changes.usageHistory.newValue as StorageShape["usageHistory"])
+        : storageState.usageHistory,
     };
     render();
   });

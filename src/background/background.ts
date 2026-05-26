@@ -1,7 +1,7 @@
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
-import { getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
+import { appendUsageHistoryEntry, getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
 import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot } from "../shared/types";
 
 const CLAUDE_API_ORIGIN = "https://claude.ai";
@@ -78,6 +78,13 @@ const fetchApiUsage = async (force = false): Promise<ApiUsageResponse> => {
     const organizationId = await getOrganizationId();
     const snapshot = await getUsageMetrics(organizationId);
     await saveRealUsageSnapshot(snapshot);
+    await appendUsageHistoryEntry({
+      capturedAt: snapshot.capturedAt,
+      sessionUsedPercent: snapshot.percentageUsed,
+      sessionResetsAt: snapshot.sessionResetsAt,
+      weeklyUsedPercent: snapshot.weeklyAllModelsPercentageUsed,
+      weeklyResetsAt: snapshot.weeklyAllModelsResetsAt,
+    });
     return { ok: true, snapshot };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown Claude usage error";
@@ -103,6 +110,7 @@ const fetchConversationContext = async (conversationId: string): Promise<Convers
       cachedPrefixTokens: result.cachedPrefixTokens,
       cacheExpiresAt: result.cacheExpiresAt,
       lengthIsEstimate: result.lengthIsEstimate,
+      isRefreshingContext: false,
     };
 
     await saveChatUsage(chatUsage);

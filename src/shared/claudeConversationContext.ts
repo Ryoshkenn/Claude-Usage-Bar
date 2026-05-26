@@ -294,17 +294,16 @@ export const buildChatUsageFromConversationPayload = (payload: unknown, now = Da
   }
 
   const compoundedInputTokens = calculateCompoundedInputTokens(messageTokenInfos);
-  const displayedUsageTokens = compoundedInputTokens || currentContextTokens;
   const biasedCurrentContextTokens = applyConservativeTokenBias(currentContextTokens);
-  const biasedDisplayedUsageTokens = applyConservativeTokenBias(displayedUsageTokens);
 
   return {
     chatUsage: {
-      estimatedTokens: biasedDisplayedUsageTokens,
+      estimatedTokens: biasedCurrentContextTokens,
       currentContextTokens: biasedCurrentContextTokens,
       compoundedInputTokens: Math.round(compoundedInputTokens),
       visibleMessageCount: messages.length,
       updatedAt: now,
+      isRefreshingContext: false,
     },
     lengthIsEstimate,
     cachedPrefixTokens,

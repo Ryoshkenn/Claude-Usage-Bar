@@ -96,4 +96,25 @@ button.active {
 
 .reset {
   width: 100%;
+  margin-bottom: 8px;
+}
+
+.settings-link {
+  display: block;
+  text-align: center;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgb(204 124 94 / 30%);
+  border-radius: 8px;
+  background: rgb(204 124 94 / 10%);
+  color: rgb(204 124 94);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.settings-link:hover {
+  background: rgb(204 124 94 / 18%);
 }
