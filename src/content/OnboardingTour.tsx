@@ -27,9 +27,9 @@ function getCacheTimerDemoPos(): TargetRect {
   const main = document.querySelector<HTMLElement>("main");
   if (main) {
     const r = main.getBoundingClientRect();
-    return { top: r.top + 12, left: r.left + r.width / 2 - 44, width: 88, height: 28 };
+    return { top: r.top + 12, left: r.left + 12, width: 88, height: 28 };
   }
-  return { top: Math.round(window.innerHeight * 0.12), left: Math.round(window.innerWidth / 2) - 44, width: 88, height: 28 };
+  return { top: Math.round(window.innerHeight * 0.12), left: 12, width: 88, height: 28 };
 }
 
 const STEPS: TourStep[] = [
