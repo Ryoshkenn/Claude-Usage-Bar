@@ -37,9 +37,14 @@ Data flows in one direction: **background worker → storage → content script 
 ## Key Constraints
 
 - **Composer mounting**: find controls near the "Add files, connectors, and more" button; reject `#conversation-preferences` and settings containers.
+- **Usage Bar settings route**: link to `/settings/usage-bar`, the extension-owned settings page injected into Claude settings.
+- **Light mode UI**: use the approved preview in `docs/live-examples/light-mode-preview/index.html` as the source for light-mode styling. Light mode should use white/light-warm surfaces, dark gray text, muted gray supporting text, warm gray bar/wheel tracks, Claude orange fills, light hover panels, and high-contrast message rail markers.
+- **Theme detection**: detect Claude page theme from explicit DOM signals first, computed Claude UI background colors second, and `prefers-color-scheme` last. Persist the detected page theme in local storage for the toolbar popup. The popup defaults to dark when no Claude page theme has been saved yet.
 - **Storage allowlist**: only percentages, reset display strings, routines counters, numeric token estimates/cache metadata, settings, and cached org id. Never raw payloads, cookies, or conversation text.
+- **Weekly projection settings**: `weeklyPaceMode` chooses smart learned vs manual schedule, while `weeklyEstimateDisplay` chooses active-hours vs calendar-time output. Smart mode ignores manual work days/hours/start time. Calendar-time estimates use browser-local learned day-hour buckets when available, then fall back to manual work days, active hours per day, and local `weeklyManualStartHour` only in manual mode or when learning is disabled.
 - **Context counting**: prefer Claude conversation JSON over DOM text. Avoid broad fixed feature overhead from settings alone; count tool/connector/file/project data when concrete JSON evidence is present. Use a modest Claude chat prompt overhead, not Claude Code overhead. The displayed compounded usage is not discounted for prompt caching; cache metadata is stored separately as numbers.
 - **Usage API shape**: `five_hour.utilization` (5-hour %), `seven_day.utilization` (weekly %), `resets_at` timestamps. See `AGENTS.md` § "Claude Usage API" for full field list.
 - **No third-party calls**: only `https://claude.ai` endpoints.
 - **Future tokenizer work**: README mentions planned optional Anthropic API-key support for official token counting. It is not implemented yet.
+- **Large feature handoff**: after a large feature lands, update `AGENTS.md` and `CLAUDE.md` with the new behavior, architecture, commands, verification notes, or follow-up constraints before starting the next task.
 - **Tests**: `src/test/` with Vitest/jsdom. Run `npm test` + `npm run build` before any PR.

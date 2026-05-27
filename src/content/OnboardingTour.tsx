@@ -17,10 +17,13 @@ interface TourStep {
   body: string;
   forceShowBar?: boolean;
   postNavDelay?: number;
+  scrollIntoView?: boolean;
+  allowInteraction?: boolean;
 }
 
-const MESSAGE_NAV_STEP = 5;
-const CACHE_TIMER_STEP = 6;
+const MESSAGE_NAV_STEP = 6;
+const CACHE_TIMER_STEP = 7;
+const THEME_SYNC_INTERVAL_MS = 500;
 
 // Compute where to render the demo cache timer: centered inside <main> on /new
 function getCacheTimerDemoPos(): TargetRect {
@@ -65,6 +68,15 @@ const STEPS: TourStep[] = [
     title: "Extension Settings",
     body: "Toggle the bar and ring, switch metrics, show labels, adjust pace format, and replay this tour anytime.",
     postNavDelay: 650,
+  },
+  {
+    navigateTo: "/settings/usage-bar",
+    selector: "#cub-metrics-sections",
+    title: "Usage metrics learning",
+    body: "Claude Usage Bar learns local 5-hour and weekly usage patterns to power smarter pace estimates. Samples stay in this browser — no prompts, responses, or raw payloads are stored. If you'd rather not have this data collected, click the toggles here to turn pattern learning off.",
+    postNavDelay: 200,
+    scrollIntoView: true,
+    allowInteraction: true,
   },
   {
     navigateTo: "/new",
@@ -240,6 +252,17 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
         document.body.classList.remove("cub-tour-bar-open");
       }
 
+      // Scroll target into view if requested
+      if (s.scrollIntoView && s.selector) {
+        const el = document.querySelector<HTMLElement>(s.selector);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          await sleep(400);
+          if (cancelled()) return;
+          syncHostOffset();
+        }
+      }
+
       // Find element with retries, fall back to fallbackRect
       const rect =
         (await findElement(s.selector, 5, cancelRef)) ??
@@ -259,12 +282,21 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
 
   // Theme observer
   useEffect(() => {
-    const obs = new MutationObserver(() => setLight(isLightTheme()));
+    const syncLight = () => setLight(isLightTheme());
+    const obs = new MutationObserver(syncLight);
     obs.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class", "data-theme", "data-color-scheme"],
+      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
     });
-    return () => obs.disconnect();
+    obs.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
+    });
+    const interval = window.setInterval(() => setLight(isLightTheme()), THEME_SYNC_INTERVAL_MS);
+    return () => {
+      obs.disconnect();
+      window.clearInterval(interval);
+    };
   }, []);
 
   // Animate fake message-rail dots into existence one per second
@@ -297,7 +329,11 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
       if (s.fallbackRect) setTargetRect(s.fallbackRect());
     };
     window.addEventListener("resize", remeasure);
-    return () => window.removeEventListener("resize", remeasure);
+    window.addEventListener("scroll", remeasure, true);
+    return () => {
+      window.removeEventListener("resize", remeasure);
+      window.removeEventListener("scroll", remeasure, true);
+    };
   }, [step]);
 
   const dismiss = useCallback(() => {
@@ -372,9 +408,11 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     "cub-tour-root",
     light ? "cub-tour-light" : "",
     fading ? "cub-tour-fading" : "",
+    current.allowInteraction ? "cub-tour-interactive" : "",
   ]
     .filter(Boolean)
     .join(" ");
+  const demoRailClass = light ? "cub-tour-demo-rail cub-message-rail--light" : "cub-tour-demo-rail";
 
   return (
     <div className={rootClass}>
@@ -387,7 +425,7 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
         <div className="cub-tour-spotlight" style={spotlightStyle} />
       )}
       {step === MESSAGE_NAV_STEP && demoRailDots > 0 && (
-        <div className="cub-tour-demo-rail" style={demoRailStyle}>
+        <div className={demoRailClass} style={demoRailStyle}>
           {Array.from({ length: demoRailDots }, (_, i) => (
             <div
               key={i}

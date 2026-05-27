@@ -52,7 +52,11 @@ The inline UI currently consists of:
 - A small circular context ring, colored Claude orange.
 - A hover panel for context usage showing percentage and estimated token count.
 
-The usage-page arrow should point to `/settings/usage`.
+The usage-page arrow should point to `/settings/usage-bar`, the extension-owned settings page injected into Claude settings.
+
+Light mode should use the warm Claude-style palette proven in `docs/live-examples/light-mode-preview/index.html`: white/light-warm surfaces, dark gray text, muted gray supporting text, warm gray tracks, Claude orange fills, light hover panels, and high-contrast message rail markers. Do not leave light mode with dark hover panels or near-black bar/wheel tracks.
+
+Theme detection should prefer Claude's rendered page state over guesses. Check explicit Claude DOM theme signals first (`html.dark`, `html.light`, `data-theme`, `data-color-scheme`), then inspect computed background colors from stable Claude UI surfaces, then fall back to `prefers-color-scheme`. Store the detected page theme in `chrome.storage.local` so the toolbar popup can mirror it; the popup should default to dark when no page theme has been detected yet.
 
 ### Claude Usage API
 
@@ -74,6 +78,17 @@ The known `/usage` response shape includes limit objects:
 The worker caches `organizationId` in `chrome.storage.local`, throttles usage refreshes to roughly once per minute, and clears the cached org id if auth/org lookup fails. It detects missing login via absent Claude cookies or `401/403` responses.
 
 Do not persist raw API payloads. Normalize into `RealUsageSnapshot` using `src/shared/claudeUsageApi.ts`, then store only allowlisted fields such as percentages, reset display text, and routines counters.
+
+### Weekly Usage Projection
+
+Weekly all-model estimates use sanitized numeric `/usage` samples only. `usageHistory` stores captured percentages and reset timestamps, and `weeklyUsageMetrics` stores local numeric buckets for active days, hours, and day-hour slots. Do not store prompts, responses, raw Claude payloads, cookies, auth data, or conversation text for weekly learning.
+
+The weekly settings contract is:
+
+- `weeklyMetricsEnabled` controls whether learned weekly samples are collected. When off, use the manual schedule and do not append weekly sample fields.
+- `weeklyPaceMode` selects smart learned schedule vs. manual schedule. Smart schedule must ignore `weeklyManualWorkDays`, `weeklyManualActiveHoursPerDay`, and `weeklyManualStartHour`; those manual settings apply only when manual mode is selected or learning is disabled.
+- `weeklyEstimateDisplay` selects `active_hours` or `calendar_time`. Active hours keeps the compact usable-hours-left estimate. Calendar time predicts the browser-local day/time when weekly usage will run out.
+- `weeklyManualWorkDays`, `weeklyManualActiveHoursPerDay`, and `weeklyManualStartHour` are the manual fallback schedule. Calendar-time mode should place active windows explicitly on the user's local clock hours instead of spreading active hours evenly across 24-hour days.
 
 ### Token / Context Estimation
 
@@ -119,6 +134,8 @@ Use TypeScript and React function components. Keep modules small and focused by 
 Use two-space indentation, semicolons, and double quotes, matching the existing files. Name React components in `PascalCase` such as `ContentApp`, and helper files/functions in `camelCase` such as `usageEstimator.ts` and `estimateTokensFromText`.
 
 There is no formatter or linter configured yet, so preserve the existing style manually.
+
+After implementing a large feature, update `AGENTS.md` and `CLAUDE.md` with any new behavior, architecture changes, commands, verification notes, or important follow-up constraints before moving to the next task.
 
 ## Testing Guidelines
 

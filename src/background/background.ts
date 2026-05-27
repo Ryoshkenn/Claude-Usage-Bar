@@ -82,8 +82,12 @@ const fetchApiUsage = async (force = false): Promise<ApiUsageResponse> => {
       capturedAt: snapshot.capturedAt,
       sessionUsedPercent: snapshot.percentageUsed,
       sessionResetsAt: snapshot.sessionResetsAt,
-      weeklyUsedPercent: snapshot.weeklyAllModelsPercentageUsed,
-      weeklyResetsAt: snapshot.weeklyAllModelsResetsAt,
+      ...(current.settings.weeklyMetricsEnabled !== false
+        ? {
+            weeklyUsedPercent: snapshot.weeklyAllModelsPercentageUsed,
+            weeklyResetsAt: snapshot.weeklyAllModelsResetsAt,
+          }
+        : {}),
     });
     return { ok: true, snapshot };
   } catch (error) {
@@ -125,6 +129,14 @@ const fetchConversationContext = async (conversationId: string): Promise<Convers
     return { ok: false, error: message };
   }
 };
+
+chrome.runtime.onInstalled.addListener(() => {
+  void chrome.storage.local.get(STORAGE_KEYS.installedAt).then((data) => {
+    if (!data[STORAGE_KEYS.installedAt]) {
+      void chrome.storage.local.set({ [STORAGE_KEYS.installedAt]: Date.now() });
+    }
+  });
+});
 
 chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
   const data = message as { type?: unknown; force?: unknown; conversationId?: unknown } | undefined;

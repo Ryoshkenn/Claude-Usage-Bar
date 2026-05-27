@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { UsageLogEntry } from "../shared/types";
 import {
+  buildWeeklyUsageMetrics,
   computeSessionProjection,
+  computeWeeklyProjection,
   computeWeightedDrainRate,
   getMatchingWindowHistory,
   trimForecastEntries,
@@ -169,5 +171,231 @@ describe("storage retention cap", () => {
     expect(kept).toHaveLength(100);
     expect(kept[0].capturedAt).toBe(10);
     expect(kept[99].capturedAt).toBe(109);
+  });
+});
+
+describe("weekly smart metrics", () => {
+  it("marks weekly confidence as learning until a week of samples exists", () => {
+    const base = new Date("2026-05-18T16:00:00.000Z").getTime();
+    const resetAt = new Date("2026-05-25T00:00:00.000Z").getTime();
+    const history: UsageLogEntry[] = [
+      { capturedAt: base, weeklyUsedPercent: 4, weeklyResetsAt: resetAt },
+      { capturedAt: base + 2 * 60 * 60_000, weeklyUsedPercent: 8, weeklyResetsAt: resetAt },
+      { capturedAt: base + 26 * 60 * 60_000, weeklyUsedPercent: 16, weeklyResetsAt: resetAt },
+    ];
+
+    const metrics = buildWeeklyUsageMetrics(history);
+
+    expect(metrics.confidence).toBe("learning");
+    expect(metrics.sampleCount).toBe(3);
+    expect(metrics.averageActiveHoursPerDay).toBeGreaterThan(0);
+  });
+
+  it("uses learned active hours instead of assuming all 168 weekly hours are usable", () => {
+    const now = new Date("2026-05-21T16:00:00.000Z").getTime();
+    const resetAt = new Date("2026-05-25T00:00:00.000Z").getTime();
+    const base = now - 7 * 24 * 60 * 60_000;
+    const history: UsageLogEntry[] = Array.from({ length: 8 }, (_, index) => ({
+      capturedAt: base + index * 24 * 60 * 60_000,
+      weeklyUsedPercent: index * 12,
+      weeklyResetsAt: resetAt,
+    }));
+    const metrics = buildWeeklyUsageMetrics(history);
+
+    const smart = computeWeeklyProjection(history, 48, resetAt, now, {
+      mode: "smart",
+      metrics,
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 8,
+    });
+    const oldAlwaysOn = computeWeeklyProjection([], 48, resetAt, now);
+
+    expect(metrics.confidence).toBe("ready");
+    expect(smart.drainRatePerHour).toBeGreaterThan(oldAlwaysOn.drainRatePerHour ?? 0);
+    expect(smart.projectedPercentAtReset).toBeGreaterThan(48);
+  });
+
+  it("does not collapse smart weekly estimates to sparse learned sample hours", () => {
+    const now = new Date("2026-05-27T16:00:00.000Z").getTime();
+    const resetAt = new Date("2026-06-01T00:00:00.000Z").getTime();
+    const sparseMetrics = {
+      startedAt: now - 8 * 24 * 60 * 60_000,
+      lastUpdatedAt: now,
+      sampleCount: 8,
+      activeDayBuckets: { "1": 3, "2": 3, "3": 2 },
+      activeHourBuckets: { "14": 8 },
+      activeSlotBuckets: { "1:14": 3, "2:14": 3, "3:14": 2 },
+      averageActiveHoursPerDay: 1,
+      confidence: "ready" as const,
+    };
+
+    const smart = computeWeeklyProjection([], 38, resetAt, now, {
+      mode: "smart",
+      metrics: sparseMetrics,
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 8,
+    });
+
+    expect(smart.drainRatePerHour).toBeLessThan(3);
+    expect(smart.activeHoursUntilEmpty).toBeGreaterThan(20);
+  });
+
+  it("does not let short-term weekly spikes override the smart weekly budget", () => {
+    const now = new Date("2026-05-27T16:00:00.000Z").getTime();
+    const resetAt = new Date("2026-06-01T00:00:00.000Z").getTime();
+    const base = now - 3 * 60 * 60_000;
+    const history: UsageLogEntry[] = [
+      { capturedAt: base, weeklyUsedPercent: 10, weeklyResetsAt: resetAt },
+      { capturedAt: base + 60 * 60_000, weeklyUsedPercent: 22, weeklyResetsAt: resetAt },
+      { capturedAt: base + 2 * 60 * 60_000, weeklyUsedPercent: 34, weeklyResetsAt: resetAt },
+      { capturedAt: base + 3 * 60 * 60_000, weeklyUsedPercent: 38, weeklyResetsAt: resetAt },
+    ];
+
+    const smart = computeWeeklyProjection(history, 38, resetAt, now, {
+      mode: "smart",
+      metrics: buildWeeklyUsageMetrics(history),
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 8,
+    });
+
+    expect(smart.drainRatePerHour).toBeLessThan(3);
+    expect(smart.activeHoursUntilEmpty).toBeGreaterThan(20);
+  });
+
+  it("ignores manual schedule settings when smart schedule is selected", () => {
+    const now = new Date("2026-05-27T16:00:00.000Z").getTime();
+    const resetAt = new Date("2026-06-01T00:00:00.000Z").getTime();
+    const metrics = {
+      startedAt: now - 8 * 24 * 60 * 60_000,
+      lastUpdatedAt: now,
+      sampleCount: 8,
+      activeDayBuckets: { "1": 3, "2": 3, "3": 2 },
+      activeHourBuckets: { "14": 8 },
+      activeSlotBuckets: { "1:14": 3, "2:14": 3, "3:14": 2 },
+      averageActiveHoursPerDay: 1,
+      confidence: "ready" as const,
+    };
+
+    const conservativeManual = computeWeeklyProjection([], 38, resetAt, now, {
+      mode: "smart",
+      display: "active_hours",
+      metrics,
+      manualWorkDays: [1],
+      manualActiveHoursPerDay: 1,
+      manualStartHour: 1,
+    });
+    const aggressiveManual = computeWeeklyProjection([], 38, resetAt, now, {
+      mode: "smart",
+      display: "active_hours",
+      metrics,
+      manualWorkDays: [0, 1, 2, 3, 4, 5, 6],
+      manualActiveHoursPerDay: 24,
+      manualStartHour: 18,
+    });
+
+    expect(aggressiveManual).toEqual(conservativeManual);
+  });
+
+  it("does not use manual schedule fallback for smart calendar estimates before learned slots exist", () => {
+    const now = new Date("2026-06-01T14:00:00").getTime();
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+
+    const projection = computeWeeklyProjection([], 50, resetAt, now, {
+      mode: "smart",
+      display: "calendar_time",
+      metrics: {
+        startedAt: now - 2 * 24 * 60 * 60_000,
+        lastUpdatedAt: now,
+        sampleCount: 2,
+        activeDayBuckets: {},
+        activeHourBuckets: {},
+        activeSlotBuckets: {},
+        averageActiveHoursPerDay: 0,
+        confidence: "learning",
+      },
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 10,
+      manualStartHour: 9,
+    });
+
+    expect(projection.calendarEta).toBeUndefined();
+    expect(projection.activeHoursUntilEmpty).toBeDefined();
+  });
+
+  it("keeps active-hours mode as the default weekly depletion display", () => {
+    const now = new Date("2026-06-01T14:00:00").getTime();
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+
+    const projection = computeWeeklyProjection([], 50, resetAt, now, {
+      mode: "manual",
+      display: "active_hours",
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 10,
+      manualStartHour: 9,
+    });
+
+    expect(projection.status).toBe("projected_empty");
+    expect(projection.activeHoursUntilEmpty).toBe(5);
+    expect(projection.label).toBe("Projected empty after 5h active use");
+  });
+
+  it("treats exactly 100 percent at reset as projected empty", () => {
+    const now = new Date("2026-06-01T14:00:00").getTime();
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+
+    const projection = computeWeeklyProjection([], 10, resetAt, now, {
+      mode: "manual",
+      display: "active_hours",
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 10,
+      manualStartHour: 9,
+    });
+
+    expect(projection.status).toBe("projected_empty");
+    expect(projection.projectedPercentAtReset).toBe(100);
+    expect(projection.activeHoursUntilEmpty).toBe(45);
+  });
+
+  it("projects a calendar timestamp from manual weekly day and hour settings", () => {
+    const now = new Date("2026-06-01T14:00:00").getTime();
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+
+    const projection = computeWeeklyProjection([], 50, resetAt, now, {
+      mode: "manual",
+      display: "calendar_time",
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 10,
+      manualStartHour: 9,
+    });
+
+    expect(projection.status).toBe("projected_empty");
+    expect(projection.activeHoursUntilEmpty).toBeUndefined();
+    expect(projection.etaMs).toBe(new Date("2026-06-01T19:00:00").getTime());
+  });
+
+  it("uses learned day-hour slots for smart calendar timestamps", () => {
+    const now = new Date("2026-06-01T12:00:00").getTime();
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+
+    const projection = computeWeeklyProjection([], 60, resetAt, now, {
+      mode: "smart",
+      display: "calendar_time",
+      metrics: {
+        startedAt: now - 8 * 24 * 60 * 60_000,
+        lastUpdatedAt: now,
+        sampleCount: 8,
+        activeDayBuckets: { "1": 4, "2": 4 },
+        activeHourBuckets: { "10": 4, "11": 4 },
+        activeSlotBuckets: { "1:10": 4, "1:11": 4, "2:10": 4, "2:11": 4 },
+        averageActiveHoursPerDay: 2,
+        confidence: "ready",
+      },
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 10,
+      manualStartHour: 9,
+    });
+
+    expect(projection.status).toBe("projected_empty");
+    expect(projection.etaMs).toBe(new Date("2026-06-02T11:20:00").getTime());
   });
 });

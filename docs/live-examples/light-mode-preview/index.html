@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claude Usage Bar Light Mode Preview</title>
+    <style>
+      :root {
+        --claude-bg: rgb(250 249 247);
+        --claude-surface: rgb(255 255 255);
+        --claude-surface-soft: rgb(247 246 243);
+        --claude-border: rgb(0 0 0 / 10%);
+        --claude-border-strong: rgb(0 0 0 / 16%);
+        --claude-text: rgb(40 40 38);
+        --claude-text-soft: rgb(80 78 72);
+        --claude-muted: rgb(120 118 112);
+        --claude-muted-soft: rgb(150 147 139);
+        --claude-track: rgb(221 219 214);
+        --claude-track-soft: rgb(235 233 228);
+        --claude-orange: rgb(204 124 94);
+        --claude-orange-strong: rgb(190 102 72);
+        --claude-shadow: 0 18px 48px rgb(0 0 0 / 14%);
+        --dark-bg: rgb(31 31 30);
+        --dark-surface: rgb(44 44 43);
+        --dark-text: rgb(245 245 241);
+        --dark-muted: rgb(165 164 156);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--claude-bg);
+        color: var(--claude-text);
+        font: 14px/1.4 "Anthropic Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .page {
+        min-height: 100vh;
+        padding: 28px;
+      }
+
+      .header {
+        max-width: 1180px;
+        margin: 0 auto 22px;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: 0;
+      }
+
+      .header p {
+        margin: 0;
+        color: var(--claude-muted);
+      }
+
+      .grid {
+        max-width: 1180px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 18px;
+      }
+
+      .panel {
+        border: 1px solid var(--claude-border);
+        border-radius: 10px;
+        background: var(--claude-surface);
+        box-shadow: 0 10px 34px rgb(0 0 0 / 7%);
+        overflow: hidden;
+      }
+
+      .panel-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--claude-border);
+        color: var(--claude-muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .canvas {
+        position: relative;
+        min-height: 520px;
+        padding: 34px 40px;
+        background:
+          linear-gradient(180deg, rgb(255 255 255 / 70%), rgb(250 249 247 / 90%)),
+          radial-gradient(circle at 20% 0%, rgb(204 124 94 / 8%), transparent 30%);
+      }
+
+      .chat-header {
+        position: absolute;
+        top: 22px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--claude-muted);
+      }
+
+      .cache-timer {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        height: 28px;
+        padding: 0 8px;
+        border-radius: 6px;
+        color: var(--claude-orange-strong);
+        background: rgb(204 124 94 / 8%);
+      }
+
+      .cache-tooltip {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        white-space: nowrap;
+        padding: 10px 12px;
+        border: 1px solid var(--claude-border);
+        border-radius: 8px;
+        background: var(--claude-surface);
+        color: var(--claude-text);
+        box-shadow: var(--claude-shadow);
+      }
+
+      .chat-copy {
+        max-width: 660px;
+        margin-top: 70px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .msg {
+        max-width: 520px;
+        padding: 14px 16px;
+        border: 1px solid var(--claude-border);
+        border-radius: 12px;
+        background: var(--claude-surface);
+      }
+
+      .msg.user {
+        margin-left: auto;
+        background: var(--claude-surface-soft);
+      }
+
+      .composer {
+        position: absolute;
+        left: 40px;
+        right: 84px;
+        bottom: 34px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 58px;
+        padding: 13px 16px;
+        border: 1px solid var(--claude-border);
+        border-radius: 14px;
+        background: var(--claude-surface);
+        box-shadow: 0 14px 44px rgb(0 0 0 / 10%);
+      }
+
+      .composer-placeholder {
+        flex: 1;
+        color: var(--claude-muted-soft);
+      }
+
+      .usage-root {
+        display: grid;
+        grid-template-columns: 172px auto auto;
+        align-items: center;
+        gap: 16px;
+        color: var(--claude-text-soft);
+      }
+
+      .bar-cell,
+      .wheel-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .bar-label,
+      .wheel-label {
+        color: var(--claude-text-soft);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .meter {
+        position: relative;
+        width: 172px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--claude-track);
+      }
+
+      .meter-fill {
+        display: block;
+        height: 100%;
+        width: 42%;
+        border-radius: inherit;
+        background: var(--claude-orange);
+      }
+
+      .ring {
+        --pct: 33%;
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: conic-gradient(var(--claude-orange) var(--pct), var(--claude-track) 0);
+      }
+
+      .ring::after {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border-radius: inherit;
+        background: var(--claude-surface);
+      }
+
+      .tooltip {
+        display: grid;
+        gap: 7px;
+        min-width: 330px;
+        padding: 11px 12px 12px;
+        border: 1px solid var(--claude-border);
+        border-radius: 8px;
+        background: var(--claude-surface);
+        color: var(--claude-text);
+        box-shadow: var(--claude-shadow);
+      }
+
+      .plan-tooltip {
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 16px);
+        transform: translateX(-50%);
+      }
+
+      .token-tooltip {
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 16px);
+        transform: translateX(-50%);
+        min-width: 226px;
+        text-align: center;
+      }
+
+      .tooltip-title,
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .tooltip-title,
+      .row-sub,
+      .token-tooltip span:first-child {
+        color: var(--claude-muted);
+      }
+
+      .row-title,
+      .row-pct {
+        color: var(--claude-text);
+      }
+
+      .row-sub,
+      .row-pace {
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .track {
+        height: 4px;
+        border-radius: 999px;
+        background: var(--claude-track-soft);
+        overflow: hidden;
+      }
+
+      .track span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--claude-orange);
+      }
+
+      .learning {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        margin-left: 5px;
+        border: 1px solid rgb(204 124 94 / 70%);
+        border-radius: 999px;
+        color: var(--claude-orange-strong);
+        background: rgb(204 124 94 / 8%);
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .review-banner {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 8px;
+        margin-bottom: 3px;
+        border-bottom: 1px solid var(--claude-border);
+      }
+
+      .review-banner span {
+        flex: 1;
+        color: var(--claude-muted);
+        font-size: 12px;
+      }
+
+      .review-banner a {
+        color: var(--claude-orange-strong);
+      }
+
+      .dismiss {
+        width: 18px;
+        height: 18px;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        color: var(--claude-muted);
+      }
+
+      .dismiss:hover {
+        background: rgb(0 0 0 / 6%);
+        color: var(--claude-text);
+      }
+
+      .rail {
+        position: absolute;
+        right: 26px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 7px;
+      }
+
+      .rail-marker {
+        width: 38px;
+        height: 18px;
+        border: 0;
+        background: transparent;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .rail-marker::before {
+        content: "";
+        display: block;
+        width: 18px;
+        height: 3px;
+        border-radius: 999px;
+        background: rgb(80 78 72 / 58%);
+        box-shadow: 0 0 0 1px rgb(255 255 255 / 80%);
+      }
+
+      .rail-marker:hover::before {
+        width: 26px;
+        background: rgb(80 78 72 / 78%);
+      }
+
+      .rail-marker.active::before {
+        width: 34px;
+        height: 4px;
+        background: var(--claude-text);
+      }
+
+      .tour-card {
+        position: absolute;
+        right: 84px;
+        top: 104px;
+        width: 280px;
+        padding: 18px;
+        border: 1px solid var(--claude-border);
+        border-radius: 12px;
+        background: var(--claude-surface);
+        box-shadow: var(--claude-shadow);
+      }
+
+      .tour-step {
+        color: var(--claude-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .tour-title {
+        margin-top: 7px;
+        color: var(--claude-text);
+        font-weight: 650;
+      }
+
+      .tour-body {
+        margin: 7px 0 14px;
+        color: var(--claude-text-soft);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .tour-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .ghost-btn,
+      .solid-btn {
+        height: 32px;
+        border-radius: 7px;
+        font: inherit;
+      }
+
+      .ghost-btn {
+        border: 1px solid var(--claude-border);
+        background: rgb(0 0 0 / 4%);
+        color: var(--claude-text-soft);
+      }
+
+      .ghost-btn:hover {
+        background: rgb(0 0 0 / 8%);
+      }
+
+      .solid-btn {
+        border: 0;
+        padding: 0 16px;
+        background: var(--claude-orange);
+        color: white;
+      }
+
+      .side {
+        display: grid;
+        gap: 18px;
+      }
+
+      .popup {
+        width: 320px;
+        overflow: hidden;
+        border: 1px solid var(--claude-border);
+        border-radius: 10px;
+        background: var(--claude-surface);
+        box-shadow: 0 10px 34px rgb(0 0 0 / 7%);
+      }
+
+      .popup-review {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--claude-border);
+        color: var(--claude-muted);
+      }
+
+      .popup-body {
+        padding: 16px;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 14px 0;
+      }
+
+      .metric {
+        padding: 10px;
+        border: 1px solid var(--claude-border);
+        border-radius: 8px;
+        background: var(--claude-surface-soft);
+      }
+
+      .metric span {
+        display: block;
+        color: var(--claude-muted);
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 20px;
+      }
+
+      .dark-reference {
+        background: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      .dark-reference .panel-title {
+        border-bottom-color: rgb(255 255 255 / 10%);
+        color: var(--dark-muted);
+      }
+
+      .dark-sample {
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .dark-meter {
+        width: 172px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgb(31 31 30);
+      }
+
+      .dark-meter span {
+        display: block;
+        width: 42%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--claude-orange);
+      }
+
+      .dark-ring {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: conic-gradient(var(--claude-orange) 33%, rgb(31 31 30) 0);
+      }
+
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>Claude Usage Bar Light Mode Preview</h1>
+        <p>Hardcoded preview of proposed light-mode colors before changing extension code.</p>
+      </header>
+
+      <section class="grid">
+        <section class="panel">
+          <div class="panel-title">
+            <span>Claude chat surface</span>
+            <span>proposed light mode</span>
+          </div>
+          <div class="canvas">
+            <div class="chat-header">
+              <strong>AP Art History review</strong>
+              <div class="cache-timer">
+                <span>⌛</span>
+                <span>3:42</span>
+                <div class="cache-tooltip">
+                  Prompt cache expires in 3:42<br />
+                  Cached tokens save ~90% input cost
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-copy">
+              <div class="msg">Here is a tighter comparison of style, patronage, and intended audience.</div>
+              <div class="msg user">Can you turn that into a quick quiz before my test?</div>
+              <div class="msg">Yes. I will focus on the works that are easiest to confuse.</div>
+            </div>
+
+            <div class="tour-card">
+              <div class="tour-step">Step 2 of 4</div>
+              <div class="tour-title">Jump through your messages</div>
+              <p class="tour-body">The side rail stays visible in light mode without blending into the Claude page.</p>
+              <div class="tour-actions">
+                <button class="ghost-btn">←</button>
+                <button class="solid-btn">Next</button>
+              </div>
+            </div>
+
+            <nav class="rail" aria-label="User message navigation preview">
+              <button class="rail-marker"></button>
+              <button class="rail-marker active"></button>
+              <button class="rail-marker"></button>
+              <button class="rail-marker"></button>
+            </nav>
+
+            <div class="composer">
+              <div class="composer-placeholder">How can Claude help?</div>
+              <div class="usage-root">
+                <div class="bar-cell">
+                  <span class="bar-label">42%</span>
+                  <div class="meter"><span class="meter-fill"></span></div>
+                  <div class="tooltip plan-tooltip">
+                    <div class="review-banner">
+                      <span>Enjoying Claude Usage Bar? <a href="#">Rate on Chrome Store</a></span>
+                      <button class="dismiss">×</button>
+                    </div>
+                    <div class="tooltip-title">
+                      <span>Plan usage</span>
+                      <span>→</span>
+                    </div>
+                    <div class="row">
+                      <span>
+                        <span class="row-title">5-hour limit</span><br />
+                        <span class="row-sub">resets in 2h</span>
+                      </span>
+                      <span>
+                        <span class="row-pct">42%</span><br />
+                        <span class="row-pace">67% at reset</span>
+                      </span>
+                    </div>
+                    <div class="track"><span style="width: 42%"></span></div>
+                    <div class="row">
+                      <span>
+                        <span class="row-title">Weekly · all models <span class="learning">i</span></span><br />
+                        <span class="row-sub">resets in 4d</span>
+                      </span>
+                      <span>
+                        <span class="row-pct">31%</span><br />
+                        <span class="row-pace">lasts to reset</span>
+                      </span>
+                    </div>
+                    <div class="track"><span style="width: 31%"></span></div>
+                    <div class="row">
+                      <span>Weekly · Claude Design</span>
+                      <span>18% · resets in 4d</span>
+                    </div>
+                    <div class="track"><span style="width: 18%"></span></div>
+                  </div>
+                </div>
+
+                <div class="wheel-wrap">
+                  <span class="wheel-label">33%</span>
+                  <div class="ring"></div>
+                  <div class="tooltip token-tooltip">
+                    <span>Context &amp; token usage:</span>
+                    <span>33% of context window used</span>
+                    <span>66k / 200k context length</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side">
+          <section class="popup">
+            <div class="popup-review">
+              <span>Enjoying it? <a href="#">Rate on Chrome Store</a></span>
+              <button class="dismiss">×</button>
+            </div>
+            <div class="popup-body">
+              <h2>Claude Usage Bar</h2>
+              <p>Claude API usage loaded</p>
+              <div class="metric-grid">
+                <div class="metric"><span>Today</span><strong>14</strong></div>
+                <div class="metric"><span>Chat tokens</span><strong>66k</strong></div>
+                <div class="metric"><span>5-hour</span><strong>42%</strong></div>
+                <div class="metric"><span>Weekly</span><strong>31%</strong></div>
+              </div>
+              <button class="solid-btn">Customize overlay</button>
+            </div>
+          </section>
+
+          <section class="panel dark-reference">
+            <div class="panel-title">
+              <span>Current dark reference</span>
+              <span>for contrast only</span>
+            </div>
+            <div class="dark-sample">
+              <div class="dark-meter"><span></span></div>
+              <div class="dark-ring"></div>
+              <span>Dark hover surfaces stay separate from the light proposal.</span>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>

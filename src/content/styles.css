@@ -27,6 +27,7 @@
 /* ── Bar ──────────────────────────────────────────────────── */
 
 .cub-meter {
+  display: flex;
   height: 4px;
   overflow: visible;
   border-radius: 999px;
@@ -139,6 +140,57 @@
   }
 }
 
+/* ── Review banner (inside plan usage tooltip) ───────────── */
+
+.cub-review-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+.cub-review-banner-text {
+  flex: 1;
+  font-size: 12px;
+  color: rgb(165 164 156);
+  text-align: left;
+}
+
+.cub-review-banner-text a {
+  color: rgb(204 124 94);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgb(204 124 94 / 50%);
+}
+
+.cub-review-banner-text a:hover {
+  text-decoration-color: rgb(204 124 94 / 80%);
+}
+
+.cub-review-banner-dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: rgb(165 164 156 / 60%);
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.cub-review-banner-dismiss:hover {
+  background: rgb(255 255 255 / 8%);
+  color: rgb(245 245 241);
+}
+
 /* ── Tooltips (shared) ────────────────────────────────────── */
 
 .cub-usage-tooltip,
@@ -173,6 +225,7 @@
   padding: 10px 12px 12px;
   text-align: center;
   transform: translateX(-50%) translateY(3px);
+  cursor: default;
 }
 
 /* ── Tooltip internals ────────────────────────────────────── */
@@ -236,6 +289,51 @@
 .cub-usage-row-title {
   color: rgb(225 225 219);
   font-size: 14px;
+}
+
+.cub-weekly-learning {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: 5px;
+  border: 1px solid rgb(204 124 94 / 82%);
+  border-radius: 999px;
+  color: rgb(204 124 94);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: 1px;
+}
+
+.cub-weekly-learning-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  z-index: 2;
+  width: 210px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+  transform: translateX(-50%);
+  padding: 7px 8px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  background: rgb(35 35 33 / 96%);
+  color: rgb(242 239 234 / 86%);
+  font-size: 11px;
+  font-weight: 450;
+  line-height: 1.25;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.cub-weekly-learning:hover .cub-weekly-learning-tooltip,
+.cub-weekly-learning:focus-visible .cub-weekly-learning-tooltip {
+  opacity: 1;
 }
 
 .cub-usage-row-sub {
@@ -405,11 +503,11 @@
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-meter {
-  background: rgb(220 220 218);
+  background: rgb(221 219 214);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-token-ring {
-  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(220 220 218) 0);
+  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(221 219 214) 0);
 }
 
 /* Centre hole – slightly off-white to read cleanly on light backgrounds */
@@ -459,16 +557,57 @@
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-track {
-  background: rgb(0 0 0 / 10%);
+  background: rgb(235 233 228);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-token-tooltip span:first-child {
   color: rgb(120 118 112);
 }
 
+#claude-usage-bar-root.cub-theme-light .cub-review-banner {
+  border-bottom-color: rgb(0 0 0 / 10%);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-review-banner-text {
+  color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-review-banner-text a {
+  color: rgb(190 102 72);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-review-banner-dismiss {
+  color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-review-banner-dismiss:hover {
+  background: rgb(0 0 0 / 6%);
+  color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-weekly-learning {
+  border-color: rgb(204 124 94 / 70%);
+  color: rgb(190 102 72);
+  background: rgb(204 124 94 / 8%);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-weekly-learning-tooltip {
+  background: rgb(255 255 255);
+  border: 1px solid rgb(0 0 0 / 10%);
+  color: rgb(80 78 72);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
+}
+
 #claude-usage-bar-root.cub-theme-light .cub-bar-label,
 #claude-usage-bar-root.cub-theme-light .cub-wheel-label {
-  color: rgb(195 194 184);
+  color: rgb(80 78 72);
+}
+
+#claude-cache-timer-host.cub-theme-light .cub-cache-timer-tooltip {
+  background: rgb(255 255 255);
+  border: 1px solid rgb(0 0 0 / 10%);
+  color: rgb(40 40 38);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
 }
 
 /* ── Message rail (right-side user message navigator) ───────────────────── */
@@ -531,7 +670,12 @@
 }
 
 .cub-message-rail--light .cub-message-rail-marker::before {
-  background: rgba(100, 98, 92, 0.55);
+  background: rgb(80 78 72 / 58%);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 80%);
+}
+
+.cub-message-rail--light .cub-message-rail-marker:hover::before {
+  background: rgb(80 78 72 / 78%);
 }
 
 .cub-message-rail--light .cub-message-rail-marker--active::before {
@@ -576,6 +720,12 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   inset: 0;
   pointer-events: all;
   transition: background 200ms ease;
+}
+
+/* Interactive step: let clicks pass through the backdrop so users can
+   toggle highlighted controls without dismissing the tour. */
+.cub-tour-interactive .cub-tour-backdrop {
+  pointer-events: none;
 }
 
 /* Spotlight: punches a bright hole through the dim overlay.
