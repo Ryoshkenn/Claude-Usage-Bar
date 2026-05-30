@@ -1,3 +1,11 @@
 node_modules/
 dist/
 .DS_Store
+
+# Build artifacts / local
+*.zip
+test-screenshots/
+.planning/
+.superpowers/
+.playwright-cli/
+.playwright-mcp/

@@ -1,7 +1,15 @@
 import React, { useEffect, useId, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
-import type { MetricTarget, PaceSurplusFormat, RingTarget, Settings } from "../shared/types";
+import { clearWeeklyUsageMetrics, DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
+import type {
+  MetricTarget,
+  PaceSurplusFormat,
+  RingTarget,
+  Settings,
+  WeeklyEstimateDisplay,
+  WeeklyPaceMode,
+  WeeklyUsageMetrics,
+} from "../shared/types";
 
 const SETTINGS_PATH = "/settings/usage-bar";
 
@@ -309,10 +317,11 @@ const Row = ({ labelId, descId, label, description, children }: RowProps) => (
 interface SectionProps {
   title: string;
   children: React.ReactNode;
+  id?: string;
 }
 
-const Section = ({ title, children }: SectionProps) => (
-  <section className="mb-xl last:mb-0">
+const Section = ({ title, children, id }: SectionProps) => (
+  <section id={id} className="mb-xl last:mb-0">
     <div className={CDS_SECTION_HEADER}>
       <div className={CDS_SECTION_TITLE_WRAP}>
         <h3 className={CDS_SECTION_TITLE}>{title}</h3>
@@ -338,6 +347,38 @@ const PACE_SURPLUS_OPTIONS: { value: PaceSurplusFormat; label: string }[] = [
   { value: "time", label: "Time past reset" },
 ];
 
+const WEEKLY_PACE_OPTIONS: { value: WeeklyPaceMode; label: string }[] = [
+  { value: "smart", label: "Smart schedule" },
+  { value: "manual", label: "Manual schedule" },
+];
+
+const WEEKLY_DISPLAY_OPTIONS: { value: WeeklyEstimateDisplay; label: string }[] = [
+  { value: "active_hours", label: "Active hours" },
+  { value: "calendar_time", label: "Days / time" },
+];
+
+export const formatManualStartTimeLabel = (hour: number): string => {
+  const normalizedHour = Math.max(0, Math.min(23, Math.floor(hour)));
+  const suffix = normalizedHour < 12 ? "AM" : "PM";
+  const displayHour = normalizedHour % 12 === 0 ? 12 : normalizedHour % 12;
+  return `${displayHour}:00 ${suffix}`;
+};
+
+const MANUAL_START_TIME_OPTIONS = Array.from({ length: 24 }, (_, hour) => ({
+  value: String(hour),
+  label: formatManualStartTimeLabel(hour),
+}));
+
+const WEEK_DAYS = [
+  { value: 0, label: "S" },
+  { value: 1, label: "M" },
+  { value: 2, label: "T" },
+  { value: 3, label: "W" },
+  { value: 4, label: "T" },
+  { value: 5, label: "F" },
+  { value: 6, label: "S" },
+];
+
 // ── SettingsPage ─────────────────────────────────────────────────────────────
 
 const SettingsPage = () => {
@@ -345,17 +386,22 @@ const SettingsPage = () => {
   const id = (key: string) => `cub-${uid}-${key}`;
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [weeklyMetrics, setWeeklyMetrics] = useState<WeeklyUsageMetrics | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     void getStorage().then((s) => {
       setSettings(s.settings);
+      setWeeklyMetrics(s.weeklyUsageMetrics);
       setLoaded(true);
     });
 
     const handler = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
       if (area === "local" && changes.settings?.newValue) {
         setSettings(changes.settings.newValue as Settings);
+      }
+      if (area === "local" && changes.weeklyUsageMetrics?.newValue) {
+        setWeeklyMetrics(changes.weeklyUsageMetrics.newValue as WeeklyUsageMetrics);
       }
     };
     chrome.storage.onChanged.addListener(handler);
@@ -365,6 +411,25 @@ const SettingsPage = () => {
   const update = (partial: Partial<Settings>) => {
     void updateSettings(partial).then(setSettings);
   };
+
+  const deleteWeeklyHistory = () => {
+    void clearWeeklyUsageMetrics().then(setWeeklyMetrics);
+  };
+
+  const toggleWorkDay = (day: number) => {
+    const current = new Set(settings.weeklyManualWorkDays ?? [1, 2, 3, 4, 5]);
+    if (current.has(day)) {
+      current.delete(day);
+    } else {
+      current.add(day);
+    }
+    update({ weeklyManualWorkDays: [...current].sort((a, b) => a - b) });
+  };
+
+  const learnedDays = Object.keys(weeklyMetrics?.activeDayBuckets ?? {}).length;
+  const learnedHours = weeklyMetrics?.averageActiveHoursPerDay ?? 0;
+  const showManualStartTime =
+    settings.weeklyEstimateDisplay === "calendar_time" || settings.weeklyPaceMode === "manual";
 
   if (!loaded) return null;
 
@@ -455,11 +520,124 @@ const SettingsPage = () => {
         </Row>
       </Section>
 
-      <Section title="Pace">
+      <div id="cub-metrics-sections">
+      <Section id="cub-section-weekly-metrics" title="Weekly usage metrics">
+        <Row
+          labelId={id("weekly-enabled")}
+          label="Learn weekly patterns"
+          description="Use local numeric samples to tune weekly estimates. Turn this off to keep weekly pacing on the fixed manual schedule."
+        >
+          <Switch
+            id={id("weekly-enabled")}
+            checked={settings.weeklyMetricsEnabled !== false}
+            onChange={(v) => update({ weeklyMetricsEnabled: v })}
+          />
+        </Row>
+        <Row
+          labelId={id("weekly-mode")}
+          label="Weekly estimate"
+          description="Smart mode starts from about ten 5-hour windows per week, then learns your active Claude pattern from local numeric usage samples."
+        >
+          <CdsSelect
+            id={id("weekly-mode")}
+            value={settings.weeklyPaceMode}
+            options={WEEKLY_PACE_OPTIONS}
+            onChange={(v) => update({ weeklyPaceMode: v as WeeklyPaceMode })}
+          />
+        </Row>
+        <Row
+          labelId={id("weekly-display")}
+          label="Weekly estimate display"
+          description="Active hours shows usable Claude time left. Days / time predicts the local day and time you will run out."
+        >
+          <CdsSelect
+            id={id("weekly-display")}
+            value={settings.weeklyEstimateDisplay ?? "active_hours"}
+            options={WEEKLY_DISPLAY_OPTIONS}
+            onChange={(v) => update({ weeklyEstimateDisplay: v as WeeklyEstimateDisplay })}
+          />
+        </Row>
+        <Row
+          labelId={id("weekly-days")}
+          label="Manual work days"
+          description="Used as the default schedule while smart weekly metrics are learning, or whenever manual mode is selected."
+        >
+          <div className="flex items-center gap-1" role="group" aria-label="Manual weekly work days">
+            {WEEK_DAYS.map((day) => {
+              const active = (settings.weeklyManualWorkDays ?? [1, 2, 3, 4, 5]).includes(day.value);
+              return (
+                <button
+                  key={day.value}
+                  type="button"
+                  aria-pressed={active}
+                  className="cds-reset inline-flex h-7 w-7 items-center justify-center rounded border text-body"
+                  style={{
+                    background: active ? "rgb(204 124 94 / 18%)" : "rgb(255 255 255 / 6%)",
+                    borderColor: active ? "rgb(204 124 94 / 64%)" : "rgb(255 255 255 / 10%)",
+                    color: active ? "rgb(204 124 94)" : "var(--text-primary)",
+                  }}
+                  onClick={() => toggleWorkDay(day.value)}
+                >
+                  {day.label}
+                </button>
+              );
+            })}
+          </div>
+        </Row>
+        <Row
+          labelId={id("weekly-hours")}
+          label="Manual hours per work day"
+          description="Used as the starting cap for weekly pacing before smart metrics have enough history."
+        >
+          <input
+            id={id("weekly-hours")}
+            type="number"
+            min="1"
+            max="24"
+            step="1"
+            value={settings.weeklyManualActiveHoursPerDay}
+            onChange={(e) => {
+              const value = Math.min(24, Math.max(1, Number(e.currentTarget.value) || 10));
+              update({ weeklyManualActiveHoursPerDay: value });
+            }}
+            className="h-control w-16 rounded bg-bg-000 px-sm text-body text-primary outline-none shadow-field"
+          />
+        </Row>
+        {showManualStartTime && (
+          <Row
+            labelId={id("weekly-start-hour")}
+            label="Manual start time"
+            description="Local time used with manual days to place weekly usage into calendar time."
+          >
+            <CdsSelect
+              id={id("weekly-start-hour")}
+              value={String(settings.weeklyManualStartHour ?? 9)}
+              options={MANUAL_START_TIME_OPTIONS}
+              onChange={(v) => update({ weeklyManualStartHour: Math.min(23, Math.max(0, Number(v) || 9)) })}
+            />
+          </Row>
+        )}
+        <Row
+          labelId={id("weekly-learned")}
+          label="Learned pattern"
+          description="Stored locally in this browser. No prompts, responses, cookies, or raw Claude payloads are stored."
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-body text-muted">
+              {weeklyMetrics?.confidence === "ready" ? "Ready" : "Learning"} · {weeklyMetrics?.sampleCount ?? 0} samples
+              {learnedDays > 0 ? ` · ${learnedDays} active days` : ""}
+              {learnedHours > 0 ? ` · ${Math.round(learnedHours * 10) / 10}h/day` : ""}
+            </span>
+            <CdsButton onClick={deleteWeeklyHistory}>Delete history</CdsButton>
+          </div>
+        </Row>
+      </Section>
+
+      <Section id="cub-section-5hr-metrics" title="5hr usage metrics">
         <Row
           labelId={id("show-pace")}
           label="Show pace"
-          description="Show the pace estimate next to the usage bar when enough recent session data is available."
+          description="Show the pace estimate next to the usage bar. Accurate pace requires pattern learning — to opt out of pattern-based pacing, turn this off."
         >
           <Switch
             id={id("show-pace")}
@@ -479,7 +657,22 @@ const SettingsPage = () => {
             onChange={(v) => update({ paceSurplusFormat: v as PaceSurplusFormat })}
           />
         </Row>
+        <Row
+          labelId={id("pace-learned")}
+          label="Learned pattern"
+          description="Stored locally in this browser. No prompts, responses, cookies, or raw Claude payloads are stored."
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-body text-muted">
+              {weeklyMetrics?.confidence === "ready" ? "Ready" : "Learning"} · {weeklyMetrics?.sampleCount ?? 0} samples
+              {learnedDays > 0 ? ` · ${learnedDays} active days` : ""}
+              {learnedHours > 0 ? ` · ${Math.round(learnedHours * 10) / 10}h/day` : ""}
+            </span>
+            <CdsButton onClick={deleteWeeklyHistory}>Delete history</CdsButton>
+          </div>
+        </Row>
       </Section>
+      </div>
     </div>
   );
 };
