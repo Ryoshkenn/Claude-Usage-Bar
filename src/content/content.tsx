@@ -1,15 +1,17 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { CLAUDE_ORIGIN, MESSAGE_TYPES } from "../shared/constants";
+import { CLAUDE_ORIGIN, MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import {
   getStorage,
   saveChatUsage,
   saveDailyUsage,
   saveRealUsageSnapshot,
+  updateSettings,
 } from "../shared/storage";
 import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } from "../shared/types";
 import { readClaudeDomSnapshot } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
+import { OnboardingTour } from "./OnboardingTour";
 import {
   hasMeaningfulChatUsageChange,
   hasMeaningfulDailyUsageChange,
@@ -26,6 +28,7 @@ import { messageToSnapshot } from "./usageProbeBridge";
 // it writes its ID to the page; older instances see they're displaced and stop.
 const INSTANCE_ATTR = "data-cub-instance";
 const HOST_ATTR = "data-cub-host-instance";
+const THEME_SYNC_INTERVAL_MS = 500;
 const myInstanceId = `${Date.now()}-${Math.random()}`;
 const isActiveInstance = () =>
   document.documentElement.getAttribute(INSTANCE_ATTR) === myInstanceId;
@@ -38,6 +41,7 @@ let mountedComposer: HTMLElement | null = null;
 let lastSentCount = 0;
 let lastApiRefreshUrl = "";
 let lastConversationContextUrl = "";
+let lastSyncedTheme: "light" | "dark" | null = null;
 
 // Cache timer state
 let cacheTimerRoot: ReturnType<typeof createRoot> | null = null;
@@ -45,6 +49,10 @@ let cacheTimerHost: HTMLElement | null = null;
 let cacheTimerParent: HTMLElement | null = null;
 let streamingEndedAt: number | null = null;
 let wasStreaming = false;
+
+// Onboarding tour state
+let tourRoot: ReturnType<typeof createRoot> | null = null;
+let tourHost: HTMLDivElement | null = null;
 
 const injectPageProbe = () => {
   if (location.origin !== CLAUDE_ORIGIN) {
@@ -58,9 +66,63 @@ const injectPageProbe = () => {
   (document.documentElement || document.head).appendChild(script);
 };
 
+const isColorLight = (value: string): boolean | null => {
+  const match = value.match(/rgba?\((\d+),?\s+(\d+),?\s+(\d+)(?:,?\s+([0-9.]+))?\)/i);
+  if (!match) {
+    return null;
+  }
+
+  const alpha = match[4] === undefined ? 1 : Number(match[4]);
+  if (!Number.isFinite(alpha) || alpha < 0.2) {
+    return null;
+  }
+
+  const red = Number(match[1]);
+  const green = Number(match[2]);
+  const blue = Number(match[3]);
+  const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+  return luminance > 0.62;
+};
+
+const readElementLightMode = (element: Element | null): boolean | null => {
+  let current = element instanceof HTMLElement ? element : element?.parentElement ?? null;
+
+  while (current) {
+    const light = isColorLight(getComputedStyle(current).backgroundColor);
+    if (light !== null) return light;
+    current = current.parentElement;
+  }
+
+  return null;
+};
+
+const readComputedLightMode = (): boolean | null => {
+  const selectors = [
+    "main",
+    'form textarea:not(#conversation-preferences), form [contenteditable="true"][role="textbox"], form [role="textbox"]',
+    "body",
+    "html",
+  ];
+  const centerElement = document.elementFromPoint(
+    Math.max(0, Math.floor(window.innerWidth / 2)),
+    Math.max(0, Math.floor(window.innerHeight / 2)),
+  );
+  const candidates = [
+    centerElement,
+    ...selectors.map((selector) => document.querySelector<HTMLElement>(selector)),
+  ];
+
+  for (const element of candidates) {
+    const light = readElementLightMode(element);
+    if (light !== null) return light;
+  }
+
+  return null;
+};
+
 // Detect whether Claude's UI is currently in light mode.
-// Checks Claude's explicit theme class/attribute first, falls back to the OS preference.
-const isLightMode = (): boolean => {
+// Checks Claude's explicit theme signal first, then actual UI colors, then OS preference.
+export const isLightMode = (): boolean => {
   const el = document.documentElement;
   if (el.classList.contains("dark") || el.getAttribute("data-theme") === "dark" || el.getAttribute("data-color-scheme") === "dark") {
     return false;
@@ -68,13 +130,23 @@ const isLightMode = (): boolean => {
   if (el.classList.contains("light") || el.getAttribute("data-theme") === "light" || el.getAttribute("data-color-scheme") === "light") {
     return true;
   }
+  const computed = readComputedLightMode();
+  if (computed !== null) {
+    return computed;
+  }
   return !window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
 const syncTheme = () => {
   const light = isLightMode();
+  const theme = light ? "light" : "dark";
   host?.classList.toggle("cub-theme-light", light);
+  cacheTimerHost?.classList.toggle("cub-theme-light", light);
   syncMessageRailTheme(light);
+  if (theme !== lastSyncedTheme) {
+    lastSyncedTheme = theme;
+    void chrome.storage.local.set({ [STORAGE_KEYS.detectedTheme]: light ? "light" : "dark" });
+  }
 };
 
 const ensureHost = () => {
@@ -148,6 +220,7 @@ const mountCacheTimerInHeader = (): boolean => {
   if (!cacheTimerHost) {
     cacheTimerHost = document.createElement("span");
     cacheTimerHost.id = "claude-cache-timer-host";
+    cacheTimerHost.classList.toggle("cub-theme-light", isLightMode());
     parent.appendChild(cacheTimerHost);
     cacheTimerRoot = createRoot(cacheTimerHost);
   }
@@ -162,6 +235,31 @@ const renderCacheTimer = () => {
   cacheTimerRoot?.render(
     <React.StrictMode>
       <CacheTimer cacheExpiresAt={storageState?.chatUsage.cacheExpiresAt} fallbackStartedAt={streamingEndedAt} />
+    </React.StrictMode>,
+  );
+};
+
+const ensureTourHost = () => {
+  if (tourHost && document.body.contains(tourHost)) return;
+  tourHost = document.createElement("div");
+  tourHost.id = "claude-usage-bar-tour";
+  document.body.appendChild(tourHost);
+  tourRoot = createRoot(tourHost);
+};
+
+const renderTour = () => {
+  if (!storageState || !isActiveInstance()) return;
+  ensureTourHost();
+  const showTour = storageState.settings.hasSeenTour === false;
+  tourRoot?.render(
+    <React.StrictMode>
+      {showTour ? (
+        <OnboardingTour
+          onComplete={() => {
+            void updateSettings({ hasSeenTour: true });
+          }}
+        />
+      ) : null}
     </React.StrictMode>,
   );
 };
@@ -230,9 +328,11 @@ const render = () => {
   renderCacheTimer();
   if (!storageState.settings.showOverlay) {
     removeComposerHost();
+    renderTour();
     return;
   }
   if (!mountHostInComposer()) {
+    renderTour();
     return;
   }
   root?.render(
@@ -242,9 +342,12 @@ const render = () => {
         chatUsage={storageState.chatUsage}
         realUsageSnapshot={storageState.realUsageSnapshot}
         usageHistory={storageState.usageHistory}
+        weeklyUsageMetrics={storageState.weeklyUsageMetrics}
       />
     </React.StrictMode>,
   );
+  renderTour();
+  syncTheme();
 };
 
 const requestApiUsageRefresh = (force = false) => {
@@ -356,6 +459,7 @@ const scheduleRefresh = (records?: MutationRecord[]) => {
     if (!isActiveInstance()) return;
     tickSettingsPage();
     tickMessageRail();
+    syncTheme();
     void refreshUsage();
   }, 350);
 };
@@ -395,6 +499,7 @@ const init = async () => {
   initSettingsPage();
   tickMessageRail();
   render();
+  syncTheme();
 
   // Capture initial state so the first refreshUsage call doesn't spuriously trigger a refresh.
   const initialSnapshot = readClaudeDomSnapshot();
@@ -412,6 +517,12 @@ const init = async () => {
       return;
     }
 
+    // Prompt clipboard manages its own storage; skip its changes to avoid flicker.
+    const changeKeys = Object.keys(changes);
+    if (changeKeys.length === 1 && changeKeys[0] === STORAGE_KEYS.prompts) {
+      return;
+    }
+
     storageState = {
       ...storageState,
       settings: (changes.settings?.newValue ?? storageState.settings) as StorageShape["settings"],
@@ -421,19 +532,28 @@ const init = async () => {
       usageHistory: Array.isArray(changes.usageHistory?.newValue)
         ? (changes.usageHistory.newValue as StorageShape["usageHistory"])
         : storageState.usageHistory,
+      weeklyUsageMetrics:
+        (changes.weeklyUsageMetrics?.newValue as StorageShape["weeklyUsageMetrics"] | undefined) ??
+        storageState.weeklyUsageMetrics,
     };
     render();
   });
 
-  // Watch Claude's html element for theme class/attribute changes
+  // Watch Claude's theme attributes and style changes wherever the live switch applies them.
   const themeObserver = new MutationObserver(syncTheme);
   themeObserver.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ["class", "data-theme", "data-color-scheme"],
+    attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
   });
+  themeObserver.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
+  });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncTheme);
+  window.setInterval(syncTheme, THEME_SYNC_INTERVAL_MS);
 
   const observer = new MutationObserver(scheduleRefresh);
-  observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  observer.observe(document.documentElement, { attributes: true, childList: true, subtree: true, characterData: true, attributeFilter: ["class", "data-theme", "data-color-scheme", "style"] });
   scheduleRefresh();
 };
 

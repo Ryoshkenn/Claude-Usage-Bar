@@ -3,6 +3,19 @@ export type UsageSource = "estimated" | "real";
 export type MetricTarget = "session" | "weekly" | "context" | "design";
 export type RingTarget = MetricTarget | "hidden";
 export type PaceSurplusFormat = "percent" | "time";
+export type WeeklyPaceMode = "smart" | "manual";
+export type WeeklyEstimateDisplay = "active_hours" | "calendar_time";
+export type WeeklyUsageConfidence = "learning" | "ready";
+
+export interface PromptEntry {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  pinned: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
 
 export interface Settings {
   showOverlay: boolean;
@@ -15,6 +28,14 @@ export interface Settings {
   showWheelLabel: boolean;
   showPace: boolean;
   paceSurplusFormat: PaceSurplusFormat;
+  weeklyMetricsEnabled: boolean;
+  weeklyPaceMode: WeeklyPaceMode;
+  weeklyEstimateDisplay: WeeklyEstimateDisplay;
+  weeklyManualWorkDays: number[];
+  weeklyManualActiveHoursPerDay: number;
+  weeklyManualStartHour: number;
+  hasSeenTour: boolean;
+  showClipboard: boolean;
 }
 
 export interface DailyUsage {
@@ -66,12 +87,35 @@ export interface UsageLogEntry {
   weeklyResetsAt?: number;
 }
 
+export interface WeeklyUsageMetrics {
+  startedAt: number;
+  lastUpdatedAt: number;
+  sampleCount: number;
+  activeDayBuckets: Record<string, number>;
+  activeHourBuckets: Record<string, number>;
+  activeSlotBuckets: Record<string, number>;
+  averageActiveHoursPerDay: number;
+  confidence: WeeklyUsageConfidence;
+}
+
+export interface WeeklyProjectionOptions {
+  mode: WeeklyPaceMode;
+  display?: WeeklyEstimateDisplay;
+  metrics?: WeeklyUsageMetrics;
+  manualWorkDays: number[];
+  manualActiveHoursPerDay: number;
+  manualStartHour?: number;
+}
+
 export type ProjectionStatus = "insufficient_data" | "lasting_to_reset" | "projected_empty";
 
 export interface UsageProjection {
   status: ProjectionStatus;
   etaMs?: number;
   drainRatePerHour?: number;
+  activeHoursUntilEmpty?: number;
+  projectedPercentAtReset?: number;
+  calendarEta?: boolean;
   label: string;
 }
 
@@ -113,4 +157,5 @@ export interface StorageShape {
   chatUsage: ChatUsage;
   realUsageSnapshot?: RealUsageSnapshot;
   usageHistory?: UsageLogEntry[];
+  weeklyUsageMetrics: WeeklyUsageMetrics;
 }

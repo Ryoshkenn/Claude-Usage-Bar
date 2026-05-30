@@ -13,6 +13,7 @@ let lastCount = -1;
 let activeIndex = -1;
 let currentMessages: HTMLElement[] = [];
 let clickLockUntil = 0;
+let currentThemeIsLight = false;
 
 const CLICK_LOCK_MS = 1800;
 
@@ -83,6 +84,7 @@ const rebuildMarkers = (messages: HTMLElement[]): void => {
 };
 
 export const syncMessageRailTheme = (isLight: boolean): void => {
+  currentThemeIsLight = isLight;
   railEl?.classList.toggle("cub-message-rail--light", isLight);
 };
 
@@ -105,6 +107,7 @@ export const tickMessageRail = (): void => {
     railEl = document.createElement("nav");
     railEl.id = RAIL_ID;
     railEl.className = "cub-message-rail";
+    railEl.classList.toggle("cub-message-rail--light", currentThemeIsLight);
     railEl.setAttribute("aria-label", "User message navigation");
     document.body.appendChild(railEl);
     lastCount = -1;

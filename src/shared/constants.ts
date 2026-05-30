@@ -7,6 +7,11 @@ export const STORAGE_KEYS = {
   realUsageSnapshot: "realUsageSnapshot",
   organizationId: "organizationId",
   usageHistory: "usageHistory",
+  weeklyUsageMetrics: "weeklyUsageMetrics",
+  reviewBannerDismissedAt: "reviewBannerDismissedAt",
+  installedAt: "installedAt",
+  detectedTheme: "detectedTheme",
+  prompts: "prompts",
 } as const;
 
 export const MESSAGE_TYPES = {

@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties, type MouseEvent } from "react";
 import type {
   ChatUsage,
   MetricTarget,
@@ -7,22 +7,29 @@ import type {
   Settings,
   UsageLogEntry,
   UsageProjection,
+  WeeklyUsageMetrics,
 } from "../shared/types";
+import { STORAGE_KEYS } from "../shared/constants";
+
+const STORE_URL =
+  "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
 import {
   computeSessionProjection,
   computeWeeklyProjection,
   formatEta,
 } from "../shared/usageProjection";
+import { PromptClipboard } from "./PromptClipboard";
 
 interface ContentAppProps {
   settings: Settings;
   chatUsage: ChatUsage;
   realUsageSnapshot?: RealUsageSnapshot;
   usageHistory?: UsageLogEntry[];
+  weeklyUsageMetrics?: WeeklyUsageMetrics;
 }
 
 const TOKEN_CONTEXT_LIMIT = 200_000;
-const USAGE_PAGE_URL = "/settings/usage";
+const USAGE_PAGE_URL = "/settings/usage-bar";
 
 const clampPercentage = (value: number): number => Math.min(100, Math.max(0, Math.round(value)));
 
@@ -213,11 +220,16 @@ const buildPaceSummary = (
       typeof usedPercent === "number" &&
       typeof resetsAt === "number"
     ) {
-      const hoursUntilReset = Math.max(0, (resetsAt - now) / 3_600_000);
-      const projectedPercent = Math.min(
-        100,
-        Math.max(0, Math.round(usedPercent + projection.drainRatePerHour * hoursUntilReset)),
-      );
+      const projectedPercent =
+        typeof projection.projectedPercentAtReset === "number"
+          ? Math.round(projection.projectedPercentAtReset)
+          : (() => {
+              const hoursUntilReset = Math.max(0, (resetsAt - now) / 3_600_000);
+              return Math.min(
+                100,
+                Math.max(0, Math.round(usedPercent + projection.drainRatePerHour * hoursUntilReset)),
+              );
+            })();
       return { text: `${projectedPercent}% at reset`, kind: "good" };
     }
 
@@ -232,6 +244,20 @@ const buildPaceSummary = (
   }
 
   if (projection.status === "projected_empty" && typeof projection.etaMs === "number") {
+    if (typeof projection.activeHoursUntilEmpty === "number") {
+      return { text: `~${Math.ceil(projection.activeHoursUntilEmpty)}h active left`, kind: "bad" };
+    }
+
+    if (projection.calendarEta === true) {
+      const date = new Date(projection.etaMs);
+      const dateLabel = date.toLocaleString(undefined, {
+        weekday: "short",
+        hour: "numeric",
+        minute: "2-digit",
+      });
+      return { text: `empty ${dateLabel}`, kind: "bad" };
+    }
+
     return { text: `empty in ${formatEta(projection.etaMs, now)}`, kind: "bad" };
   }
 
@@ -245,7 +271,42 @@ const RING_METRIC_LABEL: Record<string, string> = {
   design: "Claude Design",
 };
 
-export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistory }: ContentAppProps) => {
+export const ContentApp = ({
+  settings,
+  chatUsage,
+  realUsageSnapshot,
+  usageHistory,
+  weeklyUsageMetrics,
+}: ContentAppProps) => {
+  const [showReviewBanner, setShowReviewBanner] = useState(false);
+
+  useEffect(() => {
+    if (typeof chrome === "undefined" || !chrome.storage?.local) {
+      return;
+    }
+
+    void chrome.storage.local
+      .get([STORAGE_KEYS.reviewBannerDismissedAt, STORAGE_KEYS.installedAt])
+      .then((data) => {
+        const dismissedAt = data[STORAGE_KEYS.reviewBannerDismissedAt] as number | undefined;
+        const installedAt = data[STORAGE_KEYS.installedAt] as number | undefined;
+
+        if (dismissedAt && Date.now() - dismissedAt < 30 * 24 * 60 * 60 * 1000) return;
+        if (!usageHistory || usageHistory.length < 100) return;
+
+        const firstUseAt = installedAt ?? usageHistory[0]?.capturedAt;
+        if (!firstUseAt || Date.now() - firstUseAt < 7 * 24 * 60 * 60 * 1000) return;
+
+        setShowReviewBanner(true);
+      });
+  }, [usageHistory]);
+
+  const dismissReviewBanner = (e: MouseEvent) => {
+    e.stopPropagation();
+    setShowReviewBanner(false);
+    void chrome.storage.local.set({ [STORAGE_KEYS.reviewBannerDismissedAt]: Date.now() });
+  };
+
   if (!settings.showOverlay) {
     return null;
   }
@@ -257,6 +318,7 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
   const showWheel = settings.showWheel !== false;
   const showWheelLabel = settings.showWheelLabel === true;
   const showPace = settings.showPace !== false;
+  const showClipboard = settings.showClipboard !== false;
 
   const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage);
   const barWidth = typeof barPercentage === "number" ? barPercentage : 0;
@@ -289,6 +351,15 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
           usageHistory ?? [],
           weeklyAllModelsPercentage,
           realUsageSnapshot.weeklyAllModelsResetsAt,
+          Date.now(),
+          {
+            mode: settings.weeklyMetricsEnabled === false ? "manual" : (settings.weeklyPaceMode ?? "smart"),
+            display: settings.weeklyEstimateDisplay ?? "active_hours",
+            metrics: settings.weeklyMetricsEnabled === false ? undefined : weeklyUsageMetrics,
+            manualWorkDays: settings.weeklyManualWorkDays ?? [1, 2, 3, 4, 5],
+            manualActiveHoursPerDay: settings.weeklyManualActiveHoursPerDay ?? 10,
+            manualStartHour: settings.weeklyManualStartHour ?? 9,
+          },
         )
       : null;
 
@@ -308,6 +379,10 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
     paceFormat,
     nowMs,
   );
+  const showWeeklyLearningNotice =
+    settings.weeklyMetricsEnabled !== false &&
+    settings.weeklyPaceMode !== "manual" &&
+    weeklyUsageMetrics?.confidence !== "ready";
 
   const ringTooltip = (() => {
     if (ringTarget === "hidden") return null;
@@ -345,13 +420,35 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
             <span className="cub-bar-label" aria-hidden="true">{barDisplay}</span>
           )}
           <div className="cub-meter" aria-label={`${RING_METRIC_LABEL[barMetric] ?? "Usage"} ${barDisplay}`} role="button" tabIndex={0}>
+          <span className="cub-meter-hover" />
           <span className="cub-meter-fill" style={{ width: `${barWidth}%` }} />
           <span className="cub-usage-tooltip" role="tooltip">
+            {showReviewBanner && (
+              <span className="cub-review-banner">
+                <span className="cub-review-banner-text">
+                  Enjoying Claude Usage Bar?{" "}
+                  <a href={STORE_URL} target="_blank" rel="noopener noreferrer">
+                    Rate on Chrome Store ↗
+                  </a>
+                </span>
+                <button type="button" className="cub-review-banner-dismiss" onClick={dismissReviewBanner}>
+                  ✕
+                </button>
+              </span>
+            )}
             <span className="cub-usage-title">
               <span>Plan usage</span>
-              <a className="cub-usage-link" href={USAGE_PAGE_URL} aria-label="Open Claude usage page">
+              <button
+                className="cub-usage-link"
+                type="button"
+                aria-label="Open extension settings"
+                onClick={() => {
+                  history.pushState(null, "", USAGE_PAGE_URL);
+                  window.dispatchEvent(new PopStateEvent("popstate"));
+                }}
+              >
                 →
-              </a>
+              </button>
             </span>
             <span className="cub-usage-row cub-usage-row--stacked">
               <span className="cub-usage-row-label">
@@ -376,7 +473,21 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
             </span>
             <span className="cub-usage-row cub-usage-row--stacked">
               <span className="cub-usage-row-label">
-                <span className="cub-usage-row-title">Weekly · all models</span>
+                <span className="cub-usage-row-title">
+                  Weekly · all models
+                  {showWeeklyLearningNotice && (
+                    <span
+                      className="cub-weekly-learning"
+                      aria-label="Weekly usage estimate is still learning"
+                      role="img"
+                    >
+                      i
+                      <span className="cub-weekly-learning-tooltip" role="tooltip">
+                        Weekly estimates may be inaccurate during the first week while Usage Bar learns your pattern.
+                      </span>
+                    </span>
+                  )}
+                </span>
                 <span className="cub-usage-row-sub">{weeklyAllModelsResetText ?? "—"}</span>
               </span>
               <span className="cub-usage-row-value">
@@ -440,6 +551,7 @@ export const ContentApp = ({ settings, chatUsage, realUsageSnapshot, usageHistor
           </span>
         </span>
       )}
+      {showClipboard && <PromptClipboard />}
     </aside>
   );
 };
