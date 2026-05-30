@@ -37,15 +37,16 @@
   flex: 1 1 auto;
 }
 
-/* Invisible hover-bridge above the bar so the tooltip doesn't flicker */
-.cub-meter::before {
-  content: "";
+/* ── Hover zone: easy to remove — delete this block + the span in ContentApp.tsx ── */
+.cub-meter-hover {
   position: absolute;
   left: 0;
-  bottom: 100%;
-  width: 330px;
-  height: 14px;
+  right: 0;
+  top: -10px;
+  bottom: -10px;
+  z-index: 1;
 }
+/* ── End hover zone ── */
 
 .cub-meter > .cub-meter-fill {
   display: block;
@@ -384,7 +385,7 @@
 
 /* ── Hover triggers – delay on show, instant on hide ─────── */
 
-.cub-bar-cell:hover .cub-usage-tooltip,
+.cub-bar-label:hover ~ .cub-meter .cub-usage-tooltip,
 .cub-meter:hover .cub-usage-tooltip,
 .cub-meter:focus-visible .cub-usage-tooltip {
   opacity: 1;
@@ -1166,6 +1167,7 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   font-size: 13px;
   text-align: center;
   padding: 16px 0;
+  animation: cub-prompt-item-in 200ms ease forwards;
 }
 
 .cub-prompt-item {
@@ -1176,6 +1178,18 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   border: 1px solid rgb(255 255 255 / 7%);
   background: rgb(38 38 36);
   cursor: pointer;
+  animation: cub-prompt-item-in 200ms ease both;
+}
+
+@keyframes cub-prompt-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cub-prompt-item:hover {
@@ -1186,13 +1200,56 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .cub-prompt-name {
   font-size: 13px;
   font-weight: 600;
   color: rgb(245 245 241);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.cub-prompt-delete {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  background: transparent;
+  color: rgb(165 164 156);
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 150ms ease, background 150ms ease, color 150ms ease, border-color 150ms ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cub-prompt-delete:hover {
+  background: rgb(255 255 255 / 8%);
+  color: rgb(245 245 241);
+}
+
+.cub-prompt-delete.confirm {
+  width: auto;
+  padding: 0 8px;
+  border-color: rgb(217 119 87 / 50%);
+  background: rgb(217 119 87 / 15%);
+  color: rgb(217 119 87);
+  font-weight: 500;
+}
+
+.cub-prompt-delete.confirm:hover {
+  background: rgb(217 119 87 / 25%);
+  color: rgb(217 119 87);
 }
 
 .cub-prompt-hotkey {
@@ -1450,6 +1507,27 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-name {
   color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-delete {
+  border-color: rgb(0 0 0 / 10%);
+  color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-delete:hover {
+  background: rgb(0 0 0 / 6%);
+  color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-delete.confirm {
+  border-color: rgb(180 90 60 / 40%);
+  background: rgb(180 90 60 / 8%);
+  color: rgb(180 90 60);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-delete.confirm:hover {
+  background: rgb(180 90 60 / 15%);
+  color: rgb(180 90 60);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-desc {

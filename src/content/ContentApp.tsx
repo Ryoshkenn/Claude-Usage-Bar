@@ -420,6 +420,7 @@ export const ContentApp = ({
             <span className="cub-bar-label" aria-hidden="true">{barDisplay}</span>
           )}
           <div className="cub-meter" aria-label={`${RING_METRIC_LABEL[barMetric] ?? "Usage"} ${barDisplay}`} role="button" tabIndex={0}>
+          <span className="cub-meter-hover" />
           <span className="cub-meter-fill" style={{ width: `${barWidth}%` }} />
           <span className="cub-usage-tooltip" role="tooltip">
             {showReviewBanner && (

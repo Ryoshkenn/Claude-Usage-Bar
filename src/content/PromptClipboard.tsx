@@ -45,6 +45,7 @@ export const PromptClipboard = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("All");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const loadedRef = useRef(false);
@@ -290,18 +291,35 @@ export const PromptClipboard = () => {
                   ))}
                 </div>
 
-                <div className="cub-prompt-list">
+                <div className="cub-prompt-list" key={`${activeTab}-${search}`}>
                   {filteredPrompts.length === 0 && (
                     <div className="cub-prompt-empty">No prompts found</div>
                   )}
-                  {filteredPrompts.map((entry) => (
+                  {filteredPrompts.map((entry, i) => (
                     <article
                       key={entry.id}
                       className="cub-prompt-item"
+                      style={{ animationDelay: `${i * 30}ms` }}
                       onClick={() => handleInsert(entry.content)}
                     >
                       <div className="cub-prompt-item-top">
                         <span className="cub-prompt-name">{entry.title || "Untitled"}</span>
+                        <button
+                          type="button"
+                          className={`cub-prompt-delete${deletingId === entry.id ? " confirm" : ""}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (deletingId === entry.id) {
+                              handleDelete(e, entry.id);
+                              setDeletingId(null);
+                            } else {
+                              setDeletingId(entry.id);
+                            }
+                          }}
+                          onMouseLeave={() => { if (deletingId === entry.id) setDeletingId(null); }}
+                        >
+                          {deletingId === entry.id ? "delete?" : "✕"}
+                        </button>
                       </div>
                       <div className="cub-prompt-desc">{entry.content}</div>
                       <div className="cub-prompt-actions">
