@@ -517,6 +517,12 @@ const init = async () => {
       return;
     }
 
+    // Prompt clipboard manages its own storage; skip its changes to avoid flicker.
+    const changeKeys = Object.keys(changes);
+    if (changeKeys.length === 1 && changeKeys[0] === STORAGE_KEYS.prompts) {
+      return;
+    }
+
     storageState = {
       ...storageState,
       settings: (changes.settings?.newValue ?? storageState.settings) as StorageShape["settings"],

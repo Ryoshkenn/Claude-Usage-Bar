@@ -18,6 +18,7 @@ import {
   computeWeeklyProjection,
   formatEta,
 } from "../shared/usageProjection";
+import { PromptClipboard } from "./PromptClipboard";
 
 interface ContentAppProps {
   settings: Settings;
@@ -317,6 +318,7 @@ export const ContentApp = ({
   const showWheel = settings.showWheel !== false;
   const showWheelLabel = settings.showWheelLabel === true;
   const showPace = settings.showPace !== false;
+  const showClipboard = settings.showClipboard !== false;
 
   const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage);
   const barWidth = typeof barPercentage === "number" ? barPercentage : 0;
@@ -548,6 +550,7 @@ export const ContentApp = ({
           </span>
         </span>
       )}
+      {showClipboard && <PromptClipboard />}
     </aside>
   );
 };

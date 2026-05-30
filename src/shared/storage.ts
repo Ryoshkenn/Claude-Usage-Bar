@@ -3,6 +3,7 @@ import { buildWeeklyUsageMetrics } from "./usageProjection";
 import type {
   ChatUsage,
   DailyUsage,
+  PromptEntry,
   RealUsageSnapshot,
   Settings,
   StorageShape,
@@ -34,6 +35,7 @@ export const DEFAULT_SETTINGS: Settings = {
   weeklyManualActiveHoursPerDay: 10,
   weeklyManualStartHour: 9,
   hasSeenTour: false,
+  showClipboard: true,
 };
 
 const today = () => new Date().toLocaleDateString("en-CA");
@@ -214,4 +216,17 @@ export const appendUsageHistoryEntry = async (
   const trimmed = history.length > HISTORY_CAP ? history.slice(history.length - HISTORY_CAP) : history;
   await saveUsageHistory(trimmed, adapter);
   await saveWeeklyUsageMetrics(buildWeeklyUsageMetrics(trimmed), adapter);
+};
+
+export const getPrompts = async (adapter: StorageAdapter = chromeStorageAdapter): Promise<PromptEntry[]> => {
+  const data = await adapter.get(STORAGE_KEYS.prompts);
+  const raw = data[STORAGE_KEYS.prompts];
+  return Array.isArray(raw) ? (raw as PromptEntry[]) : [];
+};
+
+export const savePrompts = async (
+  prompts: PromptEntry[],
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<void> => {
+  await adapter.set({ [STORAGE_KEYS.prompts]: prompts });
 };

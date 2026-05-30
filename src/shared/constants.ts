@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   reviewBannerDismissedAt: "reviewBannerDismissedAt",
   installedAt: "installedAt",
   detectedTheme: "detectedTheme",
+  prompts: "prompts",
 } as const;
 
 export const MESSAGE_TYPES = {

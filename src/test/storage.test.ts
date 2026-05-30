@@ -60,6 +60,7 @@ describe("storage helpers", () => {
       weeklyManualActiveHoursPerDay: 10,
       weeklyManualStartHour: 9,
       hasSeenTour: false,
+      showClipboard: true,
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
@@ -87,6 +88,7 @@ describe("storage helpers", () => {
       weeklyManualActiveHoursPerDay: 10,
       weeklyManualStartHour: 9,
       hasSeenTour: false,
+      showClipboard: true,
     });
     expect(adapter.data.settings).toEqual(settings);
   });

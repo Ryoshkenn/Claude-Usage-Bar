@@ -21,6 +21,7 @@ const settings: Settings = {
   weeklyManualActiveHoursPerDay: 10,
   weeklyManualStartHour: 9,
   hasSeenTour: true,
+  showClipboard: true,
 };
 
 const baseChatUsage: ChatUsage = {

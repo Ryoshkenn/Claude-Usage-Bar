@@ -7,6 +7,16 @@ export type WeeklyPaceMode = "smart" | "manual";
 export type WeeklyEstimateDisplay = "active_hours" | "calendar_time";
 export type WeeklyUsageConfidence = "learning" | "ready";
 
+export interface PromptEntry {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  pinned: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface Settings {
   showOverlay: boolean;
   mode: OverlayMode;
@@ -25,6 +35,7 @@ export interface Settings {
   weeklyManualActiveHoursPerDay: number;
   weeklyManualStartHour: number;
   hasSeenTour: boolean;
+  showClipboard: boolean;
 }
 
 export interface DailyUsage {
