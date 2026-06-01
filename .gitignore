@@ -9,3 +9,14 @@ test-screenshots/
 .superpowers/
 .playwright-cli/
 .playwright-mcp/
+playwright-report/
+test-results/
+blob-report/
+
+# env (keep the safe template)
+.env*
+!.env.example
+
+# agent-instruction docs (kept local, not tracked)
+/CLAUDE.md
+/AGENTS.md
