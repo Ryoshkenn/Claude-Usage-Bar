@@ -82,3 +82,38 @@ The overlay uses these sources:
 - Visible Claude UI text for model labels, reset windows, and fallback limit text.
 - A page-world probe that sanitizes same-origin JSON responses down to allowlisted usage metadata before posting it to the content script.
 - A DOM transcript estimator only as a fallback when no conversation id is available.
+
+## Tech stack
+
+Chrome Manifest V3 extension built with **Vite + TypeScript + React + CRXJS**. Token
+estimation uses a bundled local Claude tokenizer (`@huggingface/tokenizers` around
+`Xenova/claude-tokenizer` assets), with a `text.length / 4` heuristic fallback if the
+tokenizer fails to initialize. No model files are fetched at runtime.
+
+## Architecture
+
+Data flows in one direction: **background worker → storage → content script UI**.
+
+| Module | Responsibility |
+|---|---|
+| `src/background/background.ts` | Service worker. Owns all Claude API calls (`/api/organizations`, `/api/organizations/{id}/usage`, conversation JSON) with `credentials: "include"`. Throttles usage refreshes to ~60s, caches org id, dedupes in-flight requests. |
+| `src/shared/claudeConversationContext.ts` | Reconstructs the active branch from conversation JSON; computes `currentContextTokens` (diagnostic) and the compounded `estimatedTokens` (displayed). Returns numeric `ChatUsage` only. |
+| `src/shared/claudeUsageApi.ts` | Normalizes raw `/usage` JSON into `RealUsageSnapshot`; extracts org UUID. |
+| `src/shared/storage.ts` | Allowlist-gated storage; rejects unsafe fields (cookies, auth, raw payloads, conversation text). |
+| `src/shared/types.ts` | Shared TypeScript types. |
+| `src/content/content.tsx` | Mounts the overlay into the composer, triggers refreshes, bridges page-probe events. |
+| `src/content/ContentApp.tsx` | Renders the plan usage bar, usage hover panel, context ring, and context hover panel. |
+| `src/content/claudeDom.ts` | Fallback transcript extraction (strict selector list — do not broaden to generic textareas). |
+| `src/popup/popup.tsx` | Extension popup: status + manual refresh. |
+| `public/pageProbe.js` | Page-world probe; sanitizes same-origin JSON to usage metadata. Fallback, not primary. |
+
+## Privacy
+
+The extension calls only `https://claude.ai` endpoints, reusing the user's existing
+session cookies, and stores a strict allowlist in `chrome.storage.local`:
+
+- **Stored:** settings, local date/message counters, numeric token estimates + cache
+  metadata, sanitized usage percentages, reset display strings, routines counters, cached
+  org id.
+- **Never stored:** prompts, responses, cookies, auth headers, request bodies, raw API
+  payloads, uploaded file contents, or conversation text.
