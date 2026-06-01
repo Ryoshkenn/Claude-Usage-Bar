@@ -40,6 +40,12 @@ The displayed ring uses `compoundedInputTokens` as the main usage value. `curren
 
 The current tokenizer is still an estimate. Anthropic's official guidance is that the `messages/count_tokens` endpoint accepts the same structured inputs as message creation, including system prompts, tools, images, and PDFs, and returns estimated input tokens. Anthropic also notes counts may include automatically added system-optimization tokens, but billing reflects only user content. Until official counting is added, the extension uses a modest `1,000` token chat prompt overhead instead of the much larger Claude Code-style overheads. Future versions will add optional Anthropic API-key support for the official endpoint and richer file/token accounting.
 
+## Settings & Onboarding
+
+The extension injects its own settings page into Claude's settings UI at `/settings/usage-bar`. From there you can configure the weekly-usage projection — `weeklyPaceMode` (smart learned vs. manual schedule) and `weeklyEstimateDisplay` (active-hours vs. calendar-time) — clear learned weekly history, and replay the onboarding tour.
+
+First-time users get an onboarding tooltip tour with an animated walkthrough and navigation controls; it can be replayed any time from the settings page.
+
 ## Development
 
 ```sh
