@@ -13,8 +13,6 @@
     "percentageUsed",
     "weeklyAllModelsPercentageUsed",
     "weeklyAllModelsResetText",
-    "claudeDesignPercentageUsed",
-    "claudeDesignResetText",
     "routinesText",
   ]);
 
@@ -84,9 +82,6 @@
 
     applyLimit(input.five_hour, "percentageUsed", "resetText");
     applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText");
-
-    const designKey = input.seven_day_omelette ?? input.seven_day_claude_design ?? input.weekly_claude_design ?? input.claude_design ?? input.design;
-    applyLimit(designKey, "claudeDesignPercentageUsed", "claudeDesignResetText");
 
     const routines = input.routines ?? input.routine_usage ?? input.routineUsage;
     if (routines && typeof routines === "object" && !Array.isArray(routines)) {

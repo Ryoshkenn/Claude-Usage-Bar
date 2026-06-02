@@ -7,7 +7,6 @@ const allowedStringKeys = new Set([
   "remainingText",
   "limitText",
   "weeklyAllModelsResetText",
-  "claudeDesignResetText",
   "routinesText",
 ]);
 const allowedNumberKeys = new Set([
@@ -16,7 +15,6 @@ const allowedNumberKeys = new Set([
   "totalMessages",
   "percentageUsed",
   "weeklyAllModelsPercentageUsed",
-  "claudeDesignPercentageUsed",
 ]);
 const unsafeKeys = new Set([
   "prompt",

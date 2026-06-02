@@ -1,6 +1,6 @@
 export type OverlayMode = "compact" | "expanded";
 export type UsageSource = "estimated" | "real";
-export type MetricTarget = "session" | "weekly" | "context" | "design";
+export type MetricTarget = "session" | "weekly" | "context";
 export type RingTarget = MetricTarget | "hidden";
 export type PaceSurplusFormat = "percent" | "time";
 export type WeeklyPaceMode = "smart" | "manual";
@@ -73,9 +73,6 @@ export interface RealUsageSnapshot {
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
-  claudeDesignPercentageUsed?: number;
-  claudeDesignResetText?: string;
-  claudeDesignResetsAt?: number;
   routinesText?: string;
 }
 
@@ -145,9 +142,6 @@ export interface UsageMetadata {
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
-  claudeDesignPercentageUsed?: number;
-  claudeDesignResetText?: string;
-  claudeDesignResetsAt?: number;
   routinesText?: string;
 }
 

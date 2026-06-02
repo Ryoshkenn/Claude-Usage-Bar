@@ -67,6 +67,13 @@ describe("storage helpers", () => {
     expect(state.weeklyUsageMetrics.confidence).toBe("learning");
   });
 
+  it("migrates the removed \"design\" metric to weekly", async () => {
+    const adapter = createAdapter({ settings: { barMetric: "design", ringTarget: "design" } });
+    const state = await getStorage(adapter);
+    expect(state.settings.barMetric).toBe("weekly");
+    expect(state.settings.ringTarget).toBe("weekly");
+  });
+
   it("merges settings", async () => {
     const adapter = createAdapter({ settings: { showOverlay: false, mode: "compact" } });
     const settings = await updateSettings({ mode: "expanded" }, adapter);

@@ -79,10 +79,10 @@ const applyLimit = (
   now: number,
   percentageKey: keyof Pick<
     UsageMetadata,
-    "percentageUsed" | "weeklyAllModelsPercentageUsed" | "claudeDesignPercentageUsed"
+    "percentageUsed" | "weeklyAllModelsPercentageUsed"
   >,
-  resetKey?: keyof Pick<UsageMetadata, "resetText" | "weeklyAllModelsResetText" | "claudeDesignResetText">,
-  resetAtMsKey?: keyof Pick<UsageMetadata, "sessionResetsAt" | "weeklyAllModelsResetsAt" | "claudeDesignResetsAt">,
+  resetKey?: keyof Pick<UsageMetadata, "resetText" | "weeklyAllModelsResetText">,
+  resetAtMsKey?: keyof Pick<UsageMetadata, "sessionResetsAt" | "weeklyAllModelsResetsAt">,
 ) => {
   const limit = parseLimitObject(value, now);
   if (!limit) {
@@ -112,11 +112,6 @@ const normalizeKnownClaudeUsageSchema = (payload: unknown, now: number): UsageMe
 
   applyLimit(output, object.five_hour, now, "percentageUsed", "resetText", "sessionResetsAt");
   applyLimit(output, object.seven_day, now, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
-  applyLimit(output, object.seven_day_omelette, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
-  applyLimit(output, object.seven_day_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
-  applyLimit(output, object.weekly_claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
-  applyLimit(output, object.claude_design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
-  applyLimit(output, object.design, now, "claudeDesignPercentageUsed", "claudeDesignResetText", "claudeDesignResetsAt");
 
   const routines = object.routines ?? object.routine_usage ?? object.routineUsage;
   if (routines && typeof routines === "object" && !Array.isArray(routines)) {
@@ -198,8 +193,6 @@ const collectObjectUsage = (object: JsonObject, path: string[], output: UsageMet
       output.percentageUsed = percentage;
     } else if (/weekly/.test(scopedText) && /all.*models|all models/.test(scopedText)) {
       output.weeklyAllModelsPercentageUsed = percentage;
-    } else if (/claude.*design/.test(scopedText)) {
-      output.claudeDesignPercentageUsed = percentage;
     }
   }
 
@@ -224,8 +217,6 @@ export const normalizeUsagePayload = (payload: unknown, now = Date.now()): RealU
 
         if (/weekly/.test(text) && /all.*models|all models/.test(text) && textUsage.percentageUsed !== undefined) {
           output.weeklyAllModelsPercentageUsed = textUsage.percentageUsed;
-        } else if (/claude.*design/.test(text) && textUsage.percentageUsed !== undefined) {
-          output.claudeDesignPercentageUsed = textUsage.percentageUsed;
         } else if (/(5|five).*hour|hour.*limit|five hour|5 hour/.test(text) && textUsage.percentageUsed !== undefined) {
           output.percentageUsed = textUsage.percentageUsed;
         } else if (/routine/.test(text) && textUsage.routinesText !== undefined) {

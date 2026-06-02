@@ -197,7 +197,6 @@ describe("Claude usage API helpers", () => {
         {
           five_hour: { utilization: 4, resets_at: "2026-05-03T08:00:00.000Z" },
           seven_day: { utilization: 60, resets_at: "2026-05-04T00:00:00.000Z" },
-          weekly_claude_design: { utilization: 9, resets_at: "2026-05-04T00:00:00.000Z" },
           routines: { used: 0, limit: 5 },
         },
         new Date("2026-05-03T05:00:00.000Z").getTime(),
@@ -211,9 +210,6 @@ describe("Claude usage API helpers", () => {
       weeklyAllModelsPercentageUsed: 60,
       weeklyAllModelsResetText: "resets in 19h",
       weeklyAllModelsResetsAt: new Date("2026-05-04T00:00:00.000Z").getTime(),
-      claudeDesignPercentageUsed: 9,
-      claudeDesignResetText: "resets in 19h",
-      claudeDesignResetsAt: new Date("2026-05-04T00:00:00.000Z").getTime(),
       routinesText: "0 / 5",
     });
   });

@@ -19,6 +19,7 @@ import {
   formatEta,
 } from "../shared/usageProjection";
 import { PromptClipboard } from "./PromptClipboard";
+import { openUsageBarSettings } from "./settingsPage";
 
 interface ContentAppProps {
   settings: Settings;
@@ -29,7 +30,6 @@ interface ContentAppProps {
 }
 
 const TOKEN_CONTEXT_LIMIT = 200_000;
-const USAGE_PAGE_URL = "/settings/usage-bar";
 
 const clampPercentage = (value: number): number => Math.min(100, Math.max(0, Math.round(value)));
 
@@ -90,10 +90,6 @@ const getMetricPercentage = (
         : null;
     case "context":
       return getContextFillPercentage(chatUsage);
-    case "design":
-      return typeof realUsageSnapshot?.claudeDesignPercentageUsed === "number"
-        ? clampPercentage(realUsageSnapshot.claudeDesignPercentageUsed)
-        : null;
   }
 };
 
@@ -268,7 +264,6 @@ const RING_METRIC_LABEL: Record<string, string> = {
   session: "5-hour session",
   weekly: "Weekly · all models",
   context: "Context window",
-  design: "Claude Design",
 };
 
 export const ContentApp = ({
@@ -333,9 +328,7 @@ export const ContentApp = ({
   const contextFillPercentage = getContextFillPercentage(chatUsage);
 
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
-  const claudeDesignPercentage = realUsageSnapshot?.claudeDesignPercentageUsed;
   const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
-  const claudeDesignResetText = realUsageSnapshot?.claudeDesignResetText;
   const routinesText = realUsageSnapshot?.routinesText;
   const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
 
@@ -443,8 +436,7 @@ export const ContentApp = ({
                 type="button"
                 aria-label="Open extension settings"
                 onClick={() => {
-                  history.pushState(null, "", USAGE_PAGE_URL);
-                  window.dispatchEvent(new PopStateEvent("popstate"));
+                  void openUsageBarSettings();
                 }}
               >
                 →
@@ -505,17 +497,6 @@ export const ContentApp = ({
             </span>
             <span className="cub-usage-track">
               <span style={{ width: `${weeklyAllModelsPercentage ?? 0}%` }} />
-            </span>
-            <span className="cub-usage-row">
-              <span>Weekly · Claude Design</span>
-              <span>
-                {typeof claudeDesignPercentage === "number"
-                  ? `${claudeDesignPercentage}%${claudeDesignResetText ? ` · ${claudeDesignResetText}` : ""}`
-                  : "—"}
-              </span>
-            </span>
-            <span className="cub-usage-track">
-              <span style={{ width: `${claudeDesignPercentage ?? 0}%` }} />
             </span>
             <span className="cub-usage-row">
               <span>Routines</span>

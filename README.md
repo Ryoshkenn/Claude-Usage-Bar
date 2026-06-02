@@ -42,7 +42,7 @@ The current tokenizer is still an estimate. Anthropic's official guidance is tha
 
 ## Settings & Onboarding
 
-The extension injects its own settings page into Claude's settings UI at `/settings/usage-bar`. From there you can configure the weekly-usage projection — `weeklyPaceMode` (smart learned vs. manual schedule) and `weeklyEstimateDisplay` (active-hours vs. calendar-time) — clear learned weekly history, and replay the onboarding tour.
+The extension adds a "Usage Bar" section to Claude's settings overlay. From there you can configure the weekly-usage projection — `weeklyPaceMode` (smart learned vs. manual schedule) and `weeklyEstimateDisplay` (active-hours vs. calendar-time) — clear learned weekly history, and replay the onboarding tour.
 
 First-time users get an onboarding tooltip tour with an animated walkthrough and navigation controls; it can be replayed any time from the settings page.
 
@@ -77,7 +77,7 @@ Load the generated `dist/` directory in Chrome at `chrome://extensions` with Dev
 
 The overlay uses these sources:
 
-- Claude's `/usage` API for 5-hour, weekly, Claude Design, and routines usage metadata.
+- Claude's `/usage` API for 5-hour, weekly, and routines usage metadata.
 - Claude's current conversation JSON for the context ring.
 - Visible Claude UI text for model labels, reset windows, and fallback limit text.
 - A page-world probe that sanitizes same-origin JSON responses down to allowlisted usage metadata before posting it to the content script.

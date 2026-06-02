@@ -11,8 +11,6 @@ import type {
   WeeklyUsageMetrics,
 } from "../shared/types";
 
-const SETTINGS_PATH = "/settings/usage-bar";
-
 const CWS_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
 
@@ -44,50 +42,146 @@ const CDS_COMBOBOX_ICON =
 
 // ── DOM helpers ──────────────────────────────────────────────────────────────
 
-const findSettingsNav = (): HTMLUListElement | null =>
-  document.querySelector<HTMLAnchorElement>('a[href="/settings/general"]')?.closest("ul") ?? null;
+// Claude's new settings nav uses <li><button> items whose label lives in a
+// truncating span (e.g. "General", "Usage"). The buttons have no href, so we
+// locate them by their visible label text.
+const NAV_LABEL_SELECTOR = "span.min-w-0.flex-1.truncate";
 
-const findSectionsContainer = (): HTMLElement | null => {
-  const main = document.querySelector<HTMLElement>("main");
-  if (!main) return null;
-  // The content area is the focusable outline div inside main
-  return main.querySelector<HTMLElement>('[tabindex="-1"].outline-none') ?? main;
+const findNavButtonByLabel = (label: string): HTMLButtonElement | null => {
+  for (const span of document.querySelectorAll<HTMLSpanElement>(
+    `li > button > ${NAV_LABEL_SELECTOR}`,
+  )) {
+    if (span.textContent?.trim() === label) return span.closest("button");
+  }
+  return null;
+};
+
+const findSettingsNav = (): HTMLUListElement | null =>
+  findNavButtonByLabel("General")?.closest("ul") ?? null;
+
+// The new settings overlay's scrollable content region styles its sections via
+// [data-settings-section] arbitrary variants (e.g. "[&_[data-settings-section]]:gap-4").
+// That class signature lives only on this one container; child sections carry
+// `data-settings-section` as an attribute, not a class, so they won't match.
+const OVERLAY_CONTAINER_SELECTOR = '[class*="data-settings-section"]';
+
+const findSectionsContainer = (): HTMLElement | null =>
+  document.querySelector<HTMLElement>(OVERLAY_CONTAINER_SELECTOR);
+
+// The settings overlay is a modal: its visible presence is the only reliable
+// "is the settings UI open" signal, since it opens without a URL change. We
+// check visibility (offsetParent), not mere DOM presence — if Claude closes the
+// modal by hiding it in place rather than removing it, a presence-only check
+// would leave panelActive stuck and show a stale panel on the next open.
+export const isSettingsOverlayOpen = (): boolean => {
+  const container = findSectionsContainer();
+  // getClientRects() is empty when the element (or an ancestor) is display:none
+  // or detached, and — unlike offsetParent — stays truthy for position:fixed
+  // modals that are actually visible.
+  return !!container && container.getClientRects().length > 0;
+};
+
+// Open/close the overlay via Claude's own app-level shortcut (⇧⌘, on mac,
+// ⇧⌃, elsewhere) and Escape. These are synthetic keydowns dispatched on
+// document; Claude's global keydown handler doesn't check isTrusted, so they
+// drive the real overlay without us needing the avatar/menu selectors.
+const isMacPlatform = (): boolean =>
+  /Mac|iPhone|iPad|iPod/.test(navigator.platform) || /Mac OS X/.test(navigator.userAgent);
+
+export const openSettingsOverlay = (): void => {
+  if (isSettingsOverlayOpen()) return;
+  const mac = isMacPlatform();
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: ",",
+      code: "Comma",
+      keyCode: 188,
+      which: 188,
+      shiftKey: true,
+      metaKey: mac,
+      ctrlKey: !mac,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+};
+
+export const closeSettingsOverlay = (): void => {
+  if (!isSettingsOverlayOpen()) return;
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "Escape",
+      code: "Escape",
+      keyCode: 27,
+      which: 27,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
 };
 
 // ── Nav injection ────────────────────────────────────────────────────────────
 
 let navLi: HTMLLIElement | null = null;
 
-const NAV_BASE_CLASS =
-  "font-base block whitespace-nowrap transition-colors ease-in-out rounded-lg px-3 h-9 line-clamp-1 flex gap-3 items-center";
+// Whether our settings panel is the active section inside the overlay. Driven
+// by clicks (our nav item activates it; any other nav item deactivates it) —
+// never by the URL, so we never navigate to a fake /settings route that would
+// expose Claude's old settings page behind the overlay.
+let panelActive = false;
+
+// Claude's nav-button class strings, copied exactly from the DOM. The base set
+// is shared by every item; the active/inactive sets toggle per current route.
+const NAV_BTN_BASE =
+  "flex h-control w-full cursor-pointer items-center gap-sm rounded px-sm text-left text-body transition-colors";
+const NAV_BTN_INACTIVE = "text-secondary hover:bg-fill-ghost-hover hover:text-primary";
+const NAV_BTN_ACTIVE = "bg-alpha-2 font-medium text-primary";
+
+const buildNavIcon = (): HTMLSpanElement => {
+  const icon = document.createElement("span");
+  icon.setAttribute("data-cds", "Icon");
+  icon.className = "shrink-0 text-secondary";
+  icon.setAttribute("aria-hidden", "true");
+  // Match the 1em / 20px box Claude's Anthropicons glyphs occupy so our row
+  // aligns with the others; render a small bar-meter SVG inside it.
+  icon.style.cssText =
+    "width:1em;height:1em;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;";
+  icon.innerHTML =
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="9"/><line x1="16" y1="20" x2="16" y2="13"/><line x1="22" y1="20" x2="22" y2="5"/></svg>';
+  return icon;
+};
 
 const injectNavItem = () => {
   const ul = findSettingsNav();
   if (!ul) return;
-  const existingA = ul.querySelector<HTMLElement>("[data-cub-nav]");
-  if (existingA) {
-    navLi = existingA.closest("li");
+  const existing = ul.querySelector<HTMLElement>("[data-cub-nav]");
+  if (existing) {
+    navLi = existing.closest("li");
     updateNavActiveState();
     return;
   }
 
   const li = document.createElement("li");
-  const a = document.createElement("a");
-  a.href = SETTINGS_PATH;
-  a.setAttribute("data-cub-nav", "");
-  a.className = `${NAV_BASE_CLASS} hover:bg-bg-200`;
-  a.textContent = "Usage Bar";
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.setAttribute("data-cub-nav", "");
+  btn.className = `${NAV_BTN_BASE} ${NAV_BTN_INACTIVE}`;
 
-  a.addEventListener("click", (e) => {
+  const text = document.createElement("span");
+  text.className = "min-w-0 flex-1 truncate";
+  text.textContent = "Usage Bar";
+
+  btn.append(buildNavIcon(), text);
+
+  btn.addEventListener("click", (e) => {
     e.preventDefault();
-    history.pushState(null, "", SETTINGS_PATH);
-    // handleUrlChange is called by our pushState wrapper
+    activatePanel();
   });
 
-  li.appendChild(a);
+  li.appendChild(btn);
 
-  // Insert after General (2nd position, above Account)
-  const generalLi = ul.querySelector<HTMLElement>('a[href="/settings/general"]')?.closest("li");
+  // Insert directly after General (2nd position, above Account)
+  const generalLi = findNavButtonByLabel("General")?.closest("li");
   if (generalLi?.nextSibling) {
     ul.insertBefore(li, generalLi.nextSibling);
   } else {
@@ -98,15 +192,17 @@ const injectNavItem = () => {
 };
 
 const updateNavActiveState = () => {
-  const a = navLi?.querySelector<HTMLElement>("[data-cub-nav]");
-  if (!a) return;
-  const isActive = location.pathname === SETTINGS_PATH;
+  const btn = navLi?.querySelector<HTMLElement>("[data-cub-nav]");
+  if (!btn) return;
+  const isActive = panelActive;
   if (isActive) {
-    a.classList.remove("hover:bg-bg-200");
-    a.classList.add("bg-bg-300");
+    btn.classList.remove(...NAV_BTN_INACTIVE.split(" "));
+    btn.classList.add(...NAV_BTN_ACTIVE.split(" "));
+    btn.setAttribute("aria-current", "page");
   } else {
-    a.classList.remove("bg-bg-300");
-    a.classList.add("hover:bg-bg-200");
+    btn.classList.remove(...NAV_BTN_ACTIVE.split(" "));
+    btn.classList.add(...NAV_BTN_INACTIVE.split(" "));
+    btn.removeAttribute("aria-current");
   }
 };
 
@@ -157,36 +253,71 @@ const unmountPanel = () => {
   hiddenChildren.length = 0;
 };
 
-const handleUrlChange = () => {
-  updateNavActiveState();
-  if (location.pathname === SETTINGS_PATH) {
-    mountPanel();
-  } else {
-    unmountPanel();
+// Reset panel refs without restoring hidden siblings — used when the overlay
+// itself is gone (its DOM, including our panel and the sections we hid, has
+// already been removed), so there is nothing to restore.
+const teardownPanel = () => {
+  if (!panelEl) return;
+  panelRoot?.unmount();
+  panelRoot = null;
+  panelEl.remove();
+  panelEl = null;
+  hiddenChildren.length = 0;
+};
+
+// Hide any sibling sections Claude (re)injected into the container while our
+// panel is the active section (e.g. a "not found" block or a re-rendered list).
+const hideStrayChildren = () => {
+  const container = panelEl?.parentElement;
+  if (!container) return;
+  for (const child of Array.from(container.children)) {
+    const el = child as HTMLElement;
+    if (el !== panelEl && el.style.display !== "none") {
+      el.style.display = "none";
+      hiddenChildren.push(el);
+    }
   }
 };
 
-// ── URL change detection ─────────────────────────────────────────────────────
+const activatePanel = () => {
+  panelActive = true;
+  mountPanel();
+  updateNavActiveState();
+};
 
-let pushStatePatched = false;
+const deactivatePanel = () => {
+  panelActive = false;
+  unmountPanel();
+  updateNavActiveState();
+};
 
-const patchHistory = () => {
-  if (pushStatePatched) return;
-  pushStatePatched = true;
+// Single source of truth, run by the MutationObserver and the refresh tick.
+const syncSettingsPanel = () => {
+  if (!isSettingsOverlayOpen()) {
+    // Overlay closed/dismissed — its DOM is gone. Drop all refs so reopening
+    // starts clean (panel inactive, nav re-injected fresh).
+    teardownPanel();
+    panelActive = false;
+    navLi = null;
+    return;
+  }
 
-  const originalPushState = history.pushState.bind(history);
-  history.pushState = (...args: Parameters<typeof history.pushState>) => {
-    originalPushState(...args);
-    handleUrlChange();
-  };
+  if (!navLi || !document.contains(navLi)) {
+    navLi = null;
+    injectNavItem();
+  }
+  updateNavActiveState();
 
-  const originalReplaceState = history.replaceState.bind(history);
-  history.replaceState = (...args: Parameters<typeof history.replaceState>) => {
-    originalReplaceState(...args);
-    handleUrlChange();
-  };
-
-  window.addEventListener("popstate", handleUrlChange);
+  if (panelActive) {
+    if (!panelEl || !document.contains(panelEl)) {
+      teardownPanel();
+      mountPanel();
+    } else {
+      hideStrayChildren();
+    }
+  } else if (panelEl) {
+    unmountPanel();
+  }
 };
 
 // ── React components matching Claude's CDS design system ─────────────────────
@@ -291,10 +422,14 @@ interface RowProps {
   label: string;
   description?: string;
   children: React.ReactNode;
+  // Stable id for a single row, used as a compact onboarding-tour spotlight
+  // target (the dynamic labelId from useId() isn't a reliable selector).
+  rowId?: string;
 }
 
-const Row = ({ labelId, descId, label, description, children }: RowProps) => (
+const Row = ({ labelId, descId, label, description, children, rowId }: RowProps) => (
   <div
+    id={rowId}
     role="group"
     aria-labelledby={labelId}
     aria-describedby={descId}
@@ -337,7 +472,6 @@ const METRIC_OPTIONS: { value: MetricTarget; label: string }[] = [
   { value: "session", label: "5-hour session" },
   { value: "weekly", label: "Weekly · all models" },
   { value: "context", label: "Context window" },
-  { value: "design", label: "Claude Design" },
 ];
 
 const RING_OPTIONS: { value: RingTarget; label: string }[] = [...METRIC_OPTIONS];
@@ -435,7 +569,7 @@ const SettingsPage = () => {
 
   return (
     <div className="flex flex-col">
-      <Section title="General">
+      <Section id="cub-section-general" title="General">
         <Row labelId={id("show-overlay")} label="Show overlay" description="Display the usage bar overlay in the Claude chat composer.">
           <Switch
             id={id("show-overlay")}
@@ -450,9 +584,12 @@ const SettingsPage = () => {
         >
           <CdsButton
             onClick={() => {
+              // Close the settings overlay (the tour starts on /new), then
+              // (re)start the tour. Don't unmount our panel synchronously here —
+              // we're inside its own React root; closing the overlay lets the
+              // observer's syncSettingsPanel tear it down safely on the next frame.
+              closeSettingsOverlay();
               void updateSettings({ hasSeenTour: false });
-              history.pushState(null, "", "/new");
-              window.dispatchEvent(new PopStateEvent("popstate", { state: null }));
             }}
           >
             Replay Tour
@@ -523,6 +660,7 @@ const SettingsPage = () => {
       <div id="cub-metrics-sections">
       <Section id="cub-section-weekly-metrics" title="Weekly usage metrics">
         <Row
+          rowId="cub-row-weekly-learning"
           labelId={id("weekly-enabled")}
           label="Learn weekly patterns"
           description="Use local numeric samples to tune weekly estimates. Turn this off to keep weekly pacing on the fixed manual schedule."
@@ -679,59 +817,59 @@ const SettingsPage = () => {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
-export const initSettingsPage = () => {
-  patchHistory();
-  injectNavItem();
-  handleUrlChange();
-
-  // Claude's pushState runs in the page world and bypasses our content-script
-  // wrapper, so we poll every 100 ms to catch navigations that handleUrlChange
-  // would otherwise miss (panel unmount, highlight clear).
-  let lastPathname = location.pathname;
-  setInterval(() => {
-    if (location.pathname !== lastPathname) {
-      lastPathname = location.pathname;
-      handleUrlChange();
+// Open the overlay (if needed) and make our panel its active section. Used by
+// the in-bar settings shortcut and the onboarding tour. Polls for the overlay
+// to mount after the shortcut fires, then activates.
+export const openUsageBarSettings = async (): Promise<void> => {
+  if (!isSettingsOverlayOpen()) {
+    openSettingsOverlay();
+    for (let i = 0; i < 25 && !isSettingsOverlayOpen(); i++) {
+      await new Promise((r) => setTimeout(r, 60));
     }
-  }, 100);
+  }
+  injectNavItem();
+  activatePanel();
+};
+
+// The overlay opens as a modal with no URL change, so a debounced refresh tick
+// alone reacts too slowly (the nav item used to take ~2 s to appear). This
+// observer runs syncSettingsPanel the instant the DOM changes — injecting the
+// nav, recovering the panel after Claude re-renders, and tearing down on close.
+// syncSettingsPanel bails cheaply when the overlay is closed, so the only
+// expensive work runs when there's actually something to do.
+let syncScheduled = false;
+
+const scheduleSync = () => {
+  if (syncScheduled) return;
+  syncScheduled = true;
+  requestAnimationFrame(() => {
+    syncScheduled = false;
+    syncSettingsPanel();
+  });
+};
+
+export const initSettingsPage = () => {
+  injectNavItem();
+
+  const observer = new MutationObserver(scheduleSync);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Clicking any settings nav item other than ours deactivates our panel and
+  // lets Claude show its own section. Delegated + capture so it survives
+  // Claude re-rendering the nav, and fires before the page's own handler.
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (!panelActive) return;
+      const btn = (e.target as Element | null)?.closest?.("li > button");
+      if (btn && !btn.hasAttribute("data-cub-nav")) {
+        deactivatePanel();
+      }
+    },
+    true,
+  );
 };
 
 export const tickSettingsPage = () => {
-  if (!navLi || !document.contains(navLi)) {
-    navLi = null;
-    injectNavItem();
-  }
-
-  // Always sync nav highlight — Claude's pushState runs in the page world and
-  // bypasses our content-script-world wrapper, so handleUrlChange may not fire.
-  updateNavActiveState();
-
-  if (location.pathname === SETTINGS_PATH) {
-    if (!panelEl || !document.contains(panelEl)) {
-      // Panel was destroyed by Claude's re-render — clean up stale refs and remount
-      if (panelEl) {
-        panelRoot?.unmount();
-        panelRoot = null;
-        panelEl = null;
-        hiddenChildren.length = 0;
-      }
-      mountPanel();
-    } else {
-      // Panel is live — hide any new children Claude injected (e.g. "not found" text)
-      const container = panelEl.parentElement;
-      if (container) {
-        for (const child of Array.from(container.children)) {
-          const el = child as HTMLElement;
-          if (el !== panelEl && el.style.display !== "none") {
-            el.style.display = "none";
-            hiddenChildren.push(el);
-          }
-        }
-      }
-    }
-  } else if (panelEl) {
-    // We navigated away from SETTINGS_PATH but panel is still mounted.
-    // Happens because Claude's pushState runs in the page world and skips our wrapper.
-    unmountPanel();
-  }
+  syncSettingsPanel();
 };

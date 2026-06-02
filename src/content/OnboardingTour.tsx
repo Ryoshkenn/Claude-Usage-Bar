@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { closeSettingsOverlay, isSettingsOverlayOpen, openUsageBarSettings } from "./settingsPage";
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
@@ -11,6 +12,9 @@ interface TargetRect {
 
 interface TourStep {
   navigateTo?: string;
+  // Open the settings overlay (a modal, opened via Claude's shortcut) and make
+  // our panel its active section, instead of navigating to a page route.
+  openSettings?: boolean;
   selector: string | null;
   fallbackRect?: () => TargetRect;
   title: string;
@@ -52,7 +56,7 @@ const STEPS: TourStep[] = [
     navigateTo: "/new",
     selector: ".cub-usage-tooltip",
     title: "Usage Details Panel",
-    body: "Hover the bar to open this panel — it shows your 5-hour pace, weekly usage, and Design-model spend.",
+    body: "Hover the bar to open this panel — it shows your 5-hour pace and weekly usage.",
     forceShowBar: true,
   },
   {
@@ -63,17 +67,18 @@ const STEPS: TourStep[] = [
     forceShowBar: true,
   },
   {
-    navigateTo: "/settings/usage-bar",
-    selector: "#cub-settings-panel",
+    openSettings: true,
+    selector: "#cub-section-general",
     title: "Extension Settings",
     body: "Toggle the bar and ring, switch metrics, show labels, adjust pace format, and replay this tour anytime.",
     postNavDelay: 650,
+    scrollIntoView: true,
   },
   {
-    navigateTo: "/settings/usage-bar",
-    selector: "#cub-metrics-sections",
+    openSettings: true,
+    selector: "#cub-section-weekly-metrics",
     title: "Usage metrics learning",
-    body: "Claude Usage Bar learns local 5-hour and weekly usage patterns to power smarter pace estimates. Samples stay in this browser — no prompts, responses, or raw payloads are stored. If you'd rather not have this data collected, click the toggles here to turn pattern learning off.",
+    body: "Claude Usage Bar learns local 5-hour and weekly usage patterns to power smarter pace estimates. Samples stay in this browser — no prompts, responses, or raw payloads are stored. If you'd rather not have this data collected, toggle pattern learning off here.",
     postNavDelay: 200,
     scrollIntoView: true,
     allowInteraction: true,
@@ -159,6 +164,11 @@ function computeCardPos(
     arrowSide = "top";
   }
 
+  // Safety net: keep the card on-screen even if the target is tall or partly
+  // scrolled out of view, so the step is never positioned where it can't be seen.
+  const maxTop = Math.max(8, window.innerHeight - CARD_HEIGHT_APPROX - 8);
+  top = Math.min(Math.max(8, top), maxTop);
+
   const idealLeft = rect.left + rect.width / 2 - CARD_WIDTH / 2;
   const left = Math.max(8, Math.min(idealLeft, window.innerWidth - CARD_WIDTH - 8));
   const arrowLeft = Math.max(16, Math.min(rect.left + rect.width / 2 - left, CARD_WIDTH - 16));
@@ -226,18 +236,43 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     const runStep = async () => {
       const s = STEPS[step];
 
-      // Navigate if needed
-      if (s.navigateTo && window.location.pathname !== s.navigateTo) {
+      if (s.openSettings) {
+        // Settings is a modal overlay opened via Claude's shortcut — not a
+        // route. Open it and activate our panel as the visible section.
         setFading(true);
         await sleep(180);
         if (cancelled()) return;
 
         document.body.classList.remove("cub-tour-bar-open");
-        history.pushState(null, "", s.navigateTo);
-        window.dispatchEvent(new PopStateEvent("popstate", { state: null }));
+        await openUsageBarSettings();
 
-        await sleep(s.postNavDelay ?? 700);
+        await sleep(s.postNavDelay ?? 650);
         if (cancelled()) return;
+
+        syncHostOffset();
+        setFading(false);
+      } else {
+        // Page step — make sure the settings overlay is dismissed first, so it
+        // doesn't sit on top of the page we're about to highlight.
+        if (isSettingsOverlayOpen()) {
+          setFading(true);
+          closeSettingsOverlay();
+          await sleep(240);
+          if (cancelled()) return;
+        }
+
+        if (s.navigateTo && window.location.pathname !== s.navigateTo) {
+          setFading(true);
+          await sleep(180);
+          if (cancelled()) return;
+
+          document.body.classList.remove("cub-tour-bar-open");
+          history.pushState(null, "", s.navigateTo);
+          window.dispatchEvent(new PopStateEvent("popstate", { state: null }));
+
+          await sleep(s.postNavDelay ?? 700);
+          if (cancelled()) return;
+        }
 
         syncHostOffset();
         setFading(false);

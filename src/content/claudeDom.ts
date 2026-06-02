@@ -205,11 +205,10 @@ const extractUsageFraction = (pageText: string): Pick<UsageMetadata, "remainingM
 
 const extractUsagePageMetadata = (pageText: string): Pick<
   UsageMetadata,
-  "percentageUsed" | "weeklyAllModelsPercentageUsed" | "claudeDesignPercentageUsed" | "routinesText"
+  "percentageUsed" | "weeklyAllModelsPercentageUsed" | "routinesText"
 > => {
   const fiveHourMatch = pageText.match(/5-hour limit[\s\S]{0,120}?(\d{1,3})%\s*used/i);
   const weeklyAllModelsMatch = pageText.match(/Weekly\s*·\s*all models[\s\S]{0,120}?(\d{1,3})%\s*used/i);
-  const claudeDesignMatch = pageText.match(/Weekly\s*·\s*Claude Design[\s\S]{0,120}?(\d{1,3})%\s*used/i);
   const routinesMatch = pageText.match(/Routines[^\n\r]*[\n\r\s]+(\d+\s*\/\s*\d+)/i);
 
   return {
@@ -217,9 +216,6 @@ const extractUsagePageMetadata = (pageText: string): Pick<
     weeklyAllModelsPercentageUsed:
       extractPercentNearLabel(/^Weekly\s*·\s*all models$/i) ??
       (weeklyAllModelsMatch ? Number(weeklyAllModelsMatch[1]) : undefined),
-    claudeDesignPercentageUsed:
-      extractPercentNearLabel(/^Weekly\s*·\s*Claude Design$/i) ??
-      (claudeDesignMatch ? Number(claudeDesignMatch[1]) : undefined),
     routinesText:
       extractTextNearLabel(/^Routines$/i, ".tabular-nums, span", /^\d+\s*\/\s*\d+$/)?.replace(/\s+/g, " ") ??
       routinesMatch?.[1]?.replace(/\s+/g, " "),

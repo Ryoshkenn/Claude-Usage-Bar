@@ -38,6 +38,20 @@ export const DEFAULT_SETTINGS: Settings = {
   showClipboard: true,
 };
 
+// Rewrite settings persisted by older versions onto the current schema. The
+// "design" (Claude Design) metric was removed in 1.0.1 — Claude folded that
+// usage into normal weekly usage — so any bar/wheel still set to it falls back
+// to "weekly" instead of showing a dead, blank metric.
+const migrateSettings = (settings: Settings): Settings => {
+  const remapDesign = <T,>(value: T): T | "weekly" =>
+    (value as unknown) === "design" ? "weekly" : value;
+  return {
+    ...settings,
+    barMetric: remapDesign(settings.barMetric),
+    ringTarget: remapDesign(settings.ringTarget),
+  };
+};
+
 const today = () => new Date().toLocaleDateString("en-CA");
 
 export const defaultDailyUsage = (): DailyUsage => ({
@@ -118,7 +132,7 @@ export const getStorage = async (adapter: StorageAdapter = chromeStorageAdapter)
   const usageHistory = Array.isArray(data.usageHistory) ? (data.usageHistory as UsageLogEntry[]) : undefined;
 
   return {
-    settings: { ...DEFAULT_SETTINGS, ...(data.settings as Partial<Settings> | undefined) },
+    settings: migrateSettings({ ...DEFAULT_SETTINGS, ...(data.settings as Partial<Settings> | undefined) }),
     dailyUsage: (data.dailyUsage as DailyUsage | undefined) ?? defaultDailyUsage(),
     chatUsage: (data.chatUsage as ChatUsage | undefined) ?? defaultChatUsage(),
     realUsageSnapshot: data.realUsageSnapshot as RealUsageSnapshot | undefined,
