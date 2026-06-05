@@ -500,7 +500,7 @@ export const ContentApp = ({
             </span>
             <span className="cub-usage-row">
               <span>Routines</span>
-              <span>{routinesText ?? "—"}</span>
+              <span className="cub-usage-row-pct">{routinesText ?? "—"}</span>
             </span>
             <span className="cub-usage-track">
               <span style={{ width: "0%" }} />

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { sanitizeUsageMetadata } from "../content/usageProbeBridge";
 import { readClaudeDomSnapshot } from "../content/claudeDom";
-import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
+import { extractOrganizationId, normalizeUsagePayload, parseRunBudgetText } from "../shared/claudeUsageApi";
 import { applyConservativeTokenBias } from "../shared/tokenBias";
 import {
   buildChatUsage,
@@ -212,6 +212,49 @@ describe("Claude usage API helpers", () => {
       weeklyAllModelsResetsAt: new Date("2026-05-04T00:00:00.000Z").getTime(),
       routinesText: "0 / 5",
     });
+  });
+
+  it("reads routine usage from the run-budget object with string counts", () => {
+    expect(
+      normalizeUsagePayload(
+        {
+          five_hour: { utilization: 4, resets_at: "2026-05-03T08:00:00.000Z" },
+          "run-budget": { limit: "5", unified_billing_enabled: true, used: "0" },
+        },
+        new Date("2026-05-03T05:00:00.000Z").getTime(),
+      )?.routinesText,
+    ).toBe("0 / 5");
+  });
+
+  it("parses the run-budget endpoint body with string counts", () => {
+    expect(parseRunBudgetText({ limit: "5", unified_billing_enabled: true, used: "0" })).toBe("0 / 5");
+    expect(parseRunBudgetText({ limit: "50", used: "12" })).toBe("12 / 50");
+    expect(parseRunBudgetText(null)).toBeUndefined();
+    expect(parseRunBudgetText({ unified_billing_enabled: true })).toBeUndefined();
+  });
+
+  it("finds run-budget routine usage even when nested deeper in the payload", () => {
+    expect(
+      normalizeUsagePayload(
+        {
+          usage: {
+            "run-budget": { limit: "5", unified_billing_enabled: true, used: "2" },
+          },
+        },
+        new Date("2026-05-03T05:00:00.000Z").getTime(),
+      )?.routinesText,
+    ).toBe("2 / 5");
+  });
+
+  it("reads higher run-budget limits without hardcoding", () => {
+    expect(
+      normalizeUsagePayload(
+        {
+          "run-budget": { limit: "50", used: "12" },
+        },
+        new Date("2026-05-03T05:00:00.000Z").getTime(),
+      )?.routinesText,
+    ).toBe("12 / 50");
   });
 
   it("handles ratio percentages from API payloads", () => {

@@ -27,6 +27,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showWheel: true,
   showWheelLabel: false,
   showPace: true,
+  showCacheTimer: true,
   paceSurplusFormat: "percent",
   weeklyMetricsEnabled: true,
   weeklyPaceMode: "smart",

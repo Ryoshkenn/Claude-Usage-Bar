@@ -262,6 +262,11 @@
   color: rgb(165 164 156);
 }
 
+/* Numeric values (e.g. Routines count) stay full-strength, not muted. */
+.cub-usage-row:not(.cub-usage-row--stacked) > span.cub-usage-row-pct:last-child {
+  color: rgb(225 225 219);
+}
+
 /* ── Stacked row variant (used inside plan usage popup) ─────────────────── */
 
 .cub-usage-row--stacked {
@@ -538,6 +543,10 @@
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-row:not(.cub-usage-row--stacked) > span:last-child {
   color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-row:not(.cub-usage-row--stacked) > span.cub-usage-row-pct:last-child {
+  color: rgb(40 40 38);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-row-title,

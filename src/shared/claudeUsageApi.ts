@@ -9,6 +9,33 @@ const compactMetadata = (metadata: UsageMetadata): UsageMetadata =>
 
 const keyText = (path: string[]): string => path.join(" ").replace(/[_-]+/g, " ").toLowerCase();
 
+// Claude returns run-budget counts as strings (e.g. used: "0", limit: "5"),
+// so coerce numeric-looking strings as well as plain numbers.
+const coerceCount = (value: unknown): number | undefined => {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : undefined;
+  }
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+};
+
+// The routines "run-budget" endpoint (GET /v1/code/routines/run-budget) returns
+// the count object directly, e.g. { limit: "5", used: "0", unified_billing_enabled }.
+// Counts arrive as strings, and the limit varies by plan, so both come from the
+// payload — never hardcoded.
+export const parseRunBudgetText = (payload: unknown): string | undefined => {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return undefined;
+  }
+  const object = payload as JsonObject;
+  const used = coerceCount(object.used ?? object.current ?? object.count);
+  const limit = coerceCount(object.limit ?? object.max ?? object.total ?? object.allowed);
+  return typeof used === "number" && typeof limit === "number" ? `${used} / ${limit}` : undefined;
+};
+
 const normalizePercentage = (value: number): number | undefined => {
   if (!Number.isFinite(value) || value < 0) {
     return undefined;
@@ -113,11 +140,22 @@ const normalizeKnownClaudeUsageSchema = (payload: unknown, now: number): UsageMe
   applyLimit(output, object.five_hour, now, "percentageUsed", "resetText", "sessionResetsAt");
   applyLimit(output, object.seven_day, now, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
 
-  const routines = object.routines ?? object.routine_usage ?? object.routineUsage;
+  // Claude's /usage payload exposes routine (automation) usage under "run-budget".
+  // Keep the older guesses as fallbacks in case the schema shifts again. The limit
+  // comes straight from the payload — never hardcoded, since higher plans allow more.
+  const routines =
+    object["run-budget"] ??
+    object.run_budget ??
+    object.runBudget ??
+    object.routines ??
+    object.routine_usage ??
+    object.routineUsage;
   if (routines && typeof routines === "object" && !Array.isArray(routines)) {
     const routineObject = routines as JsonObject;
-    const used = routineObject.used ?? routineObject.current ?? routineObject.count;
-    const limit = routineObject.limit ?? routineObject.max ?? routineObject.total ?? routineObject.allowed;
+    const used = coerceCount(routineObject.used ?? routineObject.current ?? routineObject.count);
+    const limit = coerceCount(
+      routineObject.limit ?? routineObject.max ?? routineObject.total ?? routineObject.allowed,
+    );
 
     if (typeof used === "number" && typeof limit === "number") {
       output.routinesText = `${used} / ${limit}`;
@@ -196,9 +234,16 @@ const collectObjectUsage = (object: JsonObject, path: string[], output: UsageMet
     }
   }
 
-  if (/routine/.test(text)) {
-    const used = numberEntries.find(([key]) => /used|current|count/.test(key.toLowerCase()))?.[1];
-    const limit = numberEntries.find(([key]) => /limit|max|total|allowed/.test(key.toLowerCase()))?.[1];
+  // Routine (automation) usage lives under "run-budget" — keyText turns the
+  // hyphen into a space, so match "run budget" as well as the older "routine".
+  // Counts arrive as strings here too, so coerce all entries, not just numbers.
+  if (/routine|run budget/.test(text)) {
+    const findCount = (re: RegExp): number | undefined => {
+      const entry = entries.find(([key]) => re.test(key.toLowerCase()));
+      return entry ? coerceCount(entry[1]) : undefined;
+    };
+    const used = findCount(/used|current|count/);
+    const limit = findCount(/limit|max|total|allowed/);
 
     if (typeof used === "number" && typeof limit === "number") {
       output.routinesText = `${used} / ${limit}`;

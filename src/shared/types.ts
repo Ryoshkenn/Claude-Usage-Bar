@@ -27,6 +27,7 @@ export interface Settings {
   showWheel: boolean;
   showWheelLabel: boolean;
   showPace: boolean;
+  showCacheTimer: boolean;
   paceSurplusFormat: PaceSurplusFormat;
   weeklyMetricsEnabled: boolean;
   weeklyPaceMode: WeeklyPaceMode;

@@ -12,6 +12,7 @@ import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } fro
 import { readClaudeDomSnapshot } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
 import { OnboardingTour } from "./OnboardingTour";
+import { findComposer, findComposerInsertionPoint } from "./composerMount";
 import {
   hasMeaningfulChatUsageChange,
   hasMeaningfulDailyUsageChange,
@@ -178,23 +179,6 @@ const removeComposerHost = () => {
   removeStaleHosts();
 };
 
-const findComposerControls = (): HTMLElement | null => {
-  const addButton = document.querySelector<HTMLElement>(
-    'button[aria-label="Add files, connectors, and more"]',
-  );
-  const controls = addButton?.closest<HTMLElement>(
-    "div.relative.flex-1.flex.items-center.shrink.min-w-0.gap-1",
-  );
-
-  return controls ?? null;
-};
-
-const isPreferencesComposer = (element: HTMLElement): boolean =>
-  Boolean(
-    element.querySelector("#conversation-preferences") ||
-      element.closest('[data-testid*="preferences"], [aria-label*="preferences" i]'),
-  );
-
 // Selector for Claude's stop-generation button (appears while streaming)
 const STOP_BTN_SELECTOR = 'button[aria-label*="Stop"]';
 
@@ -228,7 +212,19 @@ const mountCacheTimerInHeader = (): boolean => {
   return true;
 };
 
+const removeCacheTimer = () => {
+  cacheTimerRoot?.render(null);
+  cacheTimerHost?.remove();
+  cacheTimerHost = null;
+  cacheTimerRoot = null;
+  cacheTimerParent = null;
+};
+
 const renderCacheTimer = () => {
+  if (storageState && storageState.settings.showCacheTimer === false) {
+    removeCacheTimer();
+    return;
+  }
   if (!mountCacheTimerInHeader()) {
     return;
   }
@@ -273,24 +269,6 @@ const checkStreamingState = () => {
   wasStreaming = isStreaming;
 };
 
-const findComposer = (): HTMLElement | null => {
-  const controls = findComposerControls();
-  if (controls && !isPreferencesComposer(controls)) {
-    return controls;
-  }
-
-  const input = document.querySelector<HTMLElement>(
-    'form textarea:not(#conversation-preferences), form [contenteditable="true"][role="textbox"], form [role="textbox"]',
-  );
-  const form = input?.closest("form");
-
-  if (form instanceof HTMLElement && !isPreferencesComposer(form) && form.querySelector('button[type="submit"], button[aria-label*="Send" i]')) {
-    return form;
-  }
-
-  return null;
-};
-
 const mountHostInComposer = (): boolean => {
   ensureHost();
   if (!host) {
@@ -314,7 +292,7 @@ const mountHostInComposer = (): boolean => {
   removeStaleHosts();
 
   if (host.parentElement !== composer) {
-    const insertionPoint = composer.children[1] ?? null;
+    const insertionPoint = findComposerInsertionPoint(composer);
     composer.insertBefore(host, insertionPoint);
   }
 

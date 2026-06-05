@@ -599,7 +599,7 @@ const SettingsPage = () => {
           labelId={id("review")}
           descId={id("review-desc")}
           label="Leave a review"
-          description="Enjoying Claude Usage Bar? A rating helps others discover it and takes less than a minute."
+          description="Enjoying Claude Usage Bar? A rating helps others discover it and takes less than a minute. You can also request features or suggest other products you'd like to see right in your review."
         >
           <CdsButton onClick={() => window.open(CWS_URL, "_blank", "noopener,noreferrer")}>
             Rate on Chrome Web Store
@@ -653,6 +653,20 @@ const SettingsPage = () => {
             id={id("wheel-label")}
             checked={settings.showWheelLabel}
             onChange={(v) => update({ showWheelLabel: v })}
+          />
+        </Row>
+      </Section>
+
+      <Section title="Cache timer">
+        <Row
+          labelId={id("show-cache-timer")}
+          label="Show cache timer"
+          description="Show a countdown in the chat header for how long the prompt cache stays warm. Turn this off to hide it."
+        >
+          <Switch
+            id={id("show-cache-timer")}
+            checked={settings.showCacheTimer !== false}
+            onChange={(v) => update({ showCacheTimer: v })}
           />
         </Row>
       </Section>
