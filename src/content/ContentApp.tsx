@@ -18,6 +18,10 @@ import {
   computeWeeklyProjection,
   formatEta,
 } from "../shared/usageProjection";
+import {
+  computeModelAwareSessionProjection,
+  computeSessionMessagesLeft,
+} from "../shared/modelUsage";
 import { PromptClipboard } from "./PromptClipboard";
 import { openUsageBarSettings } from "./settingsPage";
 
@@ -254,10 +258,29 @@ const buildPaceSummary = (
       return { text: `empty ${dateLabel}`, kind: "bad" };
     }
 
+    if (format === "percent" && typeof usedPercent === "number") {
+      const projectedPercent =
+        typeof projection.projectedPercentAtReset === "number"
+          ? Math.round(projection.projectedPercentAtReset)
+          : 100;
+      return { text: `${Math.max(usedPercent, projectedPercent)}% at reset`, kind: "bad" };
+    }
+
     return { text: `empty in ${formatEta(projection.etaMs, now)}`, kind: "bad" };
   }
 
   return null;
+};
+
+const buildMessagesSummary = (messagesLeft: number | null): PaceSummary | null => {
+  if (typeof messagesLeft !== "number") {
+    return null;
+  }
+  const noun = messagesLeft === 1 ? "msg" : "msgs";
+  return {
+    text: `~${messagesLeft} ${noun} left`,
+    kind: messagesLeft <= 5 ? "bad" : "good",
+  };
 };
 
 const RING_METRIC_LABEL: Record<string, string> = {
@@ -332,9 +355,29 @@ export const ContentApp = ({
   const routinesText = realUsageSnapshot?.routinesText;
   const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
 
+  // Prefer the model-aware projection (so switching to a cheaper model lengthens
+  // the estimate); fall back to the blended drain-rate projection until enough
+  // per-message samples exist.
   const sessionProjection =
     typeof sessionPercentage === "number" && typeof realUsageSnapshot?.sessionResetsAt === "number"
-      ? computeSessionProjection(usageHistory ?? [], sessionPercentage, realUsageSnapshot.sessionResetsAt)
+      ? computeModelAwareSessionProjection(
+          usageHistory ?? [],
+          sessionPercentage,
+          realUsageSnapshot.sessionResetsAt,
+          realUsageSnapshot.modelLabel,
+          realUsageSnapshot.thinkingLevel,
+        ) ?? computeSessionProjection(usageHistory ?? [], sessionPercentage, realUsageSnapshot.sessionResetsAt)
+      : null;
+
+  const sessionMessagesLeft =
+    typeof sessionPercentage === "number" && typeof realUsageSnapshot?.sessionResetsAt === "number"
+      ? computeSessionMessagesLeft(
+          usageHistory ?? [],
+          sessionPercentage,
+          realUsageSnapshot.sessionResetsAt,
+          realUsageSnapshot.modelLabel,
+          realUsageSnapshot.thinkingLevel,
+        )
       : null;
 
   const weeklyProjection =
@@ -358,18 +401,23 @@ export const ContentApp = ({
 
   const paceFormat: PaceSurplusFormat = settings.paceSurplusFormat ?? "percent";
   const nowMs = Date.now();
-  const sessionPaceSummary = buildPaceSummary(
-    sessionProjection,
-    sessionPercentage ?? undefined,
-    realUsageSnapshot?.sessionResetsAt,
-    paceFormat,
-    nowMs,
-  );
+  const sessionPaceSummary =
+    paceFormat === "messages"
+      ? buildMessagesSummary(sessionMessagesLeft)
+      : buildPaceSummary(
+          sessionProjection,
+          sessionPercentage ?? undefined,
+          realUsageSnapshot?.sessionResetsAt,
+          paceFormat,
+          nowMs,
+        );
+  // "Messages left" is a 5-hour, single-model concept; the weekly row (all models)
+  // keeps showing percentage-at-reset in that mode.
   const weeklyPaceSummary = buildPaceSummary(
     weeklyProjection,
     weeklyAllModelsPercentage,
     realUsageSnapshot?.weeklyAllModelsResetsAt,
-    paceFormat,
+    paceFormat === "messages" ? "percent" : paceFormat,
     nowMs,
   );
   const showWeeklyLearningNotice =

@@ -50,7 +50,7 @@ describe("content styles", () => {
     expect(popupStyles).toContain("body.cub-popup-light");
     expect(popupStyles).toContain("background: rgb(250 249 247);");
     expect(popupStyles).toContain("color: rgb(40 40 38);");
-    expect(popupStyles).toContain("background: rgb(247 246 243);");
+    expect(popupStyles).toContain("color: rgb(120 118 112);");
     expect(popupStyles).toContain("border-bottom-color: rgb(0 0 0 / 10%);");
   });
 
@@ -86,5 +86,29 @@ describe("content styles", () => {
     expect(onboardingTourScript).toContain('light ? "cub-tour-demo-rail cub-message-rail--light" : "cub-tour-demo-rail"');
     expect(onboardingTourScript).toContain("const THEME_SYNC_INTERVAL_MS = 500;");
     expect(onboardingTourScript).toContain("window.setInterval(() => setLight(isLightTheme()), THEME_SYNC_INTERVAL_MS);");
+  });
+
+  it("keeps the usage tooltip hoverable after leaving the meter bounds", () => {
+    expect(styles).toContain(".cub-usage-tooltip:hover {");
+    expect(styles).toContain("visibility: hidden;");
+    expect(styles).toContain("visibility: visible;");
+  });
+
+  it("forces the usage details panel visible during walkthrough steps that target it", () => {
+    expect(styles).toContain("body.cub-tour-bar-open .cub-usage-tooltip {\n  opacity: 1 !important;\n  visibility: visible !important;");
+  });
+
+  it("only auto-shows the onboarding tour on Claude's new-chat route", () => {
+    expect(contentScript).toContain("const isNewChatPage = (): boolean => location.pathname === \"/new\" || location.pathname === \"/new/\";");
+    expect(contentScript).toContain("storageState.settings.hasSeenTour === false && isNewChatPage()");
+  });
+
+  it("uses 5-hour session estimates on Claude design routes", () => {
+    expect(contentScript).toContain("location.pathname === \"/designs\"");
+    expect(contentScript).toContain("location.pathname.startsWith(\"/designs/\")");
+    expect(contentScript).toContain("barMetric: \"session\" as const");
+    expect(contentScript).toContain("showWheel: false");
+    expect(contentScript).toContain("showClipboard: false");
+    expect(contentScript).toContain("ringTarget: \"hidden\" as const");
   });
 });

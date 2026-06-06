@@ -2,17 +2,19 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { CLAUDE_ORIGIN, MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import {
+  appendDailyModelUsage,
   getStorage,
   saveChatUsage,
   saveDailyUsage,
   saveRealUsageSnapshot,
   updateSettings,
 } from "../shared/storage";
-import type { ConversationContextResponse, RealUsageSnapshot, StorageShape } from "../shared/types";
-import { readClaudeDomSnapshot } from "./claudeDom";
+import { normalizeModelFamily } from "../shared/modelUsage";
+import type { ConversationContextResponse, RealUsageSnapshot, StorageShape, ThinkingLevel } from "../shared/types";
+import { readClaudeDomSnapshot, readThinkingEnabled, resolveEffectiveThinkingLevel } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
 import { OnboardingTour } from "./OnboardingTour";
-import { findComposer, findComposerInsertionPoint } from "./composerMount";
+import { findComposer, findComposerInsertionPoint, findDesignComposer, findDesignInsertionPoint } from "./composerMount";
 import {
   hasMeaningfulChatUsageChange,
   hasMeaningfulDailyUsageChange,
@@ -20,9 +22,9 @@ import {
 } from "./contentLifecycle";
 import "./pageOverrides.css";
 import { syncMessageRailTheme, tickMessageRail } from "./messageRail";
-import { initSettingsPage, tickSettingsPage } from "./settingsPage";
+import { initSettingsPage, openUsageBarSettings, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
-import { buildChatUsage, rollDailyUsageForward } from "./usageEstimator";
+import { buildChatUsage, deriveDailyIncrement, rollDailyUsageForward } from "./usageEstimator";
 import { messageToSnapshot } from "./usageProbeBridge";
 
 // Each content-script instance gets a unique ID. When a newer instance starts
@@ -43,6 +45,10 @@ let lastSentCount = 0;
 let lastApiRefreshUrl = "";
 let lastConversationContextUrl = "";
 let lastSyncedTheme: "light" | "dark" | null = null;
+// Sticky thinking on/off state. The effort-menu switch — the only on/off
+// authority — is readable solely while the menu is open, so we remember its last
+// value across DOM reads. undefined until the switch has ever been seen.
+let lastKnownThinkingEnabled: boolean | undefined;
 
 // Cache timer state
 let cacheTimerRoot: ReturnType<typeof createRoot> | null = null;
@@ -138,8 +144,15 @@ export const isLightMode = (): boolean => {
   return !window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
+const isDesignPage = (): boolean =>
+  location.pathname === "/design" ||
+  location.pathname.startsWith("/design/") ||
+  location.pathname === "/designs" ||
+  location.pathname.startsWith("/designs/");
+const isNewChatPage = (): boolean => location.pathname === "/new" || location.pathname === "/new/";
+
 const syncTheme = () => {
-  const light = isLightMode();
+  const light = isDesignPage() ? true : isLightMode();
   const theme = light ? "light" : "dark";
   host?.classList.toggle("cub-theme-light", light);
   cacheTimerHost?.classList.toggle("cub-theme-light", light);
@@ -158,6 +171,7 @@ const ensureHost = () => {
   host = document.createElement("div");
   host.id = "claude-usage-bar-root";
   host.setAttribute(HOST_ATTR, myInstanceId);
+  host.classList.toggle("cub-design", isDesignPage());
   // Apply theme class before first render so there is no flash
   syncTheme();
   root = createRoot(host);
@@ -246,7 +260,7 @@ const ensureTourHost = () => {
 const renderTour = () => {
   if (!storageState || !isActiveInstance()) return;
   ensureTourHost();
-  const showTour = storageState.settings.hasSeenTour === false;
+  const showTour = storageState.settings.hasSeenTour === false && isNewChatPage();
   tourRoot?.render(
     <React.StrictMode>
       {showTour ? (
@@ -275,7 +289,8 @@ const mountHostInComposer = (): boolean => {
     return false;
   }
 
-  const composer = findComposer();
+  const onDesign = isDesignPage();
+  const composer = onDesign ? findDesignComposer() : findComposer();
   if (!composer) {
     host.remove();
     mountedComposer?.classList.remove("cub-composer-host");
@@ -292,7 +307,9 @@ const mountHostInComposer = (): boolean => {
   removeStaleHosts();
 
   if (host.parentElement !== composer) {
-    const insertionPoint = findComposerInsertionPoint(composer);
+    const insertionPoint = onDesign
+      ? findDesignInsertionPoint(composer)
+      : findComposerInsertionPoint(composer);
     composer.insertBefore(host, insertionPoint);
   }
 
@@ -313,10 +330,19 @@ const render = () => {
     renderTour();
     return;
   }
+  const effectiveSettings = isDesignPage()
+    ? {
+        ...storageState.settings,
+        barMetric: "session" as const,
+        showWheel: false,
+        showClipboard: false,
+        ringTarget: "hidden" as const,
+      }
+    : storageState.settings;
   root?.render(
     <React.StrictMode>
       <ContentApp
-        settings={storageState.settings}
+        settings={effectiveSettings}
         chatUsage={storageState.chatUsage}
         realUsageSnapshot={storageState.realUsageSnapshot}
         usageHistory={storageState.usageHistory}
@@ -328,10 +354,25 @@ const render = () => {
   syncTheme();
 };
 
-const requestApiUsageRefresh = (force = false) => {
-  chrome.runtime.sendMessage({ type: MESSAGE_TYPES.fetchApiUsage, force }, () => {
-    void chrome.runtime.lastError;
-  });
+interface UsageRefreshSample {
+  modelLabel?: string;
+  thinkingLevel?: ThinkingLevel;
+  messageCount?: number;
+}
+
+const requestApiUsageRefresh = (force = false, sample?: UsageRefreshSample) => {
+  chrome.runtime.sendMessage(
+    {
+      type: MESSAGE_TYPES.fetchApiUsage,
+      force,
+      modelLabel: sample?.modelLabel,
+      thinkingLevel: sample?.thinkingLevel,
+      messageCount: sample?.messageCount,
+    },
+    () => {
+      void chrome.runtime.lastError;
+    },
+  );
 };
 
 const getConversationId = (): string | null => location.pathname.match(/\/chat\/([^/?]+)/)?.[1] ?? null;
@@ -374,6 +415,15 @@ const refreshUsage = async () => {
   }
 
   const snapshot = readClaudeDomSnapshot();
+  // Resolve the effective thinking level from the always-visible composer level
+  // and the (intermittently visible) effort-menu switch, carrying the last-seen
+  // on/off state forward. undefined means "no fresh reading" — keep the stored value.
+  const { level: detectedThinkingLevel, enabled: nextThinkingEnabled } = resolveEffectiveThinkingLevel(
+    snapshot.thinkingLevel,
+    snapshot.composerThinkingLevel,
+    lastKnownThinkingEnabled,
+  );
+  lastKnownThinkingEnabled = nextThinkingEnabled;
   const now = new Date();
   const dailyUsage = rollDailyUsageForward(storageState.dailyUsage, snapshot.visibleSentCount, now);
   const chatUsage = buildChatUsage(snapshot.visibleMessageTexts, now.getTime());
@@ -394,8 +444,15 @@ const refreshUsage = async () => {
   if (messageSent || urlChanged) {
     lastSentCount = snapshot.visibleSentCount;
     lastApiRefreshUrl = currentUrl;
+    // Attach the active model + cumulative message count so the background can
+    // record a per-message usage sample alongside the fresh percentage.
+    const sample: UsageRefreshSample = {
+      modelLabel: snapshot.modelLabel ?? storageState.realUsageSnapshot?.modelLabel,
+      thinkingLevel: detectedThinkingLevel ?? storageState.realUsageSnapshot?.thinkingLevel,
+      messageCount: dailyUsage.messagesUsed,
+    };
     // Delay after a message send so the server usage counter has time to update.
-    window.setTimeout(() => requestApiUsageRefresh(true), messageSent ? 2000 : 0);
+    window.setTimeout(() => requestApiUsageRefresh(true, sample), messageSent ? 2000 : 0);
   }
 
   if (conversationId && (currentUrl !== lastConversationContextUrl || messageSent)) {
@@ -416,13 +473,52 @@ const refreshUsage = async () => {
   const shouldSaveDailyUsage = hasMeaningfulDailyUsageChange(storageState.dailyUsage, dailyUsage);
   const shouldSaveChatUsage = !conversationId && hasMeaningfulChatUsageChange(storageState.chatUsage, chatUsage);
 
+  // Attribute newly sent messages for the popup chart. We only bucket a message
+  // under a model when it's confidently detected from the claude.ai chat UI;
+  // anything else (Claude Code, cowork, undetectable) falls into "unknown".
+  // Failures here never block the usage snapshot.
+  const dailyIncrement = deriveDailyIncrement(storageState.dailyUsage, dailyUsage);
+  if (dailyIncrement > 0) {
+    const modelLabel = snapshot.modelLabel ?? storageState.realUsageSnapshot?.modelLabel;
+    void appendDailyModelUsage(normalizeModelFamily(modelLabel) ?? "unknown", dailyIncrement, undefined, now.getTime());
+  }
+
+  // Propagate the DOM-detected model + thinking level into the live snapshot so
+  // model-aware estimates (messages left, projections) update in real time when
+  // the user switches model or thinking level. The network probe only reports the
+  // model sporadically, and the background API fetch carries neither, so the DOM
+  // is the timely source. Preserve capturedAt so the background's freshness
+  // cooldown is unaffected.
+  const detectedModel = snapshot.modelLabel;
+  const existingSnapshot = storageState.realUsageSnapshot;
+  const modelChanged =
+    Boolean(detectedModel) && existingSnapshot !== undefined && detectedModel !== existingSnapshot.modelLabel;
+  // detectedThinkingLevel is undefined only when neither signal could be read —
+  // keep the stored value rather than wiping it. Only a concrete, different level
+  // counts as a change.
+  const thinkingChanged =
+    detectedThinkingLevel !== undefined &&
+    existingSnapshot !== undefined &&
+    detectedThinkingLevel !== existingSnapshot.thinkingLevel;
+  const snapshotChanged = modelChanged || thinkingChanged;
+  const nextRealUsageSnapshot =
+    snapshotChanged && existingSnapshot
+      ? {
+          ...existingSnapshot,
+          ...(modelChanged ? { modelLabel: detectedModel } : {}),
+          ...(thinkingChanged ? { thinkingLevel: detectedThinkingLevel } : {}),
+        }
+      : existingSnapshot;
+
   storageState = {
     ...storageState,
     dailyUsage: shouldSaveDailyUsage ? dailyUsage : storageState.dailyUsage,
     chatUsage: shouldSaveChatUsage ? chatUsage : storageState.chatUsage,
+    realUsageSnapshot: nextRealUsageSnapshot,
   };
 
   await Promise.all([
+    snapshotChanged && nextRealUsageSnapshot ? saveRealUsageSnapshot(nextRealUsageSnapshot) : Promise.resolve(),
     shouldSaveDailyUsage ? saveDailyUsage(dailyUsage) : Promise.resolve(),
     shouldSaveChatUsage ? saveChatUsage(chatUsage) : Promise.resolve(),
   ]);
@@ -432,6 +528,15 @@ const refreshUsage = async () => {
 const scheduleRefresh = (records?: MutationRecord[]) => {
   if (!mutationsContainPageChanges(records)) return;
   if (!isActiveInstance()) return;
+  // The Thinking switch unmounts when the effort menu closes, and flipping it can
+  // close the menu before the debounced refreshUsage runs — so the toggle's new
+  // state would never be read and we'd fall back to a stale value. Capture the
+  // on/off state synchronously here (the mutation fires while the switch is still
+  // in the DOM mid-toggle) so resolveEffectiveThinkingLevel sees the fresh state.
+  const eagerThinkingEnabled = readThinkingEnabled();
+  if (eagerThinkingEnabled !== undefined) {
+    lastKnownThinkingEnabled = eagerThinkingEnabled;
+  }
   window.clearTimeout(updateTimer);
   updateTimer = window.setTimeout(() => {
     if (!isActiveInstance()) return;
@@ -484,10 +589,35 @@ const init = async () => {
   lastSentCount = initialSnapshot.visibleSentCount;
   lastApiRefreshUrl = location.href;
 
-  requestApiUsageRefresh();
+  requestApiUsageRefresh(isDesignPage());
 
   window.addEventListener("message", (event) => {
     void handleRealUsageMessage(event);
+  });
+
+  // The toolbar popup can't dispatch Claude's settings shortcut itself (wrong
+  // context), so it asks the active content script to open our settings panel —
+  // the same path the in-bar "→" shortcut uses.
+  chrome.runtime.onMessage.addListener((message: { type?: string } | undefined) => {
+    if (!isActiveInstance()) {
+      return;
+    }
+    if (message?.type === MESSAGE_TYPES.openSettings) {
+      void openUsageBarSettings();
+    }
+  });
+
+  // Opened from the popup on a tab that wasn't already showing claude.ai: surface
+  // the panel once the page is ready. Retry a few times because the keyboard
+  // handler the shortcut relies on mounts a beat after the content script.
+  void chrome.storage.local.get(STORAGE_KEYS.openSettingsOnLoad).then((data) => {
+    const requestedAt = data[STORAGE_KEYS.openSettingsOnLoad];
+    if (typeof requestedAt === "number" && Date.now() - requestedAt < 30_000) {
+      void chrome.storage.local.remove(STORAGE_KEYS.openSettingsOnLoad);
+      [1200, 2600, 4200].forEach((delay) =>
+        window.setTimeout(() => void openUsageBarSettings(), delay),
+      );
+    }
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
@@ -531,7 +661,9 @@ const init = async () => {
   window.setInterval(syncTheme, THEME_SYNC_INTERVAL_MS);
 
   const observer = new MutationObserver(scheduleRefresh);
-  observer.observe(document.documentElement, { attributes: true, childList: true, subtree: true, characterData: true, attributeFilter: ["class", "data-theme", "data-color-scheme", "style"] });
+  // aria-checked is included so flipping the Thinking switch fires the observer
+  // (and the eager capture in scheduleRefresh) while the effort menu is still open.
+  observer.observe(document.documentElement, { attributes: true, childList: true, subtree: true, characterData: true, attributeFilter: ["class", "data-theme", "data-color-scheme", "style", "aria-checked"] });
   scheduleRefresh();
 };
 

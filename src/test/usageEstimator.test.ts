@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { sanitizeUsageMetadata } from "../content/usageProbeBridge";
-import { readClaudeDomSnapshot } from "../content/claudeDom";
+import { readClaudeDomSnapshot, readSelectedModelLabel } from "../content/claudeDom";
 import { extractOrganizationId, normalizeUsagePayload, parseRunBudgetText } from "../shared/claudeUsageApi";
 import { applyConservativeTokenBias } from "../shared/tokenBias";
 import {
   buildChatUsage,
+  deriveDailyIncrement,
   estimateCumulativeContextTokens,
   estimateTokensFromText,
   rollDailyUsageForward,
@@ -80,6 +81,50 @@ describe("daily usage counter", () => {
     const next = rollDailyUsageForward(previous, 1, new Date("2026-05-03T12:00:00"));
     expect(next.localDate).toBe("2026-05-03");
     expect(next.messagesUsed).toBe(1);
+  });
+
+  it("derives the same-day increment from the message delta", () => {
+    const next: DailyUsage = { ...previous, messagesUsed: 5, lastVisibleSentCount: 5 };
+    expect(deriveDailyIncrement(previous, next)).toBe(3);
+  });
+
+  it("counts the full new-day count after a date rollover", () => {
+    const next: DailyUsage = { localDate: "2026-05-03", messagesUsed: 2, lastVisibleSentCount: 2, updatedAt: 2 };
+    expect(deriveDailyIncrement(previous, next)).toBe(2);
+  });
+
+  it("never returns a negative increment", () => {
+    const next: DailyUsage = { ...previous, messagesUsed: 1 };
+    expect(deriveDailyIncrement(previous, next)).toBe(0);
+  });
+});
+
+describe("readSelectedModelLabel", () => {
+  it("reads the switcher's model, ignoring an open menu that lists every model", () => {
+    document.body.innerHTML = `
+      <button data-testid="model-selector-dropdown" aria-haspopup="menu">Claude Opus 4.8</button>
+      <div role="menu">
+        <div role="menuitem">Haiku 4.5</div>
+        <div role="menuitem">Sonnet 4.6</div>
+        <div role="menuitem">Opus 4.8</div>
+      </div>
+    `;
+    // pageText would surface "Haiku 4.5" first; the switcher must still win.
+    expect(readSelectedModelLabel("Haiku 4.5 Sonnet 4.6 Opus 4.8")).toBe("Opus 4.8");
+  });
+
+  it("prefers the model-tagged control over an unrelated button", () => {
+    document.body.innerHTML = `
+      <button>New chat</button>
+      <button data-testid="model-selector-dropdown">Sonnet 4.6</button>
+    `;
+    expect(readSelectedModelLabel("")).toBe("Sonnet 4.6");
+  });
+
+  it("falls back to page text only when no control matches", () => {
+    document.body.innerHTML = `<button>New chat</button>`;
+    expect(readSelectedModelLabel("Using Haiku 4.5 today")).toBe("Haiku 4.5");
+    expect(readSelectedModelLabel("no model here")).toBeUndefined();
   });
 });
 
@@ -211,6 +256,31 @@ describe("Claude usage API helpers", () => {
       weeklyAllModelsResetText: "resets in 19h",
       weeklyAllModelsResetsAt: new Date("2026-05-04T00:00:00.000Z").getTime(),
       routinesText: "0 / 5",
+    });
+  });
+
+  it("formats API reset timestamps with hours and minutes", () => {
+    expect(
+      normalizeUsagePayload(
+        {
+          five_hour: { utilization: 4, resets_at: "2026-05-03T07:45:00.000Z" },
+        },
+        new Date("2026-05-03T05:00:00.000Z").getTime(),
+      )?.resetText,
+    ).toBe("resets in 2h 45m");
+  });
+
+  it("normalizes raw ISO reset strings from page-probe metadata", () => {
+    expect(
+      sanitizeUsageMetadata(
+        {
+          resetText: "2026-06-09T05:00:00.332761+00:00",
+        },
+        new Date("2026-06-09T02:15:00.332Z").getTime(),
+      ),
+    ).toEqual({
+      resetText: "resets in 2h 45m",
+      sessionResetsAt: new Date("2026-06-09T05:00:00.332761+00:00").getTime(),
     });
   });
 

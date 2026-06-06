@@ -1,4 +1,5 @@
-import type { UsageMetadata } from "../shared/types";
+import type { ThinkingLevel, UsageMetadata } from "../shared/types";
+import { normalizeThinkingLevel } from "../shared/modelUsage";
 
 const USER_MESSAGE_SELECTORS = [
   '[data-testid="user-message"]',
@@ -16,6 +17,13 @@ const TRANSCRIPT_MESSAGE_SELECTORS = [
 
 export interface ClaudeDomSnapshot {
   modelLabel?: string;
+  // From the effort menu (switch + radios): "off", a level, or undefined when the
+  // menu is closed. The authority on whether thinking is enabled.
+  thinkingLevel?: ThinkingLevel;
+  // From the always-visible composer control (e.g. "Opus 4.8 Max"): the configured
+  // level, shown even while thinking is off — so it's the timely source for the
+  // *level*, but says nothing about on/off.
+  composerThinkingLevel?: ThinkingLevel;
   visibleSentCount: number;
   visibleMessageCount: number;
   visibleText: string;
@@ -222,10 +230,158 @@ const extractUsagePageMetadata = (pageText: string): Pick<
   };
 };
 
+const MODEL_LABEL_RE = /\b(?:Claude\s+)?(?:Opus|Sonnet|Haiku)\s+\d(?:\.\d)?\b/i;
+
+const cleanModelLabel = (raw: string): string => raw.replace(/^Claude\s+/i, "").trim();
+
+// True when the element lives inside an open model picker, which lists every
+// model name and would otherwise poison "first match wins" detection.
+const isInsideModelMenu = (element: Element): boolean =>
+  Boolean(element.closest('[role="menu"], [role="listbox"], [data-testid*="menu" i]'));
+
+// The active model is never returned by the usage API — it only exists in the
+// page DOM. Read it from the model-switcher control specifically (textContent,
+// not innerText, so it's deterministic), trying the most specific elements
+// first: the model-tagged control, then a popup trigger button, then any button.
+// Items inside an open model menu are excluded. Only if none match do we fall
+// back to scanning the whole page, the old (unreliable) behavior.
+// The model-switcher control candidates, most specific first: the model-tagged
+// control, then a popup trigger button, then any button. Items inside an open
+// model menu are excluded so its full model list can't poison detection.
+const modelControlCandidates = (): HTMLElement[] => {
+  const pick = (selector: string): HTMLElement[] =>
+    [...document.querySelectorAll<HTMLElement>(selector)].filter(
+      (el) => !isExtensionElement(el) && !isInsideModelMenu(el),
+    );
+
+  return [
+    ...pick('[data-testid*="model" i]'),
+    ...pick('button[aria-haspopup], [role="button"][aria-haspopup]'),
+    ...pick('button, [role="button"]'),
+  ];
+};
+
+// The whitespace-collapsed textContent of the first control that names a model,
+// e.g. "Opus 4.8 Max" — model name plus (always-present) effort suffix.
+const readModelControlText = (): string | undefined => {
+  for (const el of modelControlCandidates()) {
+    const text = (el.textContent ?? "").replace(/\s+/g, " ").trim();
+    if (MODEL_LABEL_RE.test(text)) {
+      return text;
+    }
+  }
+  return undefined;
+};
+
+export const readSelectedModelLabel = (pageText: string): string | undefined => {
+  const controlText = readModelControlText();
+  const controlMatch = controlText?.match(MODEL_LABEL_RE);
+  if (controlMatch) {
+    return cleanModelLabel(controlMatch[0]);
+  }
+
+  const fallback = pageText.match(MODEL_LABEL_RE);
+  return fallback ? cleanModelLabel(fallback[0]) : undefined;
+};
+
+// Claude's effort menu radios, keyed by their data-testid suffix. "xhigh" is the
+// "Extra" option (Opus 4.7/4.8 only). ⚠️ Confirmed against live claude.ai markup
+// (role="menu" > [data-testid="effort-option-*"][aria-checked]); if thinking
+// detection breaks, re-check these testids and the switch aria-label below.
+const EFFORT_OPTION_LEVEL: Record<string, Exclude<ThinkingLevel, "off">> = {
+  low: "low",
+  medium: "medium",
+  high: "high",
+  xhigh: "extra",
+  max: "max",
+};
+
+// The active thinking level lives only in the page DOM (never the usage API), and
+// only while the effort menu is *open* (the switch + radios unmount on close).
+// Returns:
+//   "off"        — the Thinking switch is toggled off
+//   a level      — thinking on, with the checked effort radio
+//   undefined    — menu closed / not readable; caller keeps the last known value
+// so a closed menu never clobbers a previously-detected level.
+export const readThinkingLevel = (): ThinkingLevel | undefined => {
+  const toggle = document.querySelector<HTMLElement>('[role="switch"][aria-label="Thinking" i]');
+  if (toggle?.getAttribute("aria-checked") === "false") {
+    return "off";
+  }
+
+  const checked = document.querySelector<HTMLElement>('[data-testid^="effort-option-"][aria-checked="true"]');
+  const suffix = checked?.getAttribute("data-testid")?.replace("effort-option-", "");
+  return suffix ? EFFORT_OPTION_LEVEL[suffix] : undefined;
+};
+
+// The Thinking switch's bare on/off state, read in isolation from the effort
+// level. Returns:
+//   true/false   — the switch is present and toggled on/off
+//   undefined    — the switch isn't in the DOM (menu closed); caller keeps last
+// Toggling the switch can close the menu before the debounced refresh reads it,
+// so callers capture this synchronously on mutation while the switch still exists.
+export const readThinkingEnabled = (): boolean | undefined => {
+  const toggle = document.querySelector<HTMLElement>('[role="switch"][aria-label="Thinking" i]');
+  if (!toggle) {
+    return undefined;
+  }
+  return toggle.getAttribute("aria-checked") !== "false";
+};
+
+// The composer model control trails the model name with the configured effort
+// level, e.g. "Opus 4.8<span> Max</span>". Unlike the effort menu it's always in
+// the DOM, so it gives the level even when the menu is closed — but it keeps
+// showing the level when thinking is off, so it never reports "off". Returns the
+// level, or undefined when no recognizable effort suffix trails the model name.
+export const readComposerEffortLevel = (): ThinkingLevel | undefined => {
+  const text = readModelControlText();
+  const modelMatch = text?.match(MODEL_LABEL_RE);
+  if (!text || !modelMatch) {
+    return undefined;
+  }
+  const suffix = text.slice((modelMatch.index ?? 0) + modelMatch[0].length).trim();
+  if (!suffix) {
+    return undefined;
+  }
+  const level = normalizeThinkingLevel(suffix);
+  return level === "off" ? undefined : level;
+};
+
+export interface ThinkingResolution {
+  // Effective thinking level for cost math: "off" when the switch is known-off,
+  // else the freshest known level. undefined means "no reading right now" — the
+  // caller keeps its last stored value.
+  level: ThinkingLevel | undefined;
+  // Updated sticky on/off state. undefined while the switch has never been seen.
+  enabled: boolean | undefined;
+}
+
+// Combine the two thinking signals into one effective level. The effort-menu
+// switch is the only authority on enabled/disabled but is readable solely while
+// the menu is open, so its last value is remembered across reads (`lastEnabled`).
+// The composer supplies the level at all times. Until the switch has ever been
+// seen we conservatively assume thinking is on (costlier — never over-promises).
+export const resolveEffectiveThinkingLevel = (
+  menuLevel: ThinkingLevel | undefined,
+  composerLevel: ThinkingLevel | undefined,
+  lastEnabled: boolean | undefined,
+): ThinkingResolution => {
+  const enabled = menuLevel === "off" ? false : menuLevel !== undefined ? true : lastEnabled;
+
+  if (enabled === false) {
+    return { level: "off", enabled };
+  }
+
+  const menuRadioLevel = menuLevel && menuLevel !== "off" ? menuLevel : undefined;
+  return { level: menuRadioLevel ?? composerLevel, enabled };
+};
+
 export const readClaudeDomSnapshot = (): ClaudeDomSnapshot => {
   const pageText = readPageText();
   const conversation = readConversationText();
-  const modelLabel = extractTextMatch(pageText, [/\b(?:Haiku|Sonnet|Opus)\s+\d(?:\.\d)?\b/i]);
+  const modelLabel = readSelectedModelLabel(pageText);
+  const thinkingLevel = readThinkingLevel();
+  const composerThinkingLevel = readComposerEffortLevel();
   const resetText = extractTextMatch(pageText, [/\bReset(?:s)?\s+(?:in|at)[^\n]{1,80}/i, /\b\d+d\s+\d+h\b/i]);
   const remainingText = extractTextMatch(pageText, [/\b\d+\s+(?:messages?|uses?)\s+(?:left|remaining)\b/i]);
   const limitText = extractTextMatch(pageText, [/\b(?:daily|weekly|session)\s+(?:limit|usage)[^\n]{1,80}/i]);
@@ -235,12 +391,15 @@ export const readClaudeDomSnapshot = (): ClaudeDomSnapshot => {
 
   return {
     modelLabel,
+    thinkingLevel,
+    composerThinkingLevel,
     visibleSentCount: conversation.sentCount,
     visibleMessageCount: conversation.messageCount,
     visibleText: conversation.text,
     visibleMessageTexts: conversation.messageTexts,
     metadata: {
       modelLabel,
+      thinkingLevel,
       resetText,
       remainingText,
       limitText,

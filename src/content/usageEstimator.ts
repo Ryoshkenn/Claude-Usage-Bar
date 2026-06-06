@@ -54,6 +54,13 @@ export const rollDailyUsageForward = (
   };
 };
 
+// Messages added between two consecutive daily counters. When the day rolled
+// over, `next` already reset to 0, so its full count is the increment.
+export const deriveDailyIncrement = (previous: DailyUsage, next: DailyUsage): number =>
+  previous.localDate === next.localDate
+    ? Math.max(0, next.messagesUsed - previous.messagesUsed)
+    : Math.max(0, next.messagesUsed);
+
 export const buildChatUsage = (messageTexts: string[], now = Date.now()): ChatUsage => ({
   estimatedTokens: applyConservativeTokenBias(estimateCumulativeContextTokens(messageTexts)),
   currentContextTokens: applyConservativeTokenBias(messageTexts.reduce((total, messageText) => total + estimateTokensFromText(messageText), 0)),

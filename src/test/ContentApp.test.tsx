@@ -165,6 +165,58 @@ describe("ContentApp", () => {
     expect(screen.queryByText("100% at reset")).not.toBeInTheDocument();
     expect(screen.getByText("~45h active left")).toHaveAttribute("data-kind", "bad");
   });
+
+  it("shows a bad percent-at-reset label for a depleted 5-hour session on first render", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-01T14:00:00"));
+
+    render(
+      <ContentApp
+        settings={{ ...settings, paceSurplusFormat: "percent" }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 100,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("100% at reset")).toHaveAttribute("data-kind", "bad");
+  });
+
+  it("recomputes the depleted percent-at-reset label when pace is toggled back on", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-01T14:00:00"));
+
+    const snapshot = {
+      source: "real" as const,
+      capturedAt: Date.now(),
+      percentageUsed: 100,
+      sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+    };
+
+    const { rerender } = render(
+      <ContentApp
+        settings={{ ...settings, showPace: false, paceSurplusFormat: "percent" }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={snapshot}
+      />,
+    );
+
+    expect(screen.queryByText("100% at reset")).not.toBeInTheDocument();
+
+    rerender(
+      <ContentApp
+        settings={{ ...settings, showPace: true, paceSurplusFormat: "percent" }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={snapshot}
+      />,
+    );
+
+    expect(screen.getByText("100% at reset")).toHaveAttribute("data-kind", "bad");
+  });
 });
 
 describe("CacheTimer", () => {

@@ -1,8 +1,10 @@
 import { MESSAGE_TYPES } from "../shared/constants";
+import { parseResetMetadata } from "../shared/claudeUsageApi";
 import type { RealUsageSnapshot, UsageMetadata } from "../shared/types";
 
 const allowedStringKeys = new Set([
   "modelLabel",
+  "thinkingLevel",
   "resetText",
   "remainingText",
   "limitText",
@@ -14,7 +16,9 @@ const allowedNumberKeys = new Set([
   "usedMessages",
   "totalMessages",
   "percentageUsed",
+  "sessionResetsAt",
   "weeklyAllModelsPercentageUsed",
+  "weeklyAllModelsResetsAt",
 ]);
 const unsafeKeys = new Set([
   "prompt",
@@ -33,7 +37,7 @@ const unsafeKeys = new Set([
   "auth",
 ]);
 
-export const sanitizeUsageMetadata = (payload: unknown): UsageMetadata | null => {
+export const sanitizeUsageMetadata = (payload: unknown, now = Date.now()): UsageMetadata | null => {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return null;
   }
@@ -44,6 +48,24 @@ export const sanitizeUsageMetadata = (payload: unknown): UsageMetadata | null =>
   for (const [key, value] of Object.entries(input)) {
     if (unsafeKeys.has(key.toLowerCase())) {
       return null;
+    }
+
+    if (
+      (key === "resetText" || key === "weeklyAllModelsResetText") &&
+      typeof value === "string" &&
+      value.length <= 160
+    ) {
+      const reset = parseResetMetadata(value, now);
+      if (reset.resetText && reset.resetAtMs) {
+        if (key === "resetText") {
+          output.resetText = reset.resetText;
+          output.sessionResetsAt = reset.resetAtMs;
+        } else {
+          output.weeklyAllModelsResetText = reset.resetText;
+          output.weeklyAllModelsResetsAt = reset.resetAtMs;
+        }
+        continue;
+      }
     }
 
     if (allowedStringKeys.has(key) && typeof value === "string" && value.length <= 160) {
@@ -68,7 +90,7 @@ export const messageToSnapshot = (event: MessageEvent, now = Date.now()): RealUs
     return null;
   }
 
-  const metadata = sanitizeUsageMetadata(data.payload);
+  const metadata = sanitizeUsageMetadata(data.payload, now);
   if (!metadata) {
     return null;
   }

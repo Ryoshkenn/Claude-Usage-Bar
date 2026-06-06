@@ -1,8 +1,18 @@
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
 import { extractOrganizationId, normalizeUsagePayload, parseRunBudgetText } from "../shared/claudeUsageApi";
+import { getEffectiveModelWeight } from "../shared/modelUsage";
 import { appendUsageHistoryEntry, getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
-import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot } from "../shared/types";
+import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot, ThinkingLevel } from "../shared/types";
+
+// Per-message context the content script attaches to a usage refresh, since the
+// background worker has no DOM access to the active model, thinking level, or
+// message count.
+interface UsageRefreshSample {
+  modelLabel?: string;
+  thinkingLevel?: ThinkingLevel;
+  messageCount?: number;
+}
 
 const CLAUDE_API_ORIGIN = "https://claude.ai";
 // Routine (automation) usage lives on its own endpoint, not under /usage, and is
@@ -101,7 +111,7 @@ const getUsageMetrics = async (organizationId: string): Promise<RealUsageSnapsho
   return snapshot;
 };
 
-const fetchApiUsage = async (force = false): Promise<ApiUsageResponse> => {
+const fetchApiUsage = async (force = false, sample?: UsageRefreshSample): Promise<ApiUsageResponse> => {
   const current = await getStorage();
   if (!force && isFresh(current.realUsageSnapshot)) {
     return { ok: true, snapshot: current.realUsageSnapshot };
@@ -110,11 +120,28 @@ const fetchApiUsage = async (force = false): Promise<ApiUsageResponse> => {
   try {
     const organizationId = await getOrganizationId();
     const snapshot = await getUsageMetrics(organizationId);
+    // The /usage payload has no model, so carry the model forward (from this
+    // refresh's sample, else the last known snapshot) instead of wiping it.
+    const modelLabel = sample?.modelLabel ?? current.realUsageSnapshot?.modelLabel;
+    if (modelLabel) {
+      snapshot.modelLabel = modelLabel;
+    }
+    const thinkingLevel = sample?.thinkingLevel ?? current.realUsageSnapshot?.thinkingLevel;
+    if (thinkingLevel) {
+      snapshot.thinkingLevel = thinkingLevel;
+    }
     await saveRealUsageSnapshot(snapshot);
     await appendUsageHistoryEntry({
       capturedAt: snapshot.capturedAt,
       sessionUsedPercent: snapshot.percentageUsed,
       sessionResetsAt: snapshot.sessionResetsAt,
+      ...(typeof sample?.messageCount === "number"
+        ? { cumulativeMessageCount: sample.messageCount }
+        : {}),
+      ...(modelLabel
+        ? { modelWeight: getEffectiveModelWeight(modelLabel, thinkingLevel), modelLabel }
+        : {}),
+      ...(thinkingLevel ? { thinkingLevel } : {}),
       ...(current.settings.weeklyMetricsEnabled !== false
         ? {
             weeklyUsedPercent: snapshot.weeklyAllModelsPercentageUsed,
@@ -172,14 +199,28 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
-  const data = message as { type?: unknown; force?: unknown; conversationId?: unknown } | undefined;
+  const data = message as
+    | {
+        type?: unknown;
+        force?: unknown;
+        conversationId?: unknown;
+        modelLabel?: unknown;
+        thinkingLevel?: unknown;
+        messageCount?: unknown;
+      }
+    | undefined;
 
   if (!data) {
     return false;
   }
 
   if (data.type === MESSAGE_TYPES.fetchApiUsage) {
-    inFlightUsageRequest ??= fetchApiUsage(Boolean(data.force)).finally(() => {
+    const sample: UsageRefreshSample = {
+      modelLabel: typeof data.modelLabel === "string" ? data.modelLabel : undefined,
+      thinkingLevel: typeof data.thinkingLevel === "string" ? (data.thinkingLevel as ThinkingLevel) : undefined,
+      messageCount: typeof data.messageCount === "number" ? data.messageCount : undefined,
+    };
+    inFlightUsageRequest ??= fetchApiUsage(Boolean(data.force), sample).finally(() => {
       inFlightUsageRequest = null;
     });
 

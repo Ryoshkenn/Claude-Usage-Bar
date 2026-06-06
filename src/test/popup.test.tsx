@@ -53,10 +53,46 @@ const installChromeMock = (data: Record<string, unknown>) => {
   });
 };
 
+const installBrowserThemeMock = (initialTheme: "light" | "dark") => {
+  let matches = initialTheme === "light";
+  const listeners = new Set<(event: MediaQueryListEvent) => void>();
+  const mediaQueryList = {
+    get matches() {
+      return matches;
+    },
+    media: "(prefers-color-scheme: light)",
+    onchange: null,
+    addEventListener: vi.fn((_event: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.add(listener);
+    }),
+    removeEventListener: vi.fn((_event: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.delete(listener);
+    }),
+    addListener: vi.fn((listener: (event: MediaQueryListEvent) => void) => {
+      listeners.add(listener);
+    }),
+    removeListener: vi.fn((listener: (event: MediaQueryListEvent) => void) => {
+      listeners.delete(listener);
+    }),
+    dispatchEvent: vi.fn(),
+  } as unknown as MediaQueryList;
+
+  vi.stubGlobal("matchMedia", vi.fn(() => mediaQueryList));
+
+  return {
+    setTheme(theme: "light" | "dark") {
+      matches = theme === "light";
+      listeners.forEach((listener) => listener({ matches } as MediaQueryListEvent));
+    },
+  };
+};
+
 describe("Popup", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.spyOn(Date, "now").mockReturnValue(now);
+    document.body.className = "";
+    installBrowserThemeMock("dark");
   });
 
   it("does not show the review prompt before the set time", async () => {
@@ -84,9 +120,18 @@ describe("Popup", () => {
     expect(screen.queryByText(/Enjoying it/i)).not.toBeInTheDocument();
   });
 
-  it("defaults the toolbar popup to dark until Claude reports a light theme", async () => {
+  it("uses the browser light theme for the toolbar popup", async () => {
+    installBrowserThemeMock("light");
     installChromeMock({});
-    document.body.className = "";
+
+    render(<Popup />);
+
+    await waitFor(() => expect(document.body).toHaveClass("cub-popup-light"));
+  });
+
+  it("uses the browser dark theme for the toolbar popup", async () => {
+    installBrowserThemeMock("dark");
+    installChromeMock({ [STORAGE_KEYS.detectedTheme]: "light" });
 
     render(<Popup />);
 
@@ -94,11 +139,16 @@ describe("Popup", () => {
     expect(document.body).not.toHaveClass("cub-popup-light");
   });
 
-  it("uses the saved Claude light theme for the toolbar popup", async () => {
-    installChromeMock({ [STORAGE_KEYS.detectedTheme]: "light" });
-    document.body.className = "";
+  it("updates the toolbar popup when the browser theme changes", async () => {
+    const browserTheme = installBrowserThemeMock("dark");
+    installChromeMock({});
 
     render(<Popup />);
+
+    await waitFor(() => expect(screen.getByText("Claude Usage Bar")).toBeInTheDocument());
+    expect(document.body).not.toHaveClass("cub-popup-light");
+
+    browserTheme.setTheme("light");
 
     await waitFor(() => expect(document.body).toHaveClass("cub-popup-light"));
   });

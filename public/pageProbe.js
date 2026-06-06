@@ -11,8 +11,10 @@
     "totalMessages",
     "limitText",
     "percentageUsed",
+    "sessionResetsAt",
     "weeklyAllModelsPercentageUsed",
     "weeklyAllModelsResetText",
+    "weeklyAllModelsResetsAt",
     "routinesText",
   ]);
 
@@ -56,17 +58,17 @@
     return `resets ${Math.ceil(hours / 24)}d`;
   };
 
-  const parseResetText = (value, now) => {
+  const parseResetMetadata = (value, now) => {
     if (typeof value !== "string" && typeof value !== "number") return undefined;
     const ts = typeof value === "number" ? value : new Date(value).getTime();
-    return Number.isFinite(ts) ? formatTimeUntil(ts, now) : undefined;
+    return Number.isFinite(ts) ? { resetText: formatTimeUntil(ts, now), resetAtMs: ts } : undefined;
   };
 
   const applyKnownClaudeSchema = (input, output) => {
     if (!input || typeof input !== "object" || Array.isArray(input)) return;
     const now = Date.now();
 
-    const applyLimit = (obj, pctKey, resetKey) => {
+    const applyLimit = (obj, pctKey, resetKey, resetAtKey) => {
       if (!obj || typeof obj !== "object" || Array.isArray(obj)) return;
       const utilization = obj.utilization ?? obj.percent_used ?? obj.percentage_used ?? obj.percentageUsed ?? obj.used_ratio ?? obj.usage;
       const reset = obj.resets_at ?? obj.resetsAt ?? obj.reset_at ?? obj.resetAt;
@@ -75,13 +77,16 @@
         if (pct !== undefined) output[pctKey] = pct;
       }
       if (resetKey) {
-        const rt = parseResetText(reset, now);
-        if (rt) output[resetKey] = rt;
+        const parsedReset = parseResetMetadata(reset, now);
+        if (parsedReset) {
+          output[resetKey] = parsedReset.resetText;
+          if (resetAtKey) output[resetAtKey] = parsedReset.resetAtMs;
+        }
       }
     };
 
-    applyLimit(input.five_hour, "percentageUsed", "resetText");
-    applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText");
+    applyLimit(input.five_hour, "percentageUsed", "resetText", "sessionResetsAt");
+    applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
 
     const routines = input.routines ?? input.routine_usage ?? input.routineUsage;
     if (routines && typeof routines === "object" && !Array.isArray(routines)) {
@@ -99,13 +104,16 @@
     // Apply known Claude usage API schema first (handles structured /usage responses).
     applyKnownClaudeSchema(input, output);
 
-    const visit = (value, depth) => {
+    const isSessionScope = (text) => /(5|five).*hour|hour.*limit|five hour|5 hour|five_hour|5_hour/.test(text);
+    const isWeeklyScope = (text) => /seven day|seven_day|7 day|7_day|weekly/.test(text);
+
+    const visit = (value, depth, path = []) => {
       if (!value || typeof value !== "object" || depth > 4) {
         return;
       }
 
       if (Array.isArray(value)) {
-        value.slice(0, 10).forEach((item) => visit(item, depth + 1));
+        value.slice(0, 10).forEach((item, index) => visit(item, depth + 1, [...path, String(index)]));
         return;
       }
 
@@ -115,6 +123,7 @@
         }
 
         const normalized = key.toLowerCase();
+        const scopedText = [...path, key].join(" ").replace(/[_-]+/g, " ").toLowerCase();
         if (usageKeyPattern.test(key)) {
           if (typeof nested === "number" && Number.isFinite(nested)) {
             if (/remaining/.test(normalized) && /message/.test(normalized)) {
@@ -124,7 +133,19 @@
             } else if (/(limit|quota|max|total)/.test(normalized) && /(message|use|usage)/.test(normalized)) {
               output.totalMessages = nested;
             } else if (/percent|percentage/.test(normalized)) {
-              output.percentageUsed = nested;
+              if (isWeeklyScope(scopedText)) {
+                output.weeklyAllModelsPercentageUsed ??= nested;
+              } else if (isSessionScope(scopedText)) {
+                output.percentageUsed ??= nested;
+              } else {
+                output.percentageUsed = nested;
+              }
+            } else if (/reset/.test(normalized)) {
+              if (isWeeklyScope(scopedText)) {
+                output.weeklyAllModelsResetsAt ??= nested;
+              } else if (isSessionScope(scopedText)) {
+                output.sessionResetsAt ??= nested;
+              }
             }
           }
 
@@ -133,7 +154,13 @@
             if (/model/.test(normalized)) {
               output.modelLabel = nested;
             } else if (/reset/.test(normalized)) {
-              output.resetText = nested;
+              if (isWeeklyScope(scopedText)) {
+                output.weeklyAllModelsResetText ??= nested;
+              } else if (isSessionScope(scopedText)) {
+                output.resetText ??= nested;
+              } else {
+                output.resetText = nested;
+              }
             } else if (/remaining/.test(normalized)) {
               output.remainingText = nested;
             } else if (/limit|usage|quota/.test(normalized)) {
@@ -142,7 +169,7 @@
           }
         }
 
-        visit(nested, depth + 1);
+        visit(nested, depth + 1, [...path, key]);
       });
     };
 

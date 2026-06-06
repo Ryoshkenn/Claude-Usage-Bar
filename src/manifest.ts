@@ -4,7 +4,7 @@ import { EXTENSION_NAME } from "./shared/constants";
 export default defineManifest({
   manifest_version: 3,
   name: EXTENSION_NAME,
-  version: "1.0.2",
+  version: "1.2.0",
   description: "Claude usage overlay with privacy-safe usage metadata.",
   permissions: ["storage"],
   host_permissions: ["https://claude.ai/*"],

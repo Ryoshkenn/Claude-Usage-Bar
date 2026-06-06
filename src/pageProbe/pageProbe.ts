@@ -13,6 +13,11 @@ const allowedOutputKeys = new Set([
   "totalMessages",
   "limitText",
   "percentageUsed",
+  "sessionResetsAt",
+  "weeklyAllModelsPercentageUsed",
+  "weeklyAllModelsResetText",
+  "weeklyAllModelsResetsAt",
+  "routinesText",
 ]);
 
 const applyUsageText = (text: string, output: JsonObject) => {
@@ -42,14 +47,93 @@ const applyUsageText = (text: string, output: JsonObject) => {
 
 const coerceMetadata = (input: JsonObject): JsonObject => {
   const output: JsonObject = {};
+  const now = Date.now();
 
-  const visit = (value: unknown, depth: number) => {
+  const normalizePercentage = (value: number): number | undefined => {
+    if (!Number.isFinite(value) || value < 0) {
+      return undefined;
+    }
+    const percentage = value <= 1 ? value * 100 : value;
+    return Math.min(100, Math.max(0, Math.round(percentage)));
+  };
+
+  const formatTimeUntil = (timestamp: number): string => {
+    const diff = Math.max(0, timestamp - now);
+    const minutes = Math.ceil(diff / 60_000);
+    if (minutes < 60) {
+      return `resets ${minutes}m`;
+    }
+    const hours = Math.ceil(minutes / 60);
+    if (hours < 24) {
+      return `resets ${hours}h`;
+    }
+    return `resets ${Math.ceil(hours / 24)}d`;
+  };
+
+  const parseResetMetadata = (value: unknown): { resetText: string; resetAtMs: number } | undefined => {
+    if (typeof value !== "string" && typeof value !== "number") {
+      return undefined;
+    }
+    const timestamp = typeof value === "number" ? value : new Date(value).getTime();
+    return Number.isFinite(timestamp)
+      ? { resetText: formatTimeUntil(timestamp), resetAtMs: timestamp }
+      : undefined;
+  };
+
+  const applyLimit = (value: unknown, pctKey: string, resetKey: string, resetAtKey: string) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      return;
+    }
+    const object = value as JsonObject;
+    const utilization =
+      object.utilization ??
+      object.percent_used ??
+      object.percentage_used ??
+      object.percentageUsed ??
+      object.used_ratio ??
+      object.usage;
+    const reset = object.resets_at ?? object.resetsAt ?? object.reset_at ?? object.resetAt;
+    if (typeof utilization === "number") {
+      const percentage = normalizePercentage(utilization);
+      if (percentage !== undefined) {
+        output[pctKey] = percentage;
+      }
+    }
+    const parsedReset = parseResetMetadata(reset);
+    if (parsedReset) {
+      output[resetKey] = parsedReset.resetText;
+      output[resetAtKey] = parsedReset.resetAtMs;
+    }
+  };
+
+  applyLimit(input.five_hour, "percentageUsed", "resetText", "sessionResetsAt");
+  applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
+
+  const routines = input["run-budget"] ?? input.run_budget ?? input.runBudget ?? input.routines ?? input.routine_usage ?? input.routineUsage;
+  if (routines && typeof routines === "object" && !Array.isArray(routines)) {
+    const routineObject = routines as JsonObject;
+    const used = routineObject.used ?? routineObject.current ?? routineObject.count;
+    const limit = routineObject.limit ?? routineObject.max ?? routineObject.total ?? routineObject.allowed;
+    if ((typeof used === "number" || typeof used === "string") && (typeof limit === "number" || typeof limit === "string")) {
+      const usedNumber = Number(used);
+      const limitNumber = Number(limit);
+      if (Number.isFinite(usedNumber) && Number.isFinite(limitNumber)) {
+        output.routinesText = `${usedNumber} / ${limitNumber}`;
+      }
+    }
+  }
+
+  const isSessionScope = (text: string): boolean =>
+    /(5|five).*hour|hour.*limit|five hour|5 hour|five_hour|5_hour/.test(text);
+  const isWeeklyScope = (text: string): boolean => /seven day|seven_day|7 day|7_day|weekly/.test(text);
+
+  const visit = (value: unknown, depth: number, path: string[] = []) => {
     if (!value || typeof value !== "object" || depth > 4) {
       return;
     }
 
     if (Array.isArray(value)) {
-      value.slice(0, 10).forEach((item) => visit(item, depth + 1));
+      value.slice(0, 10).forEach((item, index) => visit(item, depth + 1, [...path, String(index)]));
       return;
     }
 
@@ -59,6 +143,7 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
       }
 
       const normalized = key.toLowerCase();
+      const scopedText = [...path, key].join(" ").replace(/[_-]+/g, " ").toLowerCase();
       if (usageKeyPattern.test(key)) {
         if (typeof nested === "number" && Number.isFinite(nested)) {
           if (/remaining/.test(normalized) && /message/.test(normalized)) {
@@ -68,7 +153,19 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
           } else if (/(limit|quota|max|total)/.test(normalized) && /(message|use|usage)/.test(normalized)) {
             output.totalMessages = nested;
           } else if (/percent|percentage/.test(normalized)) {
-            output.percentageUsed = nested;
+            if (isWeeklyScope(scopedText)) {
+              output.weeklyAllModelsPercentageUsed ??= nested;
+            } else if (isSessionScope(scopedText)) {
+              output.percentageUsed ??= nested;
+            } else {
+              output.percentageUsed = nested;
+            }
+          } else if (/reset/.test(normalized)) {
+            if (isWeeklyScope(scopedText)) {
+              output.weeklyAllModelsResetsAt ??= nested;
+            } else if (isSessionScope(scopedText)) {
+              output.sessionResetsAt ??= nested;
+            }
           }
         }
 
@@ -77,7 +174,13 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
           if (/model/.test(normalized)) {
             output.modelLabel = nested;
           } else if (/reset/.test(normalized)) {
-            output.resetText = nested;
+            if (isWeeklyScope(scopedText)) {
+              output.weeklyAllModelsResetText ??= nested;
+            } else if (isSessionScope(scopedText)) {
+              output.resetText ??= nested;
+            } else {
+              output.resetText = nested;
+            }
           } else if (/remaining/.test(normalized)) {
             output.remainingText = nested;
           } else if (/limit|usage|quota/.test(normalized)) {
@@ -86,7 +189,7 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
         }
       }
 
-      visit(nested, depth + 1);
+      visit(nested, depth + 1, [...path, key]);
     }
   };
 

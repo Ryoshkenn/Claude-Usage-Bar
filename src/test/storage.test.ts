@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
+  appendDailyModelUsage,
   appendUsageHistoryEntry,
   clearWeeklyUsageMetrics,
   containsUnsafeConversationFields,
+  getDailyModelHistory,
   getStorage,
   getUsageHistory,
+  isExtensionContextInvalidatedError,
   resetUsage,
+  saveChatUsage,
   saveRealUsageSnapshot,
   updateSettings,
   type StorageAdapter,
@@ -40,6 +44,32 @@ const createAdapter = (initial: Record<string, unknown> = {}): StorageAdapter & 
 };
 
 describe("storage helpers", () => {
+  it("detects Chrome extension context invalidation errors", () => {
+    expect(isExtensionContextInvalidatedError(new Error("Extension context invalidated."))).toBe(true);
+    expect(isExtensionContextInvalidatedError(new Error("other storage failure"))).toBe(false);
+  });
+
+  it("falls back to defaults when Chrome storage is unavailable after extension reload", async () => {
+    const adapter: StorageAdapter = {
+      async get() {
+        throw new Error("Extension context invalidated.");
+      },
+      async set() {
+        throw new Error("Extension context invalidated.");
+      },
+      async remove() {
+        throw new Error("Extension context invalidated.");
+      },
+    };
+
+    const state = await getStorage(adapter);
+
+    expect(state.settings.showOverlay).toBe(true);
+    expect(state.dailyUsage.messagesUsed).toBe(0);
+    await expect(saveChatUsage({ estimatedTokens: 1, visibleMessageCount: 1, updatedAt: 1 }, adapter)).resolves.toBeUndefined();
+    await expect(resetUsage(adapter)).resolves.toBeUndefined();
+  });
+
   it("reads defaults", async () => {
     const state = await getStorage(createAdapter());
     expect(state.settings).toEqual({
@@ -108,6 +138,7 @@ describe("storage helpers", () => {
       dailyUsage: { messagesUsed: 5 },
       realUsageSnapshot: { remainingText: "1 left" },
       usageHistory: [{ capturedAt: 1, weeklyUsedPercent: 50 }],
+      dailyMessageHistory: [{ date: "2026-06-18", opus: 2, sonnet: 0, haiku: 0, unknown: 0 }],
       weeklyUsageMetrics: {
         startedAt: 1,
         lastUpdatedAt: 1,
@@ -123,6 +154,7 @@ describe("storage helpers", () => {
     expect(adapter.data.settings).toEqual({ showOverlay: false, mode: "expanded" });
     expect(adapter.data.realUsageSnapshot).toBeUndefined();
     expect(adapter.data.usageHistory).toBeUndefined();
+    expect(adapter.data.dailyMessageHistory).toBeUndefined();
     expect((adapter.data.dailyUsage as { messagesUsed: number }).messagesUsed).toBe(0);
     expect((adapter.data.weeklyUsageMetrics as { sampleCount: number }).sampleCount).toBe(0);
   });
@@ -165,6 +197,24 @@ describe("storage helpers", () => {
     expect(history).toHaveLength(100);
     expect(history[0].capturedAt).toBe(2);
     expect(history[99].capturedAt).toBe(101);
+  });
+
+  it("accumulates daily per-model usage into one entry per day", async () => {
+    const adapter = createAdapter();
+    const t = new Date("2026-06-18T10:00:00").getTime();
+    await appendDailyModelUsage("opus", 2, adapter, t);
+    await appendDailyModelUsage("sonnet", 1, adapter, t + 1000);
+    await appendDailyModelUsage("opus", 3, adapter, t + 2000);
+    const history = await getDailyModelHistory(adapter);
+    expect(history).toHaveLength(1);
+    expect(history[0]).toMatchObject({ date: "2026-06-18", opus: 5, sonnet: 1, haiku: 0, unknown: 0 });
+  });
+
+  it("ignores non-positive daily increments", async () => {
+    const adapter = createAdapter();
+    await appendDailyModelUsage("opus", 0, adapter, Date.now());
+    await appendDailyModelUsage("haiku", -3, adapter, Date.now());
+    expect(await getDailyModelHistory(adapter)).toHaveLength(0);
   });
 
   it("skips duplicate capturedAt entries", async () => {

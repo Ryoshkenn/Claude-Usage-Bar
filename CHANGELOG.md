@@ -2,6 +2,33 @@
 
 All notable changes since the 1.0.0 Chrome Web Store release are documented here.
 
+## [1.2.0] - 2026-06-06
+
+### Added
+- Added model-aware 5-hour estimates that account for the active Claude model family, thinking level, and learned per-message usage from recent real API samples.
+- Added a "Messages left" pace display option for the 5-hour bar, with conservative estimates that update when the selected model or thinking level changes.
+- Added a redesigned toolbar popup with live 5-hour and weekly usage, refresh and settings shortcuts, 14-day and monthly message charts, model split legend, all-time total, and active-day streak.
+- Added daily per-model message history for Opus, Sonnet, Haiku, and undetected/other usage so the popup can show usage trends over time.
+- Added toolbar-popup light/dark matching based on the browser theme.
+- Added Claude Design route support with a simplified 5-hour-only usage bar that hides unsupported chat-specific controls.
+
+### Changed
+- The popup settings button now opens the in-page Usage Bar settings panel on the active Claude tab, or opens Claude and surfaces the settings panel after load.
+- The onboarding tour now auto-starts only on Claude's new-chat route.
+- Reset time labels now include more precise hour/minute and day/hour text when the API provides reset timestamps.
+- Usage projections now show depletion when current pace will run out exactly at reset, and ahead-of-pace fallback estimates no longer go blank.
+- Storage writes tolerate Chrome extension context invalidation during extension reloads instead of throwing noisy errors.
+
+### Fixed
+- Fixed model detection so the active model switcher wins over open model-picker menu items.
+- Fixed thinking-level detection by combining the effort menu switch with the composer-visible effort label.
+- Fixed 5-hour and weekly reset metadata parsing so the two windows stay separate.
+- Fixed usage tooltip hover and tour behavior so details remain visible while interacting with the panel or walkthrough.
+- Fixed popup theme behavior so it follows the browser rather than Claude's page theme.
+
+### Tests
+- Added coverage for model/thinking usage math, daily usage charts, page-probe reset parsing, Claude DOM thinking detection, popup browser themes, storage reload handling, and projection edge cases.
+
 ## [1.0.1] - 2026-06-01
 
 ### Changed

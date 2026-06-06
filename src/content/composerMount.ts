@@ -3,6 +3,17 @@ const COMPOSER_INPUT_SELECTOR =
   'form textarea:not(#conversation-preferences), form [contenteditable="true"][role="textbox"], form [role="textbox"]';
 const SEND_BUTTON_SELECTOR = 'button[type="submit"], button[aria-label*="Send" i]';
 
+// On /design the toolbar uses styled-components (no stable Tailwind classes).
+// Navigate up from the send button: button -> right-controls div -> outer toolbar div.
+export const findDesignComposer = (): HTMLElement | null => {
+  const sendBtn = document.querySelector<HTMLElement>('[data-testid="chat-send-button"]');
+  return sendBtn?.parentElement?.parentElement ?? null;
+};
+
+// Insert before children[1] (the right-side model+send div) so the bar sits between the two halves.
+export const findDesignInsertionPoint = (composer: HTMLElement): Element | null =>
+  composer.children[1] ?? null;
+
 export const findComposerControls = (): HTMLElement | null => {
   const addButton = document.querySelector<HTMLElement>(ADD_FILES_BUTTON_SELECTOR);
   if (!addButton) {

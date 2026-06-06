@@ -75,27 +75,14 @@ export const computeFallbackPace = (
     return { status: "insufficient_data", label: "" };
   }
 
-  const expectedPercent = (elapsedMs / windowDurationMs) * 100;
   const elapsedHours = elapsedMs / 3_600_000;
   const drainRatePerHour = elapsedHours > 0 ? sessionUsedPercent / elapsedHours : 0;
 
-  if (sessionUsedPercent <= expectedPercent * 1.1) {
-    if (drainRatePerHour > 0) {
-      const remainingPercent = 100 - sessionUsedPercent;
-      const etaHours = remainingPercent / drainRatePerHour;
-      const etaMs = now + etaHours * 3_600_000;
-      return {
-        status: "lasting_to_reset",
-        etaMs,
-        drainRatePerHour,
-        label: `Lasts ${formatEta(etaMs, now)}`,
-      };
-    }
-
+  if (drainRatePerHour <= 0) {
     return { status: "lasting_to_reset", label: "Lasts until reset" };
   }
 
-  return { status: "insufficient_data", label: "" };
+  return projectUsageDepletion(sessionUsedPercent, sessionResetsAt, drainRatePerHour, now);
 };
 
 export const projectUsageDepletion = (
@@ -112,7 +99,7 @@ export const projectUsageDepletion = (
   const etaHours = remainingPercent / drainRatePerHour;
   const etaMs = now + etaHours * 3_600_000;
 
-  if (etaMs >= sessionResetsAt) {
+  if (etaMs > sessionResetsAt) {
     return {
       status: "lasting_to_reset",
       etaMs,

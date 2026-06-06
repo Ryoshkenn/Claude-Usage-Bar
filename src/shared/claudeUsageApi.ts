@@ -45,7 +45,7 @@ const normalizePercentage = (value: number): number | undefined => {
   return Math.min(100, Math.max(0, Math.round(percentage)));
 };
 
-const formatTimeUntil = (timestamp: number, now: number): string => {
+export const formatTimeUntil = (timestamp: number, now: number): string => {
   const diff = Math.max(0, timestamp - now);
   const minutes = Math.ceil(diff / 60_000);
 
@@ -53,29 +53,26 @@ const formatTimeUntil = (timestamp: number, now: number): string => {
     return `resets in ${minutes}m`;
   }
 
-  const hours = Math.ceil(minutes / 60);
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
   if (hours < 24) {
-    return `resets in ${hours}h`;
+    return remainingMinutes > 0 ? `resets in ${hours}h ${remainingMinutes}m` : `resets in ${hours}h`;
   }
 
-  return `resets in ${Math.ceil(hours / 24)}d`;
+  const days = Math.floor(hours / 24);
+  const remainingHours = hours % 24;
+  return remainingHours > 0 ? `resets in ${days}d ${remainingHours}h` : `resets in ${days}d`;
 };
 
-const parseResetText = (value: unknown, now: number): string | undefined => {
+export const parseResetMetadata = (value: unknown, now: number): { resetText?: string; resetAtMs?: number } => {
   if (typeof value !== "string" && typeof value !== "number") {
-    return undefined;
+    return {};
   }
 
   const timestamp = typeof value === "number" ? value : new Date(value).getTime();
-  return Number.isFinite(timestamp) ? formatTimeUntil(timestamp, now) : undefined;
-};
-
-const parseResetAtMs = (value: unknown): number | undefined => {
-  if (typeof value !== "string" && typeof value !== "number") {
-    return undefined;
-  }
-  const ts = typeof value === "number" ? value : new Date(value).getTime();
-  return Number.isFinite(ts) && ts > 0 ? ts : undefined;
+  return Number.isFinite(timestamp) && timestamp > 0
+    ? { resetText: formatTimeUntil(timestamp, now), resetAtMs: timestamp }
+    : {};
 };
 
 const parseLimitObject = (value: unknown, now: number): { percentage?: number; resetText?: string; resetAtMs?: number } | null => {
@@ -95,8 +92,7 @@ const parseLimitObject = (value: unknown, now: number): { percentage?: number; r
 
   return {
     percentage: typeof utilization === "number" ? normalizePercentage(utilization) : undefined,
-    resetText: parseResetText(reset, now),
-    resetAtMs: parseResetAtMs(reset),
+    ...parseResetMetadata(reset, now),
   };
 };
 

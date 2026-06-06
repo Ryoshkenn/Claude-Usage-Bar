@@ -6,6 +6,7 @@ import {
   computeWeeklyProjection,
   computeWeightedDrainRate,
   getMatchingWindowHistory,
+  projectUsageDepletion,
   trimForecastEntries,
 } from "../shared/usageProjection";
 
@@ -110,6 +111,29 @@ describe("computeSessionProjection — insufficient data fallback", () => {
     const now = Date.now();
     const result = computeSessionProjection([], 50, now + 60 * 60_000, now);
     expect(["insufficient_data", "lasting_to_reset"]).toContain(result.status);
+  });
+
+  it("projects from current 5-hour pace instead of leaving ahead-of-pace usage blank", () => {
+    const now = new Date("2026-06-09T03:00:00.000Z").getTime();
+    const resetAt = now + 2 * 60 * 60_000;
+
+    const result = computeSessionProjection([], 80, resetAt, now);
+
+    expect(result.status).toBe("projected_empty");
+    expect(result.etaMs).toBe(now + 45 * 60_000);
+    expect(result.drainRatePerHour).toBeCloseTo(80 / 3, 5);
+  });
+});
+
+describe("projectUsageDepletion", () => {
+  it("treats empty exactly at reset as depleted instead of lasting past reset", () => {
+    const now = new Date("2026-06-09T03:00:00.000Z").getTime();
+    const resetAt = now + 2 * 60 * 60_000;
+
+    const result = projectUsageDepletion(60, resetAt, 20, now);
+
+    expect(result.status).toBe("projected_empty");
+    expect(result.etaMs).toBe(resetAt);
   });
 });
 

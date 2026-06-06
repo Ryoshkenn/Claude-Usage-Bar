@@ -479,6 +479,7 @@ const RING_OPTIONS: { value: RingTarget; label: string }[] = [...METRIC_OPTIONS]
 const PACE_SURPLUS_OPTIONS: { value: PaceSurplusFormat; label: string }[] = [
   { value: "percent", label: "Percentage at reset" },
   { value: "time", label: "Time past reset" },
+  { value: "messages", label: "Messages left" },
 ];
 
 const WEEKLY_PACE_OPTIONS: { value: WeeklyPaceMode; label: string }[] = [
@@ -799,8 +800,8 @@ const SettingsPage = () => {
         </Row>
         <Row
           labelId={id("pace-surplus")}
-          label="Pace format past reset"
-          description="When your usage lasts longer than the reset window, show the percentage you'll be at when reset hits, or the extra time you'll have past reset."
+          label="Pace format"
+          description="What to show next to the 5-hour percentage: the percentage you'll be at when reset hits, the extra time you'll have past reset, or an estimate of how many messages you have left at the model you're using."
         >
           <CdsSelect
             id={id("pace-surplus")}

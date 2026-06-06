@@ -13,6 +13,12 @@
   overflow: visible;
 }
 
+#claude-usage-bar-root.cub-design {
+  --cub-bar-width: 100px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
 .cub-root {
   display: grid;
   grid-template-columns: var(--cub-bar-width) auto auto;
@@ -22,6 +28,26 @@
   box-sizing: border-box;
   color: rgb(195 194 184);
   font: 14px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#claude-usage-bar-root.cub-design .cub-root {
+  gap: 0;
+  font-size: 11px;
+}
+
+#claude-usage-bar-root.cub-design .cub-meter {
+  height: 3px;
+}
+
+#claude-usage-bar-root.cub-design .cub-usage-tooltip {
+  left: 0;
+  transform: translateX(0) translateY(3px);
+}
+
+#claude-usage-bar-root.cub-design .cub-bar-label:hover ~ .cub-meter .cub-usage-tooltip,
+#claude-usage-bar-root.cub-design .cub-meter:hover .cub-usage-tooltip,
+#claude-usage-bar-root.cub-design .cub-meter:focus-visible .cub-usage-tooltip {
+  transform: translateX(0) translateY(0);
 }
 
 /* ── Bar ──────────────────────────────────────────────────── */
@@ -211,11 +237,12 @@
   color: rgb(245 245 241);
   font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   opacity: 0;
-  pointer-events: none;
+  pointer-events: auto;
   text-align: center;
   transform: translateX(-50%) translateY(3px);
   /* No delay on hide */
   transition: opacity 120ms ease, transform 120ms ease;
+  visibility: hidden;
   white-space: nowrap;
 }
 
@@ -245,6 +272,10 @@
 }
 
 .cub-usage-link {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
   color: rgb(165 164 156);
   cursor: pointer;
   font-size: 18px;
@@ -392,11 +423,17 @@
 
 .cub-bar-label:hover ~ .cub-meter .cub-usage-tooltip,
 .cub-meter:hover .cub-usage-tooltip,
-.cub-meter:focus-visible .cub-usage-tooltip {
+.cub-meter:focus-visible .cub-usage-tooltip,
+.cub-usage-tooltip:hover {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%) translateY(0);
   transition-delay: 250ms;
+  visibility: visible;
+}
+
+#claude-usage-bar-root.cub-design .cub-usage-tooltip:hover {
+  transform: translateX(0) translateY(0);
 }
 
 .cub-wheel-wrap:hover .cub-token-tooltip,
@@ -704,6 +741,7 @@
 /* Force bar tooltip visible during tour steps that spotlight it */
 body.cub-tour-bar-open .cub-usage-tooltip {
   opacity: 1 !important;
+  visibility: visible !important;
   pointer-events: none !important;
   transform: translateX(-50%) translateY(0) !important;
   transition-delay: 0ms !important;

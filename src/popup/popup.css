@@ -1,3 +1,11 @@
+:root {
+  /* Claude clay model ramp — Opus full clay, Sonnet lighter, Haiku lightest. */
+  --cub-opus: rgb(204 124 94);
+  --cub-sonnet: rgb(216 156 132);
+  --cub-haiku: rgb(228 190 174);
+  --cub-unknown: rgb(120 120 116);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -19,139 +27,409 @@ body.cub-popup-light {
   color: rgb(40 40 38);
 }
 
-.popup {
-  padding: 16px;
+.cub-sronly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-header {
-  margin-bottom: 16px;
+.cub-popup {
+  padding: 0 14px 12px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 18px;
-  letter-spacing: 0;
-}
-
-p {
-  margin: 4px 0 0;
-  color: rgb(244 244 242 / 64%);
-}
-
-body.cub-popup-light p {
-  color: rgb(120 118 112);
-}
-
-.metric-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.metric-grid div {
-  border: 1px solid rgb(255 255 255 / 10%);
-  border-radius: 8px;
-  padding: 10px;
-  background: rgb(255 255 255 / 4%);
-}
-
-body.cub-popup-light .metric-grid div {
-  border-color: rgb(0 0 0 / 10%);
-  background: rgb(247 246 243);
-}
-
-.metric-grid span,
-.toggle span {
-  display: block;
-  color: rgb(244 244 242 / 62%);
-}
-
-body.cub-popup-light .metric-grid span,
-body.cub-popup-light .toggle span {
-  color: rgb(120 118 112);
-}
-
-.metric-grid strong {
-  display: block;
-  margin-top: 2px;
-  font-size: 20px;
-}
-
-.toggle {
+/* ---- live-limit header ---- */
+.cub-hdr {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  gap: 10px;
+  padding: 12px 0 11px;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
 }
 
-input[type="checkbox"] {
-  width: 38px;
-  height: 22px;
-  accent-color: #2f8fed;
+body.cub-popup-light .cub-hdr {
+  border-bottom-color: rgb(0 0 0 / 8%);
 }
 
-.mode-control {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.cub-limits {
+  display: flex;
+  gap: 26px; /* roomy spacing between the 5-hour and weekly readouts */
+}
+
+.cub-lim {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.cub-k {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(244 244 242 / 55%);
+}
+
+body.cub-popup-light .cub-k {
+  color: rgb(120 118 112);
+}
+
+.cub-v {
+  font-size: 15px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.cub-r {
+  font-size: 11px;
+  color: rgb(244 244 242 / 50%);
+}
+
+body.cub-popup-light .cub-r {
+  color: rgb(140 138 132);
+}
+
+.cub-icons {
+  display: flex;
   gap: 6px;
-  margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
-button {
-  min-height: 34px;
+.cub-iconbtn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
   border: 1px solid rgb(255 255 255 / 12%);
   border-radius: 8px;
   background: rgb(255 255 255 / 5%);
   color: inherit;
-  font: inherit;
+  font-size: 14px;
+  text-decoration: none;
   cursor: pointer;
 }
 
-button:hover {
-  background: rgb(255 255 255 / 9%);
-}
-
-body.cub-popup-light button {
+body.cub-popup-light .cub-iconbtn {
   border-color: rgb(0 0 0 / 10%);
   background: rgb(0 0 0 / 4%);
 }
 
-body.cub-popup-light button:hover {
+.cub-iconbtn:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+body.cub-popup-light .cub-iconbtn:hover {
   background: rgb(0 0 0 / 8%);
 }
 
-button.active {
-  border-color: #2f8fed;
-  background: rgb(47 143 237 / 22%);
+.cub-spinning {
+  animation: cubSpin 0.8s linear infinite;
 }
 
-.reset {
-  width: 100%;
+@keyframes cubSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cub-err {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: rgb(220 130 110);
+}
+
+/* ---- summary strip ---- */
+.cub-summary {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.cub-cell {
+  flex: 1;
+}
+
+.cub-num {
+  display: block;
+  margin-top: 1px;
+  font-size: 17px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.cub-num small {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgb(244 244 242 / 55%);
+}
+
+body.cub-popup-light .cub-num small {
+  color: rgb(120 118 112);
+}
+
+/* ---- view toggle ---- */
+.cub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
   margin-bottom: 8px;
 }
 
-.settings-link {
-  display: block;
-  text-align: center;
-  padding: 8px 12px;
-  margin-bottom: 10px;
-  border: 1px solid rgb(204 124 94 / 30%);
-  border-radius: 8px;
-  background: rgb(204 124 94 / 10%);
-  color: rgb(190 102 72);
+.cub-lbl {
+  font-size: 12px;
+  color: rgb(244 244 242 / 60%);
+}
+
+body.cub-popup-light .cub-lbl {
+  color: rgb(120 118 112);
+}
+
+.cub-seg-toggle {
+  display: inline-flex;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+body.cub-popup-light .cub-seg-toggle {
+  border-color: rgb(0 0 0 / 12%);
+}
+
+.cub-seg-toggle button {
+  border: 0;
+  background: transparent;
+  color: inherit;
   font: inherit;
-  font-size: 13px;
-  text-decoration: none;
+  font-size: 11px;
+  padding: 4px 10px;
   cursor: pointer;
-  transition: background 120ms ease;
 }
 
-.settings-link:hover {
-  background: rgb(204 124 94 / 18%);
+.cub-seg-toggle button.cub-active {
+  background: rgb(204 124 94 / 22%);
+  color: var(--cub-opus);
 }
 
-.review-banner {
+body.cub-popup-light .cub-seg-toggle button.cub-active {
+  background: rgb(204 124 94 / 16%);
+  color: rgb(168 92 64);
+}
+
+/* ---- chart ---- */
+.cub-chart {
+  margin-top: 2px;
+}
+
+.cub-cols {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 96px;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+body.cub-popup-light .cub-cols {
+  border-bottom-color: rgb(0 0 0 / 8%);
+}
+
+.cub-col {
+  flex: 1;
+  min-height: 2px;
+  display: flex;
+  flex-direction: column-reverse;
+  transform-origin: bottom;
+  /* grow up from the baseline, staggered left-to-right */
+  animation: cubGrow 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 32ms);
+}
+
+@keyframes cubGrow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cub-col {
+    animation: none;
+  }
+}
+
+.cub-seg {
+  display: block;
+  flex-basis: 0;
+  width: 100%;
+}
+
+.cub-seg:first-child {
+  border-radius: 0; /* square top — no rounded corners */
+}
+
+.cub-opus {
+  background: var(--cub-opus);
+}
+
+.cub-sonnet {
+  background: var(--cub-sonnet);
+}
+
+.cub-haiku {
+  background: var(--cub-haiku);
+}
+
+.cub-unknown {
+  background: var(--cub-unknown);
+}
+
+.cub-xaxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 9px;
+  color: rgb(244 244 242 / 45%);
+}
+
+body.cub-popup-light .cub-xaxis {
+  color: rgb(140 138 132);
+}
+
+.cub-xaxis-spread span {
+  flex: 1;
+  text-align: center;
+}
+
+/* ---- legend ---- */
+.cub-legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.cub-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.cub-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+
+.cub-pct {
+  color: rgb(244 244 242 / 55%);
+  font-variant-numeric: tabular-nums;
+}
+
+body.cub-popup-light .cub-pct {
+  color: rgb(120 118 112);
+}
+
+/* Legend item with an explanatory tooltip (the "Other" bucket). */
+.cub-has-hint {
+  cursor: help;
+}
+
+.cub-has-hint .cub-dot {
+  text-decoration: none;
+}
+
+.cub-has-hint:hover {
+  opacity: 0.85;
+}
+
+/* ---- empty state ---- */
+.cub-empty {
+  margin-top: 8px;
+  padding: 22px 14px;
+  border: 1px dashed rgb(255 255 255 / 14%);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgb(244 244 242 / 55%);
+}
+
+body.cub-popup-light .cub-empty {
+  border-color: rgb(0 0 0 / 14%);
+  color: rgb(120 118 112);
+}
+
+/* ---- footer ---- */
+.cub-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 11px;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  font-size: 12px;
+  color: rgb(244 244 242 / 55%);
+}
+
+body.cub-popup-light .cub-foot {
+  border-top-color: rgb(0 0 0 / 8%);
+  color: rgb(120 118 112);
+}
+
+.cub-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cub-streak strong {
+  color: rgb(244 244 242 / 88%);
+  font-variant-numeric: tabular-nums;
+}
+
+body.cub-popup-light .cub-streak strong {
+  color: rgb(40 40 38);
+}
+
+.cub-sep {
+  margin: 0 2px;
+  color: rgb(244 244 242 / 30%);
+}
+
+body.cub-popup-light .cub-sep {
+  color: rgb(0 0 0 / 25%);
+}
+
+.cub-fire {
+  vertical-align: -2px;
+}
+
+.cub-reset {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 0;
+}
+
+.cub-reset:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* ---- review banner ---- */
+.cub-review {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -159,32 +437,32 @@ button.active {
   border-bottom: 1px solid rgb(255 255 255 / 8%);
 }
 
-body.cub-popup-light .review-banner {
+body.cub-popup-light .cub-review {
   border-bottom-color: rgb(0 0 0 / 10%);
 }
 
-.review-banner-text {
+.cub-review-text {
   flex: 1;
   font-size: 12px;
   color: rgb(244 244 242 / 48%);
 }
 
-body.cub-popup-light .review-banner-text {
+body.cub-popup-light .cub-review-text {
   color: rgb(120 118 112);
 }
 
-.review-banner-text a {
+.cub-review-text a {
   color: rgb(190 102 72);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-color: rgb(204 124 94 / 50%);
 }
 
-.review-banner-text a:hover {
+.cub-review-text a:hover {
   text-decoration-color: rgb(204 124 94 / 80%);
 }
 
-.review-banner-dismiss {
+.cub-review-dismiss {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,16 +479,16 @@ body.cub-popup-light .review-banner-text {
   flex-shrink: 0;
 }
 
-.review-banner-dismiss:hover {
+.cub-review-dismiss:hover {
   background: rgb(255 255 255 / 8%);
   color: rgb(244 244 242 / 70%);
 }
 
-body.cub-popup-light .review-banner-dismiss {
+body.cub-popup-light .cub-review-dismiss {
   color: rgb(120 118 112);
 }
 
-body.cub-popup-light .review-banner-dismiss:hover {
+body.cub-popup-light .cub-review-dismiss:hover {
   background: rgb(0 0 0 / 6%);
   color: rgb(40 40 38);
 }

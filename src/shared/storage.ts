@@ -2,6 +2,7 @@ import { STORAGE_KEYS } from "./constants";
 import { buildWeeklyUsageMetrics } from "./usageProjection";
 import type {
   ChatUsage,
+  DailyModelUsage,
   DailyUsage,
   PromptEntry,
   RealUsageSnapshot,
@@ -16,6 +17,51 @@ export interface StorageAdapter {
   set(items: Record<string, unknown>): Promise<void>;
   remove(keys: string[] | string): Promise<void>;
 }
+
+export const isExtensionContextInvalidatedError = (error: unknown): boolean => {
+  const message = error instanceof Error ? error.message : String(error);
+  return /extension context invalidated/i.test(message);
+};
+
+const safeStorageGet = async (
+  adapter: StorageAdapter,
+  keys?: string[] | string | Record<string, unknown> | null,
+): Promise<Record<string, unknown>> => {
+  try {
+    return await adapter.get(keys);
+  } catch (error) {
+    if (isExtensionContextInvalidatedError(error)) {
+      return {};
+    }
+    throw error;
+  }
+};
+
+const safeStorageSet = async (
+  adapter: StorageAdapter,
+  items: Record<string, unknown>,
+): Promise<void> => {
+  try {
+    await adapter.set(items);
+  } catch (error) {
+    if (!isExtensionContextInvalidatedError(error)) {
+      throw error;
+    }
+  }
+};
+
+const safeStorageRemove = async (
+  adapter: StorageAdapter,
+  keys: string[] | string,
+): Promise<void> => {
+  try {
+    await adapter.remove(keys);
+  } catch (error) {
+    if (!isExtensionContextInvalidatedError(error)) {
+      throw error;
+    }
+  }
+};
 
 export const DEFAULT_SETTINGS: Settings = {
   showOverlay: true,
@@ -121,12 +167,13 @@ export const containsUnsafeConversationFields = (value: unknown): boolean => {
 };
 
 export const getStorage = async (adapter: StorageAdapter = chromeStorageAdapter): Promise<StorageShape> => {
-  const data = await adapter.get([
+  const data = await safeStorageGet(adapter, [
     STORAGE_KEYS.settings,
     STORAGE_KEYS.dailyUsage,
     STORAGE_KEYS.chatUsage,
     STORAGE_KEYS.realUsageSnapshot,
     STORAGE_KEYS.usageHistory,
+    STORAGE_KEYS.dailyMessageHistory,
     STORAGE_KEYS.weeklyUsageMetrics,
   ]);
 
@@ -138,6 +185,9 @@ export const getStorage = async (adapter: StorageAdapter = chromeStorageAdapter)
     chatUsage: (data.chatUsage as ChatUsage | undefined) ?? defaultChatUsage(),
     realUsageSnapshot: data.realUsageSnapshot as RealUsageSnapshot | undefined,
     usageHistory,
+    dailyMessageHistory: Array.isArray(data.dailyMessageHistory)
+      ? (data.dailyMessageHistory as DailyModelUsage[])
+      : undefined,
     weeklyUsageMetrics:
       (data.weeklyUsageMetrics as WeeklyUsageMetrics | undefined) ??
       (usageHistory ? buildWeeklyUsageMetrics(usageHistory) : defaultWeeklyUsageMetrics()),
@@ -150,7 +200,7 @@ export const updateSettings = async (
 ): Promise<Settings> => {
   const current = await getStorage(adapter);
   const settings: Settings = { ...current.settings, ...partial };
-  await adapter.set({ [STORAGE_KEYS.settings]: settings });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.settings]: settings });
   return settings;
 };
 
@@ -158,14 +208,14 @@ export const saveDailyUsage = async (
   dailyUsage: DailyUsage,
   adapter: StorageAdapter = chromeStorageAdapter,
 ): Promise<void> => {
-  await adapter.set({ [STORAGE_KEYS.dailyUsage]: dailyUsage });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.dailyUsage]: dailyUsage });
 };
 
 export const saveChatUsage = async (
   chatUsage: ChatUsage,
   adapter: StorageAdapter = chromeStorageAdapter,
 ): Promise<void> => {
-  await adapter.set({ [STORAGE_KEYS.chatUsage]: chatUsage });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.chatUsage]: chatUsage });
 };
 
 export const saveRealUsageSnapshot = async (
@@ -175,22 +225,26 @@ export const saveRealUsageSnapshot = async (
   if (containsUnsafeConversationFields(snapshot)) {
     throw new Error("Refusing to store unsafe usage snapshot");
   }
-  await adapter.set({ [STORAGE_KEYS.realUsageSnapshot]: snapshot });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.realUsageSnapshot]: snapshot });
 };
 
 export const resetUsage = async (adapter: StorageAdapter = chromeStorageAdapter): Promise<void> => {
-  await adapter.set({
+  await safeStorageSet(adapter, {
     [STORAGE_KEYS.dailyUsage]: defaultDailyUsage(),
     [STORAGE_KEYS.chatUsage]: defaultChatUsage(),
     [STORAGE_KEYS.weeklyUsageMetrics]: defaultWeeklyUsageMetrics(),
   });
-  await adapter.remove([STORAGE_KEYS.realUsageSnapshot, STORAGE_KEYS.usageHistory]);
+  await safeStorageRemove(adapter, [
+    STORAGE_KEYS.realUsageSnapshot,
+    STORAGE_KEYS.usageHistory,
+    STORAGE_KEYS.dailyMessageHistory,
+  ]);
 };
 
 const HISTORY_CAP = 100;
 
 export const getUsageHistory = async (adapter: StorageAdapter = chromeStorageAdapter): Promise<UsageLogEntry[]> => {
-  const data = await adapter.get(STORAGE_KEYS.usageHistory);
+  const data = await safeStorageGet(adapter, STORAGE_KEYS.usageHistory);
   const raw = data[STORAGE_KEYS.usageHistory];
   return Array.isArray(raw) ? (raw as UsageLogEntry[]) : [];
 };
@@ -199,22 +253,22 @@ export const saveUsageHistory = async (
   history: UsageLogEntry[],
   adapter: StorageAdapter = chromeStorageAdapter,
 ): Promise<void> => {
-  await adapter.set({ [STORAGE_KEYS.usageHistory]: history });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.usageHistory]: history });
 };
 
 export const saveWeeklyUsageMetrics = async (
   weeklyUsageMetrics: WeeklyUsageMetrics,
   adapter: StorageAdapter = chromeStorageAdapter,
 ): Promise<void> => {
-  await adapter.set({ [STORAGE_KEYS.weeklyUsageMetrics]: weeklyUsageMetrics });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.weeklyUsageMetrics]: weeklyUsageMetrics });
 };
 
 export const clearWeeklyUsageMetrics = async (
   adapter: StorageAdapter = chromeStorageAdapter,
 ): Promise<WeeklyUsageMetrics> => {
   const weeklyUsageMetrics = defaultWeeklyUsageMetrics();
-  await adapter.set({ [STORAGE_KEYS.weeklyUsageMetrics]: weeklyUsageMetrics });
-  await adapter.remove(STORAGE_KEYS.usageHistory);
+  await safeStorageSet(adapter, { [STORAGE_KEYS.weeklyUsageMetrics]: weeklyUsageMetrics });
+  await safeStorageRemove(adapter, STORAGE_KEYS.usageHistory);
   return weeklyUsageMetrics;
 };
 
@@ -233,8 +287,54 @@ export const appendUsageHistoryEntry = async (
   await saveWeeklyUsageMetrics(buildWeeklyUsageMetrics(trimmed), adapter);
 };
 
+// Keep roughly six months of daily history — enough for the popup's 14-day and
+// last-6-months views without growing chrome.storage.local unbounded.
+const DAILY_HISTORY_CAP = 200;
+
+export type ModelBucket = "opus" | "sonnet" | "haiku" | "unknown";
+
+export const getDailyModelHistory = async (
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<DailyModelUsage[]> => {
+  const data = await safeStorageGet(adapter, STORAGE_KEYS.dailyMessageHistory);
+  const raw = data[STORAGE_KEYS.dailyMessageHistory];
+  return Array.isArray(raw) ? (raw as DailyModelUsage[]) : [];
+};
+
+export const saveDailyModelHistory = async (
+  history: DailyModelUsage[],
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<void> => {
+  await safeStorageSet(adapter, { [STORAGE_KEYS.dailyMessageHistory]: history });
+};
+
+// Add `increment` messages to today's per-model bucket, creating the day entry
+// when needed. Days only advance, so a fresh day is appended at the tail.
+export const appendDailyModelUsage = async (
+  bucket: ModelBucket,
+  increment: number,
+  adapter: StorageAdapter = chromeStorageAdapter,
+  now: number = Date.now(),
+): Promise<void> => {
+  if (increment <= 0) {
+    return;
+  }
+  const date = new Date(now).toLocaleDateString("en-CA");
+  const history = await getDailyModelHistory(adapter);
+  let entry = history.find((e) => e.date === date);
+  if (!entry) {
+    entry = { date, opus: 0, sonnet: 0, haiku: 0, unknown: 0 };
+    history.push(entry);
+  }
+  // `?? 0` tolerates entries persisted before a bucket existed.
+  entry[bucket] = (entry[bucket] ?? 0) + increment;
+  const trimmed =
+    history.length > DAILY_HISTORY_CAP ? history.slice(history.length - DAILY_HISTORY_CAP) : history;
+  await saveDailyModelHistory(trimmed, adapter);
+};
+
 export const getPrompts = async (adapter: StorageAdapter = chromeStorageAdapter): Promise<PromptEntry[]> => {
-  const data = await adapter.get(STORAGE_KEYS.prompts);
+  const data = await safeStorageGet(adapter, STORAGE_KEYS.prompts);
   const raw = data[STORAGE_KEYS.prompts];
   return Array.isArray(raw) ? (raw as PromptEntry[]) : [];
 };
@@ -243,5 +343,5 @@ export const savePrompts = async (
   prompts: PromptEntry[],
   adapter: StorageAdapter = chromeStorageAdapter,
 ): Promise<void> => {
-  await adapter.set({ [STORAGE_KEYS.prompts]: prompts });
+  await safeStorageSet(adapter, { [STORAGE_KEYS.prompts]: prompts });
 };
