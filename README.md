@@ -1,5 +1,9 @@
 # Claude Usage Bar
 
+Public site: `https://ryoshkenn.github.io/Claude-Usage-Bar/`
+
+Privacy policy: `https://ryoshkenn.github.io/Claude-Usage-Bar/privacy-policy.html`
+
 Agent-oriented repo map for the Claude Usage Bar Chrome extension.
 
 ## What This Is
