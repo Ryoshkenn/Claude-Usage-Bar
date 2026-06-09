@@ -13,6 +13,7 @@ import type {
 
 const CWS_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
+const GITHUB_PAGES_URL = "https://ryoshkenn.github.io/Claude-Usage-Bar/";
 const PRIVACY_POLICY_URL = "https://ryoshkenn.github.io/Claude-Usage-Bar/privacy-policy.html";
 
 // Claude's design-system class strings, copied exactly from the DOM
@@ -615,6 +616,16 @@ const SettingsPage = () => {
         >
           <CdsButton onClick={() => window.open(PRIVACY_POLICY_URL, "_blank", "noopener,noreferrer")}>
             Open Privacy Policy
+          </CdsButton>
+        </Row>
+        <Row
+          labelId={id("github-pages")}
+          descId={id("github-pages-desc")}
+          label="Project page"
+          description="Open the public Claude Usage Bar site with links to support and privacy information."
+        >
+          <CdsButton onClick={() => window.open(GITHUB_PAGES_URL, "_blank", "noopener,noreferrer")}>
+            Open Project Page
           </CdsButton>
         </Row>
       </Section>
