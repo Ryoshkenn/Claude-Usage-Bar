@@ -131,24 +131,22 @@ const fetchApiUsage = async (force = false, sample?: UsageRefreshSample): Promis
       snapshot.thinkingLevel = thinkingLevel;
     }
     await saveRealUsageSnapshot(snapshot);
-    await appendUsageHistoryEntry({
-      capturedAt: snapshot.capturedAt,
-      sessionUsedPercent: snapshot.percentageUsed,
-      sessionResetsAt: snapshot.sessionResetsAt,
-      ...(typeof sample?.messageCount === "number"
-        ? { cumulativeMessageCount: sample.messageCount }
-        : {}),
-      ...(modelLabel
-        ? { modelWeight: getEffectiveModelWeight(modelLabel, thinkingLevel), modelLabel }
-        : {}),
-      ...(thinkingLevel ? { thinkingLevel } : {}),
-      ...(current.settings.weeklyMetricsEnabled !== false
-        ? {
-            weeklyUsedPercent: snapshot.weeklyAllModelsPercentageUsed,
-            weeklyResetsAt: snapshot.weeklyAllModelsResetsAt,
-          }
-        : {}),
-    });
+    if (current.settings.weeklyMetricsEnabled !== false) {
+      await appendUsageHistoryEntry({
+        capturedAt: snapshot.capturedAt,
+        sessionUsedPercent: snapshot.percentageUsed,
+        sessionResetsAt: snapshot.sessionResetsAt,
+        ...(typeof sample?.messageCount === "number"
+          ? { cumulativeMessageCount: sample.messageCount }
+          : {}),
+        ...(modelLabel
+          ? { modelWeight: getEffectiveModelWeight(modelLabel, thinkingLevel), modelLabel }
+          : {}),
+        ...(thinkingLevel ? { thinkingLevel } : {}),
+        weeklyUsedPercent: snapshot.weeklyAllModelsPercentageUsed,
+        weeklyResetsAt: snapshot.weeklyAllModelsResetsAt,
+      });
+    }
     return { ok: true, snapshot };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown Claude usage error";

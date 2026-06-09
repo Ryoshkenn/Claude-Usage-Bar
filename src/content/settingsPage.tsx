@@ -13,6 +13,7 @@ import type {
 
 const CWS_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
+const PRIVACY_POLICY_URL = "https://ryoshkenn.github.io/Claude-Usage-Bar/privacy-policy.html";
 
 // Claude's design-system class strings, copied exactly from the DOM
 const CDS_SECTION_HEADER = "mb-md flex items-start justify-between gap-lg";
@@ -604,6 +605,16 @@ const SettingsPage = () => {
         >
           <CdsButton onClick={() => window.open(CWS_URL, "_blank", "noopener,noreferrer")}>
             Rate on Chrome Web Store
+          </CdsButton>
+        </Row>
+        <Row
+          labelId={id("privacy-policy")}
+          descId={id("privacy-policy-desc")}
+          label="Privacy policy"
+          description="View what Claude Usage Bar accesses, stores, and never sends to the developer."
+        >
+          <CdsButton onClick={() => window.open(PRIVACY_POLICY_URL, "_blank", "noopener,noreferrer")}>
+            Open Privacy Policy
           </CdsButton>
         </Row>
       </Section>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Usage Bar</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #faf9f7;
+      --text: #171717;
+      --muted: #5f5b54;
+      --line: #dedbd4;
+      --accent: #cc7c5e;
+      --panel: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(900px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0 64px;
+    }
+
+    header {
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.25rem, 7vw, 4.75rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.25rem;
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: #9f543d;
+      font-weight: 650;
+    }
+
+    .intro {
+      max-width: 680px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    section {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding-top: 36px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Claude Usage Bar</h1>
+      <p class="intro">
+        A Chrome extension that adds compact Claude usage, reset, context, and pace indicators
+        directly inside <code>claude.ai</code>.
+      </p>
+      <div class="actions">
+        <a class="button primary" href="privacy-policy.html">Privacy Policy</a>
+        <a class="button" href="https://github.com/Ryoshkenn/Claude-Usage-Bar/issues">Support</a>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section>
+        <h2>What it does</h2>
+        <ul>
+          <li>Shows Claude usage and reset information in the chat composer.</li>
+          <li>Estimates context usage for the active conversation.</li>
+          <li>Offers optional local weekly learning for better pace estimates.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Privacy summary</h2>
+        <ul>
+          <li>Runs only on <code>https://claude.ai/*</code>.</li>
+          <li>Does not send user data to the developer.</li>
+          <li>Does not use analytics, ads, telemetry, or tracking.</li>
+          <li>Weekly learning history is off by default and opt-in.</li>
+        </ul>
+      </section>
+    </div>
+
+    <footer>
+      Claude Usage Bar is not affiliated with Anthropic. For details about data access,
+      storage, and user controls, read the <a href="privacy-policy.html">privacy policy</a>.
+    </footer>
+  </main>
+</body>
+</html>

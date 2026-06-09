@@ -1,119 +1,158 @@
 # Claude Usage Bar
 
-A privacy-conscious Chrome Manifest V3 extension that adds a compact usage overlay to `https://claude.ai/*`.
+Agent-oriented repo map for the Claude Usage Bar Chrome extension.
 
-The extension uses Claude's authenticated browser session to fetch usage metadata and the current chat's conversation JSON from `claude.ai`. It stores only settings, sanitized usage metadata, and numeric context estimates in `chrome.storage.local`; prompts, responses, cookies, auth headers, request bodies, and raw response payloads are not persisted.
+## What This Is
 
-## Current Context Counting
+Claude Usage Bar is a Chrome Manifest V3 extension that overlays Claude usage,
+reset, context, cache, and pacing indicators into `https://claude.ai/*`.
 
-For an open chat, the context ring is driven by Claude's conversation JSON rather than the rendered DOM. The background worker fetches:
+The extension is privacy-conscious by design:
 
-```text
-GET /api/organizations/{orgId}/chat_conversations/{conversationId}?tree=true&rendering_mode=messages&render_all_tools=true
-```
+- It runs only on `https://claude.ai/*`.
+- It calls Claude endpoints directly from the user's browser session.
+- It does not send user data to developer servers.
+- It does not use analytics, ads, telemetry, or tracking.
+- Historical weekly learning is off by default and opt-in.
 
-It reconstructs the active branch from `current_leaf_message_uuid`, detects user vs assistant messages from Claude's `sender` field, then estimates the current context from:
+Public pages:
 
-- user and assistant message content
-- nested content and tool inputs present in the conversation JSON
-- extracted attachment text
-- image and document metadata estimates
-- connector/sync-source size metadata
-- project/knowledge indicators when concrete token-size metadata is present
-- prompt-cache metadata for the current branch
+- Landing page: `https://ryoshkenn.github.io/Claude-Usage-Bar/`
+- Privacy policy: `https://ryoshkenn.github.io/Claude-Usage-Bar/privacy-policy.html`
+- Support/issues: `https://github.com/Ryoshkenn/Claude-Usage-Bar/issues`
 
-The estimator avoids adding large fixed feature costs just because a Claude setting is enabled. Tool, connector, file, and project costs are counted only when there is concrete JSON evidence for that chat.
+Claude Usage Bar is not affiliated with Anthropic.
 
-Two token values are tracked:
-
-```text
-currentContextTokens = chatPromptOverhead + sum(messageTokens in active branch)
-
-compoundedInputTokens =
-  sum(currentContextTokensAtUserPrompt)
-  for each user message in the active branch
-```
-
-For example, if the first user prompt is 300 tokens and the next user prompt happens after the chat has grown by another 600 tokens, compounded input is `300 + (300 + 600) = 1,200`. Assistant text is included once it exists in the branch, so it is included in later user prompts.
-
-The displayed ring uses `compoundedInputTokens` as the main usage value. `currentContextTokens` is still shown as a diagnostic in the hover panel. Prompt caching is detected and stored as numeric metadata (`cachedPrefixTokens`, `cacheExpiresAt`), but neither value is discounted for caching because cached tokens are still present in the model context.
-
-The current tokenizer is still an estimate. Anthropic's official guidance is that the `messages/count_tokens` endpoint accepts the same structured inputs as message creation, including system prompts, tools, images, and PDFs, and returns estimated input tokens. Anthropic also notes counts may include automatically added system-optimization tokens, but billing reflects only user content. Until official counting is added, the extension uses a modest `1,000` token chat prompt overhead instead of the much larger Claude Code-style overheads. Future versions will add optional Anthropic API-key support for the official endpoint and richer file/token accounting.
-
-## Settings & Onboarding
-
-The extension adds a "Usage Bar" section to Claude's settings overlay. From there you can configure the weekly-usage projection — `weeklyPaceMode` (smart learned vs. manual schedule) and `weeklyEstimateDisplay` (active-hours vs. calendar-time) — clear learned weekly history, and replay the onboarding tour.
-
-First-time users get an onboarding tooltip tour with an animated walkthrough and navigation controls; it can be replayed any time from the settings page.
-
-## Development
+## Commands
 
 ```sh
 npm install
-npm run dev
-```
-
-For a packaged build:
-
-```sh
+npm test
 npm run build
 ```
 
-Load the generated `dist/` directory in Chrome at `chrome://extensions` with Developer Mode enabled.
+- `npm run dev` starts Vite's watch build.
+- `npm run build` runs `tsc --noEmit` and writes the production extension to `dist/`.
+- Load `dist/` in Chrome at `chrome://extensions` with Developer Mode enabled.
 
-## Manual Checklist
+Chrome caches extension bundles aggressively. After code changes, rebuild and reload the
+unpacked extension before judging browser behavior.
 
-- Run `npm test` and `npm run build`.
-- Load unpacked `dist/` in Chrome.
-- Open `https://claude.ai/`.
-- Confirm the overlay appears only on Claude.
-- Send a test message and confirm local message/token estimates update.
-- Open DevTools on Claude and confirm the conversation API token debug group logs the text parts counted for the current chat.
-- Toggle show/hide and compact/expanded in the popup.
-- Reset usage from the popup.
-- Inspect `chrome.storage.local` and verify no conversation text, auth data, cookies, or raw response bodies are stored.
+## Main Entry Points
 
-## How Usage Is Detected
-
-The overlay uses these sources:
-
-- Claude's `/usage` API for 5-hour, weekly, and routines usage metadata.
-- Claude's current conversation JSON for the context ring.
-- Visible Claude UI text for model labels, reset windows, and fallback limit text.
-- A page-world probe that sanitizes same-origin JSON responses down to allowlisted usage metadata before posting it to the content script.
-- A DOM transcript estimator only as a fallback when no conversation id is available.
-
-## Tech stack
-
-Chrome Manifest V3 extension built with **Vite + TypeScript + React + CRXJS**. Token
-estimation uses a bundled local Claude tokenizer (`@huggingface/tokenizers` around
-`Xenova/claude-tokenizer` assets), with a `text.length / 4` heuristic fallback if the
-tokenizer fails to initialize. No model files are fetched at runtime.
-
-## Architecture
-
-Data flows in one direction: **background worker → storage → content script UI**.
-
-| Module | Responsibility |
+| Path | Responsibility |
 |---|---|
-| `src/background/background.ts` | Service worker. Owns all Claude API calls (`/api/organizations`, `/api/organizations/{id}/usage`, conversation JSON) with `credentials: "include"`. Throttles usage refreshes to ~60s, caches org id, dedupes in-flight requests. |
-| `src/shared/claudeConversationContext.ts` | Reconstructs the active branch from conversation JSON; computes `currentContextTokens` (diagnostic) and the compounded `estimatedTokens` (displayed). Returns numeric `ChatUsage` only. |
-| `src/shared/claudeUsageApi.ts` | Normalizes raw `/usage` JSON into `RealUsageSnapshot`; extracts org UUID. |
-| `src/shared/storage.ts` | Allowlist-gated storage; rejects unsafe fields (cookies, auth, raw payloads, conversation text). |
-| `src/shared/types.ts` | Shared TypeScript types. |
-| `src/content/content.tsx` | Mounts the overlay into the composer, triggers refreshes, bridges page-probe events. |
-| `src/content/ContentApp.tsx` | Renders the plan usage bar, usage hover panel, context ring, and context hover panel. |
-| `src/content/claudeDom.ts` | Fallback transcript extraction (strict selector list — do not broaden to generic textareas). |
-| `src/popup/popup.tsx` | Extension popup: status + manual refresh. |
-| `public/pageProbe.js` | Page-world probe; sanitizes same-origin JSON to usage metadata. Fallback, not primary. |
+| `src/manifest.ts` | MV3 manifest source. Keep version aligned with `package.json` and `package-lock.json`. |
+| `src/background/background.ts` | Service worker. Owns authenticated Claude API fetches with `credentials: "include"`. |
+| `src/content/content.tsx` | Content-script lifecycle, overlay mount, settings panel wiring, cache timer, onboarding. |
+| `src/content/ContentApp.tsx` | Usage bar, wheel, hover panels, pace labels, and prompt clipboard rendering. |
+| `src/content/settingsPage.tsx` | Injected Claude settings panel for Usage Bar controls and public links. |
+| `src/shared/storage.ts` | `DEFAULT_SETTINGS`, storage adapters, allowlist storage helpers, learned history helpers. |
+| `src/shared/types.ts` | Shared TypeScript contracts. Add new settings fields here and in `DEFAULT_SETTINGS`. |
+| `src/shared/claudeUsageApi.ts` | Claude usage payload normalization. |
+| `src/shared/claudeConversationContext.ts` | Conversation JSON parsing and context/token estimates. |
+| `src/shared/usageProjection.ts` | 5-hour and weekly pacing math. |
+| `src/pageProbe/pageProbe.ts` | Page-world usage metadata probe with allowlisted output only. |
+| `public/pageProbe.js` | Built/static probe entry consumed by the extension. |
+| `docs/index.html` | GitHub Pages landing page. |
+| `docs/privacy-policy.html` | Public Chrome Web Store privacy policy. |
 
-## Privacy
+## Data Flow
 
-The extension calls only `https://claude.ai` endpoints, reusing the user's existing
-session cookies, and stores a strict allowlist in `chrome.storage.local`:
+1. Content script detects Claude state and requests usage/context refreshes.
+2. Background worker fetches Claude org, usage, routines, and conversation metadata.
+3. Parsers normalize payloads into numeric/sanitized shapes.
+4. Storage helpers persist only allowed extension state in `chrome.storage.local`.
+5. Content UI renders the latest stored snapshot.
 
-- **Stored:** settings, local date/message counters, numeric token estimates + cache
-  metadata, sanitized usage percentages, reset display strings, routines counters, cached
-  org id.
-- **Never stored:** prompts, responses, cookies, auth headers, request bodies, raw API
-  payloads, uploaded file contents, or conversation text.
+Stored by default:
+
+- Settings.
+- Current numeric usage/context/cache display state.
+- Local message counters and sanitized usage metadata needed for the overlay.
+
+Not stored:
+
+- Prompts.
+- Responses.
+- Cookies.
+- Auth headers or tokens.
+- Request bodies.
+- Raw Claude API payloads.
+- Uploaded file contents.
+
+Opt-in only:
+
+- Historical weekly learning samples for smarter weekly pace estimates.
+
+## Privacy And Chrome Web Store
+
+The Web Store privacy policy URL must be:
+
+```text
+https://ryoshkenn.github.io/Claude-Usage-Bar/privacy-policy.html
+```
+
+Before resubmitting a release, verify GitHub Pages is serving both:
+
+```sh
+curl -I -L https://ryoshkenn.github.io/Claude-Usage-Bar/
+curl -I -L https://ryoshkenn.github.io/Claude-Usage-Bar/privacy-policy.html
+```
+
+Expected: `HTTP/2 200`, not a GitHub 404 page.
+
+If Pages is not enabled, configure the GitHub repo:
+
+- Settings -> Pages
+- Source: `Deploy from a branch`
+- Branch: `main`
+- Folder: `/docs`
+
+## Settings Defaults
+
+Important privacy defaults:
+
+- `weeklyMetricsEnabled: false`
+- `weeklyPaceMode: "manual"`
+
+That means new installs use fixed/manual weekly pacing until the user explicitly enables
+`Learn weekly patterns`. The live overlay still stores current numeric state needed to
+display usage and context information.
+
+## Release Process
+
+For a Chrome Web Store release:
+
+1. Align the version in:
+   - `package.json`
+   - `package-lock.json`
+   - `src/manifest.ts`
+2. Run:
+   ```sh
+   npm test
+   npm run build
+   ```
+3. Zip the contents of `dist`, not the `dist` directory itself:
+   ```sh
+   mkdir -p release
+   cd dist
+   zip -r ../release/claude-usage-bar-<version>-webstore.zip . -x ".vite/*"
+   cd ..
+   zip -T release/claude-usage-bar-<version>-webstore.zip
+   unzip -l release/claude-usage-bar-<version>-webstore.zip | head
+   ```
+4. Confirm `manifest.json` is at the archive root.
+5. Confirm `.vite/*` is excluded.
+6. Confirm the public privacy policy URL returns `200`.
+
+Expected archive contents include `manifest.json`, `service-worker-loader.js`,
+`pageProbe.js`, `icons/`, `assets/`, and `src/popup/popup.html`.
+
+## Test Notes
+
+- Use plain `npm test`; Vitest does not accept `--runInBand`.
+- Storage tests assert the full default settings object, so update
+  `src/test/storage.test.ts` when `DEFAULT_SETTINGS` changes.
+- `ContentApp` tests often use explicit smart-learning fixtures even though new installs
+  default to manual/no-learning.

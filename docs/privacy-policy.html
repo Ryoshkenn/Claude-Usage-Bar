@@ -29,12 +29,32 @@
 <body>
   <h1>Privacy Policy for Claude Usage Bar</h1>
 
-  <p><strong>Last updated:</strong> May 26, 2026</p>
+  <p><strong>Last updated:</strong> June 9, 2026</p>
 
   <p>
     Claude Usage Bar is a Chrome extension that displays usage, quota, reset,
     context, and pace information while using Claude at <code>https://claude.ai</code>.
     Claude Usage Bar is not affiliated with Anthropic.
+  </p>
+
+  <p>
+    <a href="index.html">Return to Claude Usage Bar home</a>
+  </p>
+
+  <h2>Prominent disclosure</h2>
+
+  <p>
+    Claude Usage Bar runs only on <code>https://claude.ai/*</code>. To provide its
+    visible usage overlay, it fetches Claude usage and conversation-context metadata
+    from Claude using your existing logged-in Claude browser session.
+  </p>
+
+  <p>
+    Conversation content may be processed locally in your browser to estimate context
+    usage. The extension does not send your data to the developer's servers and does
+    not use analytics, advertising, telemetry, or tracking services. Optional historical
+    weekly learning samples are off by default and are collected only if you enable
+    the "Learn weekly patterns" setting.
   </p>
 
   <h2>Information the extension accesses</h2>
@@ -86,7 +106,7 @@
   <ul>
     <li>Usage estimates and sanitized usage snapshots.</li>
     <li>Message counts and token/context estimates.</li>
-    <li>Usage history used to display trends or pace information.</li>
+    <li>Optional usage history used to display trends or pace information, only when weekly learning is enabled.</li>
     <li>Your Claude organization ID, used to avoid repeated lookup requests.</li>
     <li>Extension display settings and preferences.</li>
   </ul>

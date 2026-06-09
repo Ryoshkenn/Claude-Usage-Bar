@@ -84,8 +84,8 @@ describe("storage helpers", () => {
       showPace: true,
       showCacheTimer: true,
       paceSurplusFormat: "percent",
-      weeklyMetricsEnabled: true,
-      weeklyPaceMode: "smart",
+      weeklyMetricsEnabled: false,
+      weeklyPaceMode: "manual",
       weeklyEstimateDisplay: "active_hours",
       weeklyManualWorkDays: [1, 2, 3, 4, 5],
       weeklyManualActiveHoursPerDay: 10,
@@ -105,6 +105,13 @@ describe("storage helpers", () => {
     expect(state.settings.ringTarget).toBe("weekly");
   });
 
+  it("defaults weekly learning to opt-in manual pacing", async () => {
+    const state = await getStorage(createAdapter());
+
+    expect(state.settings.weeklyMetricsEnabled).toBe(false);
+    expect(state.settings.weeklyPaceMode).toBe("manual");
+  });
+
   it("merges settings", async () => {
     const adapter = createAdapter({ settings: { showOverlay: false, mode: "compact" } });
     const settings = await updateSettings({ mode: "expanded" }, adapter);
@@ -120,8 +127,8 @@ describe("storage helpers", () => {
       showPace: true,
       showCacheTimer: true,
       paceSurplusFormat: "percent",
-      weeklyMetricsEnabled: true,
-      weeklyPaceMode: "smart",
+      weeklyMetricsEnabled: false,
+      weeklyPaceMode: "manual",
       weeklyEstimateDisplay: "active_hours",
       weeklyManualWorkDays: [1, 2, 3, 4, 5],
       weeklyManualActiveHoursPerDay: 10,
