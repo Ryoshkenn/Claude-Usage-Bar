@@ -442,6 +442,7 @@
   opacity: 1;
   transform: translateX(-50%);
   transition-delay: 250ms;
+  visibility: visible;
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
