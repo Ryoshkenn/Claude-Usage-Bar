@@ -352,7 +352,6 @@ export const ContentApp = ({
 
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
   const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
-  const routinesText = realUsageSnapshot?.routinesText;
   const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
 
   // Prefer the model-aware projection (so switching to a cheaper model lengthens
@@ -545,13 +544,6 @@ export const ContentApp = ({
             </span>
             <span className="cub-usage-track">
               <span style={{ width: `${weeklyAllModelsPercentage ?? 0}%` }} />
-            </span>
-            <span className="cub-usage-row">
-              <span>Routines</span>
-              <span className="cub-usage-row-pct">{routinesText ?? "—"}</span>
-            </span>
-            <span className="cub-usage-track">
-              <span style={{ width: "0%" }} />
             </span>
           </span>
           </div>

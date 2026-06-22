@@ -89,7 +89,6 @@ export interface RealUsageSnapshot {
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
-  routinesText?: string;
 }
 
 export interface UsageLogEntry {
@@ -168,7 +167,6 @@ export interface UsageMetadata {
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
-  routinesText?: string;
 }
 
 export interface StorageShape {
