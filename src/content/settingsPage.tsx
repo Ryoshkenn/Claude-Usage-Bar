@@ -27,10 +27,6 @@ const CDS_ROW_LABEL_WRAP = "flex min-w-0 flex-1 flex-col justify-center gap-1";
 const CDS_ROW_LABEL = "text-body text-primary";
 const CDS_ROW_DESC = "text-body text-muted";
 const CDS_ROW_CONTROL_WRAP = "flex shrink-0 items-center";
-const CDS_SWITCH =
-  "cds-reset relative inline-flex shrink-0 rounded-full border-0 outline-none bg-switch-track hover:bg-switch-track-hover data-[checked]:bg-fill-accent data-[checked]:hover:bg-fill-accent-hover disabled:opacity-50 disabled:hover:bg-switch-track focus-visible:shadow-focus h-switch w-[calc(var(--cds-switch-h,20px)*1.8)] p-[2px]";
-const CDS_SWITCH_KNOB =
-  "block rounded-full bg-switch-knob shadow-sm transition-transform duration-snap ease-overshoot motion-reduce:transition-none size-[calc(var(--cds-switch-h,20px)-4px)] data-[checked]:translate-x-[calc(var(--cds-switch-h,20px)*0.8)]";
 const CDS_BUTTON =
   "cds-reset group/btn relative isolate inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap select-none border-0 outline-none rounded h-control font-sans text-body font-medium [&:disabled:not([aria-busy])]:opacity-50 disabled:pointer-events-none transition-shadow duration-fast focus-visible:shadow-focus text-primary aria-pressed:text-accent px-md";
 const CDS_BUTTON_BG =
@@ -231,6 +227,12 @@ const mountPanel = () => {
 
   panelEl = document.createElement("div");
   panelEl.id = "cub-settings-panel";
+  // Claude scopes its component design tokens (--cds-switch-track/-knob/-h, etc.)
+  // to the `.cds-root` class, not :root. Our panel mounts outside that subtree,
+  // so without this class those vars are empty and the Switch knob/track render
+  // blank (the switch collapses to a solid accent pill). `cds-root` self-themes
+  // the panel; it only adds font-smoothing + the token defs, no layout box.
+  panelEl.className = "cds-root";
   container.appendChild(panelEl);
 
   panelRoot = createRoot(panelEl);
@@ -324,6 +326,12 @@ const syncSettingsPanel = () => {
 
 // ── React components matching Claude's CDS design system ─────────────────────
 
+// Styled inline rather than via Claude's CDS classes: those depend on
+// `--cds-switch-*` vars scoped to `.cds-root`, which our injected panel sits
+// outside of, so the knob/track render blank. Inline colors match the file's
+// existing work-day-button pattern. Track: accent (on) / translucent grey (off);
+// knob: always white. `--cds-switch-track` is kept as the off-track value so it
+// themes when in scope, with a grey fallback when it isn't.
 const Switch = ({
   checked,
   onChange,
@@ -332,24 +340,34 @@ const Switch = ({
   checked: boolean;
   onChange: (v: boolean) => void;
   id: string;
-}) => {
-  const checkedProps = checked ? { "data-checked": "" } : { "data-unchecked": "" };
-  return (
-    <button
-      type="button"
-      tabIndex={0}
-      id={id}
-      role="switch"
-      aria-checked={checked}
-      data-cds="Switch"
-      className={CDS_SWITCH}
-      {...checkedProps}
-      onClick={() => onChange(!checked)}
-    >
-      <span className={CDS_SWITCH_KNOB} {...checkedProps} />
-    </button>
-  );
-};
+}) => (
+  <button
+    type="button"
+    tabIndex={0}
+    id={id}
+    role="switch"
+    aria-checked={checked}
+    data-cds="Switch"
+    className="cds-reset relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-0 outline-none transition-colors focus-visible:shadow-focus"
+    style={{
+      height: "16px",
+      width: "28px",
+      padding: "2px",
+      background: checked ? "rgb(204 124 94)" : "var(--cds-switch-track, rgb(255 255 255 / 22%))",
+    }}
+    onClick={() => onChange(!checked)}
+  >
+    <span
+      className="block rounded-full shadow-sm transition-transform"
+      style={{
+        height: "12px",
+        width: "12px",
+        background: "#fff",
+        transform: checked ? "translateX(12px)" : "translateX(0)",
+      }}
+    />
+  </button>
+);
 
 // Combobox: Claude's dropdown visual with a transparent native <select> overlaid for interaction
 const CdsSelect = ({
