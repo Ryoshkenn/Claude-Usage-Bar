@@ -488,13 +488,16 @@ const Section = ({ title, children, id }: SectionProps) => (
 
 // ── Options ──────────────────────────────────────────────────────────────────
 
-const METRIC_OPTIONS: { value: MetricTarget; label: string }[] = [
+// Bar can't show context window — that's the wheel's job.
+const BAR_METRIC_OPTIONS: { value: MetricTarget; label: string }[] = [
   { value: "session", label: "5-hour session" },
   { value: "weekly", label: "Weekly · all models" },
-  { value: "context", label: "Context window" },
 ];
 
-const RING_OPTIONS: { value: RingTarget; label: string }[] = [...METRIC_OPTIONS];
+const RING_OPTIONS: { value: RingTarget; label: string }[] = [
+  ...BAR_METRIC_OPTIONS,
+  { value: "context", label: "Context window" },
+];
 
 const PACE_SURPLUS_OPTIONS: { value: PaceSurplusFormat; label: string }[] = [
   { value: "percent", label: "Percentage at reset" },
@@ -660,7 +663,7 @@ const SettingsPage = () => {
           <CdsSelect
             id={id("bar-metric")}
             value={settings.barMetric}
-            options={METRIC_OPTIONS}
+            options={BAR_METRIC_OPTIONS}
             onChange={(v) => update({ barMetric: v as MetricTarget })}
           />
         </Row>

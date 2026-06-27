@@ -73,6 +73,16 @@ export interface ChatUsage {
   lengthIsEstimate?: boolean;
 }
 
+// A per-model weekly limit (Max plans expose these alongside the all-models
+// weekly limit, e.g. a separate Sonnet or Opus weekly cap). Sourced from the
+// `limits` array (kind: "weekly_scoped") or the legacy `seven_day_<model>` keys.
+export interface WeeklyScopedLimit {
+  modelLabel: string;
+  percentageUsed: number;
+  resetsAt?: number;
+  resetText?: string;
+}
+
 export interface RealUsageSnapshot {
   source: "real";
   capturedAt: number;
@@ -89,6 +99,7 @@ export interface RealUsageSnapshot {
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
+  weeklyScopedLimits?: WeeklyScopedLimit[];
   routinesText?: string;
 }
 
@@ -168,6 +179,7 @@ export interface UsageMetadata {
   weeklyAllModelsPercentageUsed?: number;
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
+  weeklyScopedLimits?: WeeklyScopedLimit[];
   routinesText?: string;
 }
 

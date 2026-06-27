@@ -463,6 +463,10 @@
 #claude-cache-timer-host {
   display: inline-flex;
   align-items: center;
+  /* The title group rebuilds itself on click and re-appends to this flex parent,
+     which can land it after our host. order:1 keeps the timer right of the title
+     regardless of DOM order. */
+  order: 1;
 }
 
 .cub-cache-timer {

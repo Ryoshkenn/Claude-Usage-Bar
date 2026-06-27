@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type MouseEvent } from "react";
+import { Fragment, useEffect, useState, type CSSProperties, type MouseEvent } from "react";
 import type {
   ChatUsage,
   MetricTarget,
@@ -352,6 +352,9 @@ export const ContentApp = ({
 
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
   const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
+  // Per-model weekly limits (e.g. Sonnet/Opus on Max plans). Empty on plans that
+  // don't expose them, so the rows simply don't render.
+  const weeklyScopedLimits = realUsageSnapshot?.weeklyScopedLimits ?? [];
   const routinesText = realUsageSnapshot?.routinesText;
   const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
 
@@ -546,6 +549,21 @@ export const ContentApp = ({
             <span className="cub-usage-track">
               <span style={{ width: `${weeklyAllModelsPercentage ?? 0}%` }} />
             </span>
+            {weeklyScopedLimits.map((scoped) => (
+              <Fragment key={scoped.modelLabel}>
+                <span className="cub-usage-row cub-usage-row--stacked">
+                  <span className="cub-usage-row-label">
+                    <span className="cub-usage-row-title">Weekly · {scoped.modelLabel}</span>
+                  </span>
+                  <span className="cub-usage-row-value">
+                    <span className="cub-usage-row-pct">{scoped.percentageUsed}%</span>
+                  </span>
+                </span>
+                <span className="cub-usage-track">
+                  <span style={{ width: `${scoped.percentageUsed}%` }} />
+                </span>
+              </Fragment>
+            ))}
             <span className="cub-usage-row">
               <span>Routines</span>
               <span className="cub-usage-row-pct">{routinesText ?? "—"}</span>

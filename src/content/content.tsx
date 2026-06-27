@@ -197,9 +197,13 @@ const removeComposerHost = () => {
 const STOP_BTN_SELECTOR = 'button[aria-label*="Stop"]';
 
 const findChatMenuParent = (): HTMLElement | null => {
-  const chatMenuBtn = document.querySelector<HTMLElement>('[data-testid="chat-menu-trigger"]');
-  // The innermost flex group that contains the title rename button + separator + chevron
-  return chatMenuBtn?.parentElement ?? null;
+  // Anchor to the title group's *parent*, not chat-title-split itself: clicking
+  // the title makes Claude tear down and rebuild chat-title-split, which would
+  // destroy a host injected inside it (and the re-mount races into the wrong
+  // slot). The parent survives that teardown. The host's CSS `order:1` keeps it
+  // right of the title. (Was [data-testid="chat-menu-trigger"]'s parent before
+  // Claude's header rework.)
+  return document.querySelector<HTMLElement>('[data-testid="chat-title-split"]')?.parentElement ?? null;
 };
 
 const mountCacheTimerInHeader = (): boolean => {
@@ -360,11 +364,12 @@ interface UsageRefreshSample {
   messageCount?: number;
 }
 
-const requestApiUsageRefresh = (force = false, sample?: UsageRefreshSample) => {
+const requestApiUsageRefresh = (force = false, sample?: UsageRefreshSample, skipHistory = false) => {
   chrome.runtime.sendMessage(
     {
       type: MESSAGE_TYPES.fetchApiUsage,
       force,
+      skipHistory,
       modelLabel: sample?.modelLabel,
       thinkingLevel: sample?.thinkingLevel,
       messageCount: sample?.messageCount,
@@ -373,6 +378,32 @@ const requestApiUsageRefresh = (force = false, sample?: UsageRefreshSample) => {
       void chrome.runtime.lastError;
     },
   );
+};
+
+// The API snapshot is otherwise only refreshed on message-send / navigation, so a
+// snapshot captured before a limit window rolls over stays stale — commonly
+// showing a maxed-out percentage long after the window actually reset (the user
+// then "fixes" it by navigating to settings, which forces a refresh). Self-heal:
+// when any tracked reset time has passed, force a fresh fetch; otherwise issue a
+// gentle refresh the background's freshness cooldown collapses to a no-op when
+// recent. Either way skipHistory=true — these aren't user-attributable samples.
+const USAGE_POLL_INTERVAL_MS = 120_000;
+
+const maybeRefreshUsage = () => {
+  if (!storageState || document.visibilityState !== "visible") {
+    return;
+  }
+  const snapshot = storageState.realUsageSnapshot;
+  const now = Date.now();
+  const resetTimes = [
+    snapshot?.sessionResetsAt,
+    snapshot?.weeklyAllModelsResetsAt,
+    ...(snapshot?.weeklyScopedLimits?.map((limit) => limit.resetsAt) ?? []),
+  ];
+  const resetPassed = Boolean(
+    snapshot && resetTimes.some((t) => typeof t === "number" && now > t && snapshot.capturedAt <= t),
+  );
+  requestApiUsageRefresh(resetPassed, undefined, true);
 };
 
 const getConversationId = (): string | null => location.pathname.match(/\/chat\/([^/?]+)/)?.[1] ?? null;
@@ -659,6 +690,15 @@ const init = async () => {
   });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncTheme);
   window.setInterval(syncTheme, THEME_SYNC_INTERVAL_MS);
+
+  // Keep the usage snapshot self-healing without a navigation: poll gently while
+  // the tab is visible, and refresh immediately when the user returns to the tab.
+  window.setInterval(maybeRefreshUsage, USAGE_POLL_INTERVAL_MS);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      maybeRefreshUsage();
+    }
+  });
 
   const observer = new MutationObserver(scheduleRefresh);
   // aria-checked is included so flipping the Thinking switch fires the observer

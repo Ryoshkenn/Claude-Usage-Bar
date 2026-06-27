@@ -341,4 +341,66 @@ describe("Claude usage API helpers", () => {
       )?.weeklyAllModelsPercentageUsed,
     ).toBe(60);
   });
+
+  it("treats utilization as a percent so a real 1% is not shown as 100%", () => {
+    expect(
+      normalizeUsagePayload(
+        { five_hour: { utilization: 1, resets_at: "2026-05-03T08:00:00.000Z" } },
+        new Date("2026-05-03T05:00:00.000Z").getTime(),
+      )?.percentageUsed,
+    ).toBe(1);
+  });
+
+  it("parses the modern limits array, preferring it over legacy keys", () => {
+    const now = new Date("2026-06-21T12:00:00.000Z").getTime();
+    const snapshot = normalizeUsagePayload(
+      {
+        // Stale legacy key must be ignored when the canonical limits array exists.
+        five_hour: { utilization: 99, resets_at: "2026-06-21T13:00:00.000Z" },
+        limits: [
+          { kind: "session", group: "session", percent: 2, resets_at: "2026-06-21T13:00:00.000Z", scope: null },
+          { kind: "weekly_all", group: "weekly", percent: 30, resets_at: "2026-06-23T05:00:00.000Z", scope: null },
+          {
+            kind: "weekly_scoped",
+            group: "weekly",
+            percent: 3,
+            resets_at: "2026-06-23T05:00:00.000Z",
+            scope: { model: { id: null, display_name: "Sonnet" } },
+          },
+        ],
+      },
+      now,
+    );
+    expect(snapshot?.percentageUsed).toBe(2);
+    expect(snapshot?.sessionResetsAt).toBe(new Date("2026-06-21T13:00:00.000Z").getTime());
+    expect(snapshot?.weeklyAllModelsPercentageUsed).toBe(30);
+    expect(snapshot?.weeklyScopedLimits).toEqual([
+      {
+        modelLabel: "Sonnet",
+        percentageUsed: 3,
+        resetsAt: new Date("2026-06-23T05:00:00.000Z").getTime(),
+        resetText: expect.any(String),
+      },
+    ]);
+  });
+
+  it("reads legacy per-model weekly keys when no limits array is present", () => {
+    const snapshot = normalizeUsagePayload(
+      {
+        five_hour: { utilization: 5, resets_at: "2026-06-21T13:00:00.000Z" },
+        seven_day: { utilization: 30, resets_at: "2026-06-23T05:00:00.000Z" },
+        seven_day_sonnet: { utilization: 3, resets_at: "2026-06-23T05:00:00.000Z" },
+        seven_day_opus: null,
+      },
+      new Date("2026-06-21T12:00:00.000Z").getTime(),
+    );
+    expect(snapshot?.weeklyScopedLimits).toEqual([
+      {
+        modelLabel: "Sonnet",
+        percentageUsed: 3,
+        resetsAt: new Date("2026-06-23T05:00:00.000Z").getTime(),
+        resetText: expect.any(String),
+      },
+    ]);
+  });
 });

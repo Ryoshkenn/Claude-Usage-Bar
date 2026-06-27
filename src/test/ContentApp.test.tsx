@@ -91,6 +91,50 @@ describe("ContentApp", () => {
     expect(screen.getByText("Weekly estimates may be inaccurate during the first week while Usage Bar learns your pattern.")).toBeInTheDocument();
   });
 
+  it("renders a per-model weekly row for Max-plan scoped limits", () => {
+    render(
+      <ContentApp
+        settings={settings}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 8,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+          weeklyAllModelsPercentageUsed: 31,
+          weeklyAllModelsResetsAt: Date.now() + 4 * 24 * 60 * 60_000,
+          weeklyScopedLimits: [
+            { modelLabel: "Sonnet", percentageUsed: 3, resetText: "resets in 1d 8h" },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Weekly · Sonnet")).toBeInTheDocument();
+    expect(screen.getByText("3%")).toBeInTheDocument();
+  });
+
+  it("omits per-model weekly rows when no scoped limits exist (non-Max plans)", () => {
+    render(
+      <ContentApp
+        settings={settings}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 8,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+          weeklyAllModelsPercentageUsed: 31,
+          weeklyAllModelsResetsAt: Date.now() + 4 * 24 * 60 * 60_000,
+        }}
+      />,
+    );
+
+    // The all-models row always renders; only the per-model scoped rows are gated.
+    expect(screen.getByText("Weekly · all models")).toBeInTheDocument();
+    expect(screen.queryByText(/Weekly · Sonnet|Weekly · Opus/)).not.toBeInTheDocument();
+  });
+
   it("uses constant weekly pacing and hides learning UI when weekly learning is disabled", () => {
     render(
       <ContentApp

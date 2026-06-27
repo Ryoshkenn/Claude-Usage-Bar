@@ -111,7 +111,11 @@ const getUsageMetrics = async (organizationId: string): Promise<RealUsageSnapsho
   return snapshot;
 };
 
-const fetchApiUsage = async (force = false, sample?: UsageRefreshSample): Promise<ApiUsageResponse> => {
+const fetchApiUsage = async (
+  force = false,
+  sample?: UsageRefreshSample,
+  skipHistory = false,
+): Promise<ApiUsageResponse> => {
   const current = await getStorage();
   if (!force && isFresh(current.realUsageSnapshot)) {
     return { ok: true, snapshot: current.realUsageSnapshot };
@@ -131,7 +135,11 @@ const fetchApiUsage = async (force = false, sample?: UsageRefreshSample): Promis
       snapshot.thinkingLevel = thinkingLevel;
     }
     await saveRealUsageSnapshot(snapshot);
-    if (current.settings.weeklyMetricsEnabled !== false) {
+    // Idle/auto refreshes (visibility, poll, reset-rollover) only freshen the
+    // snapshot; they must not append history, or these unattributed samples would
+    // flood the 100-entry cap and evict the message-bearing entries the
+    // model-aware projection learns from.
+    if (!skipHistory && current.settings.weeklyMetricsEnabled !== false) {
       await appendUsageHistoryEntry({
         capturedAt: snapshot.capturedAt,
         sessionUsedPercent: snapshot.percentageUsed,
@@ -201,6 +209,7 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
     | {
         type?: unknown;
         force?: unknown;
+        skipHistory?: unknown;
         conversationId?: unknown;
         modelLabel?: unknown;
         thinkingLevel?: unknown;
@@ -218,7 +227,7 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
       thinkingLevel: typeof data.thinkingLevel === "string" ? (data.thinkingLevel as ThinkingLevel) : undefined,
       messageCount: typeof data.messageCount === "number" ? data.messageCount : undefined,
     };
-    inFlightUsageRequest ??= fetchApiUsage(Boolean(data.force), sample).finally(() => {
+    inFlightUsageRequest ??= fetchApiUsage(Boolean(data.force), sample, Boolean(data.skipHistory)).finally(() => {
       inFlightUsageRequest = null;
     });
 

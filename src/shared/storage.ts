@@ -92,9 +92,11 @@ export const DEFAULT_SETTINGS: Settings = {
 const migrateSettings = (settings: Settings): Settings => {
   const remapDesign = <T,>(value: T): T | "weekly" =>
     (value as unknown) === "design" ? "weekly" : value;
+  // "context" is wheel-only now; an older bar set to it falls back to session.
+  const bar = remapDesign(settings.barMetric);
   return {
     ...settings,
-    barMetric: remapDesign(settings.barMetric),
+    barMetric: bar === "context" ? "session" : bar,
     ringTarget: remapDesign(settings.ringTarget),
   };
 };
