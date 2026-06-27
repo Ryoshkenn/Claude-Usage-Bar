@@ -1,0 +1,407 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Prompt cache timing unavailable"
+  },
+  "cacheUnknown": {
+    "message": "cache unknown"
+  },
+  "cacheExpired": {
+    "message": "Prompt cache expired"
+  },
+  "cacheExpiresIn": {
+    "message": "Prompt cache expires in $1"
+  },
+  "expiredShort": {
+    "message": "expired"
+  },
+  "cacheHasExpired": {
+    "message": "Prompt cache has expired"
+  },
+  "cacheSavings": {
+    "message": "Cached tokens save ~90% input cost"
+  },
+  "ringSession": {
+    "message": "5-hour session"
+  },
+  "ringWeekly": {
+    "message": "Weekly · all models"
+  },
+  "ringContext": {
+    "message": "Context window"
+  },
+  "weeklyScoped": {
+    "message": "Weekly · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% at reset"
+  },
+  "pacePastReset": {
+    "message": "+$1 past reset"
+  },
+  "lastsToReset": {
+    "message": "lasts to reset"
+  },
+  "paceActiveLeft": {
+    "message": "~$1h active left"
+  },
+  "paceEmptyDate": {
+    "message": "empty $1"
+  },
+  "paceEmptyIn": {
+    "message": "empty in $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 msg left"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 msgs left"
+  },
+  "ctxCalculating": {
+    "message": "Calculating context usage..."
+  },
+  "ctxLoadingExact": {
+    "message": "Loading exact token count"
+  },
+  "ctxSpinnerHint": {
+    "message": "Spinner means the worker is recounting this chat."
+  },
+  "ctxUsageTitle": {
+    "message": "Context & token usage:"
+  },
+  "ctxPctUsed": {
+    "message": "$1% of context window used"
+  },
+  "ctxLength": {
+    "message": "$1 / $2 context length"
+  },
+  "ctxCurrent": {
+    "message": "$1 current context"
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude usage $1"
+  },
+  "usage": {
+    "message": "Usage"
+  },
+  "planUsage": {
+    "message": "Plan usage"
+  },
+  "openSettings": {
+    "message": "Open extension settings"
+  },
+  "fiveHourLimit": {
+    "message": "5-hour limit"
+  },
+  "resetUnknown": {
+    "message": "reset unknown"
+  },
+  "weeklyLearningAria": {
+    "message": "Weekly usage estimate is still learning"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Weekly estimates may be inaccurate during the first week while Usage Bar learns your pattern."
+  },
+  "routines": {
+    "message": "Routines"
+  },
+  "ctxCalcLoading": {
+    "message": "Context calculation loading"
+  },
+  "ctxWindowFull": {
+    "message": "Context window $1% full"
+  },
+  "reviewEnjoying": {
+    "message": "Enjoying Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Rate on Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "The model couldn't be determined for these messages. This can come from Claude Code and cowork."
+  },
+  "noMessages": {
+    "message": "No messages"
+  },
+  "errNoWorker": {
+    "message": "Unable to contact extension background worker"
+  },
+  "errLoadUsage": {
+    "message": "Unable to load Claude usage"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Enjoying it?"
+  },
+  "fiveHour": {
+    "message": "5-hour"
+  },
+  "weekly": {
+    "message": "Weekly"
+  },
+  "refreshAll": {
+    "message": "Refresh all stats"
+  },
+  "customizeOverlay": {
+    "message": "Customize overlay"
+  },
+  "usageSummary": {
+    "message": "Usage summary"
+  },
+  "total": {
+    "message": "Total"
+  },
+  "avgPerMo": {
+    "message": "Avg / mo"
+  },
+  "avgPerDay": {
+    "message": "Avg / day"
+  },
+  "busiest": {
+    "message": "Busiest"
+  },
+  "messagesSent": {
+    "message": "Messages sent"
+  },
+  "fourteenDays": {
+    "message": "14 Days"
+  },
+  "monthly": {
+    "message": "Monthly"
+  },
+  "collecting": {
+    "message": "Collecting usage — your daily chart fills in as you chat on claude.ai."
+  },
+  "allTime": {
+    "message": "All-time"
+  },
+  "dayStreak": {
+    "message": "$1-day streak"
+  },
+  "reset": {
+    "message": "Reset"
+  },
+  "segOther": {
+    "message": "Other"
+  },
+  "setSecGeneral": {
+    "message": "General"
+  },
+  "setSecBar": {
+    "message": "Bar"
+  },
+  "setSecWheel": {
+    "message": "Wheel"
+  },
+  "setSecCacheTimer": {
+    "message": "Cache timer"
+  },
+  "setSecWeekly": {
+    "message": "Weekly usage metrics"
+  },
+  "setSec5hr": {
+    "message": "5hr usage metrics"
+  },
+  "setShowOverlay": {
+    "message": "Show overlay"
+  },
+  "setShowOverlayDesc": {
+    "message": "Display the usage bar overlay in the Claude chat composer."
+  },
+  "setLanguage": {
+    "message": "Language"
+  },
+  "setLanguageDesc": {
+    "message": "Language for the usage overlay and popup. Defaults to English."
+  },
+  "setTour": {
+    "message": "Feature tour"
+  },
+  "setTourDesc": {
+    "message": "Walk through the extension features step by step."
+  },
+  "setTourBtn": {
+    "message": "Replay Tour"
+  },
+  "setReview": {
+    "message": "Leave a review"
+  },
+  "setReviewDesc": {
+    "message": "Enjoying Claude Usage Bar? A rating helps others discover it and takes less than a minute. You can also request features or suggest other products you'd like to see right in your review."
+  },
+  "setReviewBtn": {
+    "message": "Rate on Chrome Web Store"
+  },
+  "setPrivacy": {
+    "message": "Privacy policy"
+  },
+  "setPrivacyDesc": {
+    "message": "View what Claude Usage Bar accesses, stores, and never sends to the developer."
+  },
+  "setPrivacyBtn": {
+    "message": "Open Privacy Policy"
+  },
+  "setProject": {
+    "message": "Project page"
+  },
+  "setProjectDesc": {
+    "message": "Open the public Claude Usage Bar site with links to support and privacy information."
+  },
+  "setProjectBtn": {
+    "message": "Open Project Page"
+  },
+  "setShowBar": {
+    "message": "Show bar"
+  },
+  "setShowBarDesc": {
+    "message": "Show the horizontal usage meter in the composer toolbar."
+  },
+  "setBarShows": {
+    "message": "Bar shows"
+  },
+  "setBarShowsDesc": {
+    "message": "Which usage metric the bar fill represents."
+  },
+  "setShowPctLabel": {
+    "message": "Show percentage label"
+  },
+  "setBarLabelDesc": {
+    "message": "Display the current percentage as text next to the bar."
+  },
+  "setShowWheel": {
+    "message": "Show wheel"
+  },
+  "setShowWheelDesc": {
+    "message": "Show the circular ring indicator next to the bar."
+  },
+  "setWheelShows": {
+    "message": "Wheel shows"
+  },
+  "setWheelShowsDesc": {
+    "message": "Which usage metric the wheel fill represents."
+  },
+  "setWheelLabelDesc": {
+    "message": "Display the current percentage as small text below the wheel."
+  },
+  "setShowCacheTimer": {
+    "message": "Show cache timer"
+  },
+  "setShowCacheTimerDesc": {
+    "message": "Show a countdown in the chat header for how long the prompt cache stays warm. Turn this off to hide it."
+  },
+  "setLearnWeekly": {
+    "message": "Learn weekly patterns"
+  },
+  "setLearnWeeklyDesc": {
+    "message": "Use local numeric samples to tune weekly estimates. Turn this off to keep weekly pacing on the fixed manual schedule."
+  },
+  "setWeeklyEstimate": {
+    "message": "Weekly estimate"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Smart mode starts from about ten 5-hour windows per week, then learns your active Claude pattern from local numeric usage samples."
+  },
+  "setWeeklyDisplay": {
+    "message": "Weekly estimate display"
+  },
+  "setWeeklyDisplayDesc": {
+    "message": "Active hours shows usable Claude time left. Days / time predicts the local day and time you will run out."
+  },
+  "setManualDays": {
+    "message": "Manual work days"
+  },
+  "setManualDaysDesc": {
+    "message": "Used as the default schedule while smart weekly metrics are learning, or whenever manual mode is selected."
+  },
+  "setManualDaysAria": {
+    "message": "Manual weekly work days"
+  },
+  "setManualHours": {
+    "message": "Manual hours per work day"
+  },
+  "setManualHoursDesc": {
+    "message": "Used as the starting cap for weekly pacing before smart metrics have enough history."
+  },
+  "setManualStart": {
+    "message": "Manual start time"
+  },
+  "setManualStartDesc": {
+    "message": "Local time used with manual days to place weekly usage into calendar time."
+  },
+  "setLearnedPattern": {
+    "message": "Learned pattern"
+  },
+  "setLearnedPatternDesc": {
+    "message": "Stored locally in this browser. No prompts, responses, cookies, or raw Claude payloads are stored."
+  },
+  "setDeleteHistory": {
+    "message": "Delete history"
+  },
+  "setReady": {
+    "message": "Ready"
+  },
+  "setLearning": {
+    "message": "Learning"
+  },
+  "setSamples": {
+    "message": "$1 samples"
+  },
+  "setActiveDays": {
+    "message": "$1 active days"
+  },
+  "setHoursPerDay": {
+    "message": "$1h/day"
+  },
+  "setShowPace": {
+    "message": "Show pace"
+  },
+  "setShowPaceDesc": {
+    "message": "Show the pace estimate next to the usage bar. Accurate pace requires pattern learning — to opt out of pattern-based pacing, turn this off."
+  },
+  "setPaceFormat": {
+    "message": "Pace format"
+  },
+  "setPaceFormatDesc": {
+    "message": "What to show next to the 5-hour percentage: the percentage you'll be at when reset hits, the extra time you'll have past reset, or an estimate of how many messages you have left at the model you're using."
+  },
+  "setOptPctReset": {
+    "message": "Percentage at reset"
+  },
+  "setOptTimePast": {
+    "message": "Time past reset"
+  },
+  "setOptMsgsLeft": {
+    "message": "Messages left"
+  },
+  "setOptSmart": {
+    "message": "Smart schedule"
+  },
+  "setOptManual": {
+    "message": "Manual schedule"
+  },
+  "setOptActiveHours": {
+    "message": "Active hours"
+  },
+  "setOptDaysTime": {
+    "message": "Days / time"
+  },
+  "setDaySun": {
+    "message": "S"
+  },
+  "setDayMon": {
+    "message": "M"
+  },
+  "setDayTue": {
+    "message": "T"
+  },
+  "setDayWed": {
+    "message": "W"
+  },
+  "setDayThu": {
+    "message": "T"
+  },
+  "setDayFri": {
+    "message": "F"
+  },
+  "setDaySat": {
+    "message": "S"
+  }
+}

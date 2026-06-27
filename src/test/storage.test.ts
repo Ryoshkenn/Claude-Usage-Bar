@@ -92,6 +92,7 @@ describe("storage helpers", () => {
       weeklyManualStartHour: 9,
       hasSeenTour: false,
       showClipboard: true,
+      language: "en",
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
@@ -135,6 +136,7 @@ describe("storage helpers", () => {
       weeklyManualStartHour: 9,
       hasSeenTour: false,
       showClipboard: true,
+      language: "en",
     });
     expect(adapter.data.settings).toEqual(settings);
   });

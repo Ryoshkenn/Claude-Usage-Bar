@@ -81,6 +81,7 @@ export const DEFAULT_SETTINGS: Settings = {
   weeklyManualWorkDays: [1, 2, 3, 4, 5],
   weeklyManualActiveHoursPerDay: 10,
   weeklyManualStartHour: 9,
+  language: "en",
   hasSeenTour: false,
   showClipboard: true,
 };

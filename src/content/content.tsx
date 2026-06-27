@@ -10,6 +10,7 @@ import {
   updateSettings,
 } from "../shared/storage";
 import { normalizeModelFamily } from "../shared/modelUsage";
+import { setLanguage } from "../shared/i18n";
 import type { ConversationContextResponse, RealUsageSnapshot, StorageShape, ThinkingLevel } from "../shared/types";
 import { readClaudeDomSnapshot, readThinkingEnabled, resolveEffectiveThinkingLevel } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
@@ -151,13 +152,19 @@ const isDesignPage = (): boolean =>
   location.pathname.startsWith("/designs/");
 const isNewChatPage = (): boolean => location.pathname === "/new" || location.pathname === "/new/";
 
+// After the extension is reloaded/updated, this content script is orphaned but its
+// timers and observers keep firing; any chrome.* call then throws "Extension context
+// invalidated". chrome.runtime.id goes undefined on invalidation, so this gates the
+// recurring chrome callers and lets the orphan idle harmlessly until the page unloads.
+const extensionAlive = (): boolean => Boolean(chrome.runtime?.id);
+
 const syncTheme = () => {
   const light = isDesignPage() ? true : isLightMode();
   const theme = light ? "light" : "dark";
   host?.classList.toggle("cub-theme-light", light);
   cacheTimerHost?.classList.toggle("cub-theme-light", light);
   syncMessageRailTheme(light);
-  if (theme !== lastSyncedTheme) {
+  if (theme !== lastSyncedTheme && extensionAlive()) {
     lastSyncedTheme = theme;
     void chrome.storage.local.set({ [STORAGE_KEYS.detectedTheme]: light ? "light" : "dark" });
   }
@@ -365,6 +372,7 @@ interface UsageRefreshSample {
 }
 
 const requestApiUsageRefresh = (force = false, sample?: UsageRefreshSample, skipHistory = false) => {
+  if (!extensionAlive()) return;
   chrome.runtime.sendMessage(
     {
       type: MESSAGE_TYPES.fetchApiUsage,
@@ -409,6 +417,7 @@ const maybeRefreshUsage = () => {
 const getConversationId = (): string | null => location.pathname.match(/\/chat\/([^/?]+)/)?.[1] ?? null;
 
 const requestConversationContextRefresh = (conversationId: string) => {
+  if (!extensionAlive()) return;
   chrome.runtime.sendMessage(
     { type: MESSAGE_TYPES.fetchConversationContext, conversationId },
     (response: ConversationContextResponse | undefined) => {
@@ -610,6 +619,7 @@ const init = async () => {
 
   injectPageProbe();
   storageState = await getStorage();
+  setLanguage(storageState.settings.language);
   initSettingsPage();
   tickMessageRail();
   render();
@@ -675,6 +685,7 @@ const init = async () => {
         (changes.weeklyUsageMetrics?.newValue as StorageShape["weeklyUsageMetrics"] | undefined) ??
         storageState.weeklyUsageMetrics,
     };
+    setLanguage(storageState.settings.language);
     render();
   });
 

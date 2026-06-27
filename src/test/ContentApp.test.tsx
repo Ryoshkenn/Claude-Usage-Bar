@@ -23,6 +23,7 @@ const settings: Settings = {
   weeklyManualStartHour: 9,
   hasSeenTour: true,
   showClipboard: true,
+  language: "en",
 };
 
 const baseChatUsage: ChatUsage = {

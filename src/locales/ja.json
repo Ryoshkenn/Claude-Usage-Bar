@@ -1,0 +1,407 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "プロンプトキャッシュの残り時間は利用できません"
+  },
+  "cacheUnknown": {
+    "message": "キャッシュ不明"
+  },
+  "cacheExpired": {
+    "message": "プロンプトキャッシュの有効期限切れ"
+  },
+  "cacheExpiresIn": {
+    "message": "プロンプトキャッシュはあと $1 で期限切れ"
+  },
+  "expiredShort": {
+    "message": "期限切れ"
+  },
+  "cacheHasExpired": {
+    "message": "プロンプトキャッシュの有効期限が切れました"
+  },
+  "cacheSavings": {
+    "message": "キャッシュされたトークンは入力コストを約90%節約します"
+  },
+  "ringSession": {
+    "message": "5時間セッション"
+  },
+  "ringWeekly": {
+    "message": "週間 · 全モデル"
+  },
+  "ringContext": {
+    "message": "コンテキストウィンドウ"
+  },
+  "weeklyScoped": {
+    "message": "週間 · $1"
+  },
+  "pacePctAtReset": {
+    "message": "リセット時に $1%"
+  },
+  "pacePastReset": {
+    "message": "リセット後 +$1"
+  },
+  "lastsToReset": {
+    "message": "リセットまで持続"
+  },
+  "paceActiveLeft": {
+    "message": "アクティブ残り約 $1 時間"
+  },
+  "paceEmptyDate": {
+    "message": "$1 に空に"
+  },
+  "paceEmptyIn": {
+    "message": "$1 で空に"
+  },
+  "paceMsgLeft": {
+    "message": "残り約 $1 メッセージ"
+  },
+  "paceMsgsLeft": {
+    "message": "残り約 $1 メッセージ"
+  },
+  "ctxCalculating": {
+    "message": "コンテキスト使用量を計算中..."
+  },
+  "ctxLoadingExact": {
+    "message": "正確なトークン数を読み込み中"
+  },
+  "ctxSpinnerHint": {
+    "message": "スピナーはワーカーがこのチャットを再カウント中であることを示します。"
+  },
+  "ctxUsageTitle": {
+    "message": "コンテキストとトークンの使用量:"
+  },
+  "ctxPctUsed": {
+    "message": "コンテキストウィンドウの $1% を使用"
+  },
+  "ctxLength": {
+    "message": "コンテキスト長 $1 / $2"
+  },
+  "ctxCurrent": {
+    "message": "現在のコンテキスト $1"
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude 使用量 $1"
+  },
+  "usage": {
+    "message": "使用量"
+  },
+  "planUsage": {
+    "message": "プランの使用量"
+  },
+  "openSettings": {
+    "message": "拡張機能の設定を開く"
+  },
+  "fiveHourLimit": {
+    "message": "5時間の上限"
+  },
+  "resetUnknown": {
+    "message": "リセット時刻不明"
+  },
+  "weeklyLearningAria": {
+    "message": "週間使用量の推定を学習中です"
+  },
+  "weeklyLearningTooltip": {
+    "message": "週間の推定値は、Usage Bar があなたのパターンを学習する最初の1週間は不正確な場合があります。"
+  },
+  "routines": {
+    "message": "ルーティン"
+  },
+  "ctxCalcLoading": {
+    "message": "コンテキストを計算中"
+  },
+  "ctxWindowFull": {
+    "message": "コンテキストウィンドウ $1% 使用"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar はいかがですか?"
+  },
+  "reviewRate": {
+    "message": "Chrome ストアで評価 ↗"
+  },
+  "otherHint": {
+    "message": "これらのメッセージのモデルを特定できませんでした。Claude Code や cowork が原因の場合があります。"
+  },
+  "noMessages": {
+    "message": "メッセージなし"
+  },
+  "errNoWorker": {
+    "message": "拡張機能のバックグラウンドワーカーに接続できません"
+  },
+  "errLoadUsage": {
+    "message": "Claude の使用量を読み込めません"
+  },
+  "reviewEnjoyingShort": {
+    "message": "気に入りましたか?"
+  },
+  "fiveHour": {
+    "message": "5時間"
+  },
+  "weekly": {
+    "message": "週間"
+  },
+  "refreshAll": {
+    "message": "すべての統計を更新"
+  },
+  "customizeOverlay": {
+    "message": "オーバーレイをカスタマイズ"
+  },
+  "usageSummary": {
+    "message": "使用量の概要"
+  },
+  "total": {
+    "message": "合計"
+  },
+  "avgPerMo": {
+    "message": "平均 / 月"
+  },
+  "avgPerDay": {
+    "message": "平均 / 日"
+  },
+  "busiest": {
+    "message": "最多"
+  },
+  "messagesSent": {
+    "message": "送信メッセージ"
+  },
+  "fourteenDays": {
+    "message": "14日間"
+  },
+  "monthly": {
+    "message": "月間"
+  },
+  "collecting": {
+    "message": "使用量を収集中: claude.ai でチャットすると日次グラフが埋まっていきます。"
+  },
+  "allTime": {
+    "message": "累計"
+  },
+  "dayStreak": {
+    "message": "$1 日連続"
+  },
+  "reset": {
+    "message": "リセット"
+  },
+  "segOther": {
+    "message": "その他"
+  },
+  "setSecGeneral": {
+    "message": "一般"
+  },
+  "setSecBar": {
+    "message": "バー"
+  },
+  "setSecWheel": {
+    "message": "ホイール"
+  },
+  "setSecCacheTimer": {
+    "message": "キャッシュタイマー"
+  },
+  "setSecWeekly": {
+    "message": "週間使用量メトリクス"
+  },
+  "setSec5hr": {
+    "message": "5時間使用量メトリクス"
+  },
+  "setShowOverlay": {
+    "message": "オーバーレイを表示"
+  },
+  "setShowOverlayDesc": {
+    "message": "Claude のチャット入力欄に使用量バーのオーバーレイを表示します。"
+  },
+  "setLanguage": {
+    "message": "言語"
+  },
+  "setLanguageDesc": {
+    "message": "使用量オーバーレイとポップアップの言語。デフォルトは英語です。"
+  },
+  "setTour": {
+    "message": "機能ツアー"
+  },
+  "setTourDesc": {
+    "message": "拡張機能の機能を順を追って確認します。"
+  },
+  "setTourBtn": {
+    "message": "ツアーを再生"
+  },
+  "setReview": {
+    "message": "レビューを書く"
+  },
+  "setReviewDesc": {
+    "message": "Claude Usage Bar はいかがですか? 評価は他の人が見つける助けになり、1分もかかりません。レビューで機能をリクエストしたり、他の製品を提案したりもできます。"
+  },
+  "setReviewBtn": {
+    "message": "Chrome ウェブストアで評価"
+  },
+  "setPrivacy": {
+    "message": "プライバシーポリシー"
+  },
+  "setPrivacyDesc": {
+    "message": "Claude Usage Bar が何にアクセスし、何を保存し、開発者に何を送信しないかを確認します。"
+  },
+  "setPrivacyBtn": {
+    "message": "プライバシーポリシーを開く"
+  },
+  "setProject": {
+    "message": "プロジェクトページ"
+  },
+  "setProjectDesc": {
+    "message": "サポートとプライバシー情報へのリンクがある Claude Usage Bar の公開サイトを開きます。"
+  },
+  "setProjectBtn": {
+    "message": "プロジェクトページを開く"
+  },
+  "setShowBar": {
+    "message": "バーを表示"
+  },
+  "setShowBarDesc": {
+    "message": "入力欄ツールバーに横型の使用量メーターを表示します。"
+  },
+  "setBarShows": {
+    "message": "バーの表示内容"
+  },
+  "setBarShowsDesc": {
+    "message": "バーの塗りつぶしが表す使用量メトリクス。"
+  },
+  "setShowPctLabel": {
+    "message": "パーセントラベルを表示"
+  },
+  "setBarLabelDesc": {
+    "message": "現在のパーセントをバーの横にテキストで表示します。"
+  },
+  "setShowWheel": {
+    "message": "ホイールを表示"
+  },
+  "setShowWheelDesc": {
+    "message": "バーの横に円形のリングインジケーターを表示します。"
+  },
+  "setWheelShows": {
+    "message": "ホイールの表示内容"
+  },
+  "setWheelShowsDesc": {
+    "message": "ホイールの塗りつぶしが表す使用量メトリクス。"
+  },
+  "setWheelLabelDesc": {
+    "message": "現在のパーセントをホイールの下に小さなテキストで表示します。"
+  },
+  "setShowCacheTimer": {
+    "message": "キャッシュタイマーを表示"
+  },
+  "setShowCacheTimerDesc": {
+    "message": "プロンプトキャッシュが温かいまま保たれる時間のカウントダウンをチャットヘッダーに表示します。非表示にするにはオフにします。"
+  },
+  "setLearnWeekly": {
+    "message": "週間パターンを学習"
+  },
+  "setLearnWeeklyDesc": {
+    "message": "ローカルの数値サンプルを使って週間の推定を調整します。週間ペースを固定の手動スケジュールに保つにはオフにします。"
+  },
+  "setWeeklyEstimate": {
+    "message": "週間推定"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "スマートモードは週あたり約10個の5時間ウィンドウから始まり、その後ローカルの数値使用サンプルからあなたのアクティブな Claude パターンを学習します。"
+  },
+  "setWeeklyDisplay": {
+    "message": "週間推定の表示"
+  },
+  "setWeeklyDisplayDesc": {
+    "message": "アクティブ時間は使用可能な残りの Claude 時間を表示します。日 / 時刻は使い切るローカルの日と時刻を予測します。"
+  },
+  "setManualDays": {
+    "message": "手動の稼働日"
+  },
+  "setManualDaysDesc": {
+    "message": "スマート週間メトリクスの学習中、または手動モード選択時にデフォルトのスケジュールとして使われます。"
+  },
+  "setManualDaysAria": {
+    "message": "手動の週間稼働日"
+  },
+  "setManualHours": {
+    "message": "稼働日あたりの手動時間"
+  },
+  "setManualHoursDesc": {
+    "message": "スマートメトリクスが十分な履歴を持つ前の、週間ペースの開始上限として使われます。"
+  },
+  "setManualStart": {
+    "message": "手動の開始時刻"
+  },
+  "setManualStartDesc": {
+    "message": "週間使用量をカレンダー時間に配置するために手動の日と併用するローカル時刻。"
+  },
+  "setLearnedPattern": {
+    "message": "学習したパターン"
+  },
+  "setLearnedPatternDesc": {
+    "message": "このブラウザにローカル保存されます。プロンプト、応答、Cookie、Claude の生のペイロードは保存されません。"
+  },
+  "setDeleteHistory": {
+    "message": "履歴を削除"
+  },
+  "setReady": {
+    "message": "準備完了"
+  },
+  "setLearning": {
+    "message": "学習中"
+  },
+  "setSamples": {
+    "message": "$1 サンプル"
+  },
+  "setActiveDays": {
+    "message": "アクティブ $1 日"
+  },
+  "setHoursPerDay": {
+    "message": "$1 時間/日"
+  },
+  "setShowPace": {
+    "message": "ペースを表示"
+  },
+  "setShowPaceDesc": {
+    "message": "使用量バーの横にペースの推定を表示します。正確なペースにはパターン学習が必要です。パターンベースのペースを使わない場合はオフにします。"
+  },
+  "setPaceFormat": {
+    "message": "ペースの形式"
+  },
+  "setPaceFormatDesc": {
+    "message": "5時間のパーセントの横に表示する内容: リセット時に到達するパーセント、リセット後に得られる追加時間、または使用中のモデルで残っているメッセージ数の推定。"
+  },
+  "setOptPctReset": {
+    "message": "リセット時のパーセント"
+  },
+  "setOptTimePast": {
+    "message": "リセット後の時間"
+  },
+  "setOptMsgsLeft": {
+    "message": "残りメッセージ"
+  },
+  "setOptSmart": {
+    "message": "スマートスケジュール"
+  },
+  "setOptManual": {
+    "message": "手動スケジュール"
+  },
+  "setOptActiveHours": {
+    "message": "アクティブ時間"
+  },
+  "setOptDaysTime": {
+    "message": "日 / 時刻"
+  },
+  "setDaySun": {
+    "message": "日"
+  },
+  "setDayMon": {
+    "message": "月"
+  },
+  "setDayTue": {
+    "message": "火"
+  },
+  "setDayWed": {
+    "message": "水"
+  },
+  "setDayThu": {
+    "message": "木"
+  },
+  "setDayFri": {
+    "message": "金"
+  },
+  "setDaySat": {
+    "message": "土"
+  }
+}

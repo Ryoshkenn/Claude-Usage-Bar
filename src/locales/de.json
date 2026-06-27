@@ -1,0 +1,407 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Prompt-Cache-Zeit nicht verfügbar"
+  },
+  "cacheUnknown": {
+    "message": "Cache unbekannt"
+  },
+  "cacheExpired": {
+    "message": "Prompt-Cache abgelaufen"
+  },
+  "cacheExpiresIn": {
+    "message": "Prompt-Cache läuft ab in $1"
+  },
+  "expiredShort": {
+    "message": "abgelaufen"
+  },
+  "cacheHasExpired": {
+    "message": "Prompt-Cache ist abgelaufen"
+  },
+  "cacheSavings": {
+    "message": "Gecachte Tokens sparen ~90 % der Eingabekosten"
+  },
+  "ringSession": {
+    "message": "5-Stunden-Sitzung"
+  },
+  "ringWeekly": {
+    "message": "Wöchentlich · alle Modelle"
+  },
+  "ringContext": {
+    "message": "Kontextfenster"
+  },
+  "weeklyScoped": {
+    "message": "Wöchentlich · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1 % beim Zurücksetzen"
+  },
+  "pacePastReset": {
+    "message": "+$1 nach Zurücksetzen"
+  },
+  "lastsToReset": {
+    "message": "reicht bis zum Zurücksetzen"
+  },
+  "paceActiveLeft": {
+    "message": "~$1 Std. aktiv übrig"
+  },
+  "paceEmptyDate": {
+    "message": "leer $1"
+  },
+  "paceEmptyIn": {
+    "message": "leer in $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 Nachricht übrig"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 Nachrichten übrig"
+  },
+  "ctxCalculating": {
+    "message": "Kontextnutzung wird berechnet..."
+  },
+  "ctxLoadingExact": {
+    "message": "Genaue Token-Anzahl wird geladen"
+  },
+  "ctxSpinnerHint": {
+    "message": "Der Spinner bedeutet, dass der Worker diesen Chat neu zählt."
+  },
+  "ctxUsageTitle": {
+    "message": "Kontext- und Token-Nutzung:"
+  },
+  "ctxPctUsed": {
+    "message": "$1 % des Kontextfensters genutzt"
+  },
+  "ctxLength": {
+    "message": "$1 / $2 Kontextlänge"
+  },
+  "ctxCurrent": {
+    "message": "$1 aktueller Kontext"
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude-Nutzung $1"
+  },
+  "usage": {
+    "message": "Nutzung"
+  },
+  "planUsage": {
+    "message": "Tarifnutzung"
+  },
+  "openSettings": {
+    "message": "Erweiterungseinstellungen öffnen"
+  },
+  "fiveHourLimit": {
+    "message": "5-Stunden-Limit"
+  },
+  "resetUnknown": {
+    "message": "Zurücksetzen unbekannt"
+  },
+  "weeklyLearningAria": {
+    "message": "Wöchentliche Nutzungsschätzung lernt noch"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Wöchentliche Schätzungen können in der ersten Woche ungenau sein, während Usage Bar dein Muster lernt."
+  },
+  "routines": {
+    "message": "Routinen"
+  },
+  "ctxCalcLoading": {
+    "message": "Kontext wird berechnet"
+  },
+  "ctxWindowFull": {
+    "message": "Kontextfenster zu $1 % gefüllt"
+  },
+  "reviewEnjoying": {
+    "message": "Gefällt dir Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Im Chrome Store bewerten ↗"
+  },
+  "otherHint": {
+    "message": "Das Modell für diese Nachrichten konnte nicht bestimmt werden. Das kann von Claude Code und cowork stammen."
+  },
+  "noMessages": {
+    "message": "Keine Nachrichten"
+  },
+  "errNoWorker": {
+    "message": "Hintergrund-Worker der Erweiterung nicht erreichbar"
+  },
+  "errLoadUsage": {
+    "message": "Claude-Nutzung konnte nicht geladen werden"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Gefällt es dir?"
+  },
+  "fiveHour": {
+    "message": "5 Std."
+  },
+  "weekly": {
+    "message": "Wöchentlich"
+  },
+  "refreshAll": {
+    "message": "Alle Statistiken aktualisieren"
+  },
+  "customizeOverlay": {
+    "message": "Overlay anpassen"
+  },
+  "usageSummary": {
+    "message": "Nutzungsübersicht"
+  },
+  "total": {
+    "message": "Gesamt"
+  },
+  "avgPerMo": {
+    "message": "Ø / Mon."
+  },
+  "avgPerDay": {
+    "message": "Ø / Tag"
+  },
+  "busiest": {
+    "message": "Aktivster"
+  },
+  "messagesSent": {
+    "message": "Gesendete Nachrichten"
+  },
+  "fourteenDays": {
+    "message": "14 Tage"
+  },
+  "monthly": {
+    "message": "Monatlich"
+  },
+  "collecting": {
+    "message": "Nutzung wird erfasst – dein Tagesdiagramm füllt sich, während du auf claude.ai chattest."
+  },
+  "allTime": {
+    "message": "Insgesamt"
+  },
+  "dayStreak": {
+    "message": "$1-Tage-Serie"
+  },
+  "reset": {
+    "message": "Zurücksetzen"
+  },
+  "segOther": {
+    "message": "Andere"
+  },
+  "setSecGeneral": {
+    "message": "Allgemein"
+  },
+  "setSecBar": {
+    "message": "Balken"
+  },
+  "setSecWheel": {
+    "message": "Rad"
+  },
+  "setSecCacheTimer": {
+    "message": "Cache-Timer"
+  },
+  "setSecWeekly": {
+    "message": "Wöchentliche Nutzungsmetriken"
+  },
+  "setSec5hr": {
+    "message": "5-Stunden-Nutzungsmetriken"
+  },
+  "setShowOverlay": {
+    "message": "Overlay anzeigen"
+  },
+  "setShowOverlayDesc": {
+    "message": "Das Overlay der Nutzungsleiste im Claude-Chat-Editor anzeigen."
+  },
+  "setLanguage": {
+    "message": "Sprache"
+  },
+  "setLanguageDesc": {
+    "message": "Sprache für Nutzungs-Overlay und Popup. Standard ist Englisch."
+  },
+  "setTour": {
+    "message": "Funktionstour"
+  },
+  "setTourDesc": {
+    "message": "Gehe Schritt für Schritt durch die Funktionen der Erweiterung."
+  },
+  "setTourBtn": {
+    "message": "Tour wiederholen"
+  },
+  "setReview": {
+    "message": "Bewertung abgeben"
+  },
+  "setReviewDesc": {
+    "message": "Gefällt dir Claude Usage Bar? Eine Bewertung hilft anderen, es zu entdecken, und dauert weniger als eine Minute. Du kannst in deiner Bewertung auch Funktionen wünschen oder andere Produkte vorschlagen."
+  },
+  "setReviewBtn": {
+    "message": "Im Chrome Web Store bewerten"
+  },
+  "setPrivacy": {
+    "message": "Datenschutzrichtlinie"
+  },
+  "setPrivacyDesc": {
+    "message": "Sieh, worauf Claude Usage Bar zugreift, was es speichert und was es nie an den Entwickler sendet."
+  },
+  "setPrivacyBtn": {
+    "message": "Datenschutzrichtlinie öffnen"
+  },
+  "setProject": {
+    "message": "Projektseite"
+  },
+  "setProjectDesc": {
+    "message": "Öffne die öffentliche Claude-Usage-Bar-Website mit Links zu Support und Datenschutzinformationen."
+  },
+  "setProjectBtn": {
+    "message": "Projektseite öffnen"
+  },
+  "setShowBar": {
+    "message": "Balken anzeigen"
+  },
+  "setShowBarDesc": {
+    "message": "Die horizontale Nutzungsanzeige in der Editor-Symbolleiste anzeigen."
+  },
+  "setBarShows": {
+    "message": "Balken zeigt"
+  },
+  "setBarShowsDesc": {
+    "message": "Welche Nutzungsmetrik die Balkenfüllung darstellt."
+  },
+  "setShowPctLabel": {
+    "message": "Prozentlabel anzeigen"
+  },
+  "setBarLabelDesc": {
+    "message": "Den aktuellen Prozentsatz als Text neben dem Balken anzeigen."
+  },
+  "setShowWheel": {
+    "message": "Rad anzeigen"
+  },
+  "setShowWheelDesc": {
+    "message": "Die kreisförmige Ringanzeige neben dem Balken anzeigen."
+  },
+  "setWheelShows": {
+    "message": "Rad zeigt"
+  },
+  "setWheelShowsDesc": {
+    "message": "Welche Nutzungsmetrik die Radfüllung darstellt."
+  },
+  "setWheelLabelDesc": {
+    "message": "Den aktuellen Prozentsatz als kleinen Text unter dem Rad anzeigen."
+  },
+  "setShowCacheTimer": {
+    "message": "Cache-Timer anzeigen"
+  },
+  "setShowCacheTimerDesc": {
+    "message": "Im Chat-Header einen Countdown anzeigen, wie lange der Prompt-Cache warm bleibt. Zum Ausblenden deaktivieren."
+  },
+  "setLearnWeekly": {
+    "message": "Wöchentliche Muster lernen"
+  },
+  "setLearnWeeklyDesc": {
+    "message": "Lokale numerische Stichproben nutzen, um wöchentliche Schätzungen zu verfeinern. Deaktivieren, um das wöchentliche Tempo beim festen manuellen Zeitplan zu belassen."
+  },
+  "setWeeklyEstimate": {
+    "message": "Wöchentliche Schätzung"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Der Smart-Modus startet mit etwa zehn 5-Stunden-Fenstern pro Woche und lernt dann dein aktives Claude-Muster aus lokalen numerischen Nutzungsstichproben."
+  },
+  "setWeeklyDisplay": {
+    "message": "Anzeige der wöchentlichen Schätzung"
+  },
+  "setWeeklyDisplayDesc": {
+    "message": "Aktive Stunden zeigt die verbleibende nutzbare Claude-Zeit. Tage / Uhrzeit sagt den lokalen Tag und die Uhrzeit voraus, an dem es aufgebraucht ist."
+  },
+  "setManualDays": {
+    "message": "Manuelle Arbeitstage"
+  },
+  "setManualDaysDesc": {
+    "message": "Wird als Standardzeitplan verwendet, während smarte wöchentliche Metriken lernen, oder wenn der manuelle Modus gewählt ist."
+  },
+  "setManualDaysAria": {
+    "message": "Manuelle wöchentliche Arbeitstage"
+  },
+  "setManualHours": {
+    "message": "Manuelle Stunden pro Arbeitstag"
+  },
+  "setManualHoursDesc": {
+    "message": "Wird als Startobergrenze für das wöchentliche Tempo verwendet, bevor smarte Metriken genug Verlauf haben."
+  },
+  "setManualStart": {
+    "message": "Manuelle Startzeit"
+  },
+  "setManualStartDesc": {
+    "message": "Lokale Zeit, die mit den manuellen Tagen verwendet wird, um die wöchentliche Nutzung in die Kalenderzeit einzuordnen."
+  },
+  "setLearnedPattern": {
+    "message": "Gelerntes Muster"
+  },
+  "setLearnedPatternDesc": {
+    "message": "Lokal in diesem Browser gespeichert. Es werden keine Prompts, Antworten, Cookies oder rohen Claude-Payloads gespeichert."
+  },
+  "setDeleteHistory": {
+    "message": "Verlauf löschen"
+  },
+  "setReady": {
+    "message": "Bereit"
+  },
+  "setLearning": {
+    "message": "Lernt"
+  },
+  "setSamples": {
+    "message": "$1 Stichproben"
+  },
+  "setActiveDays": {
+    "message": "$1 aktive Tage"
+  },
+  "setHoursPerDay": {
+    "message": "$1 Std./Tag"
+  },
+  "setShowPace": {
+    "message": "Tempo anzeigen"
+  },
+  "setShowPaceDesc": {
+    "message": "Die Tempo-Schätzung neben der Nutzungsleiste anzeigen. Genaues Tempo erfordert Musterlernen — zum Deaktivieren des musterbasierten Tempos ausschalten."
+  },
+  "setPaceFormat": {
+    "message": "Tempo-Format"
+  },
+  "setPaceFormatDesc": {
+    "message": "Was neben dem 5-Stunden-Prozentsatz angezeigt wird: der Prozentsatz beim Zurücksetzen, die zusätzliche Zeit nach dem Zurücksetzen, oder eine Schätzung, wie viele Nachrichten dir mit dem genutzten Modell bleiben."
+  },
+  "setOptPctReset": {
+    "message": "Prozent beim Zurücksetzen"
+  },
+  "setOptTimePast": {
+    "message": "Zeit nach Zurücksetzen"
+  },
+  "setOptMsgsLeft": {
+    "message": "Verbleibende Nachrichten"
+  },
+  "setOptSmart": {
+    "message": "Smarter Zeitplan"
+  },
+  "setOptManual": {
+    "message": "Manueller Zeitplan"
+  },
+  "setOptActiveHours": {
+    "message": "Aktive Stunden"
+  },
+  "setOptDaysTime": {
+    "message": "Tage / Uhrzeit"
+  },
+  "setDaySun": {
+    "message": "S"
+  },
+  "setDayMon": {
+    "message": "M"
+  },
+  "setDayTue": {
+    "message": "D"
+  },
+  "setDayWed": {
+    "message": "M"
+  },
+  "setDayThu": {
+    "message": "D"
+  },
+  "setDayFri": {
+    "message": "F"
+  },
+  "setDaySat": {
+    "message": "S"
+  }
+}

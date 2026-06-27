@@ -1,0 +1,407 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "提示缓存时间不可用"
+  },
+  "cacheUnknown": {
+    "message": "缓存未知"
+  },
+  "cacheExpired": {
+    "message": "提示缓存已过期"
+  },
+  "cacheExpiresIn": {
+    "message": "提示缓存将在 $1 后过期"
+  },
+  "expiredShort": {
+    "message": "已过期"
+  },
+  "cacheHasExpired": {
+    "message": "提示缓存已过期"
+  },
+  "cacheSavings": {
+    "message": "缓存的 token 可节省约 90% 的输入成本"
+  },
+  "ringSession": {
+    "message": "5 小时会话"
+  },
+  "ringWeekly": {
+    "message": "每周 · 所有模型"
+  },
+  "ringContext": {
+    "message": "上下文窗口"
+  },
+  "weeklyScoped": {
+    "message": "每周 · $1"
+  },
+  "pacePctAtReset": {
+    "message": "重置时 $1%"
+  },
+  "pacePastReset": {
+    "message": "重置后 +$1"
+  },
+  "lastsToReset": {
+    "message": "可持续到重置"
+  },
+  "paceActiveLeft": {
+    "message": "活跃时间约剩 $1 小时"
+  },
+  "paceEmptyDate": {
+    "message": "$1 用尽"
+  },
+  "paceEmptyIn": {
+    "message": "$1 后用尽"
+  },
+  "paceMsgLeft": {
+    "message": "约剩 $1 条消息"
+  },
+  "paceMsgsLeft": {
+    "message": "约剩 $1 条消息"
+  },
+  "ctxCalculating": {
+    "message": "正在计算上下文用量..."
+  },
+  "ctxLoadingExact": {
+    "message": "正在加载精确 token 数"
+  },
+  "ctxSpinnerHint": {
+    "message": "转圈表示后台正在重新统计此对话。"
+  },
+  "ctxUsageTitle": {
+    "message": "上下文与 token 用量："
+  },
+  "ctxPctUsed": {
+    "message": "已使用上下文窗口的 $1%"
+  },
+  "ctxLength": {
+    "message": "上下文长度 $1 / $2"
+  },
+  "ctxCurrent": {
+    "message": "当前上下文 $1"
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude 用量 $1"
+  },
+  "usage": {
+    "message": "用量"
+  },
+  "planUsage": {
+    "message": "套餐用量"
+  },
+  "openSettings": {
+    "message": "打开扩展设置"
+  },
+  "fiveHourLimit": {
+    "message": "5 小时限额"
+  },
+  "resetUnknown": {
+    "message": "重置时间未知"
+  },
+  "weeklyLearningAria": {
+    "message": "每周用量预估仍在学习中"
+  },
+  "weeklyLearningTooltip": {
+    "message": "在 Usage Bar 学习你的使用模式的第一周内，每周预估可能不准确。"
+  },
+  "routines": {
+    "message": "例程"
+  },
+  "ctxCalcLoading": {
+    "message": "正在计算上下文"
+  },
+  "ctxWindowFull": {
+    "message": "上下文窗口已满 $1%"
+  },
+  "reviewEnjoying": {
+    "message": "喜欢 Claude Usage Bar 吗？"
+  },
+  "reviewRate": {
+    "message": "在 Chrome 商店评分 ↗"
+  },
+  "otherHint": {
+    "message": "无法确定这些消息的模型。可能来自 Claude Code 和 cowork。"
+  },
+  "noMessages": {
+    "message": "无消息"
+  },
+  "errNoWorker": {
+    "message": "无法连接扩展的后台 worker"
+  },
+  "errLoadUsage": {
+    "message": "无法加载 Claude 用量"
+  },
+  "reviewEnjoyingShort": {
+    "message": "喜欢吗？"
+  },
+  "fiveHour": {
+    "message": "5 小时"
+  },
+  "weekly": {
+    "message": "每周"
+  },
+  "refreshAll": {
+    "message": "刷新所有统计"
+  },
+  "customizeOverlay": {
+    "message": "自定义浮层"
+  },
+  "usageSummary": {
+    "message": "用量摘要"
+  },
+  "total": {
+    "message": "合计"
+  },
+  "avgPerMo": {
+    "message": "平均 / 月"
+  },
+  "avgPerDay": {
+    "message": "平均 / 天"
+  },
+  "busiest": {
+    "message": "最忙"
+  },
+  "messagesSent": {
+    "message": "已发送消息"
+  },
+  "fourteenDays": {
+    "message": "14 天"
+  },
+  "monthly": {
+    "message": "按月"
+  },
+  "collecting": {
+    "message": "正在收集用量：当你在 claude.ai 聊天时，每日图表会逐渐填充。"
+  },
+  "allTime": {
+    "message": "累计"
+  },
+  "dayStreak": {
+    "message": "连续 $1 天"
+  },
+  "reset": {
+    "message": "重置"
+  },
+  "segOther": {
+    "message": "其他"
+  },
+  "setSecGeneral": {
+    "message": "通用"
+  },
+  "setSecBar": {
+    "message": "进度条"
+  },
+  "setSecWheel": {
+    "message": "圆环"
+  },
+  "setSecCacheTimer": {
+    "message": "缓存计时器"
+  },
+  "setSecWeekly": {
+    "message": "每周用量指标"
+  },
+  "setSec5hr": {
+    "message": "5 小时用量指标"
+  },
+  "setShowOverlay": {
+    "message": "显示浮层"
+  },
+  "setShowOverlayDesc": {
+    "message": "在 Claude 聊天输入框中显示用量条浮层。"
+  },
+  "setLanguage": {
+    "message": "语言"
+  },
+  "setLanguageDesc": {
+    "message": "用量浮层和弹窗的语言。默认英语。"
+  },
+  "setTour": {
+    "message": "功能导览"
+  },
+  "setTourDesc": {
+    "message": "逐步了解扩展的各项功能。"
+  },
+  "setTourBtn": {
+    "message": "重新导览"
+  },
+  "setReview": {
+    "message": "留下评价"
+  },
+  "setReviewDesc": {
+    "message": "喜欢 Claude Usage Bar 吗？评分能帮助他人发现它，用时不到一分钟。你也可以在评价中请求功能或推荐其他产品。"
+  },
+  "setReviewBtn": {
+    "message": "在 Chrome 应用商店评分"
+  },
+  "setPrivacy": {
+    "message": "隐私政策"
+  },
+  "setPrivacyDesc": {
+    "message": "查看 Claude Usage Bar 访问什么、存储什么，以及绝不会发送给开发者的内容。"
+  },
+  "setPrivacyBtn": {
+    "message": "打开隐私政策"
+  },
+  "setProject": {
+    "message": "项目页面"
+  },
+  "setProjectDesc": {
+    "message": "打开 Claude Usage Bar 公开网站，含支持和隐私信息链接。"
+  },
+  "setProjectBtn": {
+    "message": "打开项目页面"
+  },
+  "setShowBar": {
+    "message": "显示进度条"
+  },
+  "setShowBarDesc": {
+    "message": "在输入框工具栏中显示横向用量计。"
+  },
+  "setBarShows": {
+    "message": "进度条显示"
+  },
+  "setBarShowsDesc": {
+    "message": "进度条填充表示的用量指标。"
+  },
+  "setShowPctLabel": {
+    "message": "显示百分比标签"
+  },
+  "setBarLabelDesc": {
+    "message": "在进度条旁以文字显示当前百分比。"
+  },
+  "setShowWheel": {
+    "message": "显示圆环"
+  },
+  "setShowWheelDesc": {
+    "message": "在进度条旁显示圆环指示器。"
+  },
+  "setWheelShows": {
+    "message": "圆环显示"
+  },
+  "setWheelShowsDesc": {
+    "message": "圆环填充表示的用量指标。"
+  },
+  "setWheelLabelDesc": {
+    "message": "在圆环下方以小号文字显示当前百分比。"
+  },
+  "setShowCacheTimer": {
+    "message": "显示缓存计时器"
+  },
+  "setShowCacheTimerDesc": {
+    "message": "在聊天标题栏显示提示缓存保持热状态的倒计时。关闭以隐藏。"
+  },
+  "setLearnWeekly": {
+    "message": "学习每周模式"
+  },
+  "setLearnWeeklyDesc": {
+    "message": "使用本地数值样本来调整每周预估。关闭可让每周节奏保持在固定的手动计划上。"
+  },
+  "setWeeklyEstimate": {
+    "message": "每周预估"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "智能模式从每周约十个 5 小时窗口开始，然后从本地数值用量样本中学习你的活跃 Claude 模式。"
+  },
+  "setWeeklyDisplay": {
+    "message": "每周预估显示"
+  },
+  "setWeeklyDisplayDesc": {
+    "message": "活跃时间显示可用的剩余 Claude 时间。天 / 时间预测你将用尽的本地日期和时间。"
+  },
+  "setManualDays": {
+    "message": "手动工作日"
+  },
+  "setManualDaysDesc": {
+    "message": "在智能每周指标学习期间，或选择手动模式时，用作默认计划。"
+  },
+  "setManualDaysAria": {
+    "message": "手动每周工作日"
+  },
+  "setManualHours": {
+    "message": "每个工作日的手动小时数"
+  },
+  "setManualHoursDesc": {
+    "message": "在智能指标积累足够历史之前，用作每周节奏的起始上限。"
+  },
+  "setManualStart": {
+    "message": "手动开始时间"
+  },
+  "setManualStartDesc": {
+    "message": "与手动天数配合使用的本地时间，用于将每周用量放入日历时间。"
+  },
+  "setLearnedPattern": {
+    "message": "已学习的模式"
+  },
+  "setLearnedPatternDesc": {
+    "message": "本地存储在此浏览器中。不会存储任何提示、回复、Cookie 或 Claude 原始载荷。"
+  },
+  "setDeleteHistory": {
+    "message": "删除历史"
+  },
+  "setReady": {
+    "message": "就绪"
+  },
+  "setLearning": {
+    "message": "学习中"
+  },
+  "setSamples": {
+    "message": "$1 个样本"
+  },
+  "setActiveDays": {
+    "message": "$1 个活跃天"
+  },
+  "setHoursPerDay": {
+    "message": "$1 小时/天"
+  },
+  "setShowPace": {
+    "message": "显示节奏"
+  },
+  "setShowPaceDesc": {
+    "message": "在用量条旁显示节奏预估。精确的节奏需要模式学习；若不使用基于模式的节奏，请关闭。"
+  },
+  "setPaceFormat": {
+    "message": "节奏格式"
+  },
+  "setPaceFormatDesc": {
+    "message": "在 5 小时百分比旁显示的内容：重置时你将达到的百分比、重置后你将多出的时间，或在你所用模型下剩余消息数的预估。"
+  },
+  "setOptPctReset": {
+    "message": "重置时百分比"
+  },
+  "setOptTimePast": {
+    "message": "重置后时间"
+  },
+  "setOptMsgsLeft": {
+    "message": "剩余消息"
+  },
+  "setOptSmart": {
+    "message": "智能计划"
+  },
+  "setOptManual": {
+    "message": "手动计划"
+  },
+  "setOptActiveHours": {
+    "message": "活跃时间"
+  },
+  "setOptDaysTime": {
+    "message": "天 / 时间"
+  },
+  "setDaySun": {
+    "message": "日"
+  },
+  "setDayMon": {
+    "message": "一"
+  },
+  "setDayTue": {
+    "message": "二"
+  },
+  "setDayWed": {
+    "message": "三"
+  },
+  "setDayThu": {
+    "message": "四"
+  },
+  "setDayFri": {
+    "message": "五"
+  },
+  "setDaySat": {
+    "message": "六"
+  }
+}

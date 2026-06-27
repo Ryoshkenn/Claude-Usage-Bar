@@ -1,0 +1,407 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "प्रॉम्प्ट कैश समय उपलब्ध नहीं"
+  },
+  "cacheUnknown": {
+    "message": "कैश अज्ञात"
+  },
+  "cacheExpired": {
+    "message": "प्रॉम्प्ट कैश समाप्त"
+  },
+  "cacheExpiresIn": {
+    "message": "प्रॉम्प्ट कैश $1 में समाप्त होगा"
+  },
+  "expiredShort": {
+    "message": "समाप्त"
+  },
+  "cacheHasExpired": {
+    "message": "प्रॉम्प्ट कैश समाप्त हो गया है"
+  },
+  "cacheSavings": {
+    "message": "कैश किए गए टोकन इनपुट लागत में ~90% की बचत करते हैं"
+  },
+  "ringSession": {
+    "message": "5-घंटे का सत्र"
+  },
+  "ringWeekly": {
+    "message": "साप्ताहिक · सभी मॉडल"
+  },
+  "ringContext": {
+    "message": "कॉन्टेक्स्ट विंडो"
+  },
+  "weeklyScoped": {
+    "message": "साप्ताहिक · $1"
+  },
+  "pacePctAtReset": {
+    "message": "रीसेट पर $1%"
+  },
+  "pacePastReset": {
+    "message": "रीसेट के बाद +$1"
+  },
+  "lastsToReset": {
+    "message": "रीसेट तक चलेगा"
+  },
+  "paceActiveLeft": {
+    "message": "~$1 घंटे सक्रिय शेष"
+  },
+  "paceEmptyDate": {
+    "message": "$1 को खत्म"
+  },
+  "paceEmptyIn": {
+    "message": "$1 में खत्म"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 संदेश शेष"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 संदेश शेष"
+  },
+  "ctxCalculating": {
+    "message": "कॉन्टेक्स्ट उपयोग की गणना हो रही है..."
+  },
+  "ctxLoadingExact": {
+    "message": "सटीक टोकन गिनती लोड हो रही है"
+  },
+  "ctxSpinnerHint": {
+    "message": "स्पिनर का अर्थ है कि वर्कर इस चैट को फिर से गिन रहा है।"
+  },
+  "ctxUsageTitle": {
+    "message": "कॉन्टेक्स्ट और टोकन उपयोग:"
+  },
+  "ctxPctUsed": {
+    "message": "कॉन्टेक्स्ट विंडो का $1% उपयोग"
+  },
+  "ctxLength": {
+    "message": "कॉन्टेक्स्ट लंबाई $1 / $2"
+  },
+  "ctxCurrent": {
+    "message": "वर्तमान कॉन्टेक्स्ट $1"
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude उपयोग $1"
+  },
+  "usage": {
+    "message": "उपयोग"
+  },
+  "planUsage": {
+    "message": "प्लान उपयोग"
+  },
+  "openSettings": {
+    "message": "एक्सटेंशन सेटिंग्स खोलें"
+  },
+  "fiveHourLimit": {
+    "message": "5-घंटे की सीमा"
+  },
+  "resetUnknown": {
+    "message": "रीसेट अज्ञात"
+  },
+  "weeklyLearningAria": {
+    "message": "साप्ताहिक उपयोग अनुमान अभी सीख रहा है"
+  },
+  "weeklyLearningTooltip": {
+    "message": "पहले सप्ताह के दौरान साप्ताहिक अनुमान गलत हो सकते हैं जबकि Usage Bar आपका पैटर्न सीखता है।"
+  },
+  "routines": {
+    "message": "रूटीन"
+  },
+  "ctxCalcLoading": {
+    "message": "कॉन्टेक्स्ट गणना हो रही है"
+  },
+  "ctxWindowFull": {
+    "message": "कॉन्टेक्स्ट विंडो $1% भरी"
+  },
+  "reviewEnjoying": {
+    "message": "क्या Claude Usage Bar पसंद आ रहा है?"
+  },
+  "reviewRate": {
+    "message": "Chrome स्टोर पर रेट करें ↗"
+  },
+  "otherHint": {
+    "message": "इन संदेशों के लिए मॉडल निर्धारित नहीं किया जा सका। यह Claude Code और cowork से आ सकता है।"
+  },
+  "noMessages": {
+    "message": "कोई संदेश नहीं"
+  },
+  "errNoWorker": {
+    "message": "एक्सटेंशन बैकग्राउंड वर्कर से संपर्क नहीं हो सका"
+  },
+  "errLoadUsage": {
+    "message": "Claude उपयोग लोड नहीं हो सका"
+  },
+  "reviewEnjoyingShort": {
+    "message": "पसंद आया?"
+  },
+  "fiveHour": {
+    "message": "5 घंटे"
+  },
+  "weekly": {
+    "message": "साप्ताहिक"
+  },
+  "refreshAll": {
+    "message": "सभी आँकड़े रिफ्रेश करें"
+  },
+  "customizeOverlay": {
+    "message": "ओवरले अनुकूलित करें"
+  },
+  "usageSummary": {
+    "message": "उपयोग सारांश"
+  },
+  "total": {
+    "message": "कुल"
+  },
+  "avgPerMo": {
+    "message": "औसत / माह"
+  },
+  "avgPerDay": {
+    "message": "औसत / दिन"
+  },
+  "busiest": {
+    "message": "सबसे व्यस्त"
+  },
+  "messagesSent": {
+    "message": "भेजे गए संदेश"
+  },
+  "fourteenDays": {
+    "message": "14 दिन"
+  },
+  "monthly": {
+    "message": "मासिक"
+  },
+  "collecting": {
+    "message": "उपयोग एकत्र हो रहा है: जैसे-जैसे आप claude.ai पर चैट करते हैं, आपका दैनिक चार्ट भरता जाता है।"
+  },
+  "allTime": {
+    "message": "कुल अवधि"
+  },
+  "dayStreak": {
+    "message": "$1-दिन की लकीर"
+  },
+  "reset": {
+    "message": "रीसेट"
+  },
+  "segOther": {
+    "message": "अन्य"
+  },
+  "setSecGeneral": {
+    "message": "सामान्य"
+  },
+  "setSecBar": {
+    "message": "बार"
+  },
+  "setSecWheel": {
+    "message": "व्हील"
+  },
+  "setSecCacheTimer": {
+    "message": "कैश टाइमर"
+  },
+  "setSecWeekly": {
+    "message": "साप्ताहिक उपयोग मेट्रिक्स"
+  },
+  "setSec5hr": {
+    "message": "5-घंटे उपयोग मेट्रिक्स"
+  },
+  "setShowOverlay": {
+    "message": "ओवरले दिखाएं"
+  },
+  "setShowOverlayDesc": {
+    "message": "Claude चैट कंपोज़र में उपयोग बार ओवरले दिखाएं।"
+  },
+  "setLanguage": {
+    "message": "भाषा"
+  },
+  "setLanguageDesc": {
+    "message": "उपयोग ओवरले और पॉपअप की भाषा। डिफ़ॉल्ट अंग्रेज़ी।"
+  },
+  "setTour": {
+    "message": "फ़ीचर टूर"
+  },
+  "setTourDesc": {
+    "message": "एक्सटेंशन की सुविधाओं को चरण दर चरण देखें।"
+  },
+  "setTourBtn": {
+    "message": "टूर दोबारा चलाएं"
+  },
+  "setReview": {
+    "message": "समीक्षा छोड़ें"
+  },
+  "setReviewDesc": {
+    "message": "क्या Claude Usage Bar पसंद आ रहा है? रेटिंग दूसरों को इसे खोजने में मदद करती है और एक मिनट से भी कम लगता है। आप अपनी समीक्षा में सुविधाएं भी मांग सकते हैं या अन्य उत्पाद सुझा सकते हैं।"
+  },
+  "setReviewBtn": {
+    "message": "Chrome वेब स्टोर पर रेट करें"
+  },
+  "setPrivacy": {
+    "message": "गोपनीयता नीति"
+  },
+  "setPrivacyDesc": {
+    "message": "देखें कि Claude Usage Bar किस तक पहुँचता है, क्या संग्रहीत करता है, और डेवलपर को कभी क्या नहीं भेजता।"
+  },
+  "setPrivacyBtn": {
+    "message": "गोपनीयता नीति खोलें"
+  },
+  "setProject": {
+    "message": "प्रोजेक्ट पेज"
+  },
+  "setProjectDesc": {
+    "message": "समर्थन और गोपनीयता जानकारी के लिंक के साथ सार्वजनिक Claude Usage Bar साइट खोलें।"
+  },
+  "setProjectBtn": {
+    "message": "प्रोजेक्ट पेज खोलें"
+  },
+  "setShowBar": {
+    "message": "बार दिखाएं"
+  },
+  "setShowBarDesc": {
+    "message": "कंपोज़र टूलबार में क्षैतिज उपयोग मीटर दिखाएं।"
+  },
+  "setBarShows": {
+    "message": "बार दिखाता है"
+  },
+  "setBarShowsDesc": {
+    "message": "बार का भराव कौन सी उपयोग मेट्रिक दर्शाता है।"
+  },
+  "setShowPctLabel": {
+    "message": "प्रतिशत लेबल दिखाएं"
+  },
+  "setBarLabelDesc": {
+    "message": "वर्तमान प्रतिशत को बार के बगल में टेक्स्ट के रूप में दिखाएं।"
+  },
+  "setShowWheel": {
+    "message": "व्हील दिखाएं"
+  },
+  "setShowWheelDesc": {
+    "message": "बार के बगल में गोलाकार रिंग संकेतक दिखाएं।"
+  },
+  "setWheelShows": {
+    "message": "व्हील दिखाता है"
+  },
+  "setWheelShowsDesc": {
+    "message": "व्हील का भराव कौन सी उपयोग मेट्रिक दर्शाता है।"
+  },
+  "setWheelLabelDesc": {
+    "message": "वर्तमान प्रतिशत को व्हील के नीचे छोटे टेक्स्ट के रूप में दिखाएं।"
+  },
+  "setShowCacheTimer": {
+    "message": "कैश टाइमर दिखाएं"
+  },
+  "setShowCacheTimerDesc": {
+    "message": "चैट हेडर में दिखाएं कि प्रॉम्प्ट कैश कितनी देर गर्म रहता है, इसकी उलटी गिनती। छिपाने के लिए इसे बंद करें।"
+  },
+  "setLearnWeekly": {
+    "message": "साप्ताहिक पैटर्न सीखें"
+  },
+  "setLearnWeeklyDesc": {
+    "message": "साप्ताहिक अनुमानों को ट्यून करने के लिए स्थानीय संख्यात्मक नमूनों का उपयोग करें। साप्ताहिक गति को निश्चित मैनुअल शेड्यूल पर रखने के लिए इसे बंद करें।"
+  },
+  "setWeeklyEstimate": {
+    "message": "साप्ताहिक अनुमान"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "स्मार्ट मोड प्रति सप्ताह लगभग दस 5-घंटे विंडो से शुरू होता है, फिर स्थानीय संख्यात्मक उपयोग नमूनों से आपका सक्रिय Claude पैटर्न सीखता है।"
+  },
+  "setWeeklyDisplay": {
+    "message": "साप्ताहिक अनुमान प्रदर्शन"
+  },
+  "setWeeklyDisplayDesc": {
+    "message": "सक्रिय घंटे शेष उपयोग योग्य Claude समय दिखाता है। दिन / समय उस स्थानीय दिन और समय का अनुमान लगाता है जब आपका उपयोग समाप्त होगा।"
+  },
+  "setManualDays": {
+    "message": "मैनुअल कार्य दिवस"
+  },
+  "setManualDaysDesc": {
+    "message": "स्मार्ट साप्ताहिक मेट्रिक्स के सीखने के दौरान, या जब मैनुअल मोड चुना जाता है, डिफ़ॉल्ट शेड्यूल के रूप में उपयोग किया जाता है।"
+  },
+  "setManualDaysAria": {
+    "message": "मैनुअल साप्ताहिक कार्य दिवस"
+  },
+  "setManualHours": {
+    "message": "प्रति कार्य दिवस मैनुअल घंटे"
+  },
+  "setManualHoursDesc": {
+    "message": "स्मार्ट मेट्रिक्स के पास पर्याप्त इतिहास होने से पहले साप्ताहिक गति की शुरुआती सीमा के रूप में उपयोग किया जाता है।"
+  },
+  "setManualStart": {
+    "message": "मैनुअल आरंभ समय"
+  },
+  "setManualStartDesc": {
+    "message": "साप्ताहिक उपयोग को कैलेंडर समय में रखने के लिए मैनुअल दिनों के साथ उपयोग किया जाने वाला स्थानीय समय।"
+  },
+  "setLearnedPattern": {
+    "message": "सीखा गया पैटर्न"
+  },
+  "setLearnedPatternDesc": {
+    "message": "इस ब्राउज़र में स्थानीय रूप से संग्रहीत। कोई प्रॉम्प्ट, प्रतिक्रिया, कुकीज़ या कच्चे Claude पेलोड संग्रहीत नहीं किए जाते।"
+  },
+  "setDeleteHistory": {
+    "message": "इतिहास हटाएं"
+  },
+  "setReady": {
+    "message": "तैयार"
+  },
+  "setLearning": {
+    "message": "सीख रहा है"
+  },
+  "setSamples": {
+    "message": "$1 नमूने"
+  },
+  "setActiveDays": {
+    "message": "$1 सक्रिय दिन"
+  },
+  "setHoursPerDay": {
+    "message": "$1 घंटे/दिन"
+  },
+  "setShowPace": {
+    "message": "गति दिखाएं"
+  },
+  "setShowPaceDesc": {
+    "message": "उपयोग बार के बगल में गति अनुमान दिखाएं। सटीक गति के लिए पैटर्न सीखना आवश्यक है; पैटर्न-आधारित गति न चाहने पर इसे बंद करें।"
+  },
+  "setPaceFormat": {
+    "message": "गति प्रारूप"
+  },
+  "setPaceFormatDesc": {
+    "message": "5-घंटे प्रतिशत के बगल में क्या दिखाएं: रीसेट होने पर आप जिस प्रतिशत पर होंगे, रीसेट के बाद आपके पास अतिरिक्त समय, या आप जिस मॉडल का उपयोग कर रहे हैं उस पर शेष संदेशों का अनुमान।"
+  },
+  "setOptPctReset": {
+    "message": "रीसेट पर प्रतिशत"
+  },
+  "setOptTimePast": {
+    "message": "रीसेट के बाद समय"
+  },
+  "setOptMsgsLeft": {
+    "message": "शेष संदेश"
+  },
+  "setOptSmart": {
+    "message": "स्मार्ट शेड्यूल"
+  },
+  "setOptManual": {
+    "message": "मैनुअल शेड्यूल"
+  },
+  "setOptActiveHours": {
+    "message": "सक्रिय घंटे"
+  },
+  "setOptDaysTime": {
+    "message": "दिन / समय"
+  },
+  "setDaySun": {
+    "message": "र"
+  },
+  "setDayMon": {
+    "message": "सो"
+  },
+  "setDayTue": {
+    "message": "मं"
+  },
+  "setDayWed": {
+    "message": "बु"
+  },
+  "setDayThu": {
+    "message": "गु"
+  },
+  "setDayFri": {
+    "message": "शु"
+  },
+  "setDaySat": {
+    "message": "श"
+  }
+}

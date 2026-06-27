@@ -10,6 +10,7 @@ import type {
   WeeklyUsageMetrics,
 } from "../shared/types";
 import { STORAGE_KEYS } from "../shared/constants";
+import { t } from "../shared/i18n";
 
 const STORE_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
@@ -122,7 +123,12 @@ export const CacheTimer = ({ cacheExpiresAt, fallbackStartedAt = null }: CacheTi
 
   if (activeExpiresAt === null) {
     return (
-      <span className="cub-cache-timer" data-unknown="true" role="status" aria-label="Prompt cache timing unavailable">
+      <span
+        className="cub-cache-timer"
+        data-unknown="true"
+        role="status"
+        aria-label={t("cacheTimingUnavailable", "Prompt cache timing unavailable")}
+      >
         <span className="cub-cache-timer-trigger">
           <svg
             className="cub-cache-timer-icon"
@@ -141,7 +147,7 @@ export const CacheTimer = ({ cacheExpiresAt, fallbackStartedAt = null }: CacheTi
             <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
             <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
           </svg>
-          <span className="cub-cache-timer-text">cache unknown</span>
+          <span className="cub-cache-timer-text">{t("cacheUnknown", "cache unknown")}</span>
         </span>
       </span>
     );
@@ -160,7 +166,11 @@ export const CacheTimer = ({ cacheExpiresAt, fallbackStartedAt = null }: CacheTi
       data-expired={String(expired)}
       data-warning={String(warning)}
       role="timer"
-      aria-label={expired ? "Prompt cache expired" : `Prompt cache expires in ${display}`}
+      aria-label={
+        expired
+          ? t("cacheExpired", "Prompt cache expired")
+          : t("cacheExpiresIn", "Prompt cache expires in $1", display)
+      }
     >
       <span
         className="cub-cache-timer-trigger"
@@ -184,15 +194,17 @@ export const CacheTimer = ({ cacheExpiresAt, fallbackStartedAt = null }: CacheTi
           <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
           <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
         </svg>
-        <span className="cub-cache-timer-text">{expired ? "expired" : display}</span>
+        <span className="cub-cache-timer-text">{expired ? t("expiredShort", "expired") : display}</span>
       </span>
       <span
         className={`cub-cache-timer-tooltip${hovered ? " cub-cache-timer-tooltip--visible" : ""}`}
         role="tooltip"
       >
-        {expired ? "Prompt cache has expired" : `Prompt cache expires in ${display}`}
+        {expired
+          ? t("cacheHasExpired", "Prompt cache has expired")
+          : t("cacheExpiresIn", "Prompt cache expires in $1", display)}
         <br />
-        Cached tokens save ~90% input cost
+        {t("cacheSavings", "Cached tokens save ~90% input cost")}
       </span>
     </span>
   );
@@ -230,22 +242,25 @@ const buildPaceSummary = (
                 Math.max(0, Math.round(usedPercent + projection.drainRatePerHour * hoursUntilReset)),
               );
             })();
-      return { text: `${projectedPercent}% at reset`, kind: "good" };
+      return { text: t("pacePctAtReset", "$1% at reset", projectedPercent), kind: "good" };
     }
 
     if (format === "time" && typeof projection.etaMs === "number" && typeof resetsAt === "number") {
       const surplusMs = projection.etaMs - resetsAt;
       if (surplusMs > 60_000) {
-        return { text: `+${formatEta(surplusMs, 0)} past reset`, kind: "good" };
+        return { text: t("pacePastReset", "+$1 past reset", formatEta(surplusMs, 0)), kind: "good" };
       }
     }
 
-    return { text: "lasts to reset", kind: "good" };
+    return { text: t("lastsToReset", "lasts to reset"), kind: "good" };
   }
 
   if (projection.status === "projected_empty" && typeof projection.etaMs === "number") {
     if (typeof projection.activeHoursUntilEmpty === "number") {
-      return { text: `~${Math.ceil(projection.activeHoursUntilEmpty)}h active left`, kind: "bad" };
+      return {
+        text: t("paceActiveLeft", "~$1h active left", Math.ceil(projection.activeHoursUntilEmpty)),
+        kind: "bad",
+      };
     }
 
     if (projection.calendarEta === true) {
@@ -255,7 +270,7 @@ const buildPaceSummary = (
         hour: "numeric",
         minute: "2-digit",
       });
-      return { text: `empty ${dateLabel}`, kind: "bad" };
+      return { text: t("paceEmptyDate", "empty $1", dateLabel), kind: "bad" };
     }
 
     if (format === "percent" && typeof usedPercent === "number") {
@@ -263,10 +278,13 @@ const buildPaceSummary = (
         typeof projection.projectedPercentAtReset === "number"
           ? Math.round(projection.projectedPercentAtReset)
           : 100;
-      return { text: `${Math.max(usedPercent, projectedPercent)}% at reset`, kind: "bad" };
+      return {
+        text: t("pacePctAtReset", "$1% at reset", Math.max(usedPercent, projectedPercent)),
+        kind: "bad",
+      };
     }
 
-    return { text: `empty in ${formatEta(projection.etaMs, now)}`, kind: "bad" };
+    return { text: t("paceEmptyIn", "empty in $1", formatEta(projection.etaMs, now)), kind: "bad" };
   }
 
   return null;
@@ -276,17 +294,26 @@ const buildMessagesSummary = (messagesLeft: number | null): PaceSummary | null =
   if (typeof messagesLeft !== "number") {
     return null;
   }
-  const noun = messagesLeft === 1 ? "msg" : "msgs";
   return {
-    text: `~${messagesLeft} ${noun} left`,
+    text:
+      messagesLeft === 1
+        ? t("paceMsgLeft", "~$1 msg left", messagesLeft)
+        : t("paceMsgsLeft", "~$1 msgs left", messagesLeft),
     kind: messagesLeft <= 5 ? "bad" : "good",
   };
 };
 
-const RING_METRIC_LABEL: Record<string, string> = {
-  session: "5-hour session",
-  weekly: "Weekly · all models",
-  context: "Context window",
+const ringMetricLabel = (metric: string): string | undefined => {
+  switch (metric) {
+    case "session":
+      return t("ringSession", "5-hour session");
+    case "weekly":
+      return t("ringWeekly", "Weekly · all models");
+    case "context":
+      return t("ringContext", "Context window");
+    default:
+      return undefined;
+  }
 };
 
 export const ContentApp = ({
@@ -433,46 +460,55 @@ export const ContentApp = ({
     if (ringTarget === "context") {
       return isRefreshingContext ? (
         <>
-          <span>Calculating context usage...</span>
-          <span>Loading exact token count</span>
-          <span>Spinner means the worker is recounting this chat.</span>
+          <span>{t("ctxCalculating", "Calculating context usage...")}</span>
+          <span>{t("ctxLoadingExact", "Loading exact token count")}</span>
+          <span>{t("ctxSpinnerHint", "Spinner means the worker is recounting this chat.")}</span>
         </>
       ) : (
         <>
-          <span>Context &amp; token usage:</span>
-          <span>{contextFillPercentage}% of context window used</span>
+          <span>{t("ctxUsageTitle", "Context & token usage:")}</span>
+          <span>{t("ctxPctUsed", "$1% of context window used", contextFillPercentage)}</span>
           <span>
-            {formatCompactNumber(contextLengthTokens)} / {formatCompactNumber(TOKEN_CONTEXT_LIMIT)} context length
+            {t(
+              "ctxLength",
+              "$1 / $2 context length",
+              [formatCompactNumber(contextLengthTokens), formatCompactNumber(TOKEN_CONTEXT_LIMIT)],
+            )}
           </span>
-          <span>{formatCompactNumber(totalTokensUsed)} current context</span>
+          <span>{t("ctxCurrent", "$1 current context", formatCompactNumber(totalTokensUsed))}</span>
         </>
       );
     }
     return (
       <>
-        <span>{RING_METRIC_LABEL[ringTarget]}:</span>
+        <span>{ringMetricLabel(ringTarget)}:</span>
         <span>{ringPercentage}%</span>
       </>
     );
   })();
 
   return (
-    <aside className="cub-root" aria-label={`Claude usage ${barDisplay}`}>
+    <aside className="cub-root" aria-label={t("ariaClaudeUsage", "Claude usage $1", barDisplay)}>
       {showBar && (
         <div className="cub-bar-cell">
           {showBarLabel && (
             <span className="cub-bar-label" aria-hidden="true">{barDisplay}</span>
           )}
-          <div className="cub-meter" aria-label={`${RING_METRIC_LABEL[barMetric] ?? "Usage"} ${barDisplay}`} role="button" tabIndex={0}>
+          <div
+            className="cub-meter"
+            aria-label={`${ringMetricLabel(barMetric) ?? t("usage", "Usage")} ${barDisplay}`}
+            role="button"
+            tabIndex={0}
+          >
           <span className="cub-meter-hover" />
           <span className="cub-meter-fill" style={{ width: `${barWidth}%` }} />
           <span className="cub-usage-tooltip" role="tooltip">
             {showReviewBanner && (
               <span className="cub-review-banner">
                 <span className="cub-review-banner-text">
-                  Enjoying Claude Usage Bar?{" "}
+                  {t("reviewEnjoying", "Enjoying Claude Usage Bar?")}{" "}
                   <a href={STORE_URL} target="_blank" rel="noopener noreferrer">
-                    Rate on Chrome Store ↗
+                    {t("reviewRate", "Rate on Chrome Store ↗")}
                   </a>
                 </span>
                 <button type="button" className="cub-review-banner-dismiss" onClick={dismissReviewBanner}>
@@ -481,11 +517,11 @@ export const ContentApp = ({
               </span>
             )}
             <span className="cub-usage-title">
-              <span>Plan usage</span>
+              <span>{t("planUsage", "Plan usage")}</span>
               <button
                 className="cub-usage-link"
                 type="button"
-                aria-label="Open extension settings"
+                aria-label={t("openSettings", "Open extension settings")}
                 onClick={() => {
                   void openUsageBarSettings();
                 }}
@@ -495,9 +531,9 @@ export const ContentApp = ({
             </span>
             <span className="cub-usage-row cub-usage-row--stacked">
               <span className="cub-usage-row-label">
-                <span className="cub-usage-row-title">5-hour limit</span>
+                <span className="cub-usage-row-title">{t("fiveHourLimit", "5-hour limit")}</span>
                 <span className="cub-usage-row-sub">
-                  {realUsageSnapshot?.resetText ?? "reset unknown"}
+                  {realUsageSnapshot?.resetText ?? t("resetUnknown", "reset unknown")}
                 </span>
               </span>
               <span className="cub-usage-row-value">
@@ -517,16 +553,19 @@ export const ContentApp = ({
             <span className="cub-usage-row cub-usage-row--stacked">
               <span className="cub-usage-row-label">
                 <span className="cub-usage-row-title">
-                  Weekly · all models
+                  {t("ringWeekly", "Weekly · all models")}
                   {showWeeklyLearningNotice && (
                     <span
                       className="cub-weekly-learning"
-                      aria-label="Weekly usage estimate is still learning"
+                      aria-label={t("weeklyLearningAria", "Weekly usage estimate is still learning")}
                       role="img"
                     >
                       i
                       <span className="cub-weekly-learning-tooltip" role="tooltip">
-                        Weekly estimates may be inaccurate during the first week while Usage Bar learns your pattern.
+                        {t(
+                          "weeklyLearningTooltip",
+                          "Weekly estimates may be inaccurate during the first week while Usage Bar learns your pattern.",
+                        )}
                       </span>
                     </span>
                   )}
@@ -553,7 +592,7 @@ export const ContentApp = ({
               <Fragment key={scoped.modelLabel}>
                 <span className="cub-usage-row cub-usage-row--stacked">
                   <span className="cub-usage-row-label">
-                    <span className="cub-usage-row-title">Weekly · {scoped.modelLabel}</span>
+                    <span className="cub-usage-row-title">{t("weeklyScoped", "Weekly · $1", scoped.modelLabel)}</span>
                   </span>
                   <span className="cub-usage-row-value">
                     <span className="cub-usage-row-pct">{scoped.percentageUsed}%</span>
@@ -565,7 +604,7 @@ export const ContentApp = ({
               </Fragment>
             ))}
             <span className="cub-usage-row">
-              <span>Routines</span>
+              <span>{t("routines", "Routines")}</span>
               <span className="cub-usage-row-pct">{routinesText ?? "—"}</span>
             </span>
             <span className="cub-usage-track">
@@ -585,9 +624,9 @@ export const ContentApp = ({
             aria-label={
               ringTarget === "context"
                 ? isRefreshingContext
-                  ? "Context calculation loading"
-                  : `Context window ${contextFillPercentage}% full`
-                : `${RING_METRIC_LABEL[ringTarget]} ${ringPercentage}%`
+                  ? t("ctxCalcLoading", "Context calculation loading")
+                  : t("ctxWindowFull", "Context window $1% full", contextFillPercentage)
+                : `${ringMetricLabel(ringTarget)} ${ringPercentage}%`
             }
             data-loading={String(ringTarget === "context" && isRefreshingContext)}
             style={{ "--cub-token-percentage": `${ringPercentage}%` } as CSSProperties}

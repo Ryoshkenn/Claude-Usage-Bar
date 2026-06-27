@@ -40,6 +40,8 @@ export interface Settings {
   weeklyManualStartHour: number;
   hasSeenTour: boolean;
   showClipboard: boolean;
+  // Overlay/popup UI language. Default "en"; user-selectable in settings. See SUPPORTED_LANGUAGES.
+  language: string;
 }
 
 export interface DailyUsage {

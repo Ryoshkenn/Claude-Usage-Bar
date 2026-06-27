@@ -1,0 +1,407 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "프롬프트 캐시 시간을 사용할 수 없음"
+  },
+  "cacheUnknown": {
+    "message": "캐시 알 수 없음"
+  },
+  "cacheExpired": {
+    "message": "프롬프트 캐시 만료됨"
+  },
+  "cacheExpiresIn": {
+    "message": "프롬프트 캐시가 $1 후 만료"
+  },
+  "expiredShort": {
+    "message": "만료됨"
+  },
+  "cacheHasExpired": {
+    "message": "프롬프트 캐시가 만료되었습니다"
+  },
+  "cacheSavings": {
+    "message": "캐시된 토큰은 입력 비용을 약 90% 절약합니다"
+  },
+  "ringSession": {
+    "message": "5시간 세션"
+  },
+  "ringWeekly": {
+    "message": "주간 · 모든 모델"
+  },
+  "ringContext": {
+    "message": "컨텍스트 창"
+  },
+  "weeklyScoped": {
+    "message": "주간 · $1"
+  },
+  "pacePctAtReset": {
+    "message": "초기화 시 $1%"
+  },
+  "pacePastReset": {
+    "message": "초기화 후 +$1"
+  },
+  "lastsToReset": {
+    "message": "초기화까지 유지"
+  },
+  "paceActiveLeft": {
+    "message": "활성 약 $1시간 남음"
+  },
+  "paceEmptyDate": {
+    "message": "$1 소진"
+  },
+  "paceEmptyIn": {
+    "message": "$1 후 소진"
+  },
+  "paceMsgLeft": {
+    "message": "약 $1개 메시지 남음"
+  },
+  "paceMsgsLeft": {
+    "message": "약 $1개 메시지 남음"
+  },
+  "ctxCalculating": {
+    "message": "컨텍스트 사용량 계산 중..."
+  },
+  "ctxLoadingExact": {
+    "message": "정확한 토큰 수 불러오는 중"
+  },
+  "ctxSpinnerHint": {
+    "message": "스피너는 워커가 이 채팅을 다시 계산 중임을 의미합니다."
+  },
+  "ctxUsageTitle": {
+    "message": "컨텍스트 및 토큰 사용량:"
+  },
+  "ctxPctUsed": {
+    "message": "컨텍스트 창의 $1% 사용"
+  },
+  "ctxLength": {
+    "message": "컨텍스트 길이 $1 / $2"
+  },
+  "ctxCurrent": {
+    "message": "현재 컨텍스트 $1"
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude 사용량 $1"
+  },
+  "usage": {
+    "message": "사용량"
+  },
+  "planUsage": {
+    "message": "요금제 사용량"
+  },
+  "openSettings": {
+    "message": "확장 프로그램 설정 열기"
+  },
+  "fiveHourLimit": {
+    "message": "5시간 한도"
+  },
+  "resetUnknown": {
+    "message": "초기화 시간 알 수 없음"
+  },
+  "weeklyLearningAria": {
+    "message": "주간 사용량 추정치를 학습 중입니다"
+  },
+  "weeklyLearningTooltip": {
+    "message": "주간 추정치는 Usage Bar가 사용 패턴을 학습하는 첫 주 동안 부정확할 수 있습니다."
+  },
+  "routines": {
+    "message": "루틴"
+  },
+  "ctxCalcLoading": {
+    "message": "컨텍스트 계산 중"
+  },
+  "ctxWindowFull": {
+    "message": "컨텍스트 창 $1% 참"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar가 마음에 드시나요?"
+  },
+  "reviewRate": {
+    "message": "Chrome 스토어에서 평가 ↗"
+  },
+  "otherHint": {
+    "message": "이 메시지의 모델을 확인할 수 없습니다. Claude Code 및 cowork에서 비롯될 수 있습니다."
+  },
+  "noMessages": {
+    "message": "메시지 없음"
+  },
+  "errNoWorker": {
+    "message": "확장 프로그램 백그라운드 워커에 연결할 수 없음"
+  },
+  "errLoadUsage": {
+    "message": "Claude 사용량을 불러올 수 없음"
+  },
+  "reviewEnjoyingShort": {
+    "message": "마음에 드시나요?"
+  },
+  "fiveHour": {
+    "message": "5시간"
+  },
+  "weekly": {
+    "message": "주간"
+  },
+  "refreshAll": {
+    "message": "모든 통계 새로고침"
+  },
+  "customizeOverlay": {
+    "message": "오버레이 사용자 지정"
+  },
+  "usageSummary": {
+    "message": "사용량 요약"
+  },
+  "total": {
+    "message": "합계"
+  },
+  "avgPerMo": {
+    "message": "평균 / 월"
+  },
+  "avgPerDay": {
+    "message": "평균 / 일"
+  },
+  "busiest": {
+    "message": "최다"
+  },
+  "messagesSent": {
+    "message": "보낸 메시지"
+  },
+  "fourteenDays": {
+    "message": "14일"
+  },
+  "monthly": {
+    "message": "월간"
+  },
+  "collecting": {
+    "message": "사용량 수집 중: claude.ai에서 채팅하면 일일 차트가 채워집니다."
+  },
+  "allTime": {
+    "message": "전체 기간"
+  },
+  "dayStreak": {
+    "message": "$1일 연속"
+  },
+  "reset": {
+    "message": "초기화"
+  },
+  "segOther": {
+    "message": "기타"
+  },
+  "setSecGeneral": {
+    "message": "일반"
+  },
+  "setSecBar": {
+    "message": "바"
+  },
+  "setSecWheel": {
+    "message": "휠"
+  },
+  "setSecCacheTimer": {
+    "message": "캐시 타이머"
+  },
+  "setSecWeekly": {
+    "message": "주간 사용량 지표"
+  },
+  "setSec5hr": {
+    "message": "5시간 사용량 지표"
+  },
+  "setShowOverlay": {
+    "message": "오버레이 표시"
+  },
+  "setShowOverlayDesc": {
+    "message": "Claude 채팅 입력창에 사용량 바 오버레이를 표시합니다."
+  },
+  "setLanguage": {
+    "message": "언어"
+  },
+  "setLanguageDesc": {
+    "message": "사용량 오버레이와 팝업의 언어. 기본값은 영어입니다."
+  },
+  "setTour": {
+    "message": "기능 둘러보기"
+  },
+  "setTourDesc": {
+    "message": "확장 프로그램 기능을 단계별로 살펴봅니다."
+  },
+  "setTourBtn": {
+    "message": "둘러보기 다시 보기"
+  },
+  "setReview": {
+    "message": "리뷰 남기기"
+  },
+  "setReviewDesc": {
+    "message": "Claude Usage Bar가 마음에 드시나요? 평가는 다른 사람들이 발견하는 데 도움이 되며 1분도 걸리지 않습니다. 리뷰에서 기능을 요청하거나 다른 제품을 제안할 수도 있습니다."
+  },
+  "setReviewBtn": {
+    "message": "Chrome 웹 스토어에서 평가"
+  },
+  "setPrivacy": {
+    "message": "개인정보처리방침"
+  },
+  "setPrivacyDesc": {
+    "message": "Claude Usage Bar가 무엇에 접근하고, 무엇을 저장하며, 무엇을 개발자에게 절대 보내지 않는지 확인하세요."
+  },
+  "setPrivacyBtn": {
+    "message": "개인정보처리방침 열기"
+  },
+  "setProject": {
+    "message": "프로젝트 페이지"
+  },
+  "setProjectDesc": {
+    "message": "지원 및 개인정보 정보 링크가 있는 Claude Usage Bar 공개 사이트를 엽니다."
+  },
+  "setProjectBtn": {
+    "message": "프로젝트 페이지 열기"
+  },
+  "setShowBar": {
+    "message": "바 표시"
+  },
+  "setShowBarDesc": {
+    "message": "입력창 도구 모음에 가로 사용량 미터를 표시합니다."
+  },
+  "setBarShows": {
+    "message": "바 표시 항목"
+  },
+  "setBarShowsDesc": {
+    "message": "바 채움이 나타내는 사용량 지표."
+  },
+  "setShowPctLabel": {
+    "message": "퍼센트 레이블 표시"
+  },
+  "setBarLabelDesc": {
+    "message": "현재 퍼센트를 바 옆에 텍스트로 표시합니다."
+  },
+  "setShowWheel": {
+    "message": "휠 표시"
+  },
+  "setShowWheelDesc": {
+    "message": "바 옆에 원형 링 표시기를 표시합니다."
+  },
+  "setWheelShows": {
+    "message": "휠 표시 항목"
+  },
+  "setWheelShowsDesc": {
+    "message": "휠 채움이 나타내는 사용량 지표."
+  },
+  "setWheelLabelDesc": {
+    "message": "현재 퍼센트를 휠 아래에 작은 텍스트로 표시합니다."
+  },
+  "setShowCacheTimer": {
+    "message": "캐시 타이머 표시"
+  },
+  "setShowCacheTimerDesc": {
+    "message": "프롬프트 캐시가 따뜻하게 유지되는 시간의 카운트다운을 채팅 헤더에 표시합니다. 숨기려면 끄세요."
+  },
+  "setLearnWeekly": {
+    "message": "주간 패턴 학습"
+  },
+  "setLearnWeeklyDesc": {
+    "message": "로컬 숫자 샘플을 사용해 주간 추정치를 조정합니다. 주간 페이스를 고정된 수동 일정으로 유지하려면 끄세요."
+  },
+  "setWeeklyEstimate": {
+    "message": "주간 추정"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "스마트 모드는 주당 약 10개의 5시간 창에서 시작한 다음, 로컬 숫자 사용 샘플에서 활성 Claude 패턴을 학습합니다."
+  },
+  "setWeeklyDisplay": {
+    "message": "주간 추정 표시"
+  },
+  "setWeeklyDisplayDesc": {
+    "message": "활성 시간은 사용 가능한 남은 Claude 시간을 표시합니다. 일 / 시간은 소진되는 로컬 날짜와 시간을 예측합니다."
+  },
+  "setManualDays": {
+    "message": "수동 작업일"
+  },
+  "setManualDaysDesc": {
+    "message": "스마트 주간 지표가 학습하는 동안, 또는 수동 모드를 선택한 경우 기본 일정으로 사용됩니다."
+  },
+  "setManualDaysAria": {
+    "message": "수동 주간 작업일"
+  },
+  "setManualHours": {
+    "message": "작업일당 수동 시간"
+  },
+  "setManualHoursDesc": {
+    "message": "스마트 지표에 충분한 기록이 쌓이기 전 주간 페이스의 시작 상한으로 사용됩니다."
+  },
+  "setManualStart": {
+    "message": "수동 시작 시간"
+  },
+  "setManualStartDesc": {
+    "message": "주간 사용량을 달력 시간에 배치하기 위해 수동 작업일과 함께 사용되는 로컬 시간."
+  },
+  "setLearnedPattern": {
+    "message": "학습된 패턴"
+  },
+  "setLearnedPatternDesc": {
+    "message": "이 브라우저에 로컬로 저장됩니다. 프롬프트, 응답, 쿠키 또는 Claude 원시 페이로드는 저장되지 않습니다."
+  },
+  "setDeleteHistory": {
+    "message": "기록 삭제"
+  },
+  "setReady": {
+    "message": "준비됨"
+  },
+  "setLearning": {
+    "message": "학습 중"
+  },
+  "setSamples": {
+    "message": "$1개 샘플"
+  },
+  "setActiveDays": {
+    "message": "활성 $1일"
+  },
+  "setHoursPerDay": {
+    "message": "$1시간/일"
+  },
+  "setShowPace": {
+    "message": "페이스 표시"
+  },
+  "setShowPaceDesc": {
+    "message": "사용량 바 옆에 페이스 추정치를 표시합니다. 정확한 페이스는 패턴 학습이 필요합니다. 패턴 기반 페이스를 사용하지 않으려면 끄세요."
+  },
+  "setPaceFormat": {
+    "message": "페이스 형식"
+  },
+  "setPaceFormatDesc": {
+    "message": "5시간 퍼센트 옆에 표시할 항목: 초기화 시 도달할 퍼센트, 초기화 후 추가로 갖게 될 시간, 또는 사용 중인 모델에서 남은 메시지 수 추정치."
+  },
+  "setOptPctReset": {
+    "message": "초기화 시 퍼센트"
+  },
+  "setOptTimePast": {
+    "message": "초기화 후 시간"
+  },
+  "setOptMsgsLeft": {
+    "message": "남은 메시지"
+  },
+  "setOptSmart": {
+    "message": "스마트 일정"
+  },
+  "setOptManual": {
+    "message": "수동 일정"
+  },
+  "setOptActiveHours": {
+    "message": "활성 시간"
+  },
+  "setOptDaysTime": {
+    "message": "일 / 시간"
+  },
+  "setDaySun": {
+    "message": "일"
+  },
+  "setDayMon": {
+    "message": "월"
+  },
+  "setDayTue": {
+    "message": "화"
+  },
+  "setDayWed": {
+    "message": "수"
+  },
+  "setDayThu": {
+    "message": "목"
+  },
+  "setDayFri": {
+    "message": "금"
+  },
+  "setDaySat": {
+    "message": "토"
+  }
+}

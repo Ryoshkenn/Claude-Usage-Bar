@@ -64,3 +64,10 @@ flag and client version are values Claude may bump over time — if routines sil
   fixtures in `storage.test.ts` and `ContentApp.test.tsx` (they assert the full object).
 - Never log or persist raw API payloads; strip all debug logs before finishing.
 - Two themes: every overlay style needs a `.cub-theme-light` counterpart in `styles.css`.
+- i18n: wrap user-facing strings with `t("key", "English fallback", subs?)` from `src/shared/i18n.ts`
+  (positional `$1`..`$9` placeholders). Catalogs are `src/locales/<lang>.json` (Chrome message format,
+  bundled at build — not chrome.i18n). Add the key to **every** catalog; resolution is active language →
+  English catalog → inline fallback, so partial coverage is safe. The active language is the `language`
+  setting (default `"en"`, user-picked under General), applied via `setLanguage()` when storage loads in
+  `content.tsx` and `popup.tsx` — NOT the browser locale. New languages: add a `src/locales/<lang>.json`
+  and an entry in `SUPPORTED_LANGUAGES`. Brand names (Claude, Opus/Sonnet/Haiku, Usage Bar) stay untranslated.

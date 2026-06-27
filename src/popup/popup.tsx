@@ -13,6 +13,7 @@ import {
   type ChartBar,
 } from "../shared/usageChart";
 import type { ApiUsageResponse, StorageShape } from "../shared/types";
+import { setLanguage, t } from "../shared/i18n";
 import "./popup.css";
 
 const STORE_URL =
@@ -53,22 +54,32 @@ const FireIcon = () => (
 
 type SegmentKey = "opus" | "sonnet" | "haiku" | "unknown";
 
-const OTHER_HINT =
-  "The model couldn't be determined for these messages. This can come from Claude Code and cowork.";
-
-const SEGMENTS: Array<{ key: SegmentKey; cls: string; name: string; hint?: string }> = [
+// Opus/Sonnet/Haiku are brand names (left untranslated). "Other" and its hint are
+// localized at render time via segmentName()/segmentHint() so chrome.i18n is ready.
+const SEGMENTS: Array<{ key: SegmentKey; cls: string; name: string }> = [
   { key: "opus", cls: "cub-opus", name: "Opus" },
   { key: "sonnet", cls: "cub-sonnet", name: "Sonnet" },
   { key: "haiku", cls: "cub-haiku", name: "Haiku" },
-  { key: "unknown", cls: "cub-unknown", name: "Other", hint: OTHER_HINT },
+  { key: "unknown", cls: "cub-unknown", name: "Other" },
 ];
+
+const segmentName = (s: { key: SegmentKey; name: string }): string =>
+  s.key === "unknown" ? t("segOther", "Other") : s.name;
+
+const segmentHint = (key: SegmentKey): string | undefined =>
+  key === "unknown"
+    ? t(
+        "otherHint",
+        "The model couldn't be determined for these messages. This can come from Claude Code and cowork.",
+      )
+    : undefined;
 
 // Opus/Sonnet/Haiku always appear in the legend; Other only when present.
 const ALWAYS_SHOWN: SegmentKey[] = ["opus", "sonnet", "haiku"];
 
 const barTitle = (bar: ChartBar): string => {
-  const parts = SEGMENTS.filter((s) => bar[s.key] > 0).map((s) => `${s.name} ${bar[s.key]}`);
-  return `${bar.label}\n${parts.join(" · ") || "No messages"} — Total ${bar.total}`;
+  const parts = SEGMENTS.filter((s) => bar[s.key] > 0).map((s) => `${segmentName(s)} ${bar[s.key]}`);
+  return `${bar.label}\n${parts.join(" · ") || t("noMessages", "No messages")} — ${t("total", "Total")} ${bar.total}`;
 };
 
 const UsageChart = ({ bars, view }: { bars: ChartBar[]; view: ChartView }) => {
@@ -118,13 +129,15 @@ export const Popup = () => {
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.fetchApiUsage, force }, async (response?: ApiUsageResponse) => {
       if (chrome.runtime.lastError) {
         setApiStatus("error");
-        setApiError(chrome.runtime.lastError.message ?? "Unable to contact extension background worker");
+        setApiError(
+          chrome.runtime.lastError.message ?? t("errNoWorker", "Unable to contact extension background worker"),
+        );
         return;
       }
 
       if (!response?.ok) {
         setApiStatus("error");
-        setApiError(response?.error ?? "Unable to load Claude usage");
+        setApiError(response?.error ?? t("errLoadUsage", "Unable to load Claude usage"));
         return;
       }
 
@@ -168,6 +181,7 @@ export const Popup = () => {
 
   useEffect(() => {
     void getStorage().then(async (storage) => {
+      setLanguage(storage.settings.language);
       setState(storage);
       const reviewData = await chrome.storage.local.get([
         STORAGE_KEYS.reviewBannerDismissedAt,
@@ -235,9 +249,9 @@ export const Popup = () => {
       {showReviewBanner && (
         <div className="cub-review">
           <span className="cub-review-text">
-            Enjoying it?{" "}
+            {t("reviewEnjoyingShort", "Enjoying it?")}{" "}
             <a href={STORE_URL} target="_blank" rel="noopener noreferrer">
-              Rate on Chrome Store ↗
+              {t("reviewRate", "Rate on Chrome Store ↗")}
             </a>
           </span>
           <button type="button" className="cub-review-dismiss" onClick={dismissReviewBanner}>
@@ -251,12 +265,12 @@ export const Popup = () => {
         <header className="cub-hdr">
           <div className="cub-limits">
             <div className="cub-lim">
-              <span className="cub-k">5-hour</span>
+              <span className="cub-k">{t("fiveHour", "5-hour")}</span>
               <span className="cub-v">{formatPercentage(snapshot?.percentageUsed)}</span>
               <span className="cub-r">{snapshot?.resetText ?? "—"}</span>
             </div>
             <div className="cub-lim">
-              <span className="cub-k">Weekly</span>
+              <span className="cub-k">{t("weekly", "Weekly")}</span>
               <span className="cub-v">{formatPercentage(snapshot?.weeklyAllModelsPercentageUsed)}</span>
               <span className="cub-r">{snapshot?.weeklyAllModelsResetText ?? "—"}</span>
             </div>
@@ -265,8 +279,8 @@ export const Popup = () => {
             <button
               type="button"
               className={`cub-iconbtn ${apiStatus === "loading" ? "cub-spinning" : ""}`}
-              title="Refresh all stats"
-              aria-label="Refresh all stats"
+              title={t("refreshAll", "Refresh all stats")}
+              aria-label={t("refreshAll", "Refresh all stats")}
               onClick={() => refreshApiUsage(true)}
             >
               ⟳
@@ -274,8 +288,8 @@ export const Popup = () => {
             <button
               type="button"
               className="cub-iconbtn"
-              title="Customize overlay"
-              aria-label="Customize overlay"
+              title={t("customizeOverlay", "Customize overlay")}
+              aria-label={t("customizeOverlay", "Customize overlay")}
               onClick={() => void openSettings()}
             >
               ⚙
@@ -285,17 +299,17 @@ export const Popup = () => {
 
         {apiError && <p className="cub-err">{apiError}</p>}
 
-        <section className="cub-summary" aria-label="Usage summary">
+        <section className="cub-summary" aria-label={t("usageSummary", "Usage summary")}>
           <div className="cub-cell">
-            <span className="cub-k">Total</span>
+            <span className="cub-k">{t("total", "Total")}</span>
             <strong className="cub-num">{summary.total.toLocaleString()}</strong>
           </div>
           <div className="cub-cell">
-            <span className="cub-k">Avg / {view === "monthly" ? "mo" : "day"}</span>
+            <span className="cub-k">{view === "monthly" ? t("avgPerMo", "Avg / mo") : t("avgPerDay", "Avg / day")}</span>
             <strong className="cub-num">{summary.perDayAverage.toLocaleString()}</strong>
           </div>
           <div className="cub-cell">
-            <span className="cub-k">Busiest</span>
+            <span className="cub-k">{t("busiest", "Busiest")}</span>
             <strong className="cub-num">
               {summary.busiest ? summary.busiest.total : 0}
               {summary.busiest ? <small> {summary.busiest.label}</small> : null}
@@ -304,7 +318,7 @@ export const Popup = () => {
         </section>
 
         <div className="cub-row">
-          <span className="cub-lbl">Messages sent</span>
+          <span className="cub-lbl">{t("messagesSent", "Messages sent")}</span>
           <div className="cub-seg-toggle" role="tablist">
             <button
               type="button"
@@ -313,7 +327,7 @@ export const Popup = () => {
               className={view === "daily" ? "cub-active" : ""}
               onClick={() => setView("daily")}
             >
-              14 Days
+              {t("fourteenDays", "14 Days")}
             </button>
             <button
               type="button"
@@ -322,7 +336,7 @@ export const Popup = () => {
               className={view === "monthly" ? "cub-active" : ""}
               onClick={() => setView("monthly")}
             >
-              Monthly
+              {t("monthly", "Monthly")}
             </button>
           </div>
         </div>
@@ -334,29 +348,29 @@ export const Popup = () => {
               {SEGMENTS.filter((s) => ALWAYS_SHOWN.includes(s.key) || split[s.key] > 0).map((s) => (
                 <div
                   key={s.key}
-                  className={`cub-legend-item ${s.hint ? "cub-has-hint" : ""}`}
-                  title={s.hint}
+                  className={`cub-legend-item ${segmentHint(s.key) ? "cub-has-hint" : ""}`}
+                  title={segmentHint(s.key)}
                 >
                   <span className={`cub-dot ${s.cls}`} />
-                  {s.name} <span className="cub-pct">{splitPercent(split, s.key)}%</span>
+                  {segmentName(s)} <span className="cub-pct">{splitPercent(split, s.key)}%</span>
                 </div>
               ))}
             </div>
           </>
         ) : (
           <div className="cub-empty">
-            Collecting usage — your daily chart fills in as you chat on claude.ai.
+            {t("collecting", "Collecting usage — your daily chart fills in as you chat on claude.ai.")}
           </div>
         )}
 
         <footer className="cub-foot">
           <span className="cub-streak">
-            All-time <strong>{lifetime.toLocaleString()}</strong>
+            {t("allTime", "All-time")} <strong>{lifetime.toLocaleString()}</strong>
             <span className="cub-sep">|</span>
-            <FireIcon /> <strong>{streak}</strong>-day streak
+            <FireIcon /> {t("dayStreak", "$1-day streak", streak)}
           </span>
           <button type="button" className="cub-reset" onClick={() => void resetLocalUsage()}>
-            Reset
+            {t("reset", "Reset")}
           </button>
         </footer>
       </main>
