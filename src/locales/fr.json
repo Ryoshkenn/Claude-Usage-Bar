@@ -210,7 +210,7 @@
     "message": "Langue"
   },
   "setLanguageDesc": {
-    "message": "Langue de l'overlay d'usage et du popup. Anglais par défaut."
+    "message": "Langue de l'overlay d'usage et du popup. Anglais par défaut. Les traductions peuvent être inexactes."
   },
   "setTour": {
     "message": "Visite des fonctionnalités"

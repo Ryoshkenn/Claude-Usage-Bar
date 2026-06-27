@@ -210,7 +210,7 @@
     "message": "Idioma"
   },
   "setLanguageDesc": {
-    "message": "Idioma do overlay de uso e do popup. Padrão é inglês."
+    "message": "Idioma do overlay de uso e do popup. Padrão é inglês. As traduções podem ser imprecisas."
   },
   "setTour": {
     "message": "Tour de recursos"

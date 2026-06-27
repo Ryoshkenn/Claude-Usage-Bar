@@ -210,7 +210,7 @@
     "message": "Sprache"
   },
   "setLanguageDesc": {
-    "message": "Sprache für Nutzungs-Overlay und Popup. Standard ist Englisch."
+    "message": "Sprache für Nutzungs-Overlay und Popup. Standard ist Englisch. Übersetzungen können ungenau sein."
   },
   "setTour": {
     "message": "Funktionstour"

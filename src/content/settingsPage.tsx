@@ -617,7 +617,7 @@ const SettingsPage = () => {
         <Row
           labelId={id("language")}
           label={t("setLanguage", "Language")}
-          description={t("setLanguageDesc", "Language for the usage overlay and popup. Defaults to English.")}
+          description={t("setLanguageDesc", "Language for the usage overlay and popup. Defaults to English. Translations may be inaccurate.")}
         >
           <CdsSelect
             id={id("language")}

@@ -210,7 +210,7 @@
     "message": "语言"
   },
   "setLanguageDesc": {
-    "message": "用量浮层和弹窗的语言。默认英语。"
+    "message": "用量浮层和弹窗的语言。默认英语。翻译可能不准确。"
   },
   "setTour": {
     "message": "功能导览"

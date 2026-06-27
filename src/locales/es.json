@@ -210,7 +210,7 @@
     "message": "Idioma"
   },
   "setLanguageDesc": {
-    "message": "Idioma del overlay de uso y el popup. Inglés por defecto."
+    "message": "Idioma del overlay de uso y el popup. Inglés por defecto. Las traducciones pueden ser inexactas."
   },
   "setTour": {
     "message": "Tour de funciones"

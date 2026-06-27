@@ -210,7 +210,7 @@
     "message": "Language"
   },
   "setLanguageDesc": {
-    "message": "Language for the usage overlay and popup. Defaults to English."
+    "message": "Language for the usage overlay and popup. Defaults to English. Translations may be inaccurate."
   },
   "setTour": {
     "message": "Feature tour"
