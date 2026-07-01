@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "Weekly estimates may be inaccurate during the first week while Usage Bar learns your pattern."
   },
-  "routines": {
-    "message": "Routines"
-  },
   "ctxCalcLoading": {
     "message": "Context calculation loading"
   },

@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "Wöchentliche Schätzungen können in der ersten Woche ungenau sein, während Usage Bar dein Muster lernt."
   },
-  "routines": {
-    "message": "Routinen"
-  },
   "ctxCalcLoading": {
     "message": "Kontext wird berechnet"
   },

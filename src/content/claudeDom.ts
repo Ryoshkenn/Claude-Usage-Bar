@@ -169,26 +169,6 @@ const extractPercentNearLabel = (labelPattern: RegExp): number | undefined => {
   return undefined;
 };
 
-const extractTextNearLabel = (labelPattern: RegExp, valueSelector: string, valuePattern: RegExp): string | undefined => {
-  const label = findSmallestElementWithText(labelPattern);
-  if (!label) {
-    return undefined;
-  }
-
-  for (const ancestor of ancestorsOf(label)) {
-    const matches = [...ancestor.querySelectorAll<HTMLElement>(valueSelector)]
-      .filter((element) => !isExtensionElement(element))
-      .map((element) => normalizedTextOf(element))
-      .filter((text) => valuePattern.test(text));
-
-    if (matches.length === 1) {
-      return matches[0];
-    }
-  }
-
-  return undefined;
-};
-
 const extractUsageFraction = (pageText: string): Pick<UsageMetadata, "remainingMessages" | "usedMessages" | "totalMessages"> => {
   const remainingMatch = pageText.match(
     /\b(\d{1,5})\s+(?:messages?|uses?)\s+(?:remaining|left)\D{0,24}(?:of|out of|\/)\D{0,8}(\d{1,5})\b/i,
@@ -213,20 +193,16 @@ const extractUsageFraction = (pageText: string): Pick<UsageMetadata, "remainingM
 
 const extractUsagePageMetadata = (pageText: string): Pick<
   UsageMetadata,
-  "percentageUsed" | "weeklyAllModelsPercentageUsed" | "routinesText"
+  "percentageUsed" | "weeklyAllModelsPercentageUsed"
 > => {
   const fiveHourMatch = pageText.match(/5-hour limit[\s\S]{0,120}?(\d{1,3})%\s*used/i);
   const weeklyAllModelsMatch = pageText.match(/Weekly\s*·\s*all models[\s\S]{0,120}?(\d{1,3})%\s*used/i);
-  const routinesMatch = pageText.match(/Routines[^\n\r]*[\n\r\s]+(\d+\s*\/\s*\d+)/i);
 
   return {
     percentageUsed: extractPercentNearLabel(/^5-hour limit$/i) ?? (fiveHourMatch ? Number(fiveHourMatch[1]) : undefined),
     weeklyAllModelsPercentageUsed:
       extractPercentNearLabel(/^Weekly\s*·\s*all models$/i) ??
       (weeklyAllModelsMatch ? Number(weeklyAllModelsMatch[1]) : undefined),
-    routinesText:
-      extractTextNearLabel(/^Routines$/i, ".tabular-nums, span", /^\d+\s*\/\s*\d+$/)?.replace(/\s+/g, " ") ??
-      routinesMatch?.[1]?.replace(/\s+/g, " "),
   };
 };
 

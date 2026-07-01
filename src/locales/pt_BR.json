@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "As estimativas semanais podem ser imprecisas durante a primeira semana enquanto o Usage Bar aprende seu padrão."
   },
-  "routines": {
-    "message": "Rotinas"
-  },
   "ctxCalcLoading": {
     "message": "Calculando contexto"
   },

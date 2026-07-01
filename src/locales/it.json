@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "Le stime settimanali possono essere imprecise durante la prima settimana mentre Usage Bar impara il tuo schema."
   },
-  "routines": {
-    "message": "Routine"
-  },
   "ctxCalcLoading": {
     "message": "Calcolo del contesto"
   },

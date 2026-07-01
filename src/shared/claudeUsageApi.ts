@@ -9,33 +9,6 @@ const compactMetadata = (metadata: UsageMetadata): UsageMetadata =>
 
 const keyText = (path: string[]): string => path.join(" ").replace(/[_-]+/g, " ").toLowerCase();
 
-// Claude returns run-budget counts as strings (e.g. used: "0", limit: "5"),
-// so coerce numeric-looking strings as well as plain numbers.
-const coerceCount = (value: unknown): number | undefined => {
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : undefined;
-  }
-  if (typeof value === "string" && value.trim() !== "") {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-  return undefined;
-};
-
-// The routines "run-budget" endpoint (GET /v1/code/routines/run-budget) returns
-// the count object directly, e.g. { limit: "5", used: "0", unified_billing_enabled }.
-// Counts arrive as strings, and the limit varies by plan, so both come from the
-// payload — never hardcoded.
-export const parseRunBudgetText = (payload: unknown): string | undefined => {
-  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-    return undefined;
-  }
-  const object = payload as JsonObject;
-  const used = coerceCount(object.used ?? object.current ?? object.count);
-  const limit = coerceCount(object.limit ?? object.max ?? object.total ?? object.allowed);
-  return typeof used === "number" && typeof limit === "number" ? `${used} / ${limit}` : undefined;
-};
-
 // A value already on the 0-100 percent scale: round and clamp, never rescale.
 const clampPercent = (value: number): number | undefined => {
   if (!Number.isFinite(value) || value < 0) {
@@ -224,38 +197,14 @@ const normalizeKnownClaudeUsageSchema = (payload: unknown, now: number): UsageMe
     pushScopedLimit(output, "Opus", parseLimitObject(object.seven_day_opus, now));
   }
 
-  // Claude's /usage payload exposes routine (automation) usage under "run-budget".
-  // Keep the older guesses as fallbacks in case the schema shifts again. The limit
-  // comes straight from the payload — never hardcoded, since higher plans allow more.
-  const routines =
-    object["run-budget"] ??
-    object.run_budget ??
-    object.runBudget ??
-    object.routines ??
-    object.routine_usage ??
-    object.routineUsage;
-  if (routines && typeof routines === "object" && !Array.isArray(routines)) {
-    const routineObject = routines as JsonObject;
-    const used = coerceCount(routineObject.used ?? routineObject.current ?? routineObject.count);
-    const limit = coerceCount(
-      routineObject.limit ?? routineObject.max ?? routineObject.total ?? routineObject.allowed,
-    );
-
-    if (typeof used === "number" && typeof limit === "number") {
-      output.routinesText = `${used} / ${limit}`;
-    }
-  }
-
   return compactMetadata(output);
 };
 
 const coerceUsageText = (text: string): Partial<UsageMetadata> => {
   const percentageMatch = text.match(/(\d{1,3})\s*%\s*used/i);
-  const routinesMatch = text.match(/\b(\d+)\s*\/\s*(\d+)\b/);
 
   return {
     percentageUsed: percentageMatch ? normalizePercentage(Number(percentageMatch[1])) : undefined,
-    routinesText: routinesMatch ? `${routinesMatch[1]} / ${routinesMatch[2]}` : undefined,
   };
 };
 
@@ -317,22 +266,6 @@ const collectObjectUsage = (object: JsonObject, path: string[], output: UsageMet
       output.weeklyAllModelsPercentageUsed = percentage;
     }
   }
-
-  // Routine (automation) usage lives under "run-budget" — keyText turns the
-  // hyphen into a space, so match "run budget" as well as the older "routine".
-  // Counts arrive as strings here too, so coerce all entries, not just numbers.
-  if (/routine|run budget/.test(text)) {
-    const findCount = (re: RegExp): number | undefined => {
-      const entry = entries.find(([key]) => re.test(key.toLowerCase()));
-      return entry ? coerceCount(entry[1]) : undefined;
-    };
-    const used = findCount(/used|current|count/);
-    const limit = findCount(/limit|max|total|allowed/);
-
-    if (typeof used === "number" && typeof limit === "number") {
-      output.routinesText = `${used} / ${limit}`;
-    }
-  }
 };
 
 export const normalizeUsagePayload = (payload: unknown, now = Date.now()): RealUsageSnapshot | null => {
@@ -348,8 +281,6 @@ export const normalizeUsagePayload = (payload: unknown, now = Date.now()): RealU
           output.weeklyAllModelsPercentageUsed = textUsage.percentageUsed;
         } else if (/(5|five).*hour|hour.*limit|five hour|5 hour/.test(text) && textUsage.percentageUsed !== undefined) {
           output.percentageUsed = textUsage.percentageUsed;
-        } else if (/routine/.test(text) && textUsage.routinesText !== undefined) {
-          output.routinesText = textUsage.routinesText;
         }
       }
       return;

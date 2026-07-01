@@ -102,7 +102,6 @@ export interface RealUsageSnapshot {
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
   weeklyScopedLimits?: WeeklyScopedLimit[];
-  routinesText?: string;
 }
 
 export interface UsageLogEntry {
@@ -182,7 +181,6 @@ export interface UsageMetadata {
   weeklyAllModelsResetText?: string;
   weeklyAllModelsResetsAt?: number;
   weeklyScopedLimits?: WeeklyScopedLimit[];
-  routinesText?: string;
 }
 
 export interface StorageShape {

@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "在 Usage Bar 学习你的使用模式的第一周内，每周预估可能不准确。"
   },
-  "routines": {
-    "message": "例程"
-  },
   "ctxCalcLoading": {
     "message": "正在计算上下文"
   },

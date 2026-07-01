@@ -1,6 +1,6 @@
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
-import { extractOrganizationId, normalizeUsagePayload, parseRunBudgetText } from "../shared/claudeUsageApi";
+import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
 import { getEffectiveModelWeight } from "../shared/modelUsage";
 import { appendUsageHistoryEntry, getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
 import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot, ThinkingLevel } from "../shared/types";
@@ -15,18 +15,6 @@ interface UsageRefreshSample {
 }
 
 const CLAUDE_API_ORIGIN = "https://claude.ai";
-// Routine (automation) usage lives on its own endpoint, not under /usage, and is
-// not keyed by organization. Claude's own UI only requests it from the Usage
-// settings tab, so we fetch it ourselves alongside the usage snapshot.
-const ROUTINES_RUN_BUDGET_URL = `${CLAUDE_API_ORIGIN}/v1/code/routines/run-budget`;
-// The /v1 gateway (unlike the /api web routes) requires these headers to route
-// and to scope the lookup to the org — without x-organization-uuid it 404s with
-// an empty resource_id. The session cookie still rides along via credentials.
-const ROUTINES_HEADERS: Record<string, string> = {
-  "anthropic-client-platform": "web_claude_ai",
-  "anthropic-version": "2023-06-01",
-  "anthropic-beta": "ccr-triggers-2026-01-30",
-};
 const FETCH_COOLDOWN_MS = 60_000;
 
 let inFlightUsageRequest: Promise<ApiUsageResponse> | null = null;
@@ -79,33 +67,12 @@ const getOrganizationId = async (): Promise<string> => {
   return organizationId;
 };
 
-// Routine usage is best-effort: a failure here must not sink the whole usage
-// snapshot, so swallow errors and just report no routines count.
-const getRoutinesText = async (organizationId: string): Promise<string | undefined> => {
-  try {
-    const payload = await getJson(ROUTINES_RUN_BUDGET_URL, {
-      ...ROUTINES_HEADERS,
-      "x-organization-uuid": organizationId,
-    });
-    return parseRunBudgetText(payload);
-  } catch {
-    return undefined;
-  }
-};
-
 const getUsageMetrics = async (organizationId: string): Promise<RealUsageSnapshot> => {
-  const [payload, routinesText] = await Promise.all([
-    getJson(`${CLAUDE_API_ORIGIN}/api/organizations/${organizationId}/usage`),
-    getRoutinesText(organizationId),
-  ]);
+  const payload = await getJson(`${CLAUDE_API_ORIGIN}/api/organizations/${organizationId}/usage`);
   const snapshot = normalizeUsagePayload(payload);
 
   if (!snapshot) {
     throw new Error("Claude usage response did not include supported metrics");
-  }
-
-  if (routinesText) {
-    snapshot.routinesText = routinesText;
   }
 
   return snapshot;

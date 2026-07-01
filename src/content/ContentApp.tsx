@@ -382,7 +382,6 @@ export const ContentApp = ({
   // Per-model weekly limits (e.g. Sonnet/Opus on Max plans). Empty on plans that
   // don't expose them, so the rows simply don't render.
   const weeklyScopedLimits = realUsageSnapshot?.weeklyScopedLimits ?? [];
-  const routinesText = realUsageSnapshot?.routinesText;
   const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
 
   // Prefer the model-aware projection (so switching to a cheaper model lengthens
@@ -603,13 +602,6 @@ export const ContentApp = ({
                 </span>
               </Fragment>
             ))}
-            <span className="cub-usage-row">
-              <span>{t("routines", "Routines")}</span>
-              <span className="cub-usage-row-pct">{routinesText ?? "—"}</span>
-            </span>
-            <span className="cub-usage-track">
-              <span style={{ width: "0%" }} />
-            </span>
           </span>
           </div>
         </div>

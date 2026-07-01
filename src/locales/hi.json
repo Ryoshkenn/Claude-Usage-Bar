@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "पहले सप्ताह के दौरान साप्ताहिक अनुमान गलत हो सकते हैं जबकि Usage Bar आपका पैटर्न सीखता है।"
   },
-  "routines": {
-    "message": "रूटीन"
-  },
   "ctxCalcLoading": {
     "message": "कॉन्टेक्स्ट गणना हो रही है"
   },

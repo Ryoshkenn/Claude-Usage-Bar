@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "週間の推定値は、Usage Bar があなたのパターンを学習する最初の1週間は不正確な場合があります。"
   },
-  "routines": {
-    "message": "ルーティン"
-  },
   "ctxCalcLoading": {
     "message": "コンテキストを計算中"
   },

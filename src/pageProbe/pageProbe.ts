@@ -17,7 +17,6 @@ const allowedOutputKeys = new Set([
   "weeklyAllModelsPercentageUsed",
   "weeklyAllModelsResetText",
   "weeklyAllModelsResetsAt",
-  "routinesText",
 ]);
 
 const applyUsageText = (text: string, output: JsonObject) => {
@@ -108,20 +107,6 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
 
   applyLimit(input.five_hour, "percentageUsed", "resetText", "sessionResetsAt");
   applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
-
-  const routines = input["run-budget"] ?? input.run_budget ?? input.runBudget ?? input.routines ?? input.routine_usage ?? input.routineUsage;
-  if (routines && typeof routines === "object" && !Array.isArray(routines)) {
-    const routineObject = routines as JsonObject;
-    const used = routineObject.used ?? routineObject.current ?? routineObject.count;
-    const limit = routineObject.limit ?? routineObject.max ?? routineObject.total ?? routineObject.allowed;
-    if ((typeof used === "number" || typeof used === "string") && (typeof limit === "number" || typeof limit === "string")) {
-      const usedNumber = Number(used);
-      const limitNumber = Number(limit);
-      if (Number.isFinite(usedNumber) && Number.isFinite(limitNumber)) {
-        output.routinesText = `${usedNumber} / ${limitNumber}`;
-      }
-    }
-  }
 
   const isSessionScope = (text: string): boolean =>
     /(5|five).*hour|hour.*limit|five hour|5 hour|five_hour|5_hour/.test(text);

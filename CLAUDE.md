@@ -30,7 +30,6 @@ Three contexts, message-passed via `MESSAGE_TYPES` (`src/shared/constants.ts`):
   authenticated APIs (`fetch` with `credentials: "include"`; 60s freshness cooldown). Fetches:
   - `GET /api/organizations/{org}/usage` → 5-hour + 7-day percentages (`normalizeUsagePayload`).
   - `GET /api/organizations/{org}/chat_conversations/{id}?...` → context tokens + prompt-cache.
-  - `GET /v1/code/routines/run-budget` → routines count (see note below).
 - **Content script** (`src/content/content.tsx`) — mounts React overlay (`ContentApp.tsx`) into
   the composer, the cache timer into the chat header, the settings panel (`settingsPage.tsx`),
   onboarding tour, and the user-message rail. Reads DOM usage via `claudeDom.ts`. Owns all
@@ -42,20 +41,6 @@ Shared logic in `src/shared/`: `storage.ts` (`DEFAULT_SETTINGS`, typed `chrome.s
 wrappers), `types.ts` (all interfaces — `Settings`, `RealUsageSnapshot`, etc.), `claudeUsageApi.ts`
 (payload parsers), `usageProjection.ts` (weekly pacing/learning), `claudeTokenizer.ts` (context
 token estimation).
-
-## Routines / run-budget (fragile)
-`/v1/code/routines/run-budget` is the **`/v1` gateway**, not the `/api` web routes — it needs
-extra headers or it 404s (`not_found_error`, empty `resource_id`). Required, sent from
-`ROUTINES_HEADERS` + runtime org id in `background.ts`:
-- `x-organization-uuid: <org id>` (from `getOrganizationId()`) — without it, 404.
-- `anthropic-client-platform: web_claude_ai`, `anthropic-version: 2023-06-01`,
-  `anthropic-beta: ccr-triggers-2026-01-30`.
-
-Response is `{ limit, used, unified_billing_enabled }` with `used`/`limit` as **strings**;
-`parseRunBudgetText` coerces them. Limit comes from the payload — never hardcode (Max plans
-differ). The fetch is best-effort (failure doesn't sink the usage snapshot). The `anthropic-beta`
-flag and client version are values Claude may bump over time — if routines silently revert to
-"—", re-check those header strings against a fresh browser request first.
 
 ## Conventions
 - Match surrounding CDS class strings exactly when extending the settings panel — they're copied

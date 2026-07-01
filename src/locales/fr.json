@@ -101,9 +101,6 @@
   "weeklyLearningTooltip": {
     "message": "Les estimations hebdomadaires peuvent être imprécises durant la première semaine, le temps que Usage Bar apprenne votre rythme."
   },
-  "routines": {
-    "message": "Routines"
-  },
   "ctxCalcLoading": {
     "message": "Calcul du contexte"
   },

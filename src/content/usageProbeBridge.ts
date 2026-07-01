@@ -9,7 +9,6 @@ const allowedStringKeys = new Set([
   "remainingText",
   "limitText",
   "weeklyAllModelsResetText",
-  "routinesText",
 ]);
 const allowedNumberKeys = new Set([
   "remainingMessages",
