@@ -159,7 +159,7 @@ const isNewChatPage = (): boolean => location.pathname === "/new" || location.pa
 const extensionAlive = (): boolean => Boolean(chrome.runtime?.id);
 
 const syncTheme = () => {
-  const light = isDesignPage() ? true : isLightMode();
+  const light = isLightMode();
   const theme = light ? "light" : "dark";
   host?.classList.toggle("cub-theme-light", light);
   cacheTimerHost?.classList.toggle("cub-theme-light", light);

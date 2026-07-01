@@ -73,12 +73,7 @@ progress::-moz-progress-bar {
   --tw-ring-color: rgb(204 124 94) !important;
 }
 
-/* 7. Focus ring */
-:focus-visible {
-  outline-color: rgb(204 124 94) !important;
-}
-
-/* 8. Checkboxes and radio buttons */
+/* 7. Checkboxes and radio buttons */
 input[type="checkbox"]:checked,
 input[type="radio"]:checked {
   accent-color: rgb(204 124 94);

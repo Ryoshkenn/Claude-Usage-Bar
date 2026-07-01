@@ -13,10 +13,11 @@
   overflow: visible;
 }
 
+/* On /design the bar is its own row between the prompt input and the toolbar,
+   so it stretches full-width instead of squeezing between the toolbar halves. */
 #claude-usage-bar-root.cub-design {
-  --cub-bar-width: 100px;
-  margin-left: 6px;
-  margin-right: 6px;
+  width: 100%;
+  margin: 0 0 8px;
 }
 
 .cub-root {
@@ -33,6 +34,13 @@
 #claude-usage-bar-root.cub-design .cub-root {
   gap: 0;
   font-size: 11px;
+  grid-template-columns: 1fr auto auto;
+  width: 100%;
+}
+
+#claude-usage-bar-root.cub-design .cub-bar-cell {
+  width: 100%;
+  min-width: 0;
 }
 
 #claude-usage-bar-root.cub-design .cub-meter {

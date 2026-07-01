@@ -3,16 +3,23 @@ const COMPOSER_INPUT_SELECTOR =
   'form textarea:not(#conversation-preferences), form [contenteditable="true"][role="textbox"], form [role="textbox"]';
 const SEND_BUTTON_SELECTOR = 'button[type="submit"], button[aria-label*="Send" i]';
 
-// On /design the toolbar uses styled-components (no stable Tailwind classes).
-// Navigate up from the send button: button -> right-controls div -> outer toolbar div.
+// On /design the composer uses styled-components (no stable Tailwind classes).
+// Navigate up from the send button to the outer composer card:
+// button -> right-controls div -> toolbar row -> card.
 export const findDesignComposer = (): HTMLElement | null => {
   const sendBtn = document.querySelector<HTMLElement>('[data-testid="chat-send-button"]');
-  return sendBtn?.parentElement?.parentElement ?? null;
+  return sendBtn?.parentElement?.parentElement?.parentElement ?? null;
 };
 
-// Insert before children[1] (the right-side model+send div) so the bar sits between the two halves.
-export const findDesignInsertionPoint = (composer: HTMLElement): Element | null =>
-  composer.children[1] ?? null;
+// Mount the bar as its own row between the prompt input and the toolbar:
+// insert before the card's direct child that contains the send button.
+export const findDesignInsertionPoint = (composer: HTMLElement): Element | null => {
+  let row = composer.querySelector<HTMLElement>('[data-testid="chat-send-button"]')?.parentElement ?? null;
+  while (row && row.parentElement !== composer) {
+    row = row.parentElement;
+  }
+  return row;
+};
 
 export const findComposerControls = (): HTMLElement | null => {
   const addButton = document.querySelector<HTMLElement>(ADD_FILES_BUTTON_SELECTOR);
