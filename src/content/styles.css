@@ -32,52 +32,41 @@
 }
 
 #claude-usage-bar-root.cub-design .cub-root {
-  gap: 10px;
+  gap: 0;
   font-size: 11px;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr;
   width: 100%;
 }
 
+/* 80% of the row, centered, a touch thicker than the inline claude.ai bar. */
 #claude-usage-bar-root.cub-design .cub-bar-cell {
-  width: 100%;
+  width: 80%;
   min-width: 0;
+  margin: 0 auto;
 }
 
 #claude-usage-bar-root.cub-design .cub-meter {
-  height: 3px;
+  height: 6px;
 }
 
 /* The design sidebar clips at its right edge (overflow:hidden ancestor) and the
    canvas iframe paints over anything past it, so the tooltip must fit within the
-   bar: full bar width instead of the fixed 330px, slightly smaller type. */
+   composer: centered on the (80%-wide) meter and stretched back out to the full
+   row width (100% / 0.8 = 125%) instead of the fixed 330px, slightly smaller type. */
 #claude-usage-bar-root.cub-design .cub-usage-tooltip {
-  left: 0;
+  left: 50%;
   min-width: 0;
-  width: 100%;
+  width: 125%;
   box-sizing: border-box;
   font-size: 12px;
   padding: 8px 10px 10px;
-  transform: translateX(0) translateY(3px);
-}
-
-/* Same clipping constraint for the wheel tooltip: anchor to the ring's right
-   edge so it opens leftward into the sidebar instead of into the canvas. */
-#claude-usage-bar-root.cub-design .cub-token-tooltip {
-  left: auto;
-  right: 0;
-  transform: translateX(0) translateY(3px);
-}
-
-#claude-usage-bar-root.cub-design .cub-wheel-wrap:hover .cub-token-tooltip,
-#claude-usage-bar-root.cub-design .cub-token-ring:hover .cub-token-tooltip,
-#claude-usage-bar-root.cub-design .cub-token-ring:focus-visible .cub-token-tooltip {
-  transform: translateX(0);
+  transform: translateX(-50%) translateY(3px);
 }
 
 #claude-usage-bar-root.cub-design .cub-bar-label:hover ~ .cub-meter .cub-usage-tooltip,
 #claude-usage-bar-root.cub-design .cub-meter:hover .cub-usage-tooltip,
 #claude-usage-bar-root.cub-design .cub-meter:focus-visible .cub-usage-tooltip {
-  transform: translateX(0) translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 /* ── Bar ──────────────────────────────────────────────────── */
@@ -458,7 +447,7 @@
 }
 
 #claude-usage-bar-root.cub-design .cub-usage-tooltip:hover {
-  transform: translateX(0) translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 .cub-wheel-wrap:hover .cub-token-tooltip,

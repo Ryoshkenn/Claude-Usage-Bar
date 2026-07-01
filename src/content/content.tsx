@@ -345,7 +345,10 @@ const render = () => {
     ? {
         ...storageState.settings,
         barMetric: "session" as const,
+        // No conversation on /design, so context can't be estimated — hide the wheel.
+        showWheel: false,
         showClipboard: false,
+        ringTarget: "hidden" as const,
       }
     : storageState.settings;
   root?.render(
