@@ -46,7 +46,7 @@
 }
 
 #claude-usage-bar-root.cub-design .cub-meter {
-  height: 6px;
+  height: 3px;
 }
 
 /* The design sidebar clips at its right edge (overflow:hidden ancestor) and the
