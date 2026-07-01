@@ -345,9 +345,7 @@ const render = () => {
     ? {
         ...storageState.settings,
         barMetric: "session" as const,
-        showWheel: false,
         showClipboard: false,
-        ringTarget: "hidden" as const,
       }
     : storageState.settings;
   root?.render(

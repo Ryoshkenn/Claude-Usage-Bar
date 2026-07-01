@@ -107,8 +107,9 @@ describe("content styles", () => {
     expect(contentScript).toContain("location.pathname === \"/designs\"");
     expect(contentScript).toContain("location.pathname.startsWith(\"/designs/\")");
     expect(contentScript).toContain("barMetric: \"session\" as const");
-    expect(contentScript).toContain("showWheel: false");
     expect(contentScript).toContain("showClipboard: false");
-    expect(contentScript).toContain("ringTarget: \"hidden\" as const");
+    // The wheel renders on design routes per user settings; only the clipboard stays hidden.
+    expect(contentScript).not.toContain("showWheel: false");
+    expect(contentScript).not.toContain("ringTarget: \"hidden\" as const");
   });
 });
