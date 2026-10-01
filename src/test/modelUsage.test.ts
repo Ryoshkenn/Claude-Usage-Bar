@@ -7,7 +7,9 @@ import {
   computeModelAwareSessionProjection,
   computeSessionMessagesLeft,
   estimateMessagesPerHour,
+  getContextLimitTokens,
   getEffectiveModelWeight,
+  getImageTierForModel,
   getModelWeight,
   getThinkingMultiplier,
   learnOpusEquivCostPerMessage,
@@ -38,12 +40,22 @@ const makeEntry = (
 
 describe("normalizeModelFamily / getModelWeight", () => {
   it("maps model labels to families and weights", () => {
+    expect(normalizeModelFamily("Fable 5")).toBe("fable");
     expect(normalizeModelFamily("Opus 4.8")).toBe("opus");
     expect(normalizeModelFamily("Sonnet 4.6")).toBe("sonnet");
     expect(normalizeModelFamily("Claude Haiku 4.5")).toBe("haiku");
+    // Fable costs 2x Opus per token, so it yields half the messages per budget.
+    expect(getModelWeight("Fable 5")).toBe(0.5);
     expect(getModelWeight("Opus 4.8")).toBe(1);
     expect(getModelWeight("Sonnet 4.6")).toBe(2.5);
     expect(getModelWeight("Haiku 4.5")).toBe(10);
+  });
+
+  it("prices a Fable message at twice an Opus message before thinking", () => {
+    // Effective weight = base weight / thinking multiplier. With thinking off the
+    // multiplier is 1, so Fable's per-message cost is 1/0.5 = 2x Opus's 1/1 = 1.
+    expect(getEffectiveModelWeight("Fable 5", "off")).toBe(0.5);
+    expect(getEffectiveModelWeight("Opus 4.8", "off")).toBe(1);
   });
 
   it("falls back to Opus (1) for unknown or missing labels", () => {
@@ -51,6 +63,65 @@ describe("normalizeModelFamily / getModelWeight", () => {
     expect(normalizeModelFamily("Gemini")).toBeNull();
     expect(getModelWeight(undefined)).toBe(1);
     expect(getModelWeight("Gemini")).toBe(1);
+  });
+});
+
+describe("getContextLimitTokens", () => {
+  it("gives 1M to Fable 5.1+, Opus 5+, Sonnet 5+", () => {
+    expect(getContextLimitTokens("Fable 5.1")).toBe(1_000_000);
+    expect(getContextLimitTokens("Opus 5")).toBe(1_000_000);
+    expect(getContextLimitTokens("Sonnet 5")).toBe(1_000_000);
+  });
+
+  it("gives 500K to Opus 4.6–4.8 and Sonnet 4.6", () => {
+    expect(getContextLimitTokens("Opus 4.8")).toBe(500_000);
+    expect(getContextLimitTokens("Opus 4.8 Max")).toBe(500_000);
+    expect(getContextLimitTokens("Opus 4.7")).toBe(500_000);
+    expect(getContextLimitTokens("Opus 4.6")).toBe(500_000);
+    expect(getContextLimitTokens("Sonnet 4.6")).toBe(500_000);
+  });
+
+  it("falls back to 200K for anything else, including Fable 5.0", () => {
+    expect(getContextLimitTokens("Fable 5")).toBe(200_000);
+    expect(getContextLimitTokens("Haiku 4.5")).toBe(200_000);
+    expect(getContextLimitTokens("Sonnet 4.5")).toBe(200_000);
+    expect(getContextLimitTokens("Opus 4.5")).toBe(200_000);
+    expect(getContextLimitTokens("Gemini")).toBe(200_000);
+    expect(getContextLimitTokens(undefined)).toBe(200_000);
+  });
+
+  it("falls back to 200K for unlisted future 4.x versions (safe direction)", () => {
+    // Sonnet 4.7 / Opus 4.9 aren't in the article — 200K overstates fullness
+    // rather than understating it.
+    expect(getContextLimitTokens("Sonnet 4.7")).toBe(200_000);
+    expect(getContextLimitTokens("Opus 4.9")).toBe(200_000);
+  });
+
+  it("anchors the version to the family name, ignoring stray numbers", () => {
+    expect(getContextLimitTokens("Opus 4.8 Max")).toBe(500_000);
+    expect(getContextLimitTokens("Claude Opus 4.8")).toBe(500_000);
+    expect(getContextLimitTokens("Claude Fable 5.1")).toBe(1_000_000);
+  });
+
+  it("parses hyphenated API model ids", () => {
+    expect(getContextLimitTokens("claude-opus-5")).toBe(1_000_000);
+    expect(getContextLimitTokens("claude-haiku-4-5-20251001")).toBe(200_000);
+  });
+});
+
+describe("getImageTierForModel", () => {
+  it("gives the high-resolution tier to 4.7+ models", () => {
+    expect(getImageTierForModel("Opus 5")).toBe("high");
+    expect(getImageTierForModel("Sonnet 4.6")).toBe("standard");
+    expect(getImageTierForModel("Opus 4.8")).toBe("high");
+    expect(getImageTierForModel("Haiku 4.5")).toBe("standard");
+    expect(getImageTierForModel("claude-opus-5")).toBe("high");
+    expect(getImageTierForModel("claude-haiku-4-5-20251001")).toBe("standard");
+  });
+
+  it("resolves unknown labels high (safe direction: never understates)", () => {
+    expect(getImageTierForModel(undefined)).toBe("high");
+    expect(getImageTierForModel("Gemini")).toBe("high");
   });
 });
 

@@ -320,6 +320,27 @@ describe("weekly smart metrics", () => {
     expect(aggressiveManual).toEqual(conservativeManual);
   });
 
+  it("does not flatline the weekly estimate at current usage when off the manual schedule", () => {
+    // Saturday, mid-window: the Mon-Fri manual schedule has no remaining active hours,
+    // which used to project "77% now -> 77% at reset". Heavy off-website usage (Claude
+    // Code, desktop) must still project toward running out via the calendar-time floor.
+    const now = new Date("2026-06-06T12:00:00").getTime(); // Saturday
+    const resetAt = new Date("2026-06-08T00:00:00").getTime(); // Monday
+    const projection = computeWeeklyProjection([], 77, resetAt, now, {
+      mode: "manual",
+      display: "active_hours",
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 5,
+      manualStartHour: 9,
+    });
+
+    const hoursUntilReset = (resetAt - now) / 3_600_000;
+    const projectedAtReset =
+      projection.projectedPercentAtReset ??
+      77 + (projection.drainRatePerHour ?? 0) * hoursUntilReset;
+    expect(projectedAtReset).toBeGreaterThan(90);
+  });
+
   it("does not use manual schedule fallback for smart calendar estimates before learned slots exist", () => {
     const now = new Date("2026-06-01T14:00:00").getTime();
     const resetAt = new Date("2026-06-08T00:00:00").getTime();

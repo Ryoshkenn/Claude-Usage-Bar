@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "Semanal · todos os modelos"
   },
+  "ringWeeklyFable": {
+    "message": "Semanal · Fable"
+  },
   "ringContext": {
     "message": "Janela de contexto"
   },
@@ -186,7 +189,7 @@
     "message": "Barra"
   },
   "setSecWheel": {
-    "message": "Roda"
+    "message": "Janela de contexto"
   },
   "setSecCacheTimer": {
     "message": "Temporizador de cache"
@@ -237,13 +240,13 @@
     "message": "Abrir política de privacidade"
   },
   "setProject": {
-    "message": "Página do projeto"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "Abrir o site público do Claude Usage Bar com links para suporte e informações de privacidade."
+    "message": "Abra o repositório no GitHub para código-fonte, issues e suporte."
   },
   "setProjectBtn": {
-    "message": "Abrir página do projeto"
+    "message": "Abrir GitHub"
   },
   "setShowBar": {
     "message": "Mostrar barra"
@@ -264,10 +267,10 @@
     "message": "Exibir a porcentagem atual como texto ao lado da barra."
   },
   "setShowWheel": {
-    "message": "Mostrar roda"
+    "message": "Mostrar janela de contexto"
   },
   "setShowWheelDesc": {
-    "message": "Mostrar o indicador circular ao lado da barra."
+    "message": "Mostrar o indicador da janela de contexto na barra de ferramentas do compositor."
   },
   "setWheelShows": {
     "message": "A roda mostra"
@@ -400,5 +403,143 @@
   },
   "setDaySat": {
     "message": "S"
+  },
+  "ctxBreakdownTitle": {
+    "message": "O que ocupa a janela de contexto"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 de $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Suas mensagens"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Respostas do Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Raciocínio estendido"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Chamadas de ferramentas"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Resultados de ferramentas"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Arquivos e anexos"
+  },
+  "ctxBreakdownProject": {
+    "message": "Conhecimento do projeto"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Sobrecarga do sistema"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Restante"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 mensagens"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blocos"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 chamadas"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 resultados"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 arquivos"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Ainda não há nada na janela de contexto."
+  },
+  "ctxBreakdownNote": {
+    "message": "Estimado localmente a partir desta conversa."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Estimado localmente. Resultados de ferramentas e buscas tornam isso aproximado."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Seu limite de 5 horas do Claude foi zerado"
+  },
+  "resetBannerSessionBody": {
+    "message": "Seu uso da sessão voltou a zero."
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Seu limite semanal do Claude foi zerado"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "Uma nova semana de uso acabou de começar."
+  },
+  "resetBannerAction": {
+    "message": "Abrir o Claude"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "Semanal"
+  },
+  "setSecResetAlerts": {
+    "message": "Avisos de reinício"
+  },
+  "setResetBanner": {
+    "message": "Mostrar avisos de reinício"
+  },
+  "setResetBannerDesc": {
+    "message": "Mostra um aviso quando um limite é renovado, para você saber que pode continuar."
+  },
+  "setResetBannerScope": {
+    "message": "Mostrar avisos em"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "Qualquer site permite que o aviso chegue a você em outros lugares. O Chrome pedirá permissão."
+  },
+  "setResetScopeClaude": {
+    "message": "Somente claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Qualquer site"
+  },
+  "setResetBannerSession": {
+    "message": "Limite de 5 horas"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "Avisar quando a janela de 5 horas for zerada."
+  },
+  "setResetBannerWeekly": {
+    "message": "Limite semanal"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "Avisar quando a janela semanal de todos os modelos for zerada."
+  },
+  "setResetBannerTest": {
+    "message": "Testar o aviso"
+  },
+  "setResetBannerTestDesc": {
+    "message": "Envia um aviso real após 5 segundos, para você trocar de aba e ver onde ele aparece."
+  },
+  "setResetBannerTestGo": {
+    "message": "Enviar teste"
+  },
+  "setResetBannerTestCounting": {
+    "message": "em $1 s"
+  },
+  "grantTitle": {
+    "message": "Mostrar avisos de reinício em qualquer site"
+  },
+  "grantBody": {
+    "message": "O Chrome precisa da sua permissão para mostrar um aviso fora do claude.ai. Ela só é usada para isso — nenhum conteúdo de página é lido ou enviado."
+  },
+  "grantDenied": {
+    "message": "Permissão não concedida. Os avisos continuam apenas no claude.ai."
+  },
+  "grantAllow": {
+    "message": "Continuar"
+  },
+  "grantCancel": {
+    "message": "Cancelar"
   }
 }

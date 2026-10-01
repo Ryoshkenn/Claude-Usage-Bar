@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "每周 · 所有模型"
   },
+  "ringWeeklyFable": {
+    "message": "每周 · Fable"
+  },
   "ringContext": {
     "message": "上下文窗口"
   },
@@ -186,7 +189,7 @@
     "message": "进度条"
   },
   "setSecWheel": {
-    "message": "圆环"
+    "message": "上下文窗口"
   },
   "setSecCacheTimer": {
     "message": "缓存计时器"
@@ -237,13 +240,13 @@
     "message": "打开隐私政策"
   },
   "setProject": {
-    "message": "项目页面"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "打开 Claude Usage Bar 公开网站，含支持和隐私信息链接。"
+    "message": "打开 GitHub 仓库查看源码、Issues 和支持。"
   },
   "setProjectBtn": {
-    "message": "打开项目页面"
+    "message": "打开 GitHub"
   },
   "setShowBar": {
     "message": "显示进度条"
@@ -264,10 +267,10 @@
     "message": "在进度条旁以文字显示当前百分比。"
   },
   "setShowWheel": {
-    "message": "显示圆环"
+    "message": "显示上下文窗口"
   },
   "setShowWheelDesc": {
-    "message": "在进度条旁显示圆环指示器。"
+    "message": "在撰写栏工具栏中显示上下文窗口指示器。"
   },
   "setWheelShows": {
     "message": "圆环显示"
@@ -400,5 +403,143 @@
   },
   "setDaySat": {
     "message": "六"
+  },
+  "ctxBreakdownTitle": {
+    "message": "上下文窗口占用明细"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "你的消息"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude 的回复"
+  },
+  "ctxBreakdownThinking": {
+    "message": "扩展思考"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "工具调用"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "工具结果"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "文件与附件"
+  },
+  "ctxBreakdownProject": {
+    "message": "项目知识"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "系统开销"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "剩余"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 条消息"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 个块"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 次调用"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 条结果"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 个文件"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "上下文窗口暂时为空。"
+  },
+  "ctxBreakdownNote": {
+    "message": "根据本次对话在本地估算。"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "本地估算。工具和搜索结果会使数值为近似值。"
+  },
+  "resetBannerSessionTitle": {
+    "message": "你的 Claude 5 小时额度已重置"
+  },
+  "resetBannerSessionBody": {
+    "message": "本次会话用量已归零。"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "你的 Claude 每周额度已重置"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "新的一周用量已开始。"
+  },
+  "resetBannerAction": {
+    "message": "打开 Claude"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "每周"
+  },
+  "setSecResetAlerts": {
+    "message": "重置提醒"
+  },
+  "setResetBanner": {
+    "message": "显示重置提醒"
+  },
+  "setResetBannerDesc": {
+    "message": "额度重置时弹出提醒，让你知道可以继续使用了。"
+  },
+  "setResetBannerScope": {
+    "message": "提醒显示位置"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "选择任意网站后，你在浏览其他网页时也能收到提醒。Chrome 会请求权限。"
+  },
+  "setResetScopeClaude": {
+    "message": "仅 claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "任意网站"
+  },
+  "setResetBannerSession": {
+    "message": "5 小时额度"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "5 小时会话额度重置时提醒。"
+  },
+  "setResetBannerWeekly": {
+    "message": "每周额度"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "全模型每周额度重置时提醒。"
+  },
+  "setResetBannerTest": {
+    "message": "预览提醒"
+  },
+  "setResetBannerTestDesc": {
+    "message": "5 秒后发送一条真实提醒，你可以切换标签页查看它出现的位置。"
+  },
+  "setResetBannerTestGo": {
+    "message": "发送测试"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1 秒后"
+  },
+  "grantTitle": {
+    "message": "在任意网站显示重置提醒"
+  },
+  "grantBody": {
+    "message": "在 claude.ai 之外显示提醒需要 Chrome 授权。该权限仅用于显示提醒，绝不读取或发送任何网页内容。"
+  },
+  "grantDenied": {
+    "message": "未获得授权。重置提醒将仅在 claude.ai 上显示。"
+  },
+  "grantAllow": {
+    "message": "继续"
+  },
+  "grantCancel": {
+    "message": "取消"
   }
 }

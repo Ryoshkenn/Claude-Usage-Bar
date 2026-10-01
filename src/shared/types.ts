@@ -1,6 +1,6 @@
 export type OverlayMode = "compact" | "expanded";
 export type UsageSource = "estimated" | "real";
-export type MetricTarget = "session" | "weekly" | "context";
+export type MetricTarget = "session" | "weekly" | "weekly_fable" | "context";
 export type RingTarget = MetricTarget | "hidden";
 export type PaceSurplusFormat = "percent" | "time" | "messages";
 export type WeeklyPaceMode = "smart" | "manual";
@@ -42,7 +42,20 @@ export interface Settings {
   showClipboard: boolean;
   // Overlay/popup UI language. Default "en"; user-selectable in settings. See SUPPORTED_LANGUAGES.
   language: string;
+  // Show a banner when a usage window rolls over. "off" disables it entirely,
+  // "claude" only banners claude.ai tabs (no extra permission), "everywhere"
+  // banners any normal site and requires the optional all-sites host permission.
+  resetBannerScope: ResetBannerScope;
+  // Which windows are worth interrupting for. The 5-hour session rolls over
+  // constantly, so weekly-only is a reasonable quieter choice.
+  resetBannerSession: boolean;
+  resetBannerWeekly: boolean;
 }
+
+export type ResetBannerScope = "off" | "claude" | "everywhere";
+
+// Which usage window rolled over.
+export type ResetKind = "session" | "weekly";
 
 export interface DailyUsage {
   localDate: string;
@@ -62,6 +75,31 @@ export interface DailyModelUsage {
   unknown: number;
 }
 
+// What is occupying the context window, split by the kind of content that put
+// it there. Numeric only — never any message text (see the privacy rule in
+// CLAUDE.md); `count` is how many items of that kind contributed.
+export type ContextCategory =
+  | "userMessages"
+  | "assistantMessages"
+  | "thinking"
+  | "toolCalls"
+  | "toolResults"
+  | "attachments"
+  | "projectKnowledge"
+  | "overhead";
+
+export interface ContextBreakdownEntry {
+  tokens: number;
+  count: number;
+}
+
+export interface ContextBreakdown {
+  entries: Record<ContextCategory, ContextBreakdownEntry>;
+  // Sum of every entry's tokens. Equals ChatUsage.currentContextTokens so the
+  // panel's rows add up to the headline number the ring shows.
+  totalTokens: number;
+}
+
 export interface ChatUsage {
   estimatedTokens: number;
   visibleMessageCount: number;
@@ -73,6 +111,7 @@ export interface ChatUsage {
   cachedPrefixTokens?: number;
   cacheExpiresAt?: number;
   lengthIsEstimate?: boolean;
+  contextBreakdown?: ContextBreakdown;
 }
 
 // A per-model weekly limit (Max plans expose these alongside the all-models

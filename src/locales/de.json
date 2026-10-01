@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "Wöchentlich · alle Modelle"
   },
+  "ringWeeklyFable": {
+    "message": "Wöchentlich · Fable"
+  },
   "ringContext": {
     "message": "Kontextfenster"
   },
@@ -186,7 +189,7 @@
     "message": "Balken"
   },
   "setSecWheel": {
-    "message": "Rad"
+    "message": "Kontextfenster"
   },
   "setSecCacheTimer": {
     "message": "Cache-Timer"
@@ -237,13 +240,13 @@
     "message": "Datenschutzrichtlinie öffnen"
   },
   "setProject": {
-    "message": "Projektseite"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "Öffne die öffentliche Claude-Usage-Bar-Website mit Links zu Support und Datenschutzinformationen."
+    "message": "Öffne das GitHub-Repository für Quellcode, Issues und Support."
   },
   "setProjectBtn": {
-    "message": "Projektseite öffnen"
+    "message": "GitHub öffnen"
   },
   "setShowBar": {
     "message": "Balken anzeigen"
@@ -264,10 +267,10 @@
     "message": "Den aktuellen Prozentsatz als Text neben dem Balken anzeigen."
   },
   "setShowWheel": {
-    "message": "Rad anzeigen"
+    "message": "Kontextfenster anzeigen"
   },
   "setShowWheelDesc": {
-    "message": "Die kreisförmige Ringanzeige neben dem Balken anzeigen."
+    "message": "Die Kontextfenster-Anzeige in der Composer-Symbolleiste anzeigen."
   },
   "setWheelShows": {
     "message": "Rad zeigt"
@@ -400,5 +403,143 @@
   },
   "setDaySat": {
     "message": "S"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Was das Kontextfenster belegt"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 von $2 · $3 %"
+  },
+  "ctxBreakdownUser": {
+    "message": "Deine Nachrichten"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claudes Antworten"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Erweitertes Denken"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Tool-Aufrufe"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Tool-Ergebnisse"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Dateien und Anhänge"
+  },
+  "ctxBreakdownProject": {
+    "message": "Projektwissen"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "System-Overhead"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Verbleibend"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 Nachrichten"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 Blöcke"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 Aufrufe"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 Ergebnisse"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 Dateien"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Noch nichts im Kontextfenster."
+  },
+  "ctxBreakdownNote": {
+    "message": "Lokal aus dieser Unterhaltung geschätzt."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Lokal geschätzt. Tool- und Suchergebnisse machen den Wert ungefähr."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Dein 5-Stunden-Limit für Claude wurde zurückgesetzt"
+  },
+  "resetBannerSessionBody": {
+    "message": "Deine Sitzungsnutzung steht wieder bei null."
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Dein Wochenlimit für Claude wurde zurückgesetzt"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "Eine neue Nutzungswoche hat begonnen."
+  },
+  "resetBannerAction": {
+    "message": "Claude öffnen"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "Wöchentlich"
+  },
+  "setSecResetAlerts": {
+    "message": "Reset-Hinweise"
+  },
+  "setResetBanner": {
+    "message": "Reset-Hinweise anzeigen"
+  },
+  "setResetBannerDesc": {
+    "message": "Zeigt einen Hinweis, wenn ein Limit zurückgesetzt wird, damit du weißt, dass es weitergeht."
+  },
+  "setResetBannerScope": {
+    "message": "Hinweise anzeigen auf"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "Jede Website lässt den Hinweis dich auch anderswo erreichen. Chrome fragt nach Erlaubnis."
+  },
+  "setResetScopeClaude": {
+    "message": "Nur claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Jede Website"
+  },
+  "setResetBannerSession": {
+    "message": "5-Stunden-Limit"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "Hinweis, wenn das 5-Stunden-Fenster zurückgesetzt wird."
+  },
+  "setResetBannerWeekly": {
+    "message": "Wochenlimit"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "Hinweis, wenn das Wochenfenster für alle Modelle zurückgesetzt wird."
+  },
+  "setResetBannerTest": {
+    "message": "Hinweis testen"
+  },
+  "setResetBannerTestDesc": {
+    "message": "Sendet nach 5 Sekunden einen echten Hinweis, damit du den Tab wechseln kannst."
+  },
+  "setResetBannerTestGo": {
+    "message": "Test senden"
+  },
+  "setResetBannerTestCounting": {
+    "message": "in $1 s"
+  },
+  "grantTitle": {
+    "message": "Reset-Hinweise auf jeder Website"
+  },
+  "grantBody": {
+    "message": "Chrome braucht deine Erlaubnis, um außerhalb von claude.ai einen Hinweis anzuzeigen. Sie wird nur dafür genutzt — Seiteninhalte werden nie gelesen oder gesendet."
+  },
+  "grantDenied": {
+    "message": "Erlaubnis nicht erteilt. Hinweise bleiben auf claude.ai beschränkt."
+  },
+  "grantAllow": {
+    "message": "Weiter"
+  },
+  "grantCancel": {
+    "message": "Abbrechen"
   }
 }

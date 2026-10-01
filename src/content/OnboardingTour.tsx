@@ -76,7 +76,7 @@ const STEPS: TourStep[] = [
   },
   {
     openSettings: true,
-    selector: "#cub-section-weekly-metrics",
+    selector: "#cub-section-usage-metrics",
     title: "Usage metrics learning",
     body: "Claude Usage Bar learns local 5-hour and weekly usage patterns to power smarter pace estimates. Samples stay in this browser — no prompts, responses, or raw payloads are stored. If you'd rather not have this data collected, toggle pattern learning off here.",
     postNavDelay: 200,

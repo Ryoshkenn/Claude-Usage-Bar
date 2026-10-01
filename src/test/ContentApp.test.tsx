@@ -24,6 +24,9 @@ const settings: Settings = {
   hasSeenTour: true,
   showClipboard: true,
   language: "en",
+  resetBannerScope: "claude",
+  resetBannerSession: true,
+  resetBannerWeekly: true,
 };
 
 const baseChatUsage: ChatUsage = {
@@ -46,6 +49,38 @@ describe("ContentApp", () => {
     expect(screen.getByText("24k current context")).toBeInTheDocument();
   });
 
+  it("scales the context window to the active model", () => {
+    const snapshot = (modelLabel: string) => ({
+      source: "real" as const,
+      capturedAt: Date.now(),
+      modelLabel,
+    });
+
+    const { unmount } = render(
+      <ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot("Opus 5")} />,
+    );
+    expect(screen.getByLabelText("Context window 2% full")).toBeInTheDocument();
+    expect(screen.getByText("24k / 1M context length")).toBeInTheDocument();
+    unmount();
+
+    render(
+      <ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot("Opus 4.8")} />,
+    );
+    expect(screen.getByLabelText("Context window 5% full")).toBeInTheDocument();
+    expect(screen.getByText("24k / 500k context length")).toBeInTheDocument();
+  });
+
+  it("reads 0% on an empty chat instead of rounding the overhead up", () => {
+    render(
+      <ContentApp
+        settings={settings}
+        chatUsage={{ estimatedTokens: 0, currentContextTokens: 0, visibleMessageCount: 0, updatedAt: 1 }}
+      />,
+    );
+
+    expect(screen.getByLabelText("Context window 0% full")).toBeInTheDocument();
+  });
+
   it("shows loading copy and spinner state while context is refreshing", () => {
     render(
       <ContentApp
@@ -60,6 +95,28 @@ describe("ContentApp", () => {
     expect(screen.getByLabelText("Context calculation loading")).toHaveAttribute("data-loading", "true");
     expect(screen.getByText("Calculating context usage...")).toBeInTheDocument();
     expect(screen.getByText("Loading exact token count")).toBeInTheDocument();
+  });
+
+  it("says not used yet when the session is at zero with no session reset", () => {
+    render(
+      <ContentApp
+        settings={settings}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 0,
+          resetText: "resets in 7d",
+          weeklyAllModelsPercentageUsed: 8,
+          weeklyAllModelsResetText: "resets in 7d",
+          weeklyAllModelsResetsAt: Date.now() + 7 * 24 * 60 * 60_000,
+        }}
+      />,
+    );
+
+    const sessionRow = screen.getByText("5-hour limit").closest(".cub-usage-row");
+    expect(sessionRow).toHaveTextContent("not used yet");
+    expect(sessionRow).not.toHaveTextContent("resets in 7d");
   });
 
   it("shows a weekly learning notice while smart weekly metrics are new", () => {
@@ -113,6 +170,47 @@ describe("ContentApp", () => {
 
     expect(screen.getByText("Weekly · Sonnet")).toBeInTheDocument();
     expect(screen.getByText("3%")).toBeInTheDocument();
+  });
+
+  it("fills the bar from the Fable weekly-scoped limit when barMetric is weekly_fable", () => {
+    render(
+      <ContentApp
+        settings={{ ...settings, barMetric: "weekly_fable", showBarLabel: true }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 8,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+          weeklyAllModelsPercentageUsed: 31,
+          weeklyAllModelsResetsAt: Date.now() + 4 * 24 * 60 * 60_000,
+          weeklyScopedLimits: [
+            { modelLabel: "Fable 5", percentageUsed: 42, resetText: "resets in 2d" },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByLabelText("Weekly · Fable 42%")).toBeInTheDocument();
+  });
+
+  it("shows an empty bar when weekly_fable is selected but the plan has no Fable limit", () => {
+    render(
+      <ContentApp
+        settings={{ ...settings, barMetric: "weekly_fable", showBarLabel: true }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 8,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+          weeklyAllModelsPercentageUsed: 31,
+          weeklyAllModelsResetsAt: Date.now() + 4 * 24 * 60 * 60_000,
+        }}
+      />,
+    );
+
+    expect(screen.getByLabelText("Weekly · Fable —")).toBeInTheDocument();
   });
 
   it("omits per-model weekly rows when no scoped limits exist (non-Max plans)", () => {

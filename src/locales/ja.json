@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "週間 · 全モデル"
   },
+  "ringWeeklyFable": {
+    "message": "週間 · Fable"
+  },
   "ringContext": {
     "message": "コンテキストウィンドウ"
   },
@@ -186,7 +189,7 @@
     "message": "バー"
   },
   "setSecWheel": {
-    "message": "ホイール"
+    "message": "コンテキストウィンドウ"
   },
   "setSecCacheTimer": {
     "message": "キャッシュタイマー"
@@ -237,13 +240,13 @@
     "message": "プライバシーポリシーを開く"
   },
   "setProject": {
-    "message": "プロジェクトページ"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "サポートとプライバシー情報へのリンクがある Claude Usage Bar の公開サイトを開きます。"
+    "message": "ソースコード、Issue、サポートのために GitHub リポジトリを開きます。"
   },
   "setProjectBtn": {
-    "message": "プロジェクトページを開く"
+    "message": "GitHub を開く"
   },
   "setShowBar": {
     "message": "バーを表示"
@@ -264,10 +267,10 @@
     "message": "現在のパーセントをバーの横にテキストで表示します。"
   },
   "setShowWheel": {
-    "message": "ホイールを表示"
+    "message": "コンテキストウィンドウを表示"
   },
   "setShowWheelDesc": {
-    "message": "バーの横に円形のリングインジケーターを表示します。"
+    "message": "コンポーザーツールバーにコンテキストウィンドウインジケーターを表示します。"
   },
   "setWheelShows": {
     "message": "ホイールの表示内容"
@@ -400,5 +403,143 @@
   },
   "setDaySat": {
     "message": "土"
+  },
+  "ctxBreakdownTitle": {
+    "message": "コンテキストウィンドウの内訳"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "あなたのメッセージ"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude の返答"
+  },
+  "ctxBreakdownThinking": {
+    "message": "拡張思考"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "ツール呼び出し"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "ツールの結果"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ファイルと添付"
+  },
+  "ctxBreakdownProject": {
+    "message": "プロジェクトナレッジ"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "システムオーバーヘッド"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "残り"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 件のメッセージ"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 ブロック"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 回の呼び出し"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 件の結果"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 個のファイル"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "コンテキストウィンドウはまだ空です。"
+  },
+  "ctxBreakdownNote": {
+    "message": "この会話からローカルで推定しています。"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "ローカルでの推定です。ツールや検索の結果により概算になります。"
+  },
+  "resetBannerSessionTitle": {
+    "message": "Claude の5時間の上限がリセットされました"
+  },
+  "resetBannerSessionBody": {
+    "message": "セッションの使用量がゼロに戻りました。"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Claude の週間上限がリセットされました"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "新しい週の利用枠が始まりました。"
+  },
+  "resetBannerAction": {
+    "message": "Claude を開く"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "週間"
+  },
+  "setSecResetAlerts": {
+    "message": "リセット通知"
+  },
+  "setResetBanner": {
+    "message": "リセット通知を表示"
+  },
+  "setResetBannerDesc": {
+    "message": "上限がリセットされたときにバナーを表示し、再開できることを知らせます。"
+  },
+  "setResetBannerScope": {
+    "message": "通知を表示する場所"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "すべてのサイトにすると、他のサイトを見ていても通知が届きます。Chrome が許可を求めます。"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai のみ"
+  },
+  "setResetScopeEverywhere": {
+    "message": "すべてのサイト"
+  },
+  "setResetBannerSession": {
+    "message": "5時間の上限"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "5時間のセッション枠がリセットされたら通知します。"
+  },
+  "setResetBannerWeekly": {
+    "message": "週間上限"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "全モデルの週間枠がリセットされたら通知します。"
+  },
+  "setResetBannerTest": {
+    "message": "バナーを確認"
+  },
+  "setResetBannerTestDesc": {
+    "message": "5秒後に実際のバナーを送信します。タブを切り替えて表示場所を確認できます。"
+  },
+  "setResetBannerTestGo": {
+    "message": "テスト送信"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1 秒後"
+  },
+  "grantTitle": {
+    "message": "すべてのサイトでリセット通知を表示"
+  },
+  "grantBody": {
+    "message": "claude.ai の外でバナーを表示するには Chrome の許可が必要です。バナーの表示にのみ使用し、ページの内容を読み取ったり送信したりすることはありません。"
+  },
+  "grantDenied": {
+    "message": "許可されませんでした。リセット通知は claude.ai のみに表示されます。"
+  },
+  "grantAllow": {
+    "message": "続行"
+  },
+  "grantCancel": {
+    "message": "キャンセル"
   }
 }

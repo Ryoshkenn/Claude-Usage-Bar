@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import { sanitizeUsageMetadata } from "../content/usageProbeBridge";
 import { readClaudeDomSnapshot, readSelectedModelLabel } from "../content/claudeDom";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
+import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
 import { applyConservativeTokenBias } from "../shared/tokenBias";
 import {
   buildChatUsage,
   deriveDailyIncrement,
+  estimateAttachmentTokens,
   estimateCumulativeContextTokens,
   estimateTokensFromText,
   rollDailyUsageForward,
@@ -20,16 +22,18 @@ describe("estimateTokensFromText", () => {
 
   it("rounds short text up", () => {
     expect(estimateTokensFromText("abc")).toBe(1);
-    expect(estimateTokensFromText("abcd")).toBe(1);
+    expect(estimateTokensFromText("abcd")).toBe(2);
     expect(estimateTokensFromText("abcde")).toBe(2);
   });
 
   it("handles long text", () => {
-    expect(estimateTokensFromText("a".repeat(401))).toBe(101);
+    expect(estimateTokensFromText("a".repeat(401))).toBe(118);
   });
 
-  it("uses the lightweight fallback heuristic for visible text", () => {
-    expect(estimateTokensFromText("hello      world")).toBe(3);
+  it("counts raw length without collapsing whitespace", () => {
+    // 16 raw chars (indentation/newlines are real tokens); the old version
+    // collapsed the gap and returned 3.
+    expect(estimateTokensFromText("hello      world")).toBe(5);
   });
 });
 
@@ -43,17 +47,110 @@ describe("applyConservativeTokenBias", () => {
 
 describe("estimateCumulativeContextTokens", () => {
   it("adds each message to the running context before accumulating total usage", () => {
-    expect(estimateCumulativeContextTokens(["hello world", "hello world"])).toBe(9);
+    // Base 15000 + (4 + ceil(11 / 3.4)) per message: (15008) + (15016).
+    expect(estimateCumulativeContextTokens(["hello world", "hello world"])).toBe(30024);
   });
 
   it("uses ordered user and assistant transcript parts", () => {
     const messageTexts = ["Hello how are you", "I'm doing well, thanks for asking!"];
-    const exactTokens = estimateCumulativeContextTokens(messageTexts);
     const chatUsage = buildChatUsage(messageTexts, 123);
 
     expect(chatUsage.visibleMessageCount).toBe(2);
     expect(chatUsage.updatedAt).toBe(123);
-    expect(chatUsage.estimatedTokens).toBe(applyConservativeTokenBias(exactTokens));
+    // 15000 + (4 + 5) + (4 + 10) = 15023, biased to 18028 — and estimatedTokens
+    // matches the current window, mirroring the conversation-API path.
+    expect(chatUsage.currentContextTokens).toBe(18028);
+    expect(chatUsage.estimatedTokens).toBe(chatUsage.currentContextTokens);
+  });
+
+  it("reports a true zero for an empty chat", () => {
+    const chatUsage = buildChatUsage([], 123);
+
+    expect(chatUsage.currentContextTokens).toBe(0);
+    expect(chatUsage.estimatedTokens).toBe(0);
+    expect(chatUsage.visibleMessageCount).toBe(0);
+  });
+
+  it("stays zero with no messages and no attachments", () => {
+    expect(buildChatUsage([], 123, []).currentContextTokens).toBe(0);
+  });
+
+  it("stays close to the tokenizer-based API path on mixed content", () => {    const texts = [
+      "Can you explain how memoization trades time for space complexity?",
+      `function fib(n: number): number {\n  if (n <= 1) return n;\n  return fib(n - 1) + fib(n - 2);\n}`,
+      "Each subproblem is solved once and cached: O(n) time, O(n) space.",
+      `{"model":"sonnet","max_tokens":4096}`,
+    ];
+    const dom = buildChatUsage(texts, 1);
+    const api = buildChatUsageFromConversationPayload({
+      chat_messages: texts.map((text, i) => ({
+        uuid: `m-${i}`,
+        sender: i % 2 === 0 ? "human" : "assistant",
+        parent_message_uuid: i === 0 ? "00000000-0000-4000-8000-000000000000" : `m-${i - 1}`,
+        content: [{ type: "text", text }],
+      })),
+      current_leaf_message_uuid: `m-${texts.length - 1}`,
+    }).chatUsage;
+    const exact = api.currentContextTokens ?? 0;
+    const error = Math.abs((dom.currentContextTokens ?? 0) - exact) / exact;
+    expect(error).toBeLessThan(0.15);
+  });
+});
+
+describe("estimateAttachmentTokens", () => {
+  it("prices text files by line count", () => {
+    expect(estimateAttachmentTokens({ kind: "txt", lineCount: 67 })).toBe(67 * 30);
+  });
+
+  it("prices unsized documents and images near the API path's rates", () => {
+    expect(estimateAttachmentTokens({ kind: "pdf" })).toBe(4_600);
+    expect(estimateAttachmentTokens({ kind: "png" })).toBe(1_500);
+  });
+
+  it("prices images by real pixel dims, per the documented patch formula", () => {
+    // Live 952×1269 photo: 34×46 = 1564 patches, under both tier caps.
+    expect(estimateAttachmentTokens({ kind: "jpeg", imageWidth: 952, imageHeight: 1269 })).toBe(1_564);
+    // Small screenshot: ceil(800/28) × ceil(600/28) = 29×22 = 638.
+    expect(estimateAttachmentTokens({ kind: "png", imageWidth: 800, imageHeight: 600 })).toBe(638);
+  });
+
+  it("downscales huge images to the model's tier on the DOM path too", () => {
+    const standard = estimateAttachmentTokens(
+      { kind: "png", imageWidth: 4032, imageHeight: 3024 },
+      "standard",
+    );
+    const high = estimateAttachmentTokens({ kind: "png", imageWidth: 4032, imageHeight: 3024 }, "high");
+    expect(standard).toBeLessThanOrEqual(1568);
+    expect(high).toBeGreaterThan(standard);
+  });
+
+  it("falls back to a small flat allowance for unknown kinds", () => {
+    expect(estimateAttachmentTokens({})).toBe(1_000);
+    expect(estimateAttachmentTokens({ kind: "zip" })).toBe(1_000);
+  });
+});
+
+describe("buildChatUsage with attachments", () => {
+  it("adds attachment allowances inside the same conservative bias", () => {
+    const chatUsage = buildChatUsage(["hi"], 123, [{ fileName: "r.pdf", kind: "pdf" }]);
+    const expected = applyConservativeTokenBias(
+      15_000 + 4 + estimateTokensFromText("hi") + 4_600,
+    );
+    expect(chatUsage.currentContextTokens).toBe(expected);
+    expect(chatUsage.estimatedTokens).toBe(expected);
+    expect(chatUsage.lengthIsEstimate).toBe(true);
+  });
+
+  it("counts a txt card by its lines", () => {
+    const chatUsage = buildChatUsage(["see attached"], 1, [{ kind: "txt", lineCount: 67 }]);
+    const expected = applyConservativeTokenBias(
+      15_000 + 4 + estimateTokensFromText("see attached") + 67 * 30,
+    );
+    expect(chatUsage.currentContextTokens).toBe(expected);
+  });
+
+  it("leaves text-only chats unflagged", () => {
+    expect(buildChatUsage(["hi"], 1).lengthIsEstimate).toBeUndefined();
   });
 });
 
@@ -125,6 +222,15 @@ describe("readSelectedModelLabel", () => {
     document.body.innerHTML = `<button>New chat</button>`;
     expect(readSelectedModelLabel("Using Haiku 4.5 today")).toBe("Haiku 4.5");
     expect(readSelectedModelLabel("no model here")).toBeUndefined();
+  });
+
+  it("detects Fable labels in the switcher and page text", () => {
+    document.body.innerHTML = `
+      <button data-testid="model-selector-dropdown">Fable 5.1</button>
+    `;
+    expect(readSelectedModelLabel("")).toBe("Fable 5.1");
+    document.body.innerHTML = `<button>New chat</button>`;
+    expect(readSelectedModelLabel("Using Fable 5.1 today")).toBe("Fable 5.1");
   });
 });
 

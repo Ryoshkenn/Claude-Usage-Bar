@@ -77,22 +77,25 @@ describe("storage helpers", () => {
       mode: "compact",
       barMetric: "session",
       ringTarget: "context",
-      showBar: true,
+      showBar: false,
       showBarLabel: false,
       showWheel: true,
       showWheelLabel: false,
       showPace: true,
-      showCacheTimer: true,
+      showCacheTimer: false,
       paceSurplusFormat: "percent",
-      weeklyMetricsEnabled: false,
-      weeklyPaceMode: "manual",
+      weeklyMetricsEnabled: true,
+      weeklyPaceMode: "smart",
       weeklyEstimateDisplay: "active_hours",
       weeklyManualWorkDays: [1, 2, 3, 4, 5],
-      weeklyManualActiveHoursPerDay: 10,
+      weeklyManualActiveHoursPerDay: 5,
       weeklyManualStartHour: 9,
       hasSeenTour: false,
       showClipboard: true,
       language: "en",
+      resetBannerScope: "claude",
+      resetBannerSession: true,
+      resetBannerWeekly: true,
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
@@ -103,14 +106,34 @@ describe("storage helpers", () => {
     const adapter = createAdapter({ settings: { barMetric: "design", ringTarget: "design" } });
     const state = await getStorage(adapter);
     expect(state.settings.barMetric).toBe("weekly");
-    expect(state.settings.ringTarget).toBe("weekly");
+    // The ring is now context-only, so any stored ring metric normalizes to context.
+    expect(state.settings.ringTarget).toBe("context");
   });
 
-  it("defaults weekly learning to opt-in manual pacing", async () => {
+  it("normalizes the ring to the context window indicator", async () => {
+    const adapter = createAdapter({ settings: { ringTarget: "session", showWheelLabel: true } });
+    const state = await getStorage(adapter);
+    expect(state.settings.ringTarget).toBe("context");
+    expect(state.settings.showWheelLabel).toBe(false);
+  });
+
+  it("honors stored bar and cache-timer toggles instead of forcing them off", async () => {
+    const adapter = createAdapter({ settings: { showBar: true, showCacheTimer: true } });
+    const state = await getStorage(adapter);
+    expect(state.settings.showBar).toBe(true);
+    expect(state.settings.showCacheTimer).toBe(true);
+
+    const updated = await updateSettings({ showBar: true }, createAdapter());
+    expect(updated.showBar).toBe(true);
+    const reread = await getStorage(createAdapter({ settings: updated }));
+    expect(reread.settings.showBar).toBe(true);
+  });
+
+  it("defaults weekly learning on with smart pacing", async () => {
     const state = await getStorage(createAdapter());
 
-    expect(state.settings.weeklyMetricsEnabled).toBe(false);
-    expect(state.settings.weeklyPaceMode).toBe("manual");
+    expect(state.settings.weeklyMetricsEnabled).toBe(true);
+    expect(state.settings.weeklyPaceMode).toBe("smart");
   });
 
   it("merges settings", async () => {
@@ -121,22 +144,25 @@ describe("storage helpers", () => {
       mode: "expanded",
       barMetric: "session",
       ringTarget: "context",
-      showBar: true,
+      showBar: false,
       showBarLabel: false,
       showWheel: true,
       showWheelLabel: false,
       showPace: true,
-      showCacheTimer: true,
+      showCacheTimer: false,
       paceSurplusFormat: "percent",
-      weeklyMetricsEnabled: false,
-      weeklyPaceMode: "manual",
+      weeklyMetricsEnabled: true,
+      weeklyPaceMode: "smart",
       weeklyEstimateDisplay: "active_hours",
       weeklyManualWorkDays: [1, 2, 3, 4, 5],
-      weeklyManualActiveHoursPerDay: 10,
+      weeklyManualActiveHoursPerDay: 5,
       weeklyManualStartHour: 9,
       hasSeenTour: false,
       showClipboard: true,
       language: "en",
+      resetBannerScope: "claude",
+      resetBannerSession: true,
+      resetBannerWeekly: true,
     });
     expect(adapter.data.settings).toEqual(settings);
   });

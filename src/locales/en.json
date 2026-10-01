@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "Weekly · all models"
   },
+  "ringWeeklyFable": {
+    "message": "Weekly · Fable"
+  },
   "ringContext": {
     "message": "Context window"
   },
@@ -186,7 +189,7 @@
     "message": "Bar"
   },
   "setSecWheel": {
-    "message": "Wheel"
+    "message": "Context window"
   },
   "setSecCacheTimer": {
     "message": "Cache timer"
@@ -196,6 +199,30 @@
   },
   "setSec5hr": {
     "message": "5hr usage metrics"
+  },
+  "setSecUsageMetrics": {
+    "message": "Usage metrics"
+  },
+  "set5hrMetrics": {
+    "message": "5-hour metrics"
+  },
+  "set5hrMetricsDesc": {
+    "message": "Show a pace estimate next to the 5-hour usage bar. Accurate pace uses local pattern learning — turn this off to opt out of pattern-based pacing."
+  },
+  "setWeeklyMetrics": {
+    "message": "Weekly metrics"
+  },
+  "setWeeklyMetricsDesc": {
+    "message": "Learn weekly usage from local numeric samples to power the weekly estimate. Turn this off to keep weekly pacing on the fixed manual schedule."
+  },
+  "setEstimates": {
+    "message": "Estimates"
+  },
+  "setEstimatesDesc": {
+    "message": "Smart learns your active Claude pattern from local usage samples. Manual lets you set a fixed weekly schedule."
+  },
+  "setDataCollected": {
+    "message": "Data collected"
   },
   "setShowOverlay": {
     "message": "Show overlay"
@@ -237,13 +264,13 @@
     "message": "Open Privacy Policy"
   },
   "setProject": {
-    "message": "Project page"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "Open the public Claude Usage Bar site with links to support and privacy information."
+    "message": "Open the GitHub repository for source code, issues, and support."
   },
   "setProjectBtn": {
-    "message": "Open Project Page"
+    "message": "Open GitHub"
   },
   "setShowBar": {
     "message": "Show bar"
@@ -264,10 +291,10 @@
     "message": "Display the current percentage as text next to the bar."
   },
   "setShowWheel": {
-    "message": "Show wheel"
+    "message": "Show context window"
   },
   "setShowWheelDesc": {
-    "message": "Show the circular ring indicator next to the bar."
+    "message": "Show the context window indicator in the composer toolbar."
   },
   "setWheelShows": {
     "message": "Wheel shows"
@@ -400,5 +427,143 @@
   },
   "setDaySat": {
     "message": "S"
+  },
+  "ctxBreakdownTitle": {
+    "message": "What's using the context window"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 of $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Your messages"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude's replies"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Extended thinking"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Tool calls"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Tool results"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Files & attachments"
+  },
+  "ctxBreakdownProject": {
+    "message": "Project knowledge"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "System overhead"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Remaining"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 messages"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blocks"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 calls"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 results"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 files"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Nothing in the context window yet."
+  },
+  "ctxBreakdownNote": {
+    "message": "Estimated locally from this conversation."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Estimated locally. Tool and search results make this approximate."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Your 5-hour Claude limit reset"
+  },
+  "resetBannerSessionBody": {
+    "message": "Your session usage is back to zero."
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Your weekly Claude limit reset"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "A fresh week of usage just started."
+  },
+  "resetBannerAction": {
+    "message": "Open Claude"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "Weekly"
+  },
+  "setSecResetAlerts": {
+    "message": "Reset alerts"
+  },
+  "setResetBanner": {
+    "message": "Show reset alerts"
+  },
+  "setResetBannerDesc": {
+    "message": "Pop a banner when a usage limit rolls over, so you know you can start again."
+  },
+  "setResetBannerScope": {
+    "message": "Show alerts on"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "Any site lets the banner reach you while you're browsing elsewhere. Chrome will ask for permission."
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai only"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Any site"
+  },
+  "setResetBannerSession": {
+    "message": "5-hour limit"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "Alert when the 5-hour session window resets."
+  },
+  "setResetBannerWeekly": {
+    "message": "Weekly limit"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "Alert when the weekly all-models window resets."
+  },
+  "setResetBannerTest": {
+    "message": "Preview the banner"
+  },
+  "setResetBannerTestDesc": {
+    "message": "Sends a real banner after 5 seconds, so you can switch tabs and see where it lands."
+  },
+  "setResetBannerTestGo": {
+    "message": "Send test"
+  },
+  "setResetBannerTestCounting": {
+    "message": "in $1s"
+  },
+  "grantTitle": {
+    "message": "Show reset alerts on any site"
+  },
+  "grantBody": {
+    "message": "Chrome needs your permission before the extension can draw a banner outside claude.ai. It is only used to show the banner — no page content is ever read or sent anywhere."
+  },
+  "grantDenied": {
+    "message": "Permission was not granted. Reset alerts stay on claude.ai only."
+  },
+  "grantAllow": {
+    "message": "Continue"
+  },
+  "grantCancel": {
+    "message": "Cancel"
   }
 }

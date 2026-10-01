@@ -530,6 +530,33 @@ const computeScheduleAwareWeeklyPace = (
   };
 };
 
+// The usage percentage reported by Claude's API is the real, all-surface total: it
+// counts Claude Code, desktop, and API usage against the weekly limit, not just what
+// this extension observed on claude.ai. So the projection must never assume less usage
+// than that total already implies over real elapsed time. This is the calendar-time
+// floor: what percent you would be at by reset if you simply keep burning at the
+// average rate you have burned so far this window (used% / fraction of week elapsed).
+// Any schedule/active-hours model may project HIGHER (you concentrate usage), but never
+// lower — otherwise heavy off-website usage would flatline the estimate at the current %.
+const calendarProjectedPercentAtReset = (
+  usedPercent: number,
+  resetsAt: number,
+  now: number,
+): number => {
+  const elapsedMs = now - (resetsAt - WEEKLY_WINDOW_MS);
+  if (elapsedMs <= 0) return usedPercent;
+  const fractionElapsed = Math.min(1, elapsedMs / WEEKLY_WINDOW_MS);
+  if (fractionElapsed <= 0) return usedPercent;
+  return Math.min(100, usedPercent / fractionElapsed);
+};
+
+const projectionPercentAtReset = (projection: UsageProjection, usedPercent: number): number => {
+  if (typeof projection.projectedPercentAtReset === "number") {
+    return projection.projectedPercentAtReset;
+  }
+  return projection.status === "projected_empty" ? 100 : usedPercent;
+};
+
 export const computeWeeklyProjection = (
   history: UsageLogEntry[],
   weeklyUsedPercent: number,
@@ -550,18 +577,28 @@ export const computeWeeklyProjection = (
     ? computeScheduleAwareWeeklyPace(weeklyUsedPercent, weeklyResetsAt, now, options)
     : null;
 
-  if (recent.length < MIN_ENTRIES_FOR_WEIGHTED) {
-    return smartProjection ?? computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
+  const chosen = (() => {
+    if (recent.length < MIN_ENTRIES_FOR_WEIGHTED) {
+      return smartProjection ?? computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
+    }
+    const rate = computeWeeklyDrainRate(recent);
+    if (rate === null) {
+      return smartProjection ?? computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
+    }
+    if (smartProjection) {
+      return smartProjection;
+    }
+    return projectUsageDepletion(weeklyUsedPercent, weeklyResetsAt, rate, now);
+  })();
+
+  // Enforce the calendar-time floor: if the schedule/active-hours model is projecting
+  // less usage-at-reset than the real all-surface burn rate implies (e.g. weekend/off-hours
+  // when the manual schedule has no remaining active hours, or heavy Claude Code use the
+  // learned pattern never saw), fall back to the honest calendar-time projection.
+  const calendarAtReset = calendarProjectedPercentAtReset(weeklyUsedPercent, weeklyResetsAt, now);
+  if (calendarAtReset > projectionPercentAtReset(chosen, weeklyUsedPercent) + 0.5) {
+    return computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
   }
 
-  const rate = computeWeeklyDrainRate(recent);
-  if (rate === null) {
-    return smartProjection ?? computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
-  }
-
-  if (smartProjection) {
-    return smartProjection;
-  }
-
-  return projectUsageDepletion(weeklyUsedPercent, weeklyResetsAt, rate, now);
+  return chosen;
 };

@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  readClaudeDomSnapshot,
   readComposerEffortLevel,
+  readSelectedModelLabel,
   readThinkingEnabled,
   readThinkingLevel,
   resolveEffectiveThinkingLevel,
@@ -46,6 +48,39 @@ describe("readThinkingLevel", () => {
     expect(readThinkingLevel()).toBe("extra");
     document.body.innerHTML = effortMenu("max");
     expect(readThinkingLevel()).toBe("max");
+  });
+
+  // Live claude.ai markup (Sept 2026): the effort submenu uses
+  // [role="menuitemradio"][data-effort-id][aria-checked], no testids, no switch.
+  const effortSubmenu = (checkedId: string | null): string => {
+    const options = ["low", "medium", "high", "xhigh", "max"]
+      .map(
+        (id) =>
+          `<div role="menuitemradio" data-effort-id="${id}" aria-checked="${id === checkedId}"><span>${id}</span></div>`,
+      )
+      .join("");
+    return `<div role="menu">${options}</div>`;
+  };
+
+  it("reads the checked data-effort-id radio (current live markup)", () => {
+    document.body.innerHTML = effortSubmenu("low");
+    expect(readThinkingLevel()).toBe("low");
+    document.body.innerHTML = effortSubmenu("medium");
+    expect(readThinkingLevel()).toBe("medium");
+    document.body.innerHTML = effortSubmenu("high");
+    expect(readThinkingLevel()).toBe("high");
+  });
+
+  it("maps data-effort-id xhigh to 'extra' and max to 'max'", () => {
+    document.body.innerHTML = effortSubmenu("xhigh");
+    expect(readThinkingLevel()).toBe("extra");
+    document.body.innerHTML = effortSubmenu("max");
+    expect(readThinkingLevel()).toBe("max");
+  });
+
+  it("returns undefined when no effort radio is checked", () => {
+    document.body.innerHTML = effortSubmenu(null);
+    expect(readThinkingLevel()).toBeUndefined();
   });
 });
 
@@ -98,6 +133,14 @@ describe("readComposerEffortLevel", () => {
     document.body.innerHTML = "<div>composer</div>";
     expect(readComposerEffortLevel()).toBeUndefined();
   });
+
+  it("reads the new-style Opus 5 Low control and bare Haiku 4.5", () => {
+    document.body.innerHTML = composer("Opus 5", "Low");
+    expect(readComposerEffortLevel()).toBe("low");
+    // Haiku has no effort levels — bare label, no suffix.
+    document.body.innerHTML = composer("Haiku 4.5");
+    expect(readComposerEffortLevel()).toBeUndefined();
+  });
 });
 
 describe("resolveEffectiveThinkingLevel", () => {
@@ -125,5 +168,89 @@ describe("resolveEffectiveThinkingLevel", () => {
       level: undefined,
       enabled: undefined,
     });
+  });
+});
+
+describe("readSelectedModelLabel", () => {
+  it("reads the aria-label when textContent carries no model (Model: Opus 5 Low)", () => {
+    document.body.innerHTML = `<button data-testid="model-selector-dropdown" aria-haspopup="menu" aria-label="Model: Opus 5 Low"></button>`;
+    expect(readSelectedModelLabel("")).toBe("Opus 5");
+  });
+
+  it("detects live Opus 5 / Sonnet 5 / Fable 5.1 / Haiku 4.5 labels", () => {
+    for (const label of ["Opus 5", "Sonnet 5", "Fable 5.1", "Haiku 4.5"]) {
+      document.body.innerHTML = `<button data-testid="model-selector-dropdown">${label}</button>`;
+      expect(readSelectedModelLabel("")).toBe(label);
+    }
+  });
+});
+
+describe("readDomAttachments", () => {
+  it("extracts pdf tiles (filename from img alt, no size signal)", () => {
+    document.body.innerHTML = `
+      <div data-testid="user-message"><p>read these</p></div>
+      <div data-cds="MessageAttachments">
+        <div data-testid="file-thumbnail">
+          <button><img alt="Methods Used to Establish Authoritarian States (1).pdf" src="/api/org/files/uuid-1/thumbnail"></button>
+          <div><p class="uppercase">pdf</p></div>
+        </div>
+      </div>
+    `;
+    expect(readClaudeDomSnapshot().attachments).toEqual([
+      { fileName: "Methods Used to Establish Authoritarian States (1).pdf", kind: "pdf" },
+    ]);
+  });
+
+  it("extracts txt cards (filename from title, kind from badge, line count)", () => {
+    document.body.innerHTML = `
+      <div data-testid="user-message"><p>see attached</p></div>
+      <div data-cds="MessageAttachments">
+        <div data-cds="MessageAttachmentsFile" data-testid="file-thumbnail">
+          <span data-cds="CardLink" role="button" title="Hashimoto-LegacyKorematsu-Condensed-2000-Words.txt"></span>
+          <span title="Hashimoto-LegacyKorematsu-Condensed-2000-Words.txt">truncated…</span>
+          <span class="truncate">67 lines</span>
+          <span data-cds="Badge">TXT</span>
+        </div>
+      </div>
+    `;
+    expect(readClaudeDomSnapshot().attachments).toEqual([
+      {
+        fileName: "Hashimoto-LegacyKorematsu-Condensed-2000-Words.txt",
+        kind: "txt",
+        lineCount: 67,
+      },
+    ]);
+  });
+
+  it("ignores composer-staged files inside the form", () => {
+    document.body.innerHTML = `
+      <form><div data-testid="file-thumbnail"><img alt="draft.pdf" src="/thumb"></div></form>
+      <div data-testid="user-message"><p>hi</p></div>
+    `;
+    expect(readClaudeDomSnapshot().attachments).toEqual([]);
+  });
+
+  it("returns no attachments for a text-only chat", () => {
+    document.body.innerHTML = `<div data-testid="user-message"><p>hi</p></div>`;
+    expect(readClaudeDomSnapshot().attachments).toEqual([]);
+  });
+
+  it("extracts image tiles (filename from sr-only, intrinsic dims from the resource)", () => {
+    document.body.innerHTML = `
+      <div data-testid="user-message"><p>what is this</p></div>
+      <div data-cds="MessageAttachments">
+        <div data-cds="MessageAttachmentsImage" data-testid="file-thumbnail">
+          <button><img alt="" src="/api/org/files/uuid/preview"><span class="sr-only">IMG_2198.jpeg</span></button>
+        </div>
+      </div>
+    `;
+    // jsdom never loads images, so stub the intrinsic (full-resource) size —
+    // live this reads 952×1269 while the tile renders at 120×120.
+    const img = document.querySelector("img")!;
+    Object.defineProperty(img, "naturalWidth", { value: 952 });
+    Object.defineProperty(img, "naturalHeight", { value: 1269 });
+    expect(readClaudeDomSnapshot().attachments).toEqual([
+      { fileName: "IMG_2198.jpeg", kind: "jpeg", imageWidth: 952, imageHeight: 1269 },
+    ]);
   });
 });

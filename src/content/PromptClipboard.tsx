@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { PromptEntry } from "../shared/types";
 import { getPrompts, savePrompts } from "../shared/storage";
+import { findDisclaimerMount } from "./composerMount";
 
 const CheckIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -12,11 +13,21 @@ const insertIntoComposer = (text: string) => {
   const editable = document.querySelector<HTMLElement>('[contenteditable="true"][role="textbox"]');
   if (editable) {
     editable.focus();
+    // execCommand("insertText") lets the rich-text editor (ProseMirror) turn "\n"
+    // into real line breaks. A single Text node with "\n" collapses to a space.
+    if (document.execCommand("insertText", false, text)) {
+      return true;
+    }
     const sel = window.getSelection();
     if (sel && sel.rangeCount > 0 && editable.contains(sel.anchorNode)) {
       const range = sel.getRangeAt(0);
       range.deleteContents();
-      range.insertNode(document.createTextNode(text));
+      const fragment = document.createDocumentFragment();
+      text.split("\n").forEach((line, i) => {
+        if (i > 0) fragment.appendChild(document.createElement("br"));
+        if (line) fragment.appendChild(document.createTextNode(line));
+      });
+      range.insertNode(fragment);
       range.collapse(false);
       sel.removeAllRanges();
       sel.addRange(range);
@@ -92,9 +103,9 @@ export const PromptClipboard = () => {
       return;
     }
     setRenderOpen(true);
-    const composer = document.querySelector<HTMLElement>(
-      "div.cursor-text.rounded-\\[20px\\], .cub-composer-host"
-    );
+    const composer =
+      findDisclaimerMount() ??
+      document.querySelector<HTMLElement>("div.cursor-text.rounded-\\[20px\\]");
     if (composer) {
       const rect = composer.getBoundingClientRect();
       const composerCenterX = rect.left + rect.width / 2;

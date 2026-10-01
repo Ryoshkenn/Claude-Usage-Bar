@@ -88,6 +88,38 @@
     applyLimit(input.five_hour, "percentageUsed", "resetText", "sessionResetsAt");
     applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
 
+    // The current endpoint also exposes a canonical limits array. Its entries
+    // are sibling-scoped by `kind`/`group`, so do not let the generic scanner
+    // mistake the weekly entry's reset timestamp for the session reset.
+    if (Array.isArray(input.limits)) {
+      input.limits.forEach((value) => {
+        if (!value || typeof value !== "object" || Array.isArray(value)) return;
+        const kind = typeof value.kind === "string" ? value.kind : "";
+        const group = typeof value.group === "string" ? value.group : "";
+        const percentage = value.percent ?? value.utilization;
+        const reset = value.resets_at ?? value.resetsAt ?? value.reset_at ?? value.resetAt;
+        const parsedReset = parseResetMetadata(reset, now);
+
+        if (kind === "session" || group === "session") {
+          if (typeof percentage === "number" && Number.isFinite(percentage)) {
+            output.percentageUsed = Math.min(100, Math.max(0, Math.round(percentage)));
+          }
+          if (parsedReset) {
+            output.resetText = parsedReset.resetText;
+            output.sessionResetsAt = parsedReset.resetAtMs;
+          }
+        } else if (kind === "weekly_all") {
+          if (typeof percentage === "number" && Number.isFinite(percentage)) {
+            output.weeklyAllModelsPercentageUsed = Math.min(100, Math.max(0, Math.round(percentage)));
+          }
+          if (parsedReset) {
+            output.weeklyAllModelsResetText = parsedReset.resetText;
+            output.weeklyAllModelsResetsAt = parsedReset.resetAtMs;
+          }
+        }
+      });
+    }
+
     const routines = input.routines ?? input.routine_usage ?? input.routineUsage;
     if (routines && typeof routines === "object" && !Array.isArray(routines)) {
       const used = routines.used ?? routines.current ?? routines.count;
@@ -106,6 +138,7 @@
 
     const isSessionScope = (text) => /(5|five).*hour|hour.*limit|five hour|5 hour|five_hour|5_hour/.test(text);
     const isWeeklyScope = (text) => /seven day|seven_day|7 day|7_day|weekly/.test(text);
+    const hasStructuredClaudeUsage = Array.isArray(input.limits) || input.five_hour !== undefined || input.seven_day !== undefined;
 
     const visit = (value, depth, path = []) => {
       if (!value || typeof value !== "object" || depth > 4) {
@@ -137,7 +170,7 @@
                 output.weeklyAllModelsPercentageUsed ??= nested;
               } else if (isSessionScope(scopedText)) {
                 output.percentageUsed ??= nested;
-              } else {
+              } else if (!hasStructuredClaudeUsage) {
                 output.percentageUsed = nested;
               }
             } else if (/reset/.test(normalized)) {
@@ -158,7 +191,7 @@
                 output.weeklyAllModelsResetText ??= nested;
               } else if (isSessionScope(scopedText)) {
                 output.resetText ??= nested;
-              } else {
+              } else if (!hasStructuredClaudeUsage) {
                 output.resetText = nested;
               }
             } else if (/remaining/.test(normalized)) {

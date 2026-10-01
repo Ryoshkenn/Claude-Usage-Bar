@@ -19,14 +19,16 @@ const getTokenizer = (): Tokenizer => {
 const fallbackTokenCount = (text: string): number => Math.ceil(text.length / ESTIMATED_CHARACTERS_PER_TOKEN);
 
 export const countClaudeTokens = (text: string): number => {
-  const normalized = normalizeTokenizationText(text);
-  if (!normalized) {
+  // Blank messages carry no tokens. Otherwise count the raw text as-is:
+  // indentation and line breaks in code are real tokens, so whitespace is
+  // deliberately NOT collapsed here (collapsing undercounted code by ~10-20%).
+  if (!text.trim()) {
     return 0;
   }
 
   try {
-    return getTokenizer().encode(normalized).ids.length;
+    return getTokenizer().encode(text).ids.length;
   } catch {
-    return fallbackTokenCount(normalized);
+    return fallbackTokenCount(text);
   }
 };

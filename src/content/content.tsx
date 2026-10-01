@@ -8,21 +8,22 @@ import {
   saveDailyUsage,
   saveRealUsageSnapshot,
   updateSettings,
+  type ModelBucket,
 } from "../shared/storage";
-import { normalizeModelFamily } from "../shared/modelUsage";
+import { normalizeModelFamily, getImageTierForModel } from "../shared/modelUsage";
 import { setLanguage } from "../shared/i18n";
 import type { ConversationContextResponse, RealUsageSnapshot, StorageShape, ThinkingLevel } from "../shared/types";
 import { readClaudeDomSnapshot, readThinkingEnabled, resolveEffectiveThinkingLevel } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
 import { OnboardingTour } from "./OnboardingTour";
-import { findComposer, findComposerInsertionPoint, findDesignComposer, findDesignInsertionPoint } from "./composerMount";
+import { findCoworkControlsAnchor, findDisclaimerMount, findNewChatInsertionPoint } from "./composerMount";
 import {
   hasMeaningfulChatUsageChange,
   hasMeaningfulDailyUsageChange,
   mutationsContainPageChanges,
 } from "./contentLifecycle";
 import "./pageOverrides.css";
-import { syncMessageRailTheme, tickMessageRail } from "./messageRail";
+import { syncMessageRailTheme } from "./messageRail";
 import { initSettingsPage, openUsageBarSettings, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
 import { buildChatUsage, deriveDailyIncrement, rollDailyUsageForward } from "./usageEstimator";
@@ -33,6 +34,8 @@ import { messageToSnapshot } from "./usageProbeBridge";
 const INSTANCE_ATTR = "data-cub-instance";
 const HOST_ATTR = "data-cub-host-instance";
 const THEME_SYNC_INTERVAL_MS = 500;
+// Gap between cowork's Skip/Approve controls and the anchored usage bar.
+const COWORK_ANCHOR_GAP_PX = 8;
 const myInstanceId = `${Date.now()}-${Math.random()}`;
 const isActiveInstance = () =>
   document.documentElement.getAttribute(INSTANCE_ATTR) === myInstanceId;
@@ -41,10 +44,14 @@ let storageState: StorageShape | null = null;
 let root: ReturnType<typeof createRoot> | null = null;
 let host: HTMLElement | null = null;
 let updateTimer: number | undefined;
-let mountedComposer: HTMLElement | null = null;
+let mountedDisclaimerMount: HTMLElement | null = null;
+let disclaimerResizeObserver: ResizeObserver | null = null;
 let lastSentCount = 0;
 let lastApiRefreshUrl = "";
 let lastConversationContextUrl = "";
+// Tracks the URL the overlay was last laid out for, so an SPA route change can be
+// caught and the bar repositioned immediately (see handleUrlChange).
+let lastNavUrl = "";
 let lastSyncedTheme: "light" | "dark" | null = null;
 // Sticky thinking on/off state. The effort-menu switch — the only on/off
 // authority — is readable solely while the menu is open, so we remember its last
@@ -104,6 +111,16 @@ const readElementLightMode = (element: Element | null): boolean | null => {
   return null;
 };
 
+// True for elements that belong to this extension's own overlay (bar, tooltips,
+// popups, cache timer, message rail). Their colors are our own theming, not
+// Claude's, so they must never feed theme detection — otherwise hovering the bar,
+// which pops a dark tooltip over the viewport center, flips us into dark mode.
+const isOwnElement = (el: Element | null): boolean =>
+  !!el &&
+  (Boolean(host?.contains(el)) ||
+    Boolean(cacheTimerHost?.contains(el)) ||
+    el.closest?.('#claude-usage-bar-root, [class*="cub-"]') != null);
+
 const readComputedLightMode = (): boolean | null => {
   const selectors = [
     "main",
@@ -116,7 +133,7 @@ const readComputedLightMode = (): boolean | null => {
     Math.max(0, Math.floor(window.innerHeight / 2)),
   );
   const candidates = [
-    centerElement,
+    isOwnElement(centerElement) ? null : centerElement,
     ...selectors.map((selector) => document.querySelector<HTMLElement>(selector)),
   ];
 
@@ -170,6 +187,15 @@ const syncTheme = () => {
   }
 };
 
+const applyFixedHostStyles = () => {
+  if (!host) {
+    return;
+  }
+  host.style.setProperty("position", "fixed", "important");
+  host.style.setProperty("z-index", "2147483647", "important");
+  host.style.setProperty("pointer-events", "auto", "important");
+};
+
 const ensureHost = () => {
   if (host && root) {
     return;
@@ -178,6 +204,7 @@ const ensureHost = () => {
   host = document.createElement("div");
   host.id = "claude-usage-bar-root";
   host.setAttribute(HOST_ATTR, myInstanceId);
+  applyFixedHostStyles();
   host.classList.toggle("cub-design", isDesignPage());
   // Apply theme class before first render so there is no flash
   syncTheme();
@@ -192,12 +219,98 @@ const removeStaleHosts = () => {
   });
 };
 
-const removeComposerHost = () => {
+const removeUsageBarHost = () => {
   root?.render(null);
+  if (mountedDisclaimerMount) {
+    disclaimerResizeObserver?.unobserve(mountedDisclaimerMount);
+  }
+  if (host?.classList.contains("cub-new-chat-inline")) {
+    host.classList.remove("cub-new-chat-inline");
+    host.style.removeProperty("display");
+    applyFixedHostStyles();
+  }
   host?.remove();
-  mountedComposer?.classList.remove("cub-composer-host");
-  mountedComposer = null;
+  mountedDisclaimerMount = null;
   removeStaleHosts();
+};
+
+const hasVisibleBackground = (color: string): boolean => {
+  if (!color || color === "transparent") {
+    return false;
+  }
+  const alpha = color.match(/rgba\([^,]+,[^,]+,[^,]+,\s*([0-9.]+)\)/i)?.[1];
+  return alpha === undefined || Number(alpha) > 0.01;
+};
+
+const findCoverBackground = (element: HTMLElement): string => {
+  let current: HTMLElement | null = element;
+  while (current) {
+    const background = getComputedStyle(current).backgroundColor;
+    if (hasVisibleBackground(background)) {
+      return background;
+    }
+    current = current.parentElement;
+  }
+  return isLightMode() ? "rgb(250 250 248)" : "rgb(38 38 36)";
+};
+
+const positionUsageBarHost = () => {
+  if (!host || host.classList.contains("cub-new-chat-inline")) {
+    return;
+  }
+  if (!mountedDisclaimerMount || !document.body.contains(mountedDisclaimerMount)) {
+    return;
+  }
+
+  const rect = mountedDisclaimerMount.getBoundingClientRect();
+  const visible = rect.width > 0 && rect.height > 0;
+  host.style.setProperty("display", visible ? "flex" : "none", "important");
+  if (!visible) {
+    return;
+  }
+
+  // Cowork rows keep the same disclaimer mount and theming as regular chats —
+  // only the overlay coordinates change. The disclaimer lives in a
+  // right-aligned container there, so when a Skip/Approve left group is
+  // detected, start the bar just right of those controls (same size as the
+  // regular bar) instead of over the right-side disclaimer rect. No such
+  // controls → regular-chat geometry, untouched.
+  const coworkAnchor = findCoworkControlsAnchor(mountedDisclaimerMount);
+  const anchorRect = coworkAnchor?.getBoundingClientRect() ?? null;
+  const useCoworkAnchor =
+    coworkAnchor instanceof HTMLElement &&
+    document.body.contains(coworkAnchor) &&
+    anchorRect !== null &&
+    anchorRect.width > 0 &&
+    anchorRect.height > 0;
+  const left = useCoworkAnchor ? anchorRect.right + COWORK_ANCHOR_GAP_PX : rect.left;
+  // Line up with the model select, not just the disclaimer text: the mount is
+  // the disclaimer's own (shorter) wrapper, while the model selector lives in
+  // a taller ms-auto sibling in the same row (measured 17px vs 24px). Take the
+  // row's top/height so the bar sits level with the selector; keep the mount's
+  // width so the solid cover background never paints over the selector itself.
+  // Fall back to the mount rect if the row looks wrong (DOM reshuffle).
+  const rowEl = mountedDisclaimerMount.parentElement;
+  const rowRect =
+    rowEl instanceof HTMLElement && document.body.contains(rowEl) ? rowEl.getBoundingClientRect() : null;
+  const useRowRect =
+    !useCoworkAnchor &&
+    rowRect !== null &&
+    rowRect.width >= rect.width &&
+    rowRect.height >= rect.height &&
+    rowRect.height <= 48;
+  const top = useCoworkAnchor ? anchorRect.top : useRowRect && rowRect ? rowRect.top : rect.top;
+  const height = useCoworkAnchor
+    ? anchorRect.height
+    : useRowRect && rowRect
+      ? rowRect.height
+      : rect.height;
+
+  host.style.setProperty("left", `${Math.round(left)}px`, "important");
+  host.style.setProperty("top", `${Math.round(top)}px`, "important");
+  host.style.setProperty("width", `${Math.round(rect.width)}px`, "important");
+  host.style.setProperty("height", `${Math.max(24, Math.round(height))}px`, "important");
+  host.style.setProperty("background-color", findCoverBackground(mountedDisclaimerMount), "important");
 };
 
 // Selector for Claude's stop-generation button (appears while streaming)
@@ -294,35 +407,90 @@ const checkStreamingState = () => {
   wasStreaming = isStreaming;
 };
 
-const mountHostInComposer = (): boolean => {
+const mountHostInlineInNewChat = (): boolean => {
   ensureHost();
   if (!host) {
     return false;
   }
 
-  const onDesign = isDesignPage();
-  const composer = onDesign ? findDesignComposer() : findComposer();
-  if (!composer) {
-    host.remove();
-    mountedComposer?.classList.remove("cub-composer-host");
-    mountedComposer = null;
+  const insertion = findNewChatInsertionPoint();
+  if (!insertion || !document.body.contains(insertion.parent)) {
     return false;
   }
+  const { parent, anchor } = insertion;
 
-  if (mountedComposer !== composer) {
-    mountedComposer?.classList.remove("cub-composer-host");
-    mountedComposer = composer;
-    mountedComposer.classList.add("cub-composer-host");
+  if (mountedDisclaimerMount) {
+    disclaimerResizeObserver?.unobserve(mountedDisclaimerMount);
+    mountedDisclaimerMount = null;
+  }
+
+  host.classList.add("cub-new-chat-inline");
+  // Drop the fixed-overlay styles from disclaimer mode; layout below the card
+  // comes from CSS. (Inline `!important` beats stylesheet `!important`, so the
+  // fixed position/z-index must be removed here, not just overridden.)
+  host.style.removeProperty("position");
+  host.style.removeProperty("z-index");
+  host.style.removeProperty("pointer-events");
+  host.style.removeProperty("left");
+  host.style.removeProperty("top");
+  host.style.removeProperty("width");
+  host.style.removeProperty("height");
+  host.style.removeProperty("background-color");
+  host.style.removeProperty("display");
+  host.style.setProperty("display", "flex", "important");
+
+  // (Re)insert directly below the whole composer card. Claude rebuilds the
+  // composer on keystrokes, which can detach our host, so re-insert whenever
+  // it drifted out of place.
+  if (host.parentElement !== parent || (anchor && host.nextElementSibling !== anchor)) {
+    parent.insertBefore(host, anchor);
+  } else if (!parent.contains(host)) {
+    parent.insertBefore(host, anchor);
   }
 
   removeStaleHosts();
 
-  if (host.parentElement !== composer) {
-    const insertionPoint = onDesign
-      ? findDesignInsertionPoint(composer)
-      : findComposerInsertionPoint(composer);
-    composer.insertBefore(host, insertionPoint);
+  return true;
+};
+
+const mountHostOverDisclaimer = (): boolean => {
+  ensureHost();
+  if (!host) {
+    return false;
   }
+
+  const disclaimerMount = findDisclaimerMount();
+  if (!disclaimerMount) {
+    // No disclaimer row (e.g. claude.ai/new): fall back to a row directly
+    // below the whole composer card, scoped to /new.
+    if (isNewChatPage() && mountHostInlineInNewChat()) {
+      return true;
+    }
+    removeUsageBarHost();
+    return false;
+  }
+
+  // Leaving inline /new mode: restore fixed-overlay styling.
+  if (host.classList.contains("cub-new-chat-inline")) {
+    host.classList.remove("cub-new-chat-inline");
+    host.style.removeProperty("display");
+    applyFixedHostStyles();
+  }
+
+  if (mountedDisclaimerMount !== disclaimerMount) {
+    if (mountedDisclaimerMount) {
+      disclaimerResizeObserver?.unobserve(mountedDisclaimerMount);
+    }
+    mountedDisclaimerMount = disclaimerMount;
+    disclaimerResizeObserver?.observe(disclaimerMount);
+  }
+
+  removeStaleHosts();
+
+  if (host.parentElement !== document.body) {
+    document.body.appendChild(host);
+  }
+  positionUsageBarHost();
 
   return true;
 };
@@ -333,11 +501,11 @@ const render = () => {
   }
   renderCacheTimer();
   if (!storageState.settings.showOverlay) {
-    removeComposerHost();
+    removeUsageBarHost();
     renderTour();
     return;
   }
-  if (!mountHostInComposer()) {
+  if (!mountHostOverDisclaimer()) {
     renderTour();
     return;
   }
@@ -359,11 +527,42 @@ const render = () => {
         realUsageSnapshot={storageState.realUsageSnapshot}
         usageHistory={storageState.usageHistory}
         weeklyUsageMetrics={storageState.weeklyUsageMetrics}
+        onHoverBar={handleBarHoverRefresh}
+        onHoverWheel={handleWheelHoverRefresh}
       />
     </React.StrictMode>,
   );
   renderTour();
   syncTheme();
+};
+
+// Claude is an SPA: a route change swaps out the composer/disclaimer DOM, which
+// detaches the old mount. positionUsageBarHost bails on a detached mount, so
+// without this the bar stays parked at its previous-route coordinates until the
+// debounced mutation observer re-mounts it (~1s of visible lag). On a URL change
+// we hide the stale bar and re-render across a short settle window so it snaps to
+// the new mount the instant that mount exists.
+const NAV_SETTLE_DELAYS_MS = [0, 80, 200, 400, 700, 1000];
+
+const handleUrlChange = () => {
+  if (location.href === lastNavUrl) {
+    return;
+  }
+  lastNavUrl = location.href;
+  if (!isActiveInstance()) {
+    return;
+  }
+  host?.classList.toggle("cub-design", isDesignPage());
+  if (mountedDisclaimerMount && !document.body.contains(mountedDisclaimerMount)) {
+    host?.style.setProperty("display", "none", "important");
+  }
+  for (const delay of NAV_SETTLE_DELAYS_MS) {
+    window.setTimeout(() => {
+      if (isActiveInstance()) {
+        render();
+      }
+    }, delay);
+  }
 };
 
 interface UsageRefreshSample {
@@ -450,6 +649,43 @@ const requestConversationContextRefresh = (conversationId: string) => {
   );
 };
 
+// Hovering the bar or the context wheel nudges a fresh read of whatever it shows
+// (usage percentages / context tokens), so a glance gets current numbers instead
+// of the last message-send/navigation snapshot. Throttled per surface so repeated
+// hovers don't spam; the usage fetch is further collapsed by the background's own
+// 60s freshness cooldown.
+const HOVER_REFRESH_THROTTLE_MS = 15_000;
+let lastBarHoverRefreshAt = 0;
+let lastWheelHoverRefreshAt = 0;
+
+const handleBarHoverRefresh = () => {
+  if (!storageState || document.visibilityState !== "visible") {
+    return;
+  }
+  const now = Date.now();
+  if (now - lastBarHoverRefreshAt < HOVER_REFRESH_THROTTLE_MS) {
+    return;
+  }
+  lastBarHoverRefreshAt = now;
+  // skipHistory: a hover isn't a user-attributable usage sample.
+  requestApiUsageRefresh(false, undefined, true);
+};
+
+const handleWheelHoverRefresh = () => {
+  if (!storageState || document.visibilityState !== "visible") {
+    return;
+  }
+  const now = Date.now();
+  if (now - lastWheelHoverRefreshAt < HOVER_REFRESH_THROTTLE_MS) {
+    return;
+  }
+  lastWheelHoverRefreshAt = now;
+  const conversationId = getConversationId();
+  if (conversationId) {
+    requestConversationContextRefresh(conversationId);
+  }
+};
+
 const refreshUsage = async () => {
   if (!storageState || !document.body) {
     return;
@@ -467,7 +703,12 @@ const refreshUsage = async () => {
   lastKnownThinkingEnabled = nextThinkingEnabled;
   const now = new Date();
   const dailyUsage = rollDailyUsageForward(storageState.dailyUsage, snapshot.visibleSentCount, now);
-  const chatUsage = buildChatUsage(snapshot.visibleMessageTexts, now.getTime());
+  const chatUsage = buildChatUsage(
+    snapshot.visibleMessageTexts,
+    now.getTime(),
+    snapshot.attachments,
+    getImageTierForModel(snapshot.modelLabel ?? storageState.realUsageSnapshot?.modelLabel),
+  );
 
   checkStreamingState();
 
@@ -521,7 +762,13 @@ const refreshUsage = async () => {
   const dailyIncrement = deriveDailyIncrement(storageState.dailyUsage, dailyUsage);
   if (dailyIncrement > 0) {
     const modelLabel = snapshot.modelLabel ?? storageState.realUsageSnapshot?.modelLabel;
-    void appendDailyModelUsage(normalizeModelFamily(modelLabel) ?? "unknown", dailyIncrement, undefined, now.getTime());
+    // The popup history chart only breaks out Opus/Sonnet/Haiku; Fable (and any
+    // undetected model) folds into "unknown" so the daily total still reconciles.
+    // The drain-speed estimate DOES price Fable separately — see modelUsage.ts.
+    const family = normalizeModelFamily(modelLabel);
+    const bucket: ModelBucket =
+      family === "opus" || family === "sonnet" || family === "haiku" ? family : "unknown";
+    void appendDailyModelUsage(bucket, dailyIncrement, undefined, now.getTime());
   }
 
   // Propagate the DOM-detected model + thinking level into the live snapshot so
@@ -569,6 +816,9 @@ const refreshUsage = async () => {
 const scheduleRefresh = (records?: MutationRecord[]) => {
   if (!mutationsContainPageChanges(records)) return;
   if (!isActiveInstance()) return;
+  // A route change lands as page mutations, so catch it here — before the 350ms
+  // debounce below — and reposition the overlay immediately.
+  handleUrlChange();
   // The Thinking switch unmounts when the effort menu closes, and flipping it can
   // close the menu before the debounced refreshUsage runs — so the toggle's new
   // state would never be read and we'd fall back to a stale value. Capture the
@@ -582,7 +832,7 @@ const scheduleRefresh = (records?: MutationRecord[]) => {
   updateTimer = window.setTimeout(() => {
     if (!isActiveInstance()) return;
     tickSettingsPage();
-    tickMessageRail();
+    // TEMP: message rail disabled for now (see init). Don't re-add the rail tick here.
     syncTheme();
     void refreshUsage();
   }, 350);
@@ -622,7 +872,14 @@ const init = async () => {
   storageState = await getStorage();
   setLanguage(storageState.settings.language);
   initSettingsPage();
-  tickMessageRail();
+  if (typeof ResizeObserver !== "undefined") {
+    disclaimerResizeObserver = new ResizeObserver(positionUsageBarHost);
+  }
+  window.addEventListener("resize", positionUsageBarHost, { passive: true });
+  window.addEventListener("scroll", positionUsageBarHost, { capture: true, passive: true });
+  // TEMP: message rail disabled for now — remove any rail left by a previous
+  // version and don't start a new one. Revert to the rail tick to re-enable.
+  document.querySelectorAll("#claude-user-message-rail").forEach((el) => el.remove());
   render();
   syncTheme();
 
@@ -630,6 +887,11 @@ const init = async () => {
   const initialSnapshot = readClaudeDomSnapshot();
   lastSentCount = initialSnapshot.visibleSentCount;
   lastApiRefreshUrl = location.href;
+  lastNavUrl = location.href;
+
+  // Back/forward navigations don't always produce the mutations scheduleRefresh
+  // keys off, so reposition on popstate too.
+  window.addEventListener("popstate", handleUrlChange);
 
   requestApiUsageRefresh(isDesignPage());
 

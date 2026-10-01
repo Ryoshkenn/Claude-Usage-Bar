@@ -68,22 +68,29 @@ export const DEFAULT_SETTINGS: Settings = {
   mode: "compact",
   barMetric: "session",
   ringTarget: "context",
-  showBar: true,
+  showBar: false,
   showBarLabel: false,
   showWheel: true,
   showWheelLabel: false,
   showPace: true,
-  showCacheTimer: true,
+  // Bar + cache timer default off; the user can turn either on and the choice
+  // sticks (reads honor the stored value).
+  showCacheTimer: false,
   paceSurplusFormat: "percent",
-  weeklyMetricsEnabled: false,
-  weeklyPaceMode: "manual",
+  weeklyMetricsEnabled: true,
+  weeklyPaceMode: "smart",
   weeklyEstimateDisplay: "active_hours",
   weeklyManualWorkDays: [1, 2, 3, 4, 5],
-  weeklyManualActiveHoursPerDay: 10,
+  weeklyManualActiveHoursPerDay: 5,
   weeklyManualStartHour: 9,
   language: "en",
   hasSeenTour: false,
   showClipboard: true,
+  // Banners default to claude.ai only: useful out of the box, and it needs no
+  // permission beyond the one the extension already has.
+  resetBannerScope: "claude",
+  resetBannerSession: true,
+  resetBannerWeekly: true,
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The
@@ -93,12 +100,16 @@ export const DEFAULT_SETTINGS: Settings = {
 const migrateSettings = (settings: Settings): Settings => {
   const remapDesign = <T,>(value: T): T | "weekly" =>
     (value as unknown) === "design" ? "weekly" : value;
-  // "context" is wheel-only now; an older bar set to it falls back to session.
+  // "context" is not a valid bar metric; an older bar set to it falls back to session.
   const bar = remapDesign(settings.barMetric);
+  // The ring is now just the context window indicator with a single on/off
+  // toggle, so any stored ring metric or extra label is normalized away — reads
+  // always match what the panel offers.
   return {
     ...settings,
     barMetric: bar === "context" ? "session" : bar,
-    ringTarget: remapDesign(settings.ringTarget),
+    ringTarget: "context",
+    showWheelLabel: false,
   };
 };
 

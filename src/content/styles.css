@@ -1,41 +1,70 @@
-.cub-composer-host {
-  position: relative !important;
-}
-
 #claude-usage-bar-root {
   --cub-bar-width: 172px;
-  flex: 0 0 auto;
-  margin-left: 12px;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  flex: none;
+  min-width: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  pointer-events: auto;
   color-scheme: light dark;
   overflow: visible;
 }
 
-/* On /design the bar is its own row between the prompt input and the toolbar,
-   so it stretches full-width instead of squeezing between the toolbar halves. */
+/* Keep the same full-width footer treatment on Claude's design routes when the
+   disclaimer row is present there too. */
 #claude-usage-bar-root.cub-design {
-  width: 100%;
-  margin: 0 0 8px;
+  margin: 0;
+}
+
+/* Below-card slot on claude.ai/new: the host is inserted as its own row directly
+   underneath the whole composer card (no disclaimer row there). Block-level so
+   it spans the composer width; layout comes from normal flow. */
+#claude-usage-bar-root.cub-new-chat-inline {
+  position: static !important;
+  z-index: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 4px 0 0 !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background: transparent !important;
+  overflow: visible;
+}
+
+#claude-usage-bar-root.cub-new-chat-inline .cub-root {
+  width: auto;
+  max-width: 100%;
+  gap: 8px;
+  justify-content: flex-start;
 }
 
 .cub-root {
-  display: grid;
-  grid-template-columns: var(--cub-bar-width) auto auto;
+  display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  /* Hug the children: with grid + width:100% the `auto` columns absorbed the
+     full disclaimer-row width and pushed the clipboard far from the wheel. */
   width: max-content;
+  max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
-  color: rgb(195 194 184);
-  font: 14px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: inherit;
+  font: 12px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 #claude-usage-bar-root.cub-design .cub-root {
+  display: grid;
   gap: 0;
   font-size: 11px;
   grid-template-columns: 1fr;
   width: 100%;
+  max-width: none;
 }
 
 /* 80% of the row, centered, a touch thicker than the inline claude.ai bar. */
@@ -46,7 +75,7 @@
 }
 
 #claude-usage-bar-root.cub-design .cub-meter {
-  height: 3px;
+  height: 10px;
 }
 
 /* The design sidebar clips at its right edge (overflow:hidden ancestor) and the
@@ -73,13 +102,15 @@
 
 .cub-meter {
   display: flex;
-  height: 4px;
+  height: 10px;
   overflow: visible;
-  border-radius: 999px;
-  background: rgb(31 31 30);
+  border-radius: 3px;
+  background: var(--cds-surface-3, rgb(31 31 30));
+  box-shadow: inset 0 0 0 1px var(--cds-border, rgb(255 255 255 / 12%));
   cursor: pointer;
   position: relative;
-  flex: 1 1 auto;
+  width: var(--cub-bar-width);
+  flex: 0 0 var(--cub-bar-width);
 }
 
 /* ── Hover zone: easy to remove — delete this block + the span in ContentApp.tsx ── */
@@ -97,7 +128,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: rgb(204 124 94);
+  background: linear-gradient(90deg, rgb(204 124 94 / 35%) 0%, rgb(204 124 94) 100%);
 }
 
 /* ── Bar cell (bar + optional inline label) ───────────────── */
@@ -105,8 +136,8 @@
 .cub-bar-cell {
   display: flex;
   align-items: center;
-  gap: 6px;
-  width: var(--cub-bar-width);
+  gap: 8px;
+  width: max-content;
   min-width: var(--cub-bar-width);
 }
 
@@ -129,6 +160,10 @@
   flex-direction: row;
   align-items: center;
   gap: 4px;
+  /* Positioning ancestor for the breakdown panel (absolute; right: 0):
+     without this the panel anchors to the fixed overlay host and renders
+     offset to the right of the label. */
+  position: relative;
 }
 
 .cub-wheel-label {
@@ -143,46 +178,57 @@
   flex-shrink: 0;
 }
 
-/* ── Ring ─────────────────────────────────────────────────── */
+/* ── Context percent (opens the breakdown panel) ────────── */
 
-.cub-token-ring {
-  --cub-token-percentage: 0%;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(31 31 30) 0);
+button.cub-ctx-percent {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Same footprint as the clipboard icon: 24px tall, 7px corners. Width stays
+     content-driven since "100%" can't fit in 24px. */
+  height: 24px;
+  min-width: 24px;
+  box-sizing: border-box;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: rgb(195 194 184);
+  font: 12px/1 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
   cursor: pointer;
   position: relative;
   pointer-events: auto;
+  transition: background 120ms ease, color 120ms ease;
 }
 
-.cub-token-ring[data-loading="true"] {
-  background:
-    conic-gradient(
-      from 0deg,
-      rgb(204 124 94) 0deg 36deg,
-      rgb(88 87 82) 36deg 140deg,
-      rgb(31 31 30) 140deg 360deg
-    );
-  animation: cub-spinner-rotate 900ms linear infinite;
+button.cub-ctx-percent:hover,
+button.cub-ctx-percent:focus-visible {
+  background: rgb(255 255 255 / 8%);
+  color: rgb(245 245 241);
+  outline: none;
 }
 
-/* Centre hole – must approximate the Claude toolbar background */
-.cub-token-ring::after {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border-radius: inherit;
-  background: rgb(38 38 36);
+button.cub-ctx-percent[data-clickable="false"] {
+  cursor: default;
 }
 
-@keyframes cub-spinner-rotate {
-  from {
-    transform: rotate(0deg);
+button.cub-ctx-percent[data-loading="true"] {
+  animation: cub-percent-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes cub-percent-pulse {
+  0%,
+  100% {
+    opacity: 1;
   }
 
-  to {
-    transform: rotate(360deg);
+  50% {
+    opacity: 0.45;
   }
 }
 
@@ -249,10 +295,12 @@
   gap: 8px;
   min-width: 188px;
   padding: 10px 14px 12px;
-  border: 1px solid rgb(255 255 255 / 8%);
+  border: 1px solid transparent;
   border-radius: 8px;
-  background: rgb(44 44 43);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
+  background: var(--cds-surface-3, rgb(44 44 43));
+  box-shadow:
+    0 0.25rem 1.25rem rgb(0 0 0 / 3.5%),
+    inset 0 0 0 1px var(--cds-border, rgb(255 255 255 / 8%));
   color: rgb(245 245 241);
   font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   opacity: 0;
@@ -267,10 +315,10 @@
 
 .cub-usage-tooltip {
   left: 50%;
-  gap: 5px;
+  gap: 0;
   min-width: 330px;
-  padding: 10px 12px 12px;
-  text-align: center;
+  padding: 4px;
+  text-align: left;
   transform: translateX(-50%) translateY(3px);
   cursor: default;
 }
@@ -286,6 +334,8 @@
 }
 
 .cub-usage-title {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--cds-border, rgb(255 255 255 / 8%));
   color: rgb(165 164 156);
   font-size: 14px;
 }
@@ -294,16 +344,28 @@
   appearance: none;
   background: none;
   border: none;
-  padding: 0;
+  border-radius: 5px;
+  padding: 0 4px;
   color: rgb(165 164 156);
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
   pointer-events: auto;
   text-decoration: none;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+/* Same hover wash as the context window percent. */
+.cub-usage-link:hover,
+.cub-usage-link:focus-visible {
+  background: rgb(255 255 255 / 8%);
+  color: rgb(245 245 241);
+  outline: none;
 }
 
 .cub-usage-row {
+  padding: 7px 8px;
+  border-radius: 4px;
   color: rgb(225 225 219);
   font-size: 14px;
 }
@@ -416,6 +478,7 @@
 }
 
 .cub-usage-track {
+  margin: 0 8px 5px;
   height: 4px;
   overflow: hidden;
   border-radius: 999px;
@@ -451,8 +514,8 @@
 }
 
 .cub-wheel-wrap:hover .cub-token-tooltip,
-.cub-token-ring:hover .cub-token-tooltip,
-.cub-token-ring:focus-visible .cub-token-tooltip {
+.cub-ctx-percent:hover .cub-token-tooltip,
+.cub-ctx-percent:focus-visible .cub-token-tooltip {
   opacity: 1;
   transform: translateX(-50%);
   transition-delay: 250ms;
@@ -467,8 +530,7 @@
   }
 
   .cub-root {
-    width: max-content;
-    gap: 14px;
+    gap: 10px;
   }
 }
 
@@ -565,32 +627,43 @@
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-meter {
-  background: rgb(221 219 214);
+  background: var(--cds-surface-3, rgb(221 219 214));
+  box-shadow: 0 0 0 var(--cds-ring-hairline, 1px) hsl(60 2% 12% / 0.15);
 }
 
-#claude-usage-bar-root.cub-theme-light .cub-token-ring {
-  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(221 219 214) 0);
+#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent {
+  color: rgb(80 78 72);
 }
 
-/* Centre hole – slightly off-white to read cleanly on light backgrounds */
-#claude-usage-bar-root.cub-theme-light .cub-token-ring::after {
-  background: rgb(250 250 248);
+#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent:hover,
+#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent:focus-visible {
+  background: rgb(0 0 0 / 6%);
+  color: rgb(40 40 38);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-tooltip,
 #claude-usage-bar-root.cub-theme-light .cub-token-tooltip {
-  background: rgb(255 255 255);
-  border: 1px solid rgb(0 0 0 / 10%);
+  background: var(--cds-surface-3, rgb(255 255 255));
+  border: 1px solid transparent;
   color: rgb(40 40 38);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
+  box-shadow:
+    0 0.25rem 1.25rem rgb(0 0 0 / 3.5%),
+    0 0 0 var(--cds-ring-hairline, 1px) hsl(60 2% 12% / 0.15);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-title {
+  border-bottom-color: var(--cds-border, rgb(0 0 0 / 10%));
   color: rgb(120 118 112);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-link {
   color: rgb(120 118 112);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-link:hover,
+#claude-usage-bar-root.cub-theme-light .cub-usage-link:focus-visible {
+  background: rgb(0 0 0 / 6%);
+  color: rgb(40 40 38);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-row {
@@ -683,7 +756,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  justify-content: center;
+  gap: 5px;
+  /* Long conversations produce many markers; keep the whole rail inside the
+     viewport and let markers shrink to share the height rather than spilling
+     off the top and bottom edges. */
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -694,6 +773,10 @@
   justify-content: flex-end;
   width: 36px;
   height: 18px;
+  /* Shrink to share the capped rail height when there are many messages, but
+     never collapse below a comfortably clickable slot. */
+  flex: 0 1 18px;
+  min-height: 6px;
   border: none;
   background: transparent;
   padding: 0;
@@ -1054,8 +1137,8 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   width: 24px;
   height: 24px;
   border-radius: 7px;
-  border: 1px solid rgb(255 255 255 / 8%);
-  background: rgb(31 31 30);
+  border: 1px solid var(--cds-border, rgb(255 255 255 / 8%));
+  background: var(--cds-surface-3, rgb(31 31 30));
   color: rgb(195 194 184);
   cursor: pointer;
   display: inline-grid;
@@ -1069,8 +1152,8 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 .cub-prompt-button.active,
 .cub-prompt-button:hover {
   color: rgb(245 245 241);
-  border-color: rgb(204 124 94 / 55%);
-  background: rgb(44 44 43);
+  border-color: var(--cds-border, rgb(255 255 255 / 8%));
+  background: var(--cds-fill-ghost-hover, rgb(44 44 43));
 }
 
 .cub-prompt-panel {
@@ -1079,12 +1162,14 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   width: 360px;
   max-height: calc(100vh - 40px);
   display: grid;
-  gap: 9px;
+  gap: 8px;
   padding: 12px;
-  border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 10px;
-  background: rgb(44 44 43);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 34%);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--cds-surface-3, rgb(44 44 43));
+  box-shadow:
+    0 0.25rem 1.25rem rgb(0 0 0 / 3.5%),
+    inset 0 0 0 1px var(--cds-border, rgb(255 255 255 / 8%));
   color: rgb(245 245 241);
   font: 14px/1.25 "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   white-space: normal;
@@ -1161,9 +1246,9 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 .cub-prompt-search,
 .cub-field,
 .cub-textarea {
-  border-radius: 8px;
-  border: 1px solid rgb(255 255 255 / 8%);
-  background: rgb(31 31 30);
+  border-radius: 4px;
+  border: 1px solid var(--cds-border, rgb(255 255 255 / 8%));
+  background: var(--cds-surface-3, rgb(31 31 30));
   color: rgb(225 225 219);
   outline: none;
   font: 13px/1.35 "Anthropic Sans", system-ui, sans-serif;
@@ -1200,9 +1285,9 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 }
 
 .cub-prompt-tab {
-  border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 999px;
-  background: rgb(31 31 30);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
   color: rgb(165 164 156);
   font-size: 12px;
   padding: 5px 8px;
@@ -1213,13 +1298,13 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 
 .cub-prompt-tab.active {
   color: rgb(245 245 241);
-  border-color: rgb(204 124 94 / 42%);
-  background: rgb(58 43 35);
+  border-color: transparent;
+  background: var(--cds-fill-ghost-hover, rgb(58 43 35));
 }
 
 .cub-prompt-list {
   display: grid;
-  gap: 7px;
+  gap: 1px;
   max-height: 280px;
   overflow-y: auto;
 }
@@ -1235,10 +1320,10 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 .cub-prompt-item {
   display: grid;
   gap: 6px;
-  padding: 9px;
-  border-radius: 8px;
-  border: 1px solid rgb(255 255 255 / 7%);
-  background: rgb(38 38 36);
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
   cursor: pointer;
   animation: cub-prompt-item-in 200ms ease both;
 }
@@ -1255,7 +1340,8 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 }
 
 .cub-prompt-item:hover {
-  border-color: rgb(204 124 94 / 30%);
+  border-color: transparent;
+  background: var(--cds-fill-ghost-hover, rgb(58 58 56));
 }
 
 .cub-prompt-item-top {
@@ -1504,23 +1590,198 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   color: rgb(225 225 219);
   font-size: 12px;
   line-height: 1.4;
-  max-height: 54px;
+  max-height: 120px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Context breakdown panel ─────────────────────────────────── */
+
+/* Suppress the hover tooltip while the panel is open — they occupy the same
+   space and stacking two dark surfaces reads as a rendering glitch. */
+.cub-wheel-wrap[data-breakdown-open="true"] .cub-token-tooltip {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.cub-ctx-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  z-index: 2147483647;
+  width: 288px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--cds-surface-3, rgb(44 44 43));
+  box-shadow:
+    0 0.25rem 1.25rem rgb(0 0 0 / 3.5%),
+    inset 0 0 0 1px var(--cds-border, rgb(255 255 255 / 8%));
+  color: rgb(245 245 241);
+  font-size: 12px;
+  line-height: 1.4;
+  pointer-events: auto;
+  text-align: left;
+  animation: cub-ctx-panel-in 130ms ease-out;
+}
+
+@keyframes cub-ctx-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cub-ctx-panel-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.cub-ctx-panel-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(245 245 241);
+}
+
+.cub-ctx-panel-total {
+  font-size: 11px;
+  color: rgb(158 157 148);
+  font-variant-numeric: tabular-nums;
+}
+
+.cub-ctx-stack {
+  display: flex;
+  width: 100%;
+  height: 6px;
+  margin-bottom: 10px;
+  border-radius: 3px;
   overflow: hidden;
+  gap: 1px;
+}
+
+.cub-ctx-stack-seg {
+  width: var(--cub-ctx-share, 0%);
+  background: var(--cub-ctx-color, rgb(128 126 118));
+  flex-shrink: 0;
+}
+
+.cub-ctx-rows {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cub-ctx-row {
+  display: grid;
+  grid-template-columns: 8px 1fr auto auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.cub-ctx-row:hover {
+  background: var(--cds-fill-ghost-hover, rgb(58 58 56));
+}
+
+.cub-ctx-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--cub-ctx-color, rgb(128 126 118));
+  transform: translateY(1px);
+}
+
+.cub-ctx-row-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: rgb(225 225 219);
+}
+
+.cub-ctx-row-count {
+  font-size: 10px;
+  color: rgb(140 139 131);
+}
+
+.cub-ctx-row-tokens {
+  font-variant-numeric: tabular-nums;
+  color: rgb(245 245 241);
+}
+
+.cub-ctx-row-share {
+  min-width: 30px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: rgb(158 157 148);
+}
+
+.cub-ctx-panel-empty,
+.cub-ctx-panel-note {
+  margin: 10px 0 0;
+  font-size: 10px;
+  line-height: 1.4;
+  color: rgb(140 139 131);
+}
+
+/* ── Context breakdown panel light mode ──────────────────────── */
+
+#claude-usage-bar-root.cub-theme-light .cub-ctx-panel {
+  background: var(--cds-surface-3, rgb(255 255 255));
+  border: 1px solid transparent;
+  color: rgb(40 40 38);
+  box-shadow:
+    0 0.25rem 1.25rem rgb(0 0 0 / 3.5%),
+    0 0 0 var(--cds-ring-hairline, 1px) hsl(60 2% 12% / 0.15);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-ctx-row:hover {
+  background: var(--cds-fill-ghost-hover, rgb(242 239 234));
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-ctx-panel-title,
+#claude-usage-bar-root.cub-theme-light .cub-ctx-row-tokens {
+  color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-ctx-row-label {
+  color: rgb(61 60 56);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-ctx-panel-total,
+#claude-usage-bar-root.cub-theme-light .cub-ctx-row-share {
+  color: rgb(110 108 101);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-ctx-row-count,
+#claude-usage-bar-root.cub-theme-light .cub-ctx-panel-empty,
+#claude-usage-bar-root.cub-theme-light .cub-ctx-panel-note {
+  color: rgb(130 128 120);
 }
 
 /* ── Prompt Clipboard light mode ─────────────────────────────── */
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-button {
-  border-color: rgb(0 0 0 / 10%);
-  background: rgb(235 233 228);
+  border-color: var(--cds-border, rgb(0 0 0 / 10%));
+  background: var(--cds-surface-3, rgb(235 233 228));
   color: rgb(80 78 72);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-button.active,
 #claude-usage-bar-root.cub-theme-light .cub-prompt-button:hover {
   color: rgb(40 40 38);
-  border-color: rgb(204 124 94 / 55%);
-  background: rgb(242 239 234);
+  border-color: var(--cds-border, rgb(0 0 0 / 10%));
+  background: var(--cds-fill-ghost-hover, rgb(242 239 234));
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-backdrop {
@@ -1528,10 +1789,12 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-panel {
-  background: rgb(255 255 255);
-  border: 1px solid rgb(0 0 0 / 10%);
+  background: var(--cds-surface-3, rgb(255 255 255));
+  border: 1px solid transparent;
   color: rgb(40 40 38);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
+  box-shadow:
+    0 0.25rem 1.25rem rgb(0 0 0 / 3.5%),
+    0 0 0 var(--cds-ring-hairline, 1px) hsl(60 2% 12% / 0.15);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-title {
@@ -1541,30 +1804,31 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 #claude-usage-bar-root.cub-theme-light .cub-prompt-search,
 #claude-usage-bar-root.cub-theme-light .cub-field,
 #claude-usage-bar-root.cub-theme-light .cub-textarea {
-  background: rgb(245 245 241);
-  border-color: rgb(0 0 0 / 10%);
+  background: var(--cds-surface-3, rgb(245 245 241));
+  border-color: var(--cds-border, rgb(0 0 0 / 10%));
   color: rgb(40 40 38);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-tab {
-  border-color: rgb(0 0 0 / 10%);
-  background: rgb(245 245 241);
+  border-color: transparent;
+  background: transparent;
   color: rgb(120 118 112);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-tab.active {
   color: rgb(40 40 38);
-  border-color: rgb(204 124 94 / 42%);
-  background: rgb(248 238 233);
+  border-color: transparent;
+  background: var(--cds-fill-ghost-hover, rgb(248 238 233));
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-item {
-  border-color: rgb(0 0 0 / 8%);
-  background: rgb(250 250 248);
+  border-color: transparent;
+  background: transparent;
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-item:hover {
-  border-color: rgb(204 124 94 / 35%);
+  border-color: transparent;
+  background: var(--cds-fill-ghost-hover, rgb(242 239 234));
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-name {
@@ -1677,4 +1941,84 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 
 #claude-usage-bar-root.cub-theme-light .cub-preview-text {
   color: rgb(80 78 72);
+}
+
+/* ── Settings panel: usage-metrics groups & animated sub-options ─────────────
+   These live in Claude's settings modal (not the overlay host), so they theme
+   through Claude's own CDS tokens (--cds-border) and need no .cub-theme-light
+   counterpart. */
+
+/* Divider between the top-level metric groups. The groups are data-settings-nest,
+   so CDS_ROWS both suppresses its own divide-y and forces border-top-width:0
+   !important on them — an inset box-shadow draws the separator instead, immune to
+   that border override. */
+.cub-metric-group + .cub-metric-group {
+  box-shadow: inset 0 1px 0 0 var(--cds-border, rgb(255 255 255 / 8%));
+}
+
+/* Smooth height disclosure: animate grid-template-rows 0fr↔1fr so the sub-option
+   block expands/collapses without measuring its height. */
+.cub-nest-anim {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 220ms ease;
+}
+.cub-nest-anim[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.cub-nest-anim-inner {
+  overflow: hidden;
+  min-height: 0;
+  visibility: visible;
+  transition: visibility 0s linear 0s;
+}
+/* Once collapsed, hide so the controls leave the tab order — delayed until the
+   height animation finishes so they stay visible while collapsing. */
+.cub-nest-anim[data-open="false"] > .cub-nest-anim-inner {
+  visibility: hidden;
+  transition-delay: 220ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cub-nest-anim {
+    transition: none;
+  }
+  .cub-nest-anim[data-open="false"] > .cub-nest-anim-inner {
+    transition-delay: 0s;
+  }
+}
+
+/* Git-graph style connectors: a vertical trunk on the left with a rounded elbow
+   curving into each sub-option (├ for middle rows, └ for the last), echoing the
+   merged-PR curve. */
+.cub-nest {
+  position: relative;
+}
+.cub-nest-item {
+  position: relative;
+  padding-left: 24px;
+}
+/* Trunk from the top down to the row's vertical centre, then the rounded curve
+   out toward the control. */
+.cub-nest-item::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  width: 11px;
+  height: 50%;
+  border-left: 2.25px solid var(--cds-border, rgb(255 255 255 / 16%));
+  border-bottom: 2.25px solid var(--cds-border, rgb(255 255 255 / 16%));
+  border-bottom-left-radius: 10px;
+}
+/* Trunk continuation below the elbow for every row except the last. */
+.cub-nest-item::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  bottom: 0;
+  border-left: 2.25px solid var(--cds-border, rgb(255 255 255 / 16%));
+}
+.cub-nest-item:last-child::after {
+  display: none;
 }

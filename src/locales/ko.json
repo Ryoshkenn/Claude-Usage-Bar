@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "주간 · 모든 모델"
   },
+  "ringWeeklyFable": {
+    "message": "주간 · Fable"
+  },
   "ringContext": {
     "message": "컨텍스트 창"
   },
@@ -186,7 +189,7 @@
     "message": "바"
   },
   "setSecWheel": {
-    "message": "휠"
+    "message": "컨텍스트 창"
   },
   "setSecCacheTimer": {
     "message": "캐시 타이머"
@@ -237,13 +240,13 @@
     "message": "개인정보처리방침 열기"
   },
   "setProject": {
-    "message": "프로젝트 페이지"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "지원 및 개인정보 정보 링크가 있는 Claude Usage Bar 공개 사이트를 엽니다."
+    "message": "소스 코드, 이슈, 지원을 위해 GitHub 저장소를 엽니다."
   },
   "setProjectBtn": {
-    "message": "프로젝트 페이지 열기"
+    "message": "GitHub 열기"
   },
   "setShowBar": {
     "message": "바 표시"
@@ -264,10 +267,10 @@
     "message": "현재 퍼센트를 바 옆에 텍스트로 표시합니다."
   },
   "setShowWheel": {
-    "message": "휠 표시"
+    "message": "컨텍스트 창 표시"
   },
   "setShowWheelDesc": {
-    "message": "바 옆에 원형 링 표시기를 표시합니다."
+    "message": "컴포저 도구 모음에 컨텍스트 창 표시기를 표시합니다."
   },
   "setWheelShows": {
     "message": "휠 표시 항목"
@@ -400,5 +403,143 @@
   },
   "setDaySat": {
     "message": "토"
+  },
+  "ctxBreakdownTitle": {
+    "message": "컨텍스트 창 사용 내역"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "내 메시지"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude의 답변"
+  },
+  "ctxBreakdownThinking": {
+    "message": "확장 사고"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "도구 호출"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "도구 결과"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "파일 및 첨부"
+  },
+  "ctxBreakdownProject": {
+    "message": "프로젝트 지식"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "시스템 오버헤드"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "남음"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "메시지 $1개"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "블록 $1개"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "호출 $1회"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "결과 $1개"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "파일 $1개"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "컨텍스트 창이 아직 비어 있습니다."
+  },
+  "ctxBreakdownNote": {
+    "message": "이 대화를 기준으로 로컬에서 추정했습니다."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "로컬 추정치입니다. 도구 및 검색 결과로 인해 값이 근사치입니다."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Claude 5시간 한도가 초기화되었습니다"
+  },
+  "resetBannerSessionBody": {
+    "message": "세션 사용량이 0으로 돌아갔습니다."
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Claude 주간 한도가 초기화되었습니다"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "새로운 주간 사용량이 시작되었습니다."
+  },
+  "resetBannerAction": {
+    "message": "Claude 열기"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "주간"
+  },
+  "setSecResetAlerts": {
+    "message": "초기화 알림"
+  },
+  "setResetBanner": {
+    "message": "초기화 알림 표시"
+  },
+  "setResetBannerDesc": {
+    "message": "한도가 초기화되면 배너를 띄워 다시 시작할 수 있음을 알려줍니다."
+  },
+  "setResetBannerScope": {
+    "message": "알림 표시 위치"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "모든 사이트로 하면 다른 곳을 보고 있어도 배너가 도착합니다. Chrome이 권한을 요청합니다."
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai에서만"
+  },
+  "setResetScopeEverywhere": {
+    "message": "모든 사이트"
+  },
+  "setResetBannerSession": {
+    "message": "5시간 한도"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "5시간 세션 창이 초기화되면 알립니다."
+  },
+  "setResetBannerWeekly": {
+    "message": "주간 한도"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "전체 모델 주간 창이 초기화되면 알립니다."
+  },
+  "setResetBannerTest": {
+    "message": "배너 미리 보기"
+  },
+  "setResetBannerTestDesc": {
+    "message": "5초 뒤에 실제 배너를 보냅니다. 탭을 전환해 어디에 나타나는지 확인하세요."
+  },
+  "setResetBannerTestGo": {
+    "message": "테스트 보내기"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1초 후"
+  },
+  "grantTitle": {
+    "message": "모든 사이트에 초기화 알림 표시"
+  },
+  "grantBody": {
+    "message": "claude.ai 밖에서 배너를 표시하려면 Chrome 권한이 필요합니다. 배너 표시에만 사용되며 페이지 내용을 읽거나 전송하지 않습니다."
+  },
+  "grantDenied": {
+    "message": "권한이 허용되지 않았습니다. 초기화 알림은 claude.ai에서만 표시됩니다."
+  },
+  "grantAllow": {
+    "message": "계속"
+  },
+  "grantCancel": {
+    "message": "취소"
   }
 }

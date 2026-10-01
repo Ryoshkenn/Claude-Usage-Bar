@@ -26,6 +26,9 @@
   "ringWeekly": {
     "message": "साप्ताहिक · सभी मॉडल"
   },
+  "ringWeeklyFable": {
+    "message": "साप्ताहिक · Fable"
+  },
   "ringContext": {
     "message": "कॉन्टेक्स्ट विंडो"
   },
@@ -186,7 +189,7 @@
     "message": "बार"
   },
   "setSecWheel": {
-    "message": "व्हील"
+    "message": "संदर्भ विंडो"
   },
   "setSecCacheTimer": {
     "message": "कैश टाइमर"
@@ -237,13 +240,13 @@
     "message": "गोपनीयता नीति खोलें"
   },
   "setProject": {
-    "message": "प्रोजेक्ट पेज"
+    "message": "GitHub"
   },
   "setProjectDesc": {
-    "message": "समर्थन और गोपनीयता जानकारी के लिंक के साथ सार्वजनिक Claude Usage Bar साइट खोलें।"
+    "message": "सोर्स कोड, issues और सपोर्ट के लिए GitHub रिपॉजिटरी खोलें।"
   },
   "setProjectBtn": {
-    "message": "प्रोजेक्ट पेज खोलें"
+    "message": "GitHub खोलें"
   },
   "setShowBar": {
     "message": "बार दिखाएं"
@@ -264,10 +267,10 @@
     "message": "वर्तमान प्रतिशत को बार के बगल में टेक्स्ट के रूप में दिखाएं।"
   },
   "setShowWheel": {
-    "message": "व्हील दिखाएं"
+    "message": "संदर्भ विंडो दिखाएं"
   },
   "setShowWheelDesc": {
-    "message": "बार के बगल में गोलाकार रिंग संकेतक दिखाएं।"
+    "message": "कंपोज़र टूलबार में संदर्भ विंडो संकेतक दिखाएं।"
   },
   "setWheelShows": {
     "message": "व्हील दिखाता है"
@@ -400,5 +403,143 @@
   },
   "setDaySat": {
     "message": "श"
+  },
+  "ctxBreakdownTitle": {
+    "message": "कॉन्टेक्स्ट विंडो में क्या है"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2 में से $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "आपके संदेश"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude के उत्तर"
+  },
+  "ctxBreakdownThinking": {
+    "message": "विस्तृत चिंतन"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "टूल कॉल"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "टूल परिणाम"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "फ़ाइलें और अटैचमेंट"
+  },
+  "ctxBreakdownProject": {
+    "message": "प्रोजेक्ट नॉलेज"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "सिस्टम ओवरहेड"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "शेष"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 संदेश"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 ब्लॉक"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 कॉल"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 परिणाम"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 फ़ाइलें"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "कॉन्टेक्स्ट विंडो अभी खाली है।"
+  },
+  "ctxBreakdownNote": {
+    "message": "इस बातचीत से स्थानीय रूप से अनुमानित।"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "स्थानीय अनुमान। टूल और सर्च परिणामों के कारण यह अनुमानित है।"
+  },
+  "resetBannerSessionTitle": {
+    "message": "आपकी Claude 5-घंटे की सीमा रीसेट हो गई"
+  },
+  "resetBannerSessionBody": {
+    "message": "आपका सेशन उपयोग फिर से शून्य पर है।"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "आपकी Claude साप्ताहिक सीमा रीसेट हो गई"
+  },
+  "resetBannerWeeklyBody": {
+    "message": "उपयोग का नया सप्ताह शुरू हो गया है।"
+  },
+  "resetBannerAction": {
+    "message": "Claude खोलें"
+  },
+  "resetBannerSessionTag": {
+    "message": "5HR"
+  },
+  "resetBannerWeeklyTag": {
+    "message": "साप्ताहिक"
+  },
+  "setSecResetAlerts": {
+    "message": "रीसेट सूचनाएँ"
+  },
+  "setResetBanner": {
+    "message": "रीसेट सूचनाएँ दिखाएँ"
+  },
+  "setResetBannerDesc": {
+    "message": "सीमा रीसेट होने पर बैनर दिखाता है, ताकि आपको पता चले कि आप फिर से शुरू कर सकते हैं।"
+  },
+  "setResetBannerScope": {
+    "message": "सूचनाएँ यहाँ दिखाएँ"
+  },
+  "setResetBannerScopeDesc": {
+    "message": "कोई भी साइट चुनने पर बैनर तब भी दिखेगा जब आप कहीं और ब्राउज़ कर रहे हों। Chrome अनुमति माँगेगा।"
+  },
+  "setResetScopeClaude": {
+    "message": "केवल claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "कोई भी साइट"
+  },
+  "setResetBannerSession": {
+    "message": "5-घंटे की सीमा"
+  },
+  "setResetBannerSessionDesc": {
+    "message": "5-घंटे की सेशन विंडो रीसेट होने पर सूचित करें।"
+  },
+  "setResetBannerWeekly": {
+    "message": "साप्ताहिक सीमा"
+  },
+  "setResetBannerWeeklyDesc": {
+    "message": "सभी मॉडलों की साप्ताहिक विंडो रीसेट होने पर सूचित करें।"
+  },
+  "setResetBannerTest": {
+    "message": "बैनर देखें"
+  },
+  "setResetBannerTestDesc": {
+    "message": "5 सेकंड बाद असली बैनर भेजता है, ताकि आप टैब बदलकर देख सकें कि वह कहाँ दिखता है।"
+  },
+  "setResetBannerTestGo": {
+    "message": "परीक्षण भेजें"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1 सेकंड में"
+  },
+  "grantTitle": {
+    "message": "किसी भी साइट पर रीसेट सूचनाएँ दिखाएँ"
+  },
+  "grantBody": {
+    "message": "claude.ai के बाहर बैनर दिखाने के लिए Chrome की अनुमति चाहिए। इसका उपयोग केवल बैनर दिखाने के लिए होता है — किसी पेज की सामग्री न पढ़ी जाती है, न भेजी जाती है।"
+  },
+  "grantDenied": {
+    "message": "अनुमति नहीं मिली। रीसेट सूचनाएँ केवल claude.ai पर दिखेंगी।"
+  },
+  "grantAllow": {
+    "message": "जारी रखें"
+  },
+  "grantCancel": {
+    "message": "रद्द करें"
   }
 }

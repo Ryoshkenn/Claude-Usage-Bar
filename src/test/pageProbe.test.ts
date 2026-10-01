@@ -52,4 +52,43 @@ describe("pageProbe", () => {
       },
     });
   });
+
+  it("does not use the weekly reset for an unused session in the modern limits payload", async () => {
+    const posted: unknown[] = [];
+    vi.spyOn(Date, "now").mockReturnValue(new Date("2026-09-01T05:00:00.000Z").getTime());
+    const originalPostMessage = window.postMessage.bind(window);
+    vi.spyOn(window, "postMessage").mockImplementation((message: unknown) => {
+      posted.push(message);
+      originalPostMessage(message, window.location.origin);
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        clone: () => ({
+          json: async () => ({
+            five_hour: { utilization: 0, resets_at: null },
+            seven_day: { utilization: 8, resets_at: "2026-09-08T05:00:00.000Z" },
+            limits: [
+              { kind: "session", group: "session", percent: 0, resets_at: null, scope: null },
+              { kind: "weekly_all", group: "weekly", percent: 8, resets_at: "2026-09-08T05:00:00.000Z", scope: null },
+            ],
+          }),
+        }),
+      })),
+    );
+
+    window.eval(pageProbeSource);
+    await window.fetch("/api/organizations/123e4567-e89b-12d3-a456-426614174000/usage");
+    await Promise.resolve();
+
+    expect(posted).toContainEqual({
+      type: MESSAGE_TYPES.realUsage,
+      payload: {
+        percentageUsed: 0,
+        weeklyAllModelsPercentageUsed: 8,
+        weeklyAllModelsResetText: "resets 7d",
+        weeklyAllModelsResetsAt: new Date("2026-09-08T05:00:00.000Z").getTime(),
+      },
+    });
+  });
 });

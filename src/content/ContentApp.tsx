@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, type CSSProperties, type MouseEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type MouseEvent } from "react";
 import type {
   ChatUsage,
   MetricTarget,
@@ -22,8 +22,12 @@ import {
 import {
   computeModelAwareSessionProjection,
   computeSessionMessagesLeft,
+  getContextLimitTokens,
+  normalizeModelFamily,
 } from "../shared/modelUsage";
 import { PromptClipboard } from "./PromptClipboard";
+import { ContextBreakdownPanel } from "./ContextBreakdownPanel";
+import { formatCompactNumber } from "../shared/formatNumber";
 import { openUsageBarSettings } from "./settingsPage";
 
 interface ContentAppProps {
@@ -32,9 +36,10 @@ interface ContentAppProps {
   realUsageSnapshot?: RealUsageSnapshot;
   usageHistory?: UsageLogEntry[];
   weeklyUsageMetrics?: WeeklyUsageMetrics;
+  // Fired on hover of the bar / context wheel so the host can request fresh data.
+  onHoverBar?: () => void;
+  onHoverWheel?: () => void;
 }
-
-const TOKEN_CONTEXT_LIMIT = 200_000;
 
 const clampPercentage = (value: number): number => Math.min(100, Math.max(0, Math.round(value)));
 
@@ -64,27 +69,35 @@ const getRealUsagePercentage = (realUsageSnapshot?: RealUsageSnapshot): number |
   return null;
 };
 
-const formatCompactNumber = (value: number): string => {
-  if (value >= 1_000_000) {
-    return `${Math.round(value / 100_000) / 10}M`;
+// The percent shows how full the model's context window is (context length vs
+// the model-specific limit from getContextLimitTokens). Total tokens used
+// (compounded across all inferences) can exceed the window size.
+const getContextFillPercentage = (chatUsage: ChatUsage, contextLimit: number): number => {
+  const tokens = chatUsage.currentContextTokens ?? chatUsage.estimatedTokens;
+  if (!(tokens > 0) || !(contextLimit > 0)) {
+    return 0;
   }
-
-  if (value >= 1_000) {
-    return `${Math.round(value / 1_000)}k`;
-  }
-
-  return String(value);
+  return clampPercentage((tokens / contextLimit) * 100);
 };
 
-// The ring fill shows how full the context window is (context length vs 200k limit).
-// Total tokens used (compounded across all inferences) can exceed the window size.
-const getContextFillPercentage = (chatUsage: ChatUsage): number =>
-  clampPercentage(((chatUsage.currentContextTokens ?? chatUsage.estimatedTokens) / TOKEN_CONTEXT_LIMIT) * 100);
+// The Fable weekly-scoped limit, when the plan exposes one. Matched by model
+// family so it survives label variations ("Fable 5", "Fable", etc.).
+const getFableWeeklyPercentage = (
+  realUsageSnapshot: RealUsageSnapshot | undefined,
+): number | null => {
+  const scoped = realUsageSnapshot?.weeklyScopedLimits?.find(
+    (limit) => normalizeModelFamily(limit.modelLabel) === "fable",
+  );
+  return typeof scoped?.percentageUsed === "number"
+    ? clampPercentage(scoped.percentageUsed)
+    : null;
+};
 
 const getMetricPercentage = (
   metric: MetricTarget,
   realUsageSnapshot: RealUsageSnapshot | undefined,
   chatUsage: ChatUsage,
+  contextLimit: number,
 ): number | null => {
   switch (metric) {
     case "session":
@@ -93,8 +106,10 @@ const getMetricPercentage = (
       return typeof realUsageSnapshot?.weeklyAllModelsPercentageUsed === "number"
         ? clampPercentage(realUsageSnapshot.weeklyAllModelsPercentageUsed)
         : null;
+    case "weekly_fable":
+      return getFableWeeklyPercentage(realUsageSnapshot);
     case "context":
-      return getContextFillPercentage(chatUsage);
+      return getContextFillPercentage(chatUsage, contextLimit);
   }
 };
 
@@ -309,6 +324,8 @@ const ringMetricLabel = (metric: string): string | undefined => {
       return t("ringSession", "5-hour session");
     case "weekly":
       return t("ringWeekly", "Weekly · all models");
+    case "weekly_fable":
+      return t("ringWeeklyFable", "Weekly · Fable");
     case "context":
       return t("ringContext", "Context window");
     default:
@@ -322,8 +339,41 @@ export const ContentApp = ({
   realUsageSnapshot,
   usageHistory,
   weeklyUsageMetrics,
+  onHoverBar,
+  onHoverWheel,
 }: ContentAppProps) => {
   const [showReviewBanner, setShowReviewBanner] = useState(false);
+  const [isBreakdownOpen, setIsBreakdownOpen] = useState(false);
+  // Hovering the percent opens the breakdown panel; the close is delayed so the
+  // pointer can cross the gap between the label and the floating panel.
+  const breakdownCloseTimer = useRef<number | null>(null);
+
+  const openBreakdown = () => {
+    if (breakdownCloseTimer.current !== null) {
+      window.clearTimeout(breakdownCloseTimer.current);
+      breakdownCloseTimer.current = null;
+    }
+    setIsBreakdownOpen(true);
+  };
+
+  const scheduleBreakdownClose = () => {
+    if (breakdownCloseTimer.current !== null) {
+      window.clearTimeout(breakdownCloseTimer.current);
+    }
+    breakdownCloseTimer.current = window.setTimeout(() => {
+      breakdownCloseTimer.current = null;
+      setIsBreakdownOpen(false);
+    }, 150);
+  };
+
+  useEffect(
+    () => () => {
+      if (breakdownCloseTimer.current !== null) {
+        window.clearTimeout(breakdownCloseTimer.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.storage?.local) {
@@ -361,21 +411,38 @@ export const ContentApp = ({
   const showBar = settings.showBar !== false;
   const showBarLabel = settings.showBarLabel === true;
   const showWheel = settings.showWheel !== false;
-  const showWheelLabel = settings.showWheelLabel === true;
   const showPace = settings.showPace !== false;
   const showClipboard = settings.showClipboard !== false;
 
-  const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage);
+  // Model-aware window: Opus 5 / Sonnet 5 / Fable 5.1 get 1M, Opus 4.6–4.8 and
+  // Sonnet 4.6 get 500K, everything else (and unknown models) 200K. The label
+  // is detected live from the composer, so switching models resizes the scale.
+  const contextLimit = getContextLimitTokens(realUsageSnapshot?.modelLabel);
+
+  const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage, contextLimit);
   const barWidth = typeof barPercentage === "number" ? barPercentage : 0;
   const barDisplay = typeof barPercentage === "number" ? `${barPercentage}%` : "—";
 
   const ringPercentage =
-    ringTarget === "hidden" ? 0 : (getMetricPercentage(ringTarget, realUsageSnapshot, chatUsage) ?? 0);
+    ringTarget === "hidden" ? 0 : (getMetricPercentage(ringTarget, realUsageSnapshot, chatUsage, contextLimit) ?? 0);
 
   const isRefreshingContext = Boolean(chatUsage.isRefreshingContext);
   const totalTokensUsed = chatUsage.estimatedTokens;
   const contextLengthTokens = chatUsage.currentContextTokens ?? chatUsage.estimatedTokens;
-  const contextFillPercentage = getContextFillPercentage(chatUsage);
+  const contextFillPercentage = getContextFillPercentage(chatUsage, contextLimit);
+  const contextBreakdown = chatUsage.contextBreakdown;
+  // Only the context percent has something to expand into, and only once the worker
+  // has finished counting — otherwise the label stays a plain hover-tooltip target.
+  const canOpenBreakdown =
+    ringTarget === "context" &&
+    !isRefreshingContext &&
+    Boolean(contextBreakdown && contextBreakdown.totalTokens > 0);
+
+  useEffect(() => {
+    if (!canOpenBreakdown) {
+      setIsBreakdownOpen(false);
+    }
+  }, [canOpenBreakdown]);
 
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
   const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
@@ -383,6 +450,11 @@ export const ContentApp = ({
   // don't expose them, so the rows simply don't render.
   const weeklyScopedLimits = realUsageSnapshot?.weeklyScopedLimits ?? [];
   const sessionPercentage = getRealUsagePercentage(realUsageSnapshot);
+  const sessionHasNotStarted =
+    sessionPercentage === 0 && typeof realUsageSnapshot?.sessionResetsAt !== "number";
+  const sessionResetText = sessionHasNotStarted
+    ? t("sessionNotUsedYet", "not used yet")
+    : realUsageSnapshot?.resetText ?? t("resetUnknown", "reset unknown");
 
   // Prefer the model-aware projection (so switching to a cheaper model lengthens
   // the estimate); fall back to the blended drain-rate projection until enough
@@ -471,7 +543,7 @@ export const ContentApp = ({
             {t(
               "ctxLength",
               "$1 / $2 context length",
-              [formatCompactNumber(contextLengthTokens), formatCompactNumber(TOKEN_CONTEXT_LIMIT)],
+              [formatCompactNumber(contextLengthTokens), formatCompactNumber(contextLimit)],
             )}
           </span>
           <span>{t("ctxCurrent", "$1 current context", formatCompactNumber(totalTokensUsed))}</span>
@@ -498,6 +570,7 @@ export const ContentApp = ({
             aria-label={`${ringMetricLabel(barMetric) ?? t("usage", "Usage")} ${barDisplay}`}
             role="button"
             tabIndex={0}
+            onMouseEnter={onHoverBar}
           >
           <span className="cub-meter-hover" />
           <span className="cub-meter-fill" style={{ width: `${barWidth}%` }} />
@@ -532,7 +605,7 @@ export const ContentApp = ({
               <span className="cub-usage-row-label">
                 <span className="cub-usage-row-title">{t("fiveHourLimit", "5-hour limit")}</span>
                 <span className="cub-usage-row-sub">
-                  {realUsageSnapshot?.resetText ?? t("resetUnknown", "reset unknown")}
+                  {sessionResetText}
                 </span>
               </span>
               <span className="cub-usage-row-value">
@@ -607,12 +680,18 @@ export const ContentApp = ({
         </div>
       )}
       {showWheel && ringTarget !== "hidden" && (
-        <span className="cub-wheel-wrap">
-          {showWheelLabel && (
-            <span className="cub-wheel-label" aria-hidden="true">{ringPercentage}%</span>
-          )}
-          <span
-            className="cub-token-ring"
+        <span
+          className="cub-wheel-wrap"
+          data-breakdown-open={String(isBreakdownOpen)}
+          onMouseEnter={() => {
+            onHoverWheel?.();
+            if (canOpenBreakdown) openBreakdown();
+          }}
+          onMouseLeave={canOpenBreakdown ? scheduleBreakdownClose : undefined}
+        >
+          <button
+            type="button"
+            className="cub-ctx-percent"
             aria-label={
               ringTarget === "context"
                 ? isRefreshingContext
@@ -620,13 +699,25 @@ export const ContentApp = ({
                   : t("ctxWindowFull", "Context window $1% full", contextFillPercentage)
                 : `${ringMetricLabel(ringTarget)} ${ringPercentage}%`
             }
+            aria-expanded={canOpenBreakdown ? isBreakdownOpen : undefined}
+            aria-haspopup={canOpenBreakdown ? "dialog" : undefined}
+            data-clickable={String(canOpenBreakdown)}
             data-loading={String(ringTarget === "context" && isRefreshingContext)}
-            style={{ "--cub-token-percentage": `${ringPercentage}%` } as CSSProperties}
+            onClick={canOpenBreakdown ? () => setIsBreakdownOpen((open) => !open) : undefined}
           >
+            {ringPercentage}%
             <span className="cub-token-tooltip" role="tooltip">
               {ringTooltip}
             </span>
-          </span>
+          </button>
+          {canOpenBreakdown && isBreakdownOpen && contextBreakdown && (
+            <ContextBreakdownPanel
+              breakdown={contextBreakdown}
+              contextLimit={contextLimit}
+              lengthIsEstimate={chatUsage.lengthIsEstimate}
+              onClose={() => setIsBreakdownOpen(false)}
+            />
+          )}
         </span>
       )}
       {showClipboard && <PromptClipboard />}

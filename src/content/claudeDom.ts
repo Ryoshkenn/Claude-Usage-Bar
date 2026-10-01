@@ -15,6 +15,20 @@ const TRANSCRIPT_MESSAGE_SELECTORS = [
   '[data-message-author-role="assistant"]',
 ];
 
+export interface DomAttachment {
+  fileName?: string;
+  // Lowercased kind: badge text ("pdf", "txt") or filename extension.
+  kind?: string;
+  // Parsed from thumbnails like "67 lines" (text/code files). PDFs and images
+  // expose no size in the DOM.
+  lineCount?: number;
+  // Intrinsic pixel dimensions of attached images, read from the loaded
+  // resource (naturalWidth/Height) — the rendered 120px tile size is useless,
+  // but the underlying /preview resource is full-size (verified live).
+  imageWidth?: number;
+  imageHeight?: number;
+}
+
 export interface ClaudeDomSnapshot {
   modelLabel?: string;
   // From the effort menu (switch + radios): "off", a level, or undefined when the
@@ -28,6 +42,10 @@ export interface ClaudeDomSnapshot {
   visibleMessageCount: number;
   visibleText: string;
   visibleMessageTexts: string[];
+  // Sent attachments (PDF/image thumbnails, file cards). Deliberately NOT part
+  // of `metadata` — the page probe allowlists metadata keys, and filenames
+  // would leak document titles through it.
+  attachments: DomAttachment[];
   metadata: UsageMetadata;
 }
 
@@ -98,6 +116,54 @@ const readConversationText = (): { text: string; messageTexts: string[]; message
     sentCount: userElements.map(transcriptTextOf).filter(Boolean).length,
   };
 };
+
+const ATTACHMENT_SELECTOR = '[data-testid="file-thumbnail"]';
+
+// Sent attachments, read from the file tiles/cards in the transcript. Two live
+// variants (verified Sept 2026): image-preview tiles (PDFs/images — filename in
+// the img alt, type badge, NO size) and file cards (txt/code — full filename in
+// a title attr, a "67 lines" size signal, type badge). Only filename, kind, and
+// line count are extracted — never file contents.
+const readDomAttachments = (): DomAttachment[] =>
+  [...document.querySelectorAll<HTMLElement>(ATTACHMENT_SELECTOR)]
+    .filter((el) => !isExtensionElement(el) && !el.closest("form"))
+    .map((thumb) => {
+      const text = (thumb.textContent ?? "").replace(/\s+/g, " ").trim();
+      const img = thumb.querySelector("img");
+      const fileName =
+        img?.getAttribute("alt")?.trim() ||
+        thumb.querySelector(".sr-only")?.textContent?.trim() ||
+        thumb.querySelector("[title]")?.getAttribute("title")?.trim() ||
+        undefined;
+      const badge = thumb
+        .querySelector('[data-cds="Badge"]')
+        ?.textContent?.replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+      const ext = fileName?.match(/\.([a-z0-9]{1,5})$/)?.[1]?.toLowerCase();
+      const lineMatch = text.match(/(\d+)\s+lines?\b/i);
+
+      const attachment: DomAttachment = {};
+      if (fileName) {
+        attachment.fileName = fileName;
+      }
+      const kind = ext ?? badge;
+      if (kind) {
+        attachment.kind = kind;
+      }
+      if (lineMatch) {
+        attachment.lineCount = Number(lineMatch[1]);
+      }
+      // Intrinsic (full-resource) dimensions only — the rendered tile is a
+      // fixed 120px and says nothing about the real image.
+      const naturalWidth = img?.naturalWidth ?? 0;
+      const naturalHeight = img?.naturalHeight ?? 0;
+      if (naturalWidth > 0 && naturalHeight > 0) {
+        attachment.imageWidth = naturalWidth;
+        attachment.imageHeight = naturalHeight;
+      }
+      return attachment;
+    });
 
 const readPageText = (): string => {
   const pageText = document.body.innerText ?? "";
@@ -206,7 +272,7 @@ const extractUsagePageMetadata = (pageText: string): Pick<
   };
 };
 
-const MODEL_LABEL_RE = /\b(?:Claude\s+)?(?:Opus|Sonnet|Haiku)\s+\d(?:\.\d)?\b/i;
+const MODEL_LABEL_RE = /\b(?:Claude\s+)?(?:Opus|Sonnet|Haiku|Fable)\s+\d(?:\.\d)?\b/i;
 
 const cleanModelLabel = (raw: string): string => raw.replace(/^Claude\s+/i, "").trim();
 
@@ -237,13 +303,19 @@ const modelControlCandidates = (): HTMLElement[] => {
   ];
 };
 
-// The whitespace-collapsed textContent of the first control that names a model,
-// e.g. "Opus 4.8 Max" — model name plus (always-present) effort suffix.
+// The whitespace-collapsed text of the first control that names a model, e.g.
+// "Opus 5 Low" — model name plus effort suffix (absent on Haiku, which has no
+// levels: "Haiku 4.5"). Checks textContent first, then the aria-label (format
+// "Model: Opus 5 Low"), which carries the same info without badge noise.
 const readModelControlText = (): string | undefined => {
   for (const el of modelControlCandidates()) {
     const text = (el.textContent ?? "").replace(/\s+/g, " ").trim();
     if (MODEL_LABEL_RE.test(text)) {
       return text;
+    }
+    const labelled = (el.getAttribute("aria-label") ?? "").replace(/\s+/g, " ").trim();
+    if (MODEL_LABEL_RE.test(labelled)) {
+      return labelled;
     }
   }
   return undefined;
@@ -260,10 +332,11 @@ export const readSelectedModelLabel = (pageText: string): string | undefined => 
   return fallback ? cleanModelLabel(fallback[0]) : undefined;
 };
 
-// Claude's effort menu radios, keyed by their data-testid suffix. "xhigh" is the
-// "Extra" option (Opus 4.7/4.8 only). ⚠️ Confirmed against live claude.ai markup
-// (role="menu" > [data-testid="effort-option-*"][aria-checked]); if thinking
-// detection breaks, re-check these testids and the switch aria-label below.
+// Claude's effort submenu radios. Current markup (verified live Sept 2026) is
+// role="menu" > [role="menuitemradio"][data-effort-id][aria-checked] with ids
+// low/medium/high/xhigh/max; "xhigh" is the "Extra" option. The older
+// [data-testid="effort-option-*"] variant is kept as a fallback.
+// ⚠️ If thinking detection breaks, re-check these against live claude.ai markup.
 const EFFORT_OPTION_LEVEL: Record<string, Exclude<ThinkingLevel, "off">> = {
   low: "low",
   medium: "medium",
@@ -273,10 +346,11 @@ const EFFORT_OPTION_LEVEL: Record<string, Exclude<ThinkingLevel, "off">> = {
 };
 
 // The active thinking level lives only in the page DOM (never the usage API), and
-// only while the effort menu is *open* (the switch + radios unmount on close).
+// only while the effort submenu is *open* (the radios unmount on close).
 // Returns:
-//   "off"        — the Thinking switch is toggled off
-//   a level      — thinking on, with the checked effort radio
+//   "off"        — the Thinking switch is toggled off (legacy markup only; the
+//                  current effort submenu has no switch — a level is always set)
+//   a level      — the checked effort radio
 //   undefined    — menu closed / not readable; caller keeps the last known value
 // so a closed menu never clobbers a previously-detected level.
 export const readThinkingLevel = (): ThinkingLevel | undefined => {
@@ -285,15 +359,24 @@ export const readThinkingLevel = (): ThinkingLevel | undefined => {
     return "off";
   }
 
-  const checked = document.querySelector<HTMLElement>('[data-testid^="effort-option-"][aria-checked="true"]');
-  const suffix = checked?.getAttribute("data-testid")?.replace("effort-option-", "");
-  return suffix ? EFFORT_OPTION_LEVEL[suffix] : undefined;
+  const legacy = document.querySelector<HTMLElement>('[data-testid^="effort-option-"][aria-checked="true"]');
+  const legacySuffix = legacy?.getAttribute("data-testid")?.replace("effort-option-", "");
+  if (legacySuffix && EFFORT_OPTION_LEVEL[legacySuffix]) {
+    return EFFORT_OPTION_LEVEL[legacySuffix];
+  }
+
+  const checked = document.querySelector<HTMLElement>('[data-effort-id][aria-checked="true"]');
+  const effortId = checked?.getAttribute("data-effort-id") ?? "";
+  return EFFORT_OPTION_LEVEL[effortId];
 };
 
 // The Thinking switch's bare on/off state, read in isolation from the effort
-// level. Returns:
+// level. Legacy markup only — the current effort submenu (Sept 2026) has no
+// switch, so this returns undefined there and callers keep their last value.
+// Returns:
 //   true/false   — the switch is present and toggled on/off
-//   undefined    — the switch isn't in the DOM (menu closed); caller keeps last
+//   undefined    — the switch isn't in the DOM (menu closed, or new markup);
+//                  caller keeps last
 // Toggling the switch can close the menu before the debounced refresh reads it,
 // so callers capture this synchronously on mutation while the switch still exists.
 export const readThinkingEnabled = (): boolean | undefined => {
@@ -305,10 +388,11 @@ export const readThinkingEnabled = (): boolean | undefined => {
 };
 
 // The composer model control trails the model name with the configured effort
-// level, e.g. "Opus 4.8<span> Max</span>". Unlike the effort menu it's always in
-// the DOM, so it gives the level even when the menu is closed — but it keeps
-// showing the level when thinking is off, so it never reports "off". Returns the
-// level, or undefined when no recognizable effort suffix trails the model name.
+// level, e.g. "Opus 5 Low". Unlike the effort submenu it's always in the DOM,
+// so it gives the level even when the menu is closed. Haiku has no levels, so
+// its control is a bare "Haiku 4.5" with no suffix — correctly yielding
+// undefined. Returns the level, or undefined when no recognizable effort suffix
+// trails the model name.
 export const readComposerEffortLevel = (): ThinkingLevel | undefined => {
   const text = readModelControlText();
   const modelMatch = text?.match(MODEL_LABEL_RE);
@@ -373,6 +457,7 @@ export const readClaudeDomSnapshot = (): ClaudeDomSnapshot => {
     visibleMessageCount: conversation.messageCount,
     visibleText: conversation.text,
     visibleMessageTexts: conversation.messageTexts,
+    attachments: readDomAttachments(),
     metadata: {
       modelLabel,
       thinkingLevel,

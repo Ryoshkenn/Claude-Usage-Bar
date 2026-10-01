@@ -108,6 +108,44 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
   applyLimit(input.five_hour, "percentageUsed", "resetText", "sessionResetsAt");
   applyLimit(input.seven_day, "weeklyAllModelsPercentageUsed", "weeklyAllModelsResetText", "weeklyAllModelsResetsAt");
 
+  // The current endpoint also exposes a canonical limits array. Its entries
+  // are sibling-scoped by `kind`/`group`, so do not let the generic scanner
+  // mistake the weekly entry's reset timestamp for the session reset.
+  if (Array.isArray(input.limits)) {
+    for (const value of input.limits) {
+      if (!value || typeof value !== "object" || Array.isArray(value)) {
+        continue;
+      }
+      const limit = value as JsonObject;
+      const kind = typeof limit.kind === "string" ? limit.kind : "";
+      const group = typeof limit.group === "string" ? limit.group : "";
+      const percentage = limit.percent ?? limit.utilization;
+      const reset = limit.resets_at ?? limit.resetsAt ?? limit.reset_at ?? limit.resetAt;
+      const parsedReset = parseResetMetadata(reset);
+
+      if (kind === "session" || group === "session") {
+        if (typeof percentage === "number" && Number.isFinite(percentage)) {
+          output.percentageUsed = Math.min(100, Math.max(0, Math.round(percentage)));
+        }
+        if (parsedReset) {
+          output.resetText = parsedReset.resetText;
+          output.sessionResetsAt = parsedReset.resetAtMs;
+        }
+      } else if (kind === "weekly_all") {
+        if (typeof percentage === "number" && Number.isFinite(percentage)) {
+          output.weeklyAllModelsPercentageUsed = Math.min(100, Math.max(0, Math.round(percentage)));
+        }
+        if (parsedReset) {
+          output.weeklyAllModelsResetText = parsedReset.resetText;
+          output.weeklyAllModelsResetsAt = parsedReset.resetAtMs;
+        }
+      }
+    }
+  }
+
+  const hasStructuredClaudeUsage =
+    Array.isArray(input.limits) || input.five_hour !== undefined || input.seven_day !== undefined;
+
   const isSessionScope = (text: string): boolean =>
     /(5|five).*hour|hour.*limit|five hour|5 hour|five_hour|5_hour/.test(text);
   const isWeeklyScope = (text: string): boolean => /seven day|seven_day|7 day|7_day|weekly/.test(text);
@@ -142,7 +180,7 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
               output.weeklyAllModelsPercentageUsed ??= nested;
             } else if (isSessionScope(scopedText)) {
               output.percentageUsed ??= nested;
-            } else {
+            } else if (!hasStructuredClaudeUsage) {
               output.percentageUsed = nested;
             }
           } else if (/reset/.test(normalized)) {
@@ -163,7 +201,7 @@ const coerceMetadata = (input: JsonObject): JsonObject => {
               output.weeklyAllModelsResetText ??= nested;
             } else if (isSessionScope(scopedText)) {
               output.resetText ??= nested;
-            } else {
+            } else if (!hasStructuredClaudeUsage) {
               output.resetText = nested;
             }
           } else if (/remaining/.test(normalized)) {

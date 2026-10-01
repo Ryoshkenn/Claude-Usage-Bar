@@ -1,4 +1,5 @@
 import type { ThinkingLevel, UsageLogEntry, UsageProjection } from "./types";
+import type { ImageTier } from "./imageTokens";
 import { projectUsageDepletion, trimForecastEntries } from "./usageProjection";
 
 // Usage weight per model family, expressed as "messages obtainable per unit of
@@ -7,7 +8,10 @@ import { projectUsageDepletion, trimForecastEntries } from "./usageProjection";
 // in cost terms Opus=2.5, Sonnet=1, Haiku=0.25; weight is the inverse normalized
 // to Opus → Sonnet ~2.5×, Haiku ~10× more messages. Budget cost of one message is
 // opusCost / weight.
+// Fable 5 is priced at $10/$50 per Mtok vs Opus 4.8's $5/$25 — 2× the token cost,
+// so it drains the budget twice as fast → weight 0.5 (half as many messages as Opus).
 export const MODEL_USAGE_WEIGHTS = {
+  fable: 0.5,
   opus: 1,
   sonnet: 2.5,
   haiku: 10,
@@ -41,12 +45,13 @@ export const CONSERVATIVE_MESSAGE_COST_FACTOR = 2;
 const RESET_TOLERANCE_MS = 60_000;
 
 // Mirror the family detection in claudeDom.ts (labels look like "Opus 4.8",
-// "Sonnet 4.6", "Haiku 4.5"). Unknown / missing labels return null.
+// "Sonnet 4.6", "Haiku 4.5", "Fable 5"). Unknown / missing labels return null.
 export const normalizeModelFamily = (label?: string): ModelFamily | null => {
   if (!label) {
     return null;
   }
   const lower = label.toLowerCase();
+  if (lower.includes("fable")) return "fable";
   if (lower.includes("opus")) return "opus";
   if (lower.includes("sonnet")) return "sonnet";
   if (lower.includes("haiku")) return "haiku";
@@ -58,6 +63,71 @@ export const normalizeModelFamily = (label?: string): ModelFamily | null => {
 export const getModelWeight = (label?: string): number => {
   const family = normalizeModelFamily(label);
   return family ? MODEL_USAGE_WEIGHTS[family] : MODEL_USAGE_WEIGHTS.opus;
+};
+
+// Context window sizes when chatting with Claude on paid plans.
+// https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans
+// Unknown / undetected models fall back to 200K: the smallest window, so the
+// displayed percentage never understates how full the context actually is.
+export const CONTEXT_LIMIT_DEFAULT_TOKENS = 200_000;
+export const CONTEXT_LIMIT_500K_TOKENS = 500_000;
+export const CONTEXT_LIMIT_1M_TOKENS = 1_000_000;
+
+const parseModelVersion = (label: string): { major: number; minor: number } | null => {
+  // Anchor the version to the family name so a stray number elsewhere in the
+  // label (e.g. a "Max" suffix variant or plan name) can't be mistaken for the
+  // model version. Accept space/hyphen/underscore separators so API model ids
+  // like "claude-opus-5" and "claude-haiku-4-5-20251001" parse too.
+  const match = label.match(/(?:opus|sonnet|haiku|fable)[\s\-_]+(\d+)(?:[.\-](\d+))?/i);
+  if (!match) {
+    return null;
+  }
+  return { major: Number(match[1]), minor: match[2] === undefined ? 0 : Number(match[2]) };
+};
+
+export const getContextLimitTokens = (label?: string): number => {
+  const family = normalizeModelFamily(label);
+  if (!family || !label) {
+    return CONTEXT_LIMIT_DEFAULT_TOKENS;
+  }
+  const version = parseModelVersion(label);
+  const major = version?.major ?? 0;
+  const minor = version?.minor ?? 0;
+
+  // 1M chat window: Fable 5.1+, Opus 5+, Sonnet 5+.
+  if (family === "fable" && (major > 5 || (major === 5 && minor >= 1))) {
+    return CONTEXT_LIMIT_1M_TOKENS;
+  }
+  if ((family === "opus" || family === "sonnet") && major >= 5) {
+    return CONTEXT_LIMIT_1M_TOKENS;
+  }
+
+  // 500K chat window: Opus 4.6–4.8, Sonnet 4.6. Capped to exactly these
+  // versions on purpose — an unknown future 4.x must fall back to 200K (which
+  // overstates fullness, the safe direction) rather than being granted 500K.
+  if (family === "opus" && major === 4 && minor >= 6 && minor <= 8) {
+    return CONTEXT_LIMIT_500K_TOKENS;
+  }
+  if (family === "sonnet" && major === 4 && minor === 6) {
+    return CONTEXT_LIMIT_500K_TOKENS;
+  }
+
+  return CONTEXT_LIMIT_DEFAULT_TOKENS;
+};
+
+// Vision resolution tier for image token pricing (see imageTokens.ts).
+// "High-resolution" covers Claude 4.7 and later; older models are standard.
+// Unknown / unparsable labels resolve to high — the larger estimate, so the
+// displayed percentage never understates how full the context is.
+export const getImageTierForModel = (label?: string): ImageTier => {
+  if (!label) {
+    return "high";
+  }
+  const version = parseModelVersion(label);
+  if (!version) {
+    return "high";
+  }
+  return version.major > 4 || (version.major === 4 && version.minor >= 7) ? "high" : "standard";
 };
 
 // 1-based rank of each selectable thinking level. Drives the multiplier below.

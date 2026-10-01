@@ -9,6 +9,31 @@ const onboardingTourScript = readFileSync(resolve(__dirname, "../content/Onboard
 const popupStyles = readFileSync(resolve(__dirname, "../popup/popup.css"), "utf8");
 
 describe("content styles", () => {
+  it("keeps the usage bar above Claude as a fixed overlay", () => {
+    expect(styles).toContain("position: fixed !important;");
+    expect(styles).toContain("z-index: 2147483647 !important;");
+    expect(contentScript).toContain("document.body.appendChild(host);");
+    expect(contentScript).toContain("window.addEventListener(\"scroll\", positionUsageBarHost");
+  });
+
+  it("uses a thicker rounded-rectangle main meter", () => {
+    expect(styles).toContain("height: 10px;");
+    expect(styles).toContain("border-radius: 3px;");
+  });
+
+  it("keeps the meter width when its percentage label is enabled", () => {
+    // The row hugs its children (flex + max-content) so the wheel and clipboard
+    // sit together instead of spreading across the full disclaimer-row width.
+    expect(styles).toContain("width: max-content;");
+    expect(styles).toContain("flex: 0 0 var(--cub-bar-width);");
+  });
+
+  it("uses Claude menu surface tokens and a right-brightening opacity fill", () => {
+    expect(styles).toContain("background: var(--cds-surface-3, rgb(44 44 43));");
+    expect(styles).toContain("var(--cds-border, rgb(255 255 255 / 8%));");
+    expect(styles).toContain("linear-gradient(90deg, rgb(204 124 94 / 35%) 0%, rgb(204 124 94) 100%)");
+  });
+
   it("uses readable dark text for inline labels in light mode", () => {
     expect(styles).toContain(
       "#claude-usage-bar-root.cub-theme-light .cub-bar-label,\n#claude-usage-bar-root.cub-theme-light .cub-wheel-label {\n  color: rgb(80 78 72);",
@@ -20,13 +45,15 @@ describe("content styles", () => {
     expect(styles).toContain("#claude-cache-timer-host.cub-theme-light .cub-cache-timer-tooltip");
   });
 
-  it("uses warm Claude light tracks for the bar, wheel, and usage rows", () => {
+  it("uses warm Claude light tracks for the bar, context percent, and usage rows", () => {
     expect(styles).toContain(
-      "#claude-usage-bar-root.cub-theme-light .cub-meter {\n  background: rgb(221 219 214);",
+      "#claude-usage-bar-root.cub-theme-light .cub-meter {\n  background: var(--cds-surface-3, rgb(221 219 214));",
     );
+    expect(styles).toContain("button.cub-ctx-percent:hover,");
     expect(styles).toContain(
-      "#claude-usage-bar-root.cub-theme-light .cub-token-ring {\n  background: conic-gradient(rgb(204 124 94) var(--cub-token-percentage), rgb(221 219 214) 0);",
+      "#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent:hover,",
     );
+    expect(styles).toContain("box-shadow: 0 0 0 var(--cds-ring-hairline, 1px) hsl(60 2% 12% / 0.15);");
     expect(styles).toContain(
       "#claude-usage-bar-root.cub-theme-light .cub-usage-track {\n  background: rgb(235 233 228);",
     );
@@ -70,7 +97,9 @@ describe("content styles", () => {
   });
 
   it("re-syncs theme after delayed overlay elements are mounted or refreshed", () => {
-    expect(contentScript).toContain("tickMessageRail();\n    syncTheme();");
+    // TEMP: message rail disabled (no tickMessageRail in the refresh path).
+    expect(contentScript).toContain("tickSettingsPage();");
+    expect(contentScript).not.toContain("tickMessageRail();");
     expect(contentScript).toContain("render();\n  syncTheme();");
   });
 
