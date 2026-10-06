@@ -6,7 +6,9 @@ export type RingTarget = MetricTarget | "hidden";
 export type ContextDisplay = "ring" | "text";
 export type PaceSurplusFormat = "percent" | "time" | "messages";
 export type WeeklyPaceMode = "smart" | "manual";
-export type WeeklyEstimateDisplay = "active_hours" | "calendar_time";
+// What the weekly row shows: usable active hours left, the day/time you'll run
+// out, or the percentage you're on pace to reach by reset.
+export type WeeklyEstimateDisplay = "active_hours" | "calendar_time" | "percent_at_reset";
 export type WeeklyUsageConfidence = "learning" | "ready";
 // Per-message thinking level selectable in claude.ai. Opus exposes all five;
 // Sonnet stops at "high"; Haiku has no levels (handled as on/off in modelUsage).
@@ -36,8 +38,10 @@ export interface Settings {
   showCacheTimer: boolean;
   paceSurplusFormat: PaceSurplusFormat;
   weeklyMetricsEnabled: boolean;
-  weeklyPaceMode: WeeklyPaceMode;
   weeklyEstimateDisplay: WeeklyEstimateDisplay;
+  // Fixed schedule the weekly estimate falls back to while learning (or with
+  // learning off). No longer editable — the manual mode was removed — but a
+  // schedule set in an older version keeps being honoured.
   weeklyManualWorkDays: number[];
   weeklyManualActiveHoursPerDay: number;
   weeklyManualStartHour: number;
@@ -48,11 +52,8 @@ export interface Settings {
   // Show a banner when a usage window rolls over. "off" disables it entirely,
   // "claude" only banners claude.ai tabs (no extra permission), "everywhere"
   // banners any normal site and requires the optional all-sites host permission.
+  // Covers both the 5-hour and weekly windows.
   resetBannerScope: ResetBannerScope;
-  // Which windows are worth interrupting for. The 5-hour session rolls over
-  // constantly, so weekly-only is a reasonable quieter choice.
-  resetBannerSession: boolean;
-  resetBannerWeekly: boolean;
 }
 
 export type ResetBannerScope = "off" | "claude" | "everywhere";

@@ -185,206 +185,44 @@
   "setSecGeneral": {
     "message": "General"
   },
-  "setSecBar": {
-    "message": "Bar"
-  },
   "setSecWheel": {
     "message": "Context window"
   },
   "setSecCacheTimer": {
     "message": "Cache timer"
   },
-  "setSecWeekly": {
-    "message": "Weekly usage metrics"
-  },
-  "setSec5hr": {
-    "message": "5hr usage metrics"
-  },
-  "setSecUsageMetrics": {
-    "message": "Usage metrics"
-  },
-  "set5hrMetrics": {
-    "message": "5-hour metrics"
-  },
-  "set5hrMetricsDesc": {
-    "message": "Show a pace estimate next to the 5-hour usage bar. Accurate pace uses local pattern learning — turn this off to opt out of pattern-based pacing."
-  },
-  "setWeeklyMetrics": {
-    "message": "Weekly metrics"
-  },
-  "setWeeklyMetricsDesc": {
-    "message": "Learn weekly usage from local numeric samples to power the weekly estimate. Turn this off to keep weekly pacing on the fixed manual schedule."
-  },
-  "setEstimates": {
-    "message": "Estimates"
-  },
-  "setEstimatesDesc": {
-    "message": "Smart learns your active Claude pattern from local usage samples. Manual lets you set a fixed weekly schedule."
-  },
-  "setDataCollected": {
-    "message": "Data collected"
-  },
   "setShowOverlay": {
     "message": "Show overlay"
   },
   "setShowOverlayDesc": {
-    "message": "Display the usage bar overlay in the Claude chat composer."
+    "message": "Turn everything in the composer on or off."
   },
   "setLanguage": {
     "message": "Language"
   },
-  "setLanguageDesc": {
-    "message": "Language for the usage overlay and popup. Defaults to English. Translations may be inaccurate."
-  },
   "setTour": {
     "message": "Feature tour"
-  },
-  "setTourDesc": {
-    "message": "Walk through the extension features step by step."
   },
   "setTourBtn": {
     "message": "Replay Tour"
   },
-  "setReview": {
-    "message": "Leave a review"
-  },
-  "setReviewDesc": {
-    "message": "Enjoying Claude Usage Bar? A rating helps others discover it and takes less than a minute. You can also request features or suggest other products you'd like to see right in your review."
-  },
-  "setReviewBtn": {
-    "message": "Rate on Chrome Web Store"
-  },
   "setPrivacy": {
     "message": "Privacy policy"
   },
-  "setPrivacyDesc": {
-    "message": "View what Claude Usage Bar accesses, stores, and never sends to the developer."
-  },
-  "setPrivacyBtn": {
-    "message": "Open Privacy Policy"
-  },
   "setProject": {
     "message": "GitHub"
-  },
-  "setProjectDesc": {
-    "message": "Open the GitHub repository for source code, issues, and support."
-  },
-  "setProjectBtn": {
-    "message": "Open GitHub"
-  },
-  "setShowBar": {
-    "message": "Show bar"
-  },
-  "setShowBarDesc": {
-    "message": "Show the horizontal usage meter in the composer toolbar."
-  },
-  "setBarShows": {
-    "message": "Bar shows"
-  },
-  "setBarShowsDesc": {
-    "message": "Which usage metric the bar fill represents."
-  },
-  "setShowPctLabel": {
-    "message": "Show percentage label"
-  },
-  "setBarLabelDesc": {
-    "message": "Display the current percentage as text next to the bar."
-  },
-  "setShowWheel": {
-    "message": "Show context window"
-  },
-  "setShowWheelDesc": {
-    "message": "Show the context window indicator in the composer toolbar."
-  },
-  "setWheelShows": {
-    "message": "Wheel shows"
-  },
-  "setWheelShowsDesc": {
-    "message": "Which usage metric the wheel fill represents."
-  },
-  "setWheelLabelDesc": {
-    "message": "Display the current percentage as small text below the wheel."
-  },
-  "setShowCacheTimer": {
-    "message": "Show cache timer"
-  },
-  "setShowCacheTimerDesc": {
-    "message": "Show a countdown in the chat header for how long the prompt cache stays warm. Turn this off to hide it."
-  },
-  "setLearnWeekly": {
-    "message": "Learn weekly patterns"
-  },
-  "setLearnWeeklyDesc": {
-    "message": "Use local numeric samples to tune weekly estimates. Turn this off to keep weekly pacing on the fixed manual schedule."
   },
   "setWeeklyEstimate": {
     "message": "Weekly estimate"
   },
   "setWeeklyEstimateDesc": {
-    "message": "Smart mode starts from about ten 5-hour windows per week, then learns your active Claude pattern from local numeric usage samples."
-  },
-  "setWeeklyDisplay": {
-    "message": "Weekly estimate display"
-  },
-  "setWeeklyDisplayDesc": {
-    "message": "Active hours shows usable Claude time left. Days / time predicts the local day and time you will run out."
-  },
-  "setManualDays": {
-    "message": "Manual work days"
-  },
-  "setManualDaysDesc": {
-    "message": "Used as the default schedule while smart weekly metrics are learning, or whenever manual mode is selected."
-  },
-  "setManualDaysAria": {
-    "message": "Manual weekly work days"
-  },
-  "setManualHours": {
-    "message": "Manual hours per work day"
-  },
-  "setManualHoursDesc": {
-    "message": "Used as the starting cap for weekly pacing before smart metrics have enough history."
-  },
-  "setManualStart": {
-    "message": "Manual start time"
-  },
-  "setManualStartDesc": {
-    "message": "Local time used with manual days to place weekly usage into calendar time."
-  },
-  "setLearnedPattern": {
-    "message": "Learned pattern"
-  },
-  "setLearnedPatternDesc": {
-    "message": "Stored locally in this browser. No prompts, responses, cookies, or raw Claude payloads are stored."
+    "message": "Usable hours left, the day and time you'll run out, or where you'll be at reset."
   },
   "setDeleteHistory": {
     "message": "Delete history"
   },
-  "setReady": {
-    "message": "Ready"
-  },
-  "setLearning": {
-    "message": "Learning"
-  },
   "setSamples": {
     "message": "$1 samples"
-  },
-  "setActiveDays": {
-    "message": "$1 active days"
-  },
-  "setHoursPerDay": {
-    "message": "$1h/day"
-  },
-  "setShowPace": {
-    "message": "Show pace"
-  },
-  "setShowPaceDesc": {
-    "message": "Show the pace estimate next to the usage bar. Accurate pace requires pattern learning — to opt out of pattern-based pacing, turn this off."
-  },
-  "setPaceFormat": {
-    "message": "Pace format"
-  },
-  "setPaceFormatDesc": {
-    "message": "What to show next to the 5-hour percentage: the percentage you'll be at when reset hits, the extra time you'll have past reset, or an estimate of how many messages you have left at the model you're using."
   },
   "setOptPctReset": {
     "message": "Percentage at reset"
@@ -395,38 +233,11 @@
   "setOptMsgsLeft": {
     "message": "Messages left"
   },
-  "setOptSmart": {
-    "message": "Smart schedule"
-  },
-  "setOptManual": {
-    "message": "Manual schedule"
-  },
   "setOptActiveHours": {
     "message": "Active hours"
   },
   "setOptDaysTime": {
     "message": "Days / time"
-  },
-  "setDaySun": {
-    "message": "S"
-  },
-  "setDayMon": {
-    "message": "M"
-  },
-  "setDayTue": {
-    "message": "T"
-  },
-  "setDayWed": {
-    "message": "W"
-  },
-  "setDayThu": {
-    "message": "T"
-  },
-  "setDayFri": {
-    "message": "F"
-  },
-  "setDaySat": {
-    "message": "S"
   },
   "ctxBreakdownTitle": {
     "message": "What's using the context window"
@@ -488,62 +299,23 @@
   "resetBannerSessionTitle": {
     "message": "Your 5-hour Claude limit reset"
   },
-  "resetBannerSessionBody": {
-    "message": "Your session usage is back to zero."
-  },
   "resetBannerWeeklyTitle": {
     "message": "Your weekly Claude limit reset"
-  },
-  "resetBannerWeeklyBody": {
-    "message": "A fresh week of usage just started."
   },
   "resetBannerAction": {
     "message": "Open Claude"
   },
-  "resetBannerSessionTag": {
-    "message": "5HR"
-  },
-  "resetBannerWeeklyTag": {
-    "message": "Weekly"
-  },
   "setSecResetAlerts": {
     "message": "Reset alerts"
   },
-  "setResetBanner": {
-    "message": "Show reset alerts"
-  },
-  "setResetBannerDesc": {
-    "message": "Pop a banner when a usage limit rolls over, so you know you can start again."
-  },
   "setResetBannerScope": {
     "message": "Show alerts on"
-  },
-  "setResetBannerScopeDesc": {
-    "message": "Any site lets the banner reach you while you're browsing elsewhere. Chrome will ask for permission."
   },
   "setResetScopeClaude": {
     "message": "claude.ai only"
   },
   "setResetScopeEverywhere": {
     "message": "Any site"
-  },
-  "setResetBannerSession": {
-    "message": "5-hour limit"
-  },
-  "setResetBannerSessionDesc": {
-    "message": "Alert when the 5-hour session window resets."
-  },
-  "setResetBannerWeekly": {
-    "message": "Weekly limit"
-  },
-  "setResetBannerWeeklyDesc": {
-    "message": "Alert when the weekly all-models window resets."
-  },
-  "setResetBannerTest": {
-    "message": "Preview the banner"
-  },
-  "setResetBannerTestDesc": {
-    "message": "Sends a real banner after 5 seconds, so you can switch tabs and see where it lands."
   },
   "setResetBannerTestGo": {
     "message": "Send test"
@@ -566,16 +338,58 @@
   "grantCancel": {
     "message": "Cancel"
   },
-  "setContextDisplay": {
-    "message": "Show as"
-  },
-  "setContextDisplayDesc": {
-    "message": "A ring that fills up, or the percentage as text."
-  },
   "setOptRing": {
     "message": "Ring"
   },
   "setOptPercentText": {
     "message": "Percentage"
+  },
+  "setSecDisplay": {
+    "message": "Display"
+  },
+  "setSecPacing": {
+    "message": "Pacing"
+  },
+  "setOptOff": {
+    "message": "Off"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "Which limit the bar tracks."
+  },
+  "setShowPct": {
+    "message": "Show %"
+  },
+  "setContextDesc": {
+    "message": "How full the current chat is."
+  },
+  "setCacheTimerDesc": {
+    "message": "Countdown in the chat header while the prompt cache is warm."
+  },
+  "setPacing": {
+    "message": "Show pace estimates"
+  },
+  "setPacingDesc": {
+    "message": "Estimates learn from numeric usage samples stored only in this browser. Turning this off stops collecting them."
+  },
+  "set5hrPace": {
+    "message": "5-hour pace"
+  },
+  "set5hrPaceDesc": {
+    "message": "Shown next to the 5-hour percentage."
+  },
+  "setLearnedData": {
+    "message": "Learned usage"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner when your 5-hour or weekly limit resets. Any site needs Chrome permission."
+  },
+  "setLanguageShortDesc": {
+    "message": "Translations may be inaccurate."
+  },
+  "setReviewLink": {
+    "message": "Rate on Chrome Web Store"
   }
 }

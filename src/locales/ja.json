@@ -185,182 +185,44 @@
   "setSecGeneral": {
     "message": "一般"
   },
-  "setSecBar": {
-    "message": "バー"
-  },
   "setSecWheel": {
     "message": "コンテキストウィンドウ"
   },
   "setSecCacheTimer": {
     "message": "キャッシュタイマー"
   },
-  "setSecWeekly": {
-    "message": "週間使用量メトリクス"
-  },
-  "setSec5hr": {
-    "message": "5時間使用量メトリクス"
-  },
   "setShowOverlay": {
     "message": "オーバーレイを表示"
   },
   "setShowOverlayDesc": {
-    "message": "Claude のチャット入力欄に使用量バーのオーバーレイを表示します。"
+    "message": "入力欄の表示をすべてオン/オフします。"
   },
   "setLanguage": {
     "message": "言語"
   },
-  "setLanguageDesc": {
-    "message": "使用量オーバーレイとポップアップの言語。デフォルトは英語です。翻訳は不正確な場合があります。"
-  },
   "setTour": {
     "message": "機能ツアー"
-  },
-  "setTourDesc": {
-    "message": "拡張機能の機能を順を追って確認します。"
   },
   "setTourBtn": {
     "message": "ツアーを再生"
   },
-  "setReview": {
-    "message": "レビューを書く"
-  },
-  "setReviewDesc": {
-    "message": "Claude Usage Bar はいかがですか? 評価は他の人が見つける助けになり、1分もかかりません。レビューで機能をリクエストしたり、他の製品を提案したりもできます。"
-  },
-  "setReviewBtn": {
-    "message": "Chrome ウェブストアで評価"
-  },
   "setPrivacy": {
     "message": "プライバシーポリシー"
-  },
-  "setPrivacyDesc": {
-    "message": "Claude Usage Bar が何にアクセスし、何を保存し、開発者に何を送信しないかを確認します。"
-  },
-  "setPrivacyBtn": {
-    "message": "プライバシーポリシーを開く"
   },
   "setProject": {
     "message": "GitHub"
   },
-  "setProjectDesc": {
-    "message": "ソースコード、Issue、サポートのために GitHub リポジトリを開きます。"
-  },
-  "setProjectBtn": {
-    "message": "GitHub を開く"
-  },
-  "setShowBar": {
-    "message": "バーを表示"
-  },
-  "setShowBarDesc": {
-    "message": "入力欄ツールバーに横型の使用量メーターを表示します。"
-  },
-  "setBarShows": {
-    "message": "バーの表示内容"
-  },
-  "setBarShowsDesc": {
-    "message": "バーの塗りつぶしが表す使用量メトリクス。"
-  },
-  "setShowPctLabel": {
-    "message": "パーセントラベルを表示"
-  },
-  "setBarLabelDesc": {
-    "message": "現在のパーセントをバーの横にテキストで表示します。"
-  },
-  "setShowWheel": {
-    "message": "コンテキストウィンドウを表示"
-  },
-  "setShowWheelDesc": {
-    "message": "コンポーザーツールバーにコンテキストウィンドウインジケーターを表示します。"
-  },
-  "setWheelShows": {
-    "message": "ホイールの表示内容"
-  },
-  "setWheelShowsDesc": {
-    "message": "ホイールの塗りつぶしが表す使用量メトリクス。"
-  },
-  "setWheelLabelDesc": {
-    "message": "現在のパーセントをホイールの下に小さなテキストで表示します。"
-  },
-  "setShowCacheTimer": {
-    "message": "キャッシュタイマーを表示"
-  },
-  "setShowCacheTimerDesc": {
-    "message": "プロンプトキャッシュが温かいまま保たれる時間のカウントダウンをチャットヘッダーに表示します。非表示にするにはオフにします。"
-  },
-  "setLearnWeekly": {
-    "message": "週間パターンを学習"
-  },
-  "setLearnWeeklyDesc": {
-    "message": "ローカルの数値サンプルを使って週間の推定を調整します。週間ペースを固定の手動スケジュールに保つにはオフにします。"
-  },
   "setWeeklyEstimate": {
-    "message": "週間推定"
+    "message": "週間の予測"
   },
   "setWeeklyEstimateDesc": {
-    "message": "スマートモードは週あたり約10個の5時間ウィンドウから始まり、その後ローカルの数値使用サンプルからあなたのアクティブな Claude パターンを学習します。"
-  },
-  "setWeeklyDisplay": {
-    "message": "週間推定の表示"
-  },
-  "setWeeklyDisplayDesc": {
-    "message": "アクティブ時間は使用可能な残りの Claude 時間を表示します。日 / 時刻は使い切るローカルの日と時刻を予測します。"
-  },
-  "setManualDays": {
-    "message": "手動の稼働日"
-  },
-  "setManualDaysDesc": {
-    "message": "スマート週間メトリクスの学習中、または手動モード選択時にデフォルトのスケジュールとして使われます。"
-  },
-  "setManualDaysAria": {
-    "message": "手動の週間稼働日"
-  },
-  "setManualHours": {
-    "message": "稼働日あたりの手動時間"
-  },
-  "setManualHoursDesc": {
-    "message": "スマートメトリクスが十分な履歴を持つ前の、週間ペースの開始上限として使われます。"
-  },
-  "setManualStart": {
-    "message": "手動の開始時刻"
-  },
-  "setManualStartDesc": {
-    "message": "週間使用量をカレンダー時間に配置するために手動の日と併用するローカル時刻。"
-  },
-  "setLearnedPattern": {
-    "message": "学習したパターン"
-  },
-  "setLearnedPatternDesc": {
-    "message": "このブラウザにローカル保存されます。プロンプト、応答、Cookie、Claude の生のペイロードは保存されません。"
+    "message": "残りの利用可能時間、上限に達する日時、またはリセット時の使用率。"
   },
   "setDeleteHistory": {
     "message": "履歴を削除"
   },
-  "setReady": {
-    "message": "準備完了"
-  },
-  "setLearning": {
-    "message": "学習中"
-  },
   "setSamples": {
     "message": "$1 サンプル"
-  },
-  "setActiveDays": {
-    "message": "アクティブ $1 日"
-  },
-  "setHoursPerDay": {
-    "message": "$1 時間/日"
-  },
-  "setShowPace": {
-    "message": "ペースを表示"
-  },
-  "setShowPaceDesc": {
-    "message": "使用量バーの横にペースの推定を表示します。正確なペースにはパターン学習が必要です。パターンベースのペースを使わない場合はオフにします。"
-  },
-  "setPaceFormat": {
-    "message": "ペースの形式"
-  },
-  "setPaceFormatDesc": {
-    "message": "5時間のパーセントの横に表示する内容: リセット時に到達するパーセント、リセット後に得られる追加時間、または使用中のモデルで残っているメッセージ数の推定。"
   },
   "setOptPctReset": {
     "message": "リセット時のパーセント"
@@ -371,38 +233,11 @@
   "setOptMsgsLeft": {
     "message": "残りメッセージ"
   },
-  "setOptSmart": {
-    "message": "スマートスケジュール"
-  },
-  "setOptManual": {
-    "message": "手動スケジュール"
-  },
   "setOptActiveHours": {
     "message": "アクティブ時間"
   },
   "setOptDaysTime": {
     "message": "日 / 時刻"
-  },
-  "setDaySun": {
-    "message": "日"
-  },
-  "setDayMon": {
-    "message": "月"
-  },
-  "setDayTue": {
-    "message": "火"
-  },
-  "setDayWed": {
-    "message": "水"
-  },
-  "setDayThu": {
-    "message": "木"
-  },
-  "setDayFri": {
-    "message": "金"
-  },
-  "setDaySat": {
-    "message": "土"
   },
   "ctxBreakdownTitle": {
     "message": "コンテキストウィンドウの内訳"
@@ -464,62 +299,23 @@
   "resetBannerSessionTitle": {
     "message": "Claude の5時間の上限がリセットされました"
   },
-  "resetBannerSessionBody": {
-    "message": "セッションの使用量がゼロに戻りました。"
-  },
   "resetBannerWeeklyTitle": {
     "message": "Claude の週間上限がリセットされました"
-  },
-  "resetBannerWeeklyBody": {
-    "message": "新しい週の利用枠が始まりました。"
   },
   "resetBannerAction": {
     "message": "Claude を開く"
   },
-  "resetBannerSessionTag": {
-    "message": "5HR"
-  },
-  "resetBannerWeeklyTag": {
-    "message": "週間"
-  },
   "setSecResetAlerts": {
     "message": "リセット通知"
   },
-  "setResetBanner": {
-    "message": "リセット通知を表示"
-  },
-  "setResetBannerDesc": {
-    "message": "上限がリセットされたときにバナーを表示し、再開できることを知らせます。"
-  },
   "setResetBannerScope": {
     "message": "通知を表示する場所"
-  },
-  "setResetBannerScopeDesc": {
-    "message": "すべてのサイトにすると、他のサイトを見ていても通知が届きます。Chrome が許可を求めます。"
   },
   "setResetScopeClaude": {
     "message": "claude.ai のみ"
   },
   "setResetScopeEverywhere": {
     "message": "すべてのサイト"
-  },
-  "setResetBannerSession": {
-    "message": "5時間の上限"
-  },
-  "setResetBannerSessionDesc": {
-    "message": "5時間のセッション枠がリセットされたら通知します。"
-  },
-  "setResetBannerWeekly": {
-    "message": "週間上限"
-  },
-  "setResetBannerWeeklyDesc": {
-    "message": "全モデルの週間枠がリセットされたら通知します。"
-  },
-  "setResetBannerTest": {
-    "message": "バナーを確認"
-  },
-  "setResetBannerTestDesc": {
-    "message": "5秒後に実際のバナーを送信します。タブを切り替えて表示場所を確認できます。"
   },
   "setResetBannerTestGo": {
     "message": "テスト送信"
@@ -542,16 +338,58 @@
   "grantCancel": {
     "message": "キャンセル"
   },
-  "setContextDisplay": {
-    "message": "表示形式"
-  },
-  "setContextDisplayDesc": {
-    "message": "満ちていくリング、またはテキストのパーセント表示。"
-  },
   "setOptRing": {
     "message": "リング"
   },
   "setOptPercentText": {
     "message": "パーセント"
+  },
+  "setSecDisplay": {
+    "message": "表示"
+  },
+  "setSecPacing": {
+    "message": "ペース"
+  },
+  "setOptOff": {
+    "message": "オフ"
+  },
+  "setUsageBar": {
+    "message": "使用量バー"
+  },
+  "setUsageBarDesc": {
+    "message": "バーが表示する上限。"
+  },
+  "setShowPct": {
+    "message": "% を表示"
+  },
+  "setContextDesc": {
+    "message": "現在のチャットの使用量。"
+  },
+  "setCacheTimerDesc": {
+    "message": "プロンプトキャッシュが有効な間、チャットのヘッダーにカウントダウンを表示します。"
+  },
+  "setPacing": {
+    "message": "ペース予測を表示"
+  },
+  "setPacingDesc": {
+    "message": "予測はこのブラウザ内にのみ保存される数値の使用サンプルから学習します。オフにすると収集を停止します。"
+  },
+  "set5hrPace": {
+    "message": "5時間のペース"
+  },
+  "set5hrPaceDesc": {
+    "message": "5時間の使用率の横に表示されます。"
+  },
+  "setLearnedData": {
+    "message": "学習した使用状況"
+  },
+  "setResetAlertsDesc": {
+    "message": "5時間または週間の上限がリセットされたときにバナーを表示します。「すべてのサイト」には Chrome の権限が必要です。"
+  },
+  "setLanguageShortDesc": {
+    "message": "翻訳は不正確な場合があります。"
+  },
+  "setReviewLink": {
+    "message": "Chrome ウェブストアで評価"
   }
 }

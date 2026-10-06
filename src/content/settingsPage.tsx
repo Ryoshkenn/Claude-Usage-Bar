@@ -10,7 +10,6 @@ import type {
   ResetBannerScope,
   Settings,
   WeeklyEstimateDisplay,
-  WeeklyPaceMode,
   WeeklyUsageMetrics,
 } from "../shared/types";
 
@@ -521,18 +520,26 @@ const NestItem = ({ children }: { children: React.ReactNode }) => (
 // Option labels are functions, not consts, because t() reads the active language
 // at call time — a module-level const would freeze the labels in English.
 // Bar can't show context window — that's the wheel's job.
+// "off" folds each feature's on/off switch into its own picker, so a single
+// control covers both whether it shows and how.
+type BarChoice = MetricTarget | "off";
+type ContextChoice = ContextDisplay | "off";
+
 const resetScopeOptions = (): { value: ResetBannerScope; label: string }[] => [
+  { value: "off", label: t("setOptOff", "Off") },
   { value: "claude", label: t("setResetScopeClaude", "claude.ai only") },
   { value: "everywhere", label: t("setResetScopeEverywhere", "Any site") },
 ];
 
-const barMetricOptions = (): { value: MetricTarget; label: string }[] => [
+const barOptions = (): { value: BarChoice; label: string }[] => [
+  { value: "off", label: t("setOptOff", "Off") },
   { value: "session", label: t("ringSession", "5-hour session") },
   { value: "weekly", label: t("ringWeekly", "Weekly · all models") },
   { value: "weekly_fable", label: t("ringWeeklyFable", "Weekly · Fable") },
 ];
 
-const contextDisplayOptions = (): { value: ContextDisplay; label: string }[] => [
+const contextOptions = (): { value: ContextChoice; label: string }[] => [
+  { value: "off", label: t("setOptOff", "Off") },
   { value: "ring", label: t("setOptRing", "Ring") },
   { value: "text", label: t("setOptPercentText", "Percentage") },
 ];
@@ -543,37 +550,52 @@ const paceSurplusOptions = (): { value: PaceSurplusFormat; label: string }[] => 
   { value: "messages", label: t("setOptMsgsLeft", "Messages left") },
 ];
 
-const weeklyPaceOptions = (): { value: WeeklyPaceMode; label: string }[] => [
-  { value: "smart", label: t("setOptSmart", "Smart schedule") },
-  { value: "manual", label: t("setOptManual", "Manual schedule") },
-];
-
 const weeklyDisplayOptions = (): { value: WeeklyEstimateDisplay; label: string }[] => [
   { value: "active_hours", label: t("setOptActiveHours", "Active hours") },
   { value: "calendar_time", label: t("setOptDaysTime", "Days / time") },
+  { value: "percent_at_reset", label: t("setOptPctReset", "Percentage at reset") },
 ];
 
-export const formatManualStartTimeLabel = (hour: number): string => {
-  const normalizedHour = Math.max(0, Math.min(23, Math.floor(hour)));
-  const suffix = normalizedHour < 12 ? "AM" : "PM";
-  const displayHour = normalizedHour % 12 === 0 ? 12 : normalizedHour % 12;
-  return `${displayHour}:00 ${suffix}`;
-};
+// 16px line icons for the footer links (GitHub uses its own mark).
+const LinkIcon = ({ name }: { name: "star" | "shield" | "github" }) =>
+  name === "github" ? (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+    </svg>
+  ) : (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {name === "star" ? (
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      ) : (
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      )}
+    </svg>
+  );
 
-const MANUAL_START_TIME_OPTIONS = Array.from({ length: 24 }, (_, hour) => ({
-  value: String(hour),
-  label: formatManualStartTimeLabel(hour),
-}));
-
-const weekDays = (): { value: number; label: string }[] => [
-  { value: 0, label: t("setDaySun", "S") },
-  { value: 1, label: t("setDayMon", "M") },
-  { value: 2, label: t("setDayTue", "T") },
-  { value: 3, label: t("setDayWed", "W") },
-  { value: 4, label: t("setDayThu", "T") },
-  { value: 5, label: t("setDayFri", "F") },
-  { value: 6, label: t("setDaySat", "S") },
-];
+const FooterLink = ({
+  href,
+  icon,
+  children,
+}: {
+  href: string;
+  icon: "star" | "shield" | "github";
+  children: React.ReactNode;
+}) => (
+  <a className="cub-settings-link text-body text-muted" href={href} target="_blank" rel="noopener noreferrer">
+    <LinkIcon name={icon} />
+    {children}
+  </a>
+);
 
 // ── SettingsPage ─────────────────────────────────────────────────────────────
 
@@ -652,42 +674,149 @@ const SettingsPage = () => {
     void clearWeeklyUsageMetrics().then(setWeeklyMetrics);
   };
 
-  const toggleWorkDay = (day: number) => {
-    const current = new Set(settings.weeklyManualWorkDays ?? [1, 2, 3, 4, 5]);
-    if (current.has(day)) {
-      current.delete(day);
-    } else {
-      current.add(day);
-    }
-    update({ weeklyManualWorkDays: [...current].sort((a, b) => a - b) });
-  };
+  // Pacing is the one switch for estimates and the local learning behind them,
+  // so turning it off also stops new samples from being recorded.
+  const setPacing = (on: boolean) => update({ showPace: on, weeklyMetricsEnabled: on });
 
-  const learnedDays = Object.keys(weeklyMetrics?.activeDayBuckets ?? {}).length;
-  const learnedHours = weeklyMetrics?.averageActiveHoursPerDay ?? 0;
-
-  // "Data collected" status string describing the locally learned usage pattern.
-  const learnedStatusText =
-    `${weeklyMetrics?.confidence === "ready" ? t("setReady", "Ready") : t("setLearning", "Learning")}` +
-    ` · ${t("setSamples", "$1 samples", weeklyMetrics?.sampleCount ?? 0)}` +
-    (learnedDays > 0 ? ` · ${t("setActiveDays", "$1 active days", learnedDays)}` : "") +
-    (learnedHours > 0 ? ` · ${t("setHoursPerDay", "$1h/day", Math.round(learnedHours * 10) / 10)}` : "");
+  const learnedSamples = weeklyMetrics?.sampleCount ?? 0;
 
   if (!loaded) return null;
 
+  const pacingOn = settings.showPace !== false;
+  const barChoice: BarChoice = settings.showBar !== false ? settings.barMetric : "off";
+  const contextChoice: ContextChoice =
+    settings.showWheel !== false ? (settings.contextDisplay ?? "ring") : "off";
+
   return (
     <div className="flex flex-col">
-      <Section id="cub-section-general" title={t("setSecGeneral", "General")}>
-        <Row labelId={id("show-overlay")} label={t("setShowOverlay", "Show overlay")} description={t("setShowOverlayDesc", "Display the usage bar overlay in the Claude chat composer.")}>
+      <Section id="cub-section-display" title={t("setSecDisplay", "Display")}>
+        <Row labelId={id("show-overlay")} label={t("setShowOverlay", "Show overlay")} description={t("setShowOverlayDesc", "Turn everything in the composer on or off.")}>
           <Switch
             id={id("show-overlay")}
             checked={settings.showOverlay}
             onChange={(v) => update({ showOverlay: v })}
           />
         </Row>
+        <Row labelId={id("bar")} label={t("setUsageBar", "Usage bar")} description={t("setUsageBarDesc", "Which limit the bar tracks.")}>
+          <div className="flex items-center gap-3">
+            {barChoice !== "off" && (
+              <label className="flex items-center gap-1.5 text-body text-muted" htmlFor={id("bar-label")}>
+                {t("setShowPct", "Show %")}
+                <Switch
+                  id={id("bar-label")}
+                  checked={settings.showBarLabel}
+                  onChange={(v) => update({ showBarLabel: v })}
+                />
+              </label>
+            )}
+            <CdsSelect
+              id={id("bar")}
+              value={barChoice}
+              options={barOptions()}
+              onChange={(v) =>
+                update(v === "off" ? { showBar: false } : { showBar: true, barMetric: v as MetricTarget })
+              }
+            />
+          </div>
+        </Row>
+        <Row labelId={id("context")} label={t("setSecWheel", "Context window")} description={t("setContextDesc", "How full the current chat is.")}>
+          <CdsSelect
+            id={id("context")}
+            value={contextChoice}
+            options={contextOptions()}
+            onChange={(v) =>
+              update(v === "off" ? { showWheel: false } : { showWheel: true, contextDisplay: v as ContextDisplay })
+            }
+          />
+        </Row>
+        <Row
+          labelId={id("show-cache-timer")}
+          label={t("setSecCacheTimer", "Cache timer")}
+          description={t("setCacheTimerDesc", "Countdown in the chat header while the prompt cache is warm.")}
+        >
+          <Switch
+            id={id("show-cache-timer")}
+            checked={settings.showCacheTimer !== false}
+            onChange={(v) => update({ showCacheTimer: v })}
+          />
+        </Row>
+      </Section>
+
+      <Section id="cub-section-pacing" title={t("setSecPacing", "Pacing")}>
+        <MetricGroup>
+          <Row
+            labelId={id("pacing")}
+            label={t("setPacing", "Show pace estimates")}
+            description={t("setPacingDesc", "Estimates learn from numeric usage samples stored only in this browser. Turning this off stops collecting them.")}
+          >
+            <Switch id={id("pacing")} checked={pacingOn} onChange={setPacing} />
+          </Row>
+          <NestGroup open={pacingOn}>
+            <NestItem>
+              <Row labelId={id("pace-surplus")} label={t("set5hrPace", "5-hour pace")} description={t("set5hrPaceDesc", "Shown next to the 5-hour percentage.")}>
+                <CdsSelect
+                  id={id("pace-surplus")}
+                  value={settings.paceSurplusFormat}
+                  options={paceSurplusOptions()}
+                  onChange={(v) => update({ paceSurplusFormat: v as PaceSurplusFormat })}
+                />
+              </Row>
+            </NestItem>
+            <NestItem>
+              <Row labelId={id("weekly-display")} label={t("setWeeklyEstimate", "Weekly estimate")} description={t("setWeeklyEstimateDesc", "Usable hours left, the day and time you'll run out, or where you'll be at reset.")}>
+                <CdsSelect
+                  id={id("weekly-display")}
+                  value={settings.weeklyEstimateDisplay ?? "active_hours"}
+                  options={weeklyDisplayOptions()}
+                  onChange={(v) => update({ weeklyEstimateDisplay: v as WeeklyEstimateDisplay })}
+                />
+              </Row>
+            </NestItem>
+            <NestItem>
+              <Row
+                labelId={id("learned")}
+                label={t("setLearnedData", "Learned usage")}
+                description={t("setSamples", "$1 samples", learnedSamples)}
+              >
+                <CdsButton onClick={deleteWeeklyHistory}>{t("setDeleteHistory", "Delete history")}</CdsButton>
+              </Row>
+            </NestItem>
+          </NestGroup>
+        </MetricGroup>
+      </Section>
+
+      <Section title={t("setSecResetAlerts", "Reset alerts")}>
+        <Row
+          labelId={id("reset-banner-scope")}
+          label={t("setResetBannerScope", "Show alerts on")}
+          description={t(
+            "setResetAlertsDesc",
+            "Banner when your 5-hour or weekly limit resets. Any site needs Chrome permission.",
+          )}
+        >
+          <div className="flex items-center gap-2">
+            {settings.resetBannerScope !== "off" && (
+              <CdsButton onClick={sendTestBanner}>
+                {testCountdown > 0
+                  ? t("setResetBannerTestCounting", "in $1s", String(testCountdown))
+                  : t("setResetBannerTestGo", "Send test")}
+              </CdsButton>
+            )}
+            <CdsSelect
+              id={id("reset-banner-scope")}
+              value={settings.resetBannerScope}
+              options={resetScopeOptions()}
+              onChange={(v) => void changeResetScope(v as ResetBannerScope)}
+            />
+          </div>
+        </Row>
+      </Section>
+
+      <Section id="cub-section-general" title={t("setSecGeneral", "General")}>
         <Row
           labelId={id("language")}
           label={t("setLanguage", "Language")}
-          description={t("setLanguageDesc", "Language for the usage overlay and popup. Defaults to English. Translations may be inaccurate.")}
+          description={t("setLanguageShortDesc", "Translations may be inaccurate.")}
         >
           <CdsSelect
             id={id("language")}
@@ -696,11 +825,7 @@ const SettingsPage = () => {
             options={SUPPORTED_LANGUAGES}
           />
         </Row>
-        <Row
-          labelId={id("replay-tour")}
-          label={t("setTour", "Feature tour")}
-          description={t("setTourDesc", "Walk through the extension features step by step.")}
-        >
+        <Row labelId={id("replay-tour")} label={t("setTour", "Feature tour")}>
           <CdsButton
             onClick={() => {
               // Close the settings overlay (the tour starts on /new), then
@@ -714,346 +839,12 @@ const SettingsPage = () => {
             {t("setTourBtn", "Replay Tour")}
           </CdsButton>
         </Row>
-        <Row
-          labelId={id("review")}
-          descId={id("review-desc")}
-          label={t("setReview", "Leave a review")}
-          description={t("setReviewDesc", "Enjoying Claude Usage Bar? A rating helps others discover it and takes less than a minute. You can also request features or suggest other products you'd like to see right in your review.")}
-        >
-          <CdsButton onClick={() => window.open(CWS_URL, "_blank", "noopener,noreferrer")}>
-            {t("setReviewBtn", "Rate on Chrome Web Store")}
-          </CdsButton>
-        </Row>
-        <Row
-          labelId={id("privacy-policy")}
-          descId={id("privacy-policy-desc")}
-          label={t("setPrivacy", "Privacy policy")}
-          description={t("setPrivacyDesc", "View what Claude Usage Bar accesses, stores, and never sends to the developer.")}
-        >
-          <CdsButton onClick={() => window.open(PRIVACY_POLICY_URL, "_blank", "noopener,noreferrer")}>
-            {t("setPrivacyBtn", "Open Privacy Policy")}
-          </CdsButton>
-        </Row>
-        <Row
-          labelId={id("github")}
-          descId={id("github-desc")}
-          label={t("setProject", "GitHub")}
-          description={t("setProjectDesc", "Open the GitHub repository for source code, issues, and support.")}
-        >
-          <CdsButton onClick={() => window.open(GITHUB_URL, "_blank", "noopener,noreferrer")}>
-            {t("setProjectBtn", "Open GitHub")}
-          </CdsButton>
-        </Row>
+        <div className="cub-settings-links">
+          <FooterLink href={CWS_URL} icon="star">{t("setReviewLink", "Rate on Chrome Web Store")}</FooterLink>
+          <FooterLink href={PRIVACY_POLICY_URL} icon="shield">{t("setPrivacy", "Privacy policy")}</FooterLink>
+          <FooterLink href={GITHUB_URL} icon="github">{t("setProject", "GitHub")}</FooterLink>
+        </div>
       </Section>
-
-      <Section title={t("setSecBar", "Bar")}>
-        <Row labelId={id("show-bar")} label={t("setShowBar", "Show bar")} description={t("setShowBarDesc", "Show the horizontal usage meter in the composer toolbar.")}>
-          <Switch
-            id={id("show-bar")}
-            checked={settings.showBar}
-            onChange={(v) => update({ showBar: v })}
-          />
-        </Row>
-        <Row labelId={id("bar-metric")} label={t("setBarShows", "Bar shows")} description={t("setBarShowsDesc", "Which usage metric the bar fill represents.")}>
-          <CdsSelect
-            id={id("bar-metric")}
-            value={settings.barMetric}
-            options={barMetricOptions()}
-            onChange={(v) => update({ barMetric: v as MetricTarget })}
-          />
-        </Row>
-        <Row labelId={id("bar-label")} label={t("setShowPctLabel", "Show percentage label")} description={t("setBarLabelDesc", "Display the current percentage as text next to the bar.")}>
-          <Switch
-            id={id("bar-label")}
-            checked={settings.showBarLabel}
-            onChange={(v) => update({ showBarLabel: v })}
-          />
-        </Row>
-      </Section>
-
-      <Section title={t("setSecWheel", "Context window")}>
-        <Row labelId={id("show-wheel")} label={t("setShowWheel", "Show context window")} description={t("setShowWheelDesc", "Show the context window indicator in the composer toolbar.")}>
-          <Switch
-            id={id("show-wheel")}
-            checked={settings.showWheel}
-            onChange={(v) => update({ showWheel: v })}
-          />
-        </Row>
-        <Row labelId={id("context-display")} label={t("setContextDisplay", "Show as")} description={t("setContextDisplayDesc", "A ring that fills up, or the percentage as text.")}>
-          <CdsSelect
-            id={id("context-display")}
-            value={settings.contextDisplay ?? "ring"}
-            options={contextDisplayOptions()}
-            onChange={(v) => update({ contextDisplay: v as ContextDisplay })}
-          />
-        </Row>
-      </Section>
-
-      <Section title={t("setSecResetAlerts", "Reset alerts")}>
-        <Row
-          labelId={id("reset-banner")}
-          label={t("setResetBanner", "Show reset alerts")}
-          description={t(
-            "setResetBannerDesc",
-            "Pop a banner when a usage limit rolls over, so you know you can start again.",
-          )}
-        >
-          <Switch
-            id={id("reset-banner")}
-            checked={settings.resetBannerScope !== "off"}
-            onChange={(v) => update({ resetBannerScope: v ? "claude" : "off" })}
-          />
-        </Row>
-        {settings.resetBannerScope !== "off" && (
-          <>
-            <Row
-              labelId={id("reset-banner-scope")}
-              label={t("setResetBannerScope", "Show alerts on")}
-              description={t(
-                "setResetBannerScopeDesc",
-                "Any site lets the banner reach you while you're browsing elsewhere. Chrome will ask for permission.",
-              )}
-            >
-              <CdsSelect
-                id={id("reset-banner-scope")}
-                value={settings.resetBannerScope}
-                options={resetScopeOptions()}
-                onChange={(v) => void changeResetScope(v as ResetBannerScope)}
-              />
-            </Row>
-            <Row
-              labelId={id("reset-banner-session")}
-              label={t("setResetBannerSession", "5-hour limit")}
-              description={t("setResetBannerSessionDesc", "Alert when the 5-hour session window resets.")}
-            >
-              <Switch
-                id={id("reset-banner-session")}
-                checked={settings.resetBannerSession}
-                onChange={(v) => update({ resetBannerSession: v })}
-              />
-            </Row>
-            <Row
-              labelId={id("reset-banner-weekly")}
-              label={t("setResetBannerWeekly", "Weekly limit")}
-              description={t("setResetBannerWeeklyDesc", "Alert when the weekly all-models window resets.")}
-            >
-              <Switch
-                id={id("reset-banner-weekly")}
-                checked={settings.resetBannerWeekly}
-                onChange={(v) => update({ resetBannerWeekly: v })}
-              />
-            </Row>
-            <Row
-              labelId={id("reset-banner-test")}
-              label={t("setResetBannerTest", "Preview the banner")}
-              description={t(
-                "setResetBannerTestDesc",
-                "Sends a real banner after 5 seconds, so you can switch tabs and see where it lands.",
-              )}
-            >
-              <CdsButton onClick={sendTestBanner}>
-                {testCountdown > 0
-                  ? t("setResetBannerTestCounting", "in $1s", String(testCountdown))
-                  : t("setResetBannerTestGo", "Send test")}
-              </CdsButton>
-            </Row>
-          </>
-        )}
-      </Section>
-
-      <Section title={t("setSecCacheTimer", "Cache timer")}>
-        <Row
-          labelId={id("show-cache-timer")}
-          label={t("setShowCacheTimer", "Show cache timer")}
-          description={t("setShowCacheTimerDesc", "Show a countdown in the chat header for how long the prompt cache stays warm. Turn this off to hide it.")}
-        >
-          <Switch
-            id={id("show-cache-timer")}
-            checked={settings.showCacheTimer !== false}
-            onChange={(v) => update({ showCacheTimer: v })}
-          />
-        </Row>
-      </Section>
-
-      <div id="cub-metrics-sections">
-      <Section id="cub-section-usage-metrics" title={t("setSecUsageMetrics", "Usage metrics")}>
-        {/* 5-hour metrics: toggle reveals its pace format sub-option */}
-        <MetricGroup>
-          <Row
-            rowId="cub-row-5hr-metrics"
-            labelId={id("show-pace")}
-            label={t("set5hrMetrics", "5-hour metrics")}
-            description={t("set5hrMetricsDesc", "Show a pace estimate next to the 5-hour usage bar. Accurate pace uses local pattern learning — turn this off to opt out of pattern-based pacing.")}
-          >
-            <Switch
-              id={id("show-pace")}
-              checked={settings.showPace}
-              onChange={(v) => update({ showPace: v })}
-            />
-          </Row>
-          <NestGroup open={settings.showPace}>
-            <NestItem>
-              <Row
-                labelId={id("pace-surplus")}
-                label={t("setPaceFormat", "Pace format")}
-                description={t("setPaceFormatDesc", "What to show next to the 5-hour percentage: the percentage you'll be at when reset hits, the extra time you'll have past reset, or an estimate of how many messages you have left at the model you're using.")}
-              >
-                <CdsSelect
-                  id={id("pace-surplus")}
-                  value={settings.paceSurplusFormat}
-                  options={paceSurplusOptions()}
-                  onChange={(v) => update({ paceSurplusFormat: v as PaceSurplusFormat })}
-                />
-              </Row>
-            </NestItem>
-          </NestGroup>
-        </MetricGroup>
-
-        {/* Weekly metrics: toggle reveals the weekly estimate display sub-option */}
-        <MetricGroup>
-          <Row
-            rowId="cub-row-weekly-metrics"
-            labelId={id("weekly-enabled")}
-            label={t("setWeeklyMetrics", "Weekly metrics")}
-            description={t("setWeeklyMetricsDesc", "Learn weekly usage from local numeric samples to power the weekly estimate. Turn this off to keep weekly pacing on the fixed manual schedule.")}
-          >
-            <Switch
-              id={id("weekly-enabled")}
-              checked={settings.weeklyMetricsEnabled !== false}
-              onChange={(v) => update({ weeklyMetricsEnabled: v })}
-            />
-          </Row>
-          <NestGroup open={settings.weeklyMetricsEnabled !== false}>
-            <NestItem>
-              <Row
-                labelId={id("weekly-display")}
-                label={t("setWeeklyDisplay", "Weekly estimate display")}
-                description={t("setWeeklyDisplayDesc", "Active hours shows usable Claude time left. Days / time predicts the local day and time you will run out.")}
-              >
-                <CdsSelect
-                  id={id("weekly-display")}
-                  value={settings.weeklyEstimateDisplay ?? "active_hours"}
-                  options={weeklyDisplayOptions()}
-                  onChange={(v) => update({ weeklyEstimateDisplay: v as WeeklyEstimateDisplay })}
-                />
-              </Row>
-            </NestItem>
-            {settings.weeklyEstimateDisplay === "calendar_time" && settings.weeklyPaceMode !== "manual" && (
-              <NestItem>
-                <Row
-                  labelId={id("weekly-start-hour")}
-                  label={t("setManualStart", "Manual start time")}
-                  description={t("setManualStartDesc", "Local time used with manual days to place weekly usage into calendar time.")}
-                >
-                  <CdsSelect
-                    id={id("weekly-start-hour")}
-                    value={String(settings.weeklyManualStartHour ?? 9)}
-                    options={MANUAL_START_TIME_OPTIONS}
-                    onChange={(v) => update({ weeklyManualStartHour: Math.min(23, Math.max(0, Number(v) || 9)) })}
-                  />
-                </Row>
-              </NestItem>
-            )}
-          </NestGroup>
-        </MetricGroup>
-
-        {/* Estimates: manual reveals the work-day / hours / start-time sub-options */}
-        <MetricGroup>
-          <Row
-            labelId={id("weekly-mode")}
-            label={t("setEstimates", "Estimates")}
-            description={t("setEstimatesDesc", "Smart learns your active Claude pattern from local usage samples. Manual lets you set a fixed weekly schedule.")}
-          >
-            <CdsSelect
-              id={id("weekly-mode")}
-              value={settings.weeklyPaceMode}
-              options={weeklyPaceOptions()}
-              onChange={(v) => update({ weeklyPaceMode: v as WeeklyPaceMode })}
-            />
-          </Row>
-          <NestGroup open={settings.weeklyPaceMode === "manual"}>
-            <NestItem>
-              <Row
-                labelId={id("weekly-days")}
-                label={t("setManualDays", "Manual work days")}
-                description={t("setManualDaysDesc", "Used as the default schedule while smart weekly metrics are learning, or whenever manual mode is selected.")}
-              >
-                <div className="flex items-center gap-1" role="group" aria-label={t("setManualDaysAria", "Manual weekly work days")}>
-                  {weekDays().map((day) => {
-                    const active = (settings.weeklyManualWorkDays ?? [1, 2, 3, 4, 5]).includes(day.value);
-                    return (
-                      <button
-                        key={day.value}
-                        type="button"
-                        aria-pressed={active}
-                        className="cds-reset inline-flex h-7 w-7 items-center justify-center rounded border text-body"
-                        style={{
-                          background: active ? "rgb(204 124 94 / 18%)" : "rgb(255 255 255 / 6%)",
-                          borderColor: active ? "rgb(204 124 94 / 64%)" : "rgb(255 255 255 / 10%)",
-                          color: active ? "rgb(204 124 94)" : "var(--text-primary)",
-                        }}
-                        onClick={() => toggleWorkDay(day.value)}
-                      >
-                        {day.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </Row>
-            </NestItem>
-            <NestItem>
-              <Row
-                labelId={id("weekly-hours")}
-                label={t("setManualHours", "Manual hours per work day")}
-                description={t("setManualHoursDesc", "Used as the starting cap for weekly pacing before smart metrics have enough history.")}
-              >
-                <input
-                  id={id("weekly-hours")}
-                  type="number"
-                  min="1"
-                  max="24"
-                  step="1"
-                  value={settings.weeklyManualActiveHoursPerDay}
-                  onChange={(e) => {
-                    const value = Math.min(24, Math.max(1, Number(e.currentTarget.value) || 10));
-                    update({ weeklyManualActiveHoursPerDay: value });
-                  }}
-                  className="h-control w-16 rounded bg-bg-000 px-sm text-body text-primary outline-none shadow-field"
-                />
-              </Row>
-            </NestItem>
-            <NestItem>
-              <Row
-                labelId={id("manual-start-hour")}
-                label={t("setManualStart", "Manual start time")}
-                description={t("setManualStartDesc", "Local time used with manual days to place weekly usage into calendar time.")}
-              >
-                <CdsSelect
-                  id={id("manual-start-hour")}
-                  value={String(settings.weeklyManualStartHour ?? 9)}
-                  options={MANUAL_START_TIME_OPTIONS}
-                  onChange={(v) => update({ weeklyManualStartHour: Math.min(23, Math.max(0, Number(v) || 9)) })}
-                />
-              </Row>
-            </NestItem>
-          </NestGroup>
-        </MetricGroup>
-
-        {/* Data collected: local learned-pattern status + delete */}
-        <MetricGroup>
-          <Row
-            labelId={id("weekly-learned")}
-            label={t("setDataCollected", "Data collected")}
-            description={t("setLearnedPatternDesc", "Stored locally in this browser. No prompts, responses, cookies, or raw Claude payloads are stored.")}
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-body text-muted">{learnedStatusText}</span>
-              <CdsButton onClick={deleteWeeklyHistory}>{t("setDeleteHistory", "Delete history")}</CdsButton>
-            </div>
-          </Row>
-        </MetricGroup>
-      </Section>
-      </div>
     </div>
   );
 };

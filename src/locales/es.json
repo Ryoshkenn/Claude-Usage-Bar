@@ -185,182 +185,44 @@
   "setSecGeneral": {
     "message": "General"
   },
-  "setSecBar": {
-    "message": "Barra"
-  },
   "setSecWheel": {
     "message": "Ventana de contexto"
   },
   "setSecCacheTimer": {
     "message": "Temporizador de caché"
   },
-  "setSecWeekly": {
-    "message": "Métricas de uso semanal"
-  },
-  "setSec5hr": {
-    "message": "Métricas de uso de 5h"
-  },
   "setShowOverlay": {
     "message": "Mostrar overlay"
   },
   "setShowOverlayDesc": {
-    "message": "Mostrar el overlay de la barra de uso en el compositor de chat de Claude."
+    "message": "Activa o desactiva todo en el compositor."
   },
   "setLanguage": {
     "message": "Idioma"
   },
-  "setLanguageDesc": {
-    "message": "Idioma del overlay de uso y el popup. Inglés por defecto. Las traducciones pueden ser inexactas."
-  },
   "setTour": {
     "message": "Tour de funciones"
-  },
-  "setTourDesc": {
-    "message": "Recorre las funciones de la extensión paso a paso."
   },
   "setTourBtn": {
     "message": "Repetir tour"
   },
-  "setReview": {
-    "message": "Dejar una reseña"
-  },
-  "setReviewDesc": {
-    "message": "¿Te gusta Claude Usage Bar? Una valoración ayuda a otros a descubrirlo y lleva menos de un minuto. También puedes pedir funciones o sugerir otros productos en tu reseña."
-  },
-  "setReviewBtn": {
-    "message": "Valorar en Chrome Web Store"
-  },
   "setPrivacy": {
     "message": "Política de privacidad"
   },
-  "setPrivacyDesc": {
-    "message": "Consulta a qué accede Claude Usage Bar, qué almacena y qué nunca envía al desarrollador."
-  },
-  "setPrivacyBtn": {
-    "message": "Abrir política de privacidad"
-  },
   "setProject": {
     "message": "GitHub"
-  },
-  "setProjectDesc": {
-    "message": "Abre el repositorio de GitHub para el código fuente, issues y soporte."
-  },
-  "setProjectBtn": {
-    "message": "Abrir GitHub"
-  },
-  "setShowBar": {
-    "message": "Mostrar barra"
-  },
-  "setShowBarDesc": {
-    "message": "Mostrar el medidor horizontal de uso en la barra del compositor."
-  },
-  "setBarShows": {
-    "message": "La barra muestra"
-  },
-  "setBarShowsDesc": {
-    "message": "Qué métrica de uso representa el relleno de la barra."
-  },
-  "setShowPctLabel": {
-    "message": "Mostrar etiqueta de porcentaje"
-  },
-  "setBarLabelDesc": {
-    "message": "Mostrar el porcentaje actual como texto junto a la barra."
-  },
-  "setShowWheel": {
-    "message": "Mostrar ventana de contexto"
-  },
-  "setShowWheelDesc": {
-    "message": "Mostrar el indicador de la ventana de contexto en la barra de herramientas del compositor."
-  },
-  "setWheelShows": {
-    "message": "La rueda muestra"
-  },
-  "setWheelShowsDesc": {
-    "message": "Qué métrica de uso representa el relleno de la rueda."
-  },
-  "setWheelLabelDesc": {
-    "message": "Mostrar el porcentaje actual como texto pequeño debajo de la rueda."
-  },
-  "setShowCacheTimer": {
-    "message": "Mostrar temporizador de caché"
-  },
-  "setShowCacheTimerDesc": {
-    "message": "Mostrar una cuenta atrás en el encabezado del chat de cuánto tiempo sigue caliente la caché de prompts. Desactívalo para ocultarlo."
-  },
-  "setLearnWeekly": {
-    "message": "Aprender patrones semanales"
-  },
-  "setLearnWeeklyDesc": {
-    "message": "Usa muestras numéricas locales para ajustar las estimaciones semanales. Desactívalo para mantener el ritmo semanal en el horario manual fijo."
   },
   "setWeeklyEstimate": {
     "message": "Estimación semanal"
   },
   "setWeeklyEstimateDesc": {
-    "message": "El modo inteligente parte de unas diez ventanas de 5 horas por semana y luego aprende tu patrón activo de Claude a partir de muestras numéricas locales."
-  },
-  "setWeeklyDisplay": {
-    "message": "Visualización de estimación semanal"
-  },
-  "setWeeklyDisplayDesc": {
-    "message": "Horas activas muestra el tiempo de Claude utilizable restante. Días / hora predice el día y la hora locales en que te quedarás sin uso."
-  },
-  "setManualDays": {
-    "message": "Días de trabajo manuales"
-  },
-  "setManualDaysDesc": {
-    "message": "Se usa como horario por defecto mientras las métricas semanales inteligentes aprenden, o cuando se selecciona el modo manual."
-  },
-  "setManualDaysAria": {
-    "message": "Días de trabajo semanales manuales"
-  },
-  "setManualHours": {
-    "message": "Horas manuales por día de trabajo"
-  },
-  "setManualHoursDesc": {
-    "message": "Se usa como límite inicial para el ritmo semanal antes de que las métricas inteligentes tengan suficiente historial."
-  },
-  "setManualStart": {
-    "message": "Hora de inicio manual"
-  },
-  "setManualStartDesc": {
-    "message": "Hora local usada con los días manuales para situar el uso semanal en tiempo de calendario."
-  },
-  "setLearnedPattern": {
-    "message": "Patrón aprendido"
-  },
-  "setLearnedPatternDesc": {
-    "message": "Almacenado localmente en este navegador. No se almacenan prompts, respuestas, cookies ni payloads sin procesar de Claude."
+    "message": "Horas de uso restantes, el día y la hora en que te quedarás sin uso, o dónde estarás al restablecerse."
   },
   "setDeleteHistory": {
     "message": "Eliminar historial"
   },
-  "setReady": {
-    "message": "Listo"
-  },
-  "setLearning": {
-    "message": "Aprendiendo"
-  },
   "setSamples": {
     "message": "$1 muestras"
-  },
-  "setActiveDays": {
-    "message": "$1 días activos"
-  },
-  "setHoursPerDay": {
-    "message": "$1h/día"
-  },
-  "setShowPace": {
-    "message": "Mostrar ritmo"
-  },
-  "setShowPaceDesc": {
-    "message": "Mostrar la estimación de ritmo junto a la barra de uso. Un ritmo preciso requiere aprendizaje de patrones; para no usar el ritmo basado en patrones, desactívalo."
-  },
-  "setPaceFormat": {
-    "message": "Formato de ritmo"
-  },
-  "setPaceFormatDesc": {
-    "message": "Qué mostrar junto al porcentaje de 5 horas: el porcentaje al que llegarás cuando ocurra el reinicio, el tiempo extra que tendrás tras el reinicio, o una estimación de cuántos mensajes te quedan con el modelo que usas."
   },
   "setOptPctReset": {
     "message": "Porcentaje al reiniciar"
@@ -371,38 +233,11 @@
   "setOptMsgsLeft": {
     "message": "Mensajes restantes"
   },
-  "setOptSmart": {
-    "message": "Horario inteligente"
-  },
-  "setOptManual": {
-    "message": "Horario manual"
-  },
   "setOptActiveHours": {
     "message": "Horas activas"
   },
   "setOptDaysTime": {
     "message": "Días / hora"
-  },
-  "setDaySun": {
-    "message": "D"
-  },
-  "setDayMon": {
-    "message": "L"
-  },
-  "setDayTue": {
-    "message": "M"
-  },
-  "setDayWed": {
-    "message": "X"
-  },
-  "setDayThu": {
-    "message": "J"
-  },
-  "setDayFri": {
-    "message": "V"
-  },
-  "setDaySat": {
-    "message": "S"
   },
   "ctxBreakdownTitle": {
     "message": "Qué ocupa la ventana de contexto"
@@ -464,62 +299,23 @@
   "resetBannerSessionTitle": {
     "message": "Tu límite de 5 horas de Claude se restableció"
   },
-  "resetBannerSessionBody": {
-    "message": "Tu uso de la sesión volvió a cero."
-  },
   "resetBannerWeeklyTitle": {
     "message": "Tu límite semanal de Claude se restableció"
-  },
-  "resetBannerWeeklyBody": {
-    "message": "Acaba de empezar una nueva semana de uso."
   },
   "resetBannerAction": {
     "message": "Abrir Claude"
   },
-  "resetBannerSessionTag": {
-    "message": "5HR"
-  },
-  "resetBannerWeeklyTag": {
-    "message": "Semanal"
-  },
   "setSecResetAlerts": {
     "message": "Avisos de reinicio"
   },
-  "setResetBanner": {
-    "message": "Mostrar avisos de reinicio"
-  },
-  "setResetBannerDesc": {
-    "message": "Muestra un aviso cuando un límite se renueva, para saber que puedes seguir."
-  },
   "setResetBannerScope": {
     "message": "Mostrar avisos en"
-  },
-  "setResetBannerScopeDesc": {
-    "message": "Cualquier sitio permite que el aviso te llegue mientras navegas. Chrome pedirá permiso."
   },
   "setResetScopeClaude": {
     "message": "Solo claude.ai"
   },
   "setResetScopeEverywhere": {
     "message": "Cualquier sitio"
-  },
-  "setResetBannerSession": {
-    "message": "Límite de 5 horas"
-  },
-  "setResetBannerSessionDesc": {
-    "message": "Avisar cuando se reinicie la ventana de 5 horas."
-  },
-  "setResetBannerWeekly": {
-    "message": "Límite semanal"
-  },
-  "setResetBannerWeeklyDesc": {
-    "message": "Avisar cuando se reinicie la ventana semanal de todos los modelos."
-  },
-  "setResetBannerTest": {
-    "message": "Ver el aviso"
-  },
-  "setResetBannerTestDesc": {
-    "message": "Envía un aviso real tras 5 segundos, para que cambies de pestaña y veas dónde aparece."
   },
   "setResetBannerTestGo": {
     "message": "Enviar prueba"
@@ -542,16 +338,58 @@
   "grantCancel": {
     "message": "Cancelar"
   },
-  "setContextDisplay": {
-    "message": "Mostrar como"
-  },
-  "setContextDisplayDesc": {
-    "message": "Un anillo que se llena o el porcentaje como texto."
-  },
   "setOptRing": {
     "message": "Anillo"
   },
   "setOptPercentText": {
     "message": "Porcentaje"
+  },
+  "setSecDisplay": {
+    "message": "Visualización"
+  },
+  "setSecPacing": {
+    "message": "Ritmo"
+  },
+  "setOptOff": {
+    "message": "Desactivado"
+  },
+  "setUsageBar": {
+    "message": "Barra de uso"
+  },
+  "setUsageBarDesc": {
+    "message": "Qué límite sigue la barra."
+  },
+  "setShowPct": {
+    "message": "Mostrar %"
+  },
+  "setContextDesc": {
+    "message": "Cuánto se ha llenado el chat actual."
+  },
+  "setCacheTimerDesc": {
+    "message": "Cuenta atrás en la cabecera del chat mientras la caché de prompts está activa."
+  },
+  "setPacing": {
+    "message": "Mostrar estimaciones de ritmo"
+  },
+  "setPacingDesc": {
+    "message": "Las estimaciones aprenden de muestras numéricas de uso guardadas solo en este navegador. Al desactivarlo se dejan de recopilar."
+  },
+  "set5hrPace": {
+    "message": "Ritmo de 5 horas"
+  },
+  "set5hrPaceDesc": {
+    "message": "Se muestra junto al porcentaje de 5 horas."
+  },
+  "setLearnedData": {
+    "message": "Uso aprendido"
+  },
+  "setResetAlertsDesc": {
+    "message": "Aviso cuando se restablece tu límite de 5 horas o semanal. «Cualquier sitio» requiere permiso de Chrome."
+  },
+  "setLanguageShortDesc": {
+    "message": "Las traducciones pueden ser inexactas."
+  },
+  "setReviewLink": {
+    "message": "Valorar en Chrome Web Store"
   }
 }

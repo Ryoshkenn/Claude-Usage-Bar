@@ -185,182 +185,44 @@
   "setSecGeneral": {
     "message": "通用"
   },
-  "setSecBar": {
-    "message": "进度条"
-  },
   "setSecWheel": {
     "message": "上下文窗口"
   },
   "setSecCacheTimer": {
     "message": "缓存计时器"
   },
-  "setSecWeekly": {
-    "message": "每周用量指标"
-  },
-  "setSec5hr": {
-    "message": "5 小时用量指标"
-  },
   "setShowOverlay": {
     "message": "显示浮层"
   },
   "setShowOverlayDesc": {
-    "message": "在 Claude 聊天输入框中显示用量条浮层。"
+    "message": "开启或关闭输入框中的所有内容。"
   },
   "setLanguage": {
     "message": "语言"
   },
-  "setLanguageDesc": {
-    "message": "用量浮层和弹窗的语言。默认英语。翻译可能不准确。"
-  },
   "setTour": {
     "message": "功能导览"
-  },
-  "setTourDesc": {
-    "message": "逐步了解扩展的各项功能。"
   },
   "setTourBtn": {
     "message": "重新导览"
   },
-  "setReview": {
-    "message": "留下评价"
-  },
-  "setReviewDesc": {
-    "message": "喜欢 Claude Usage Bar 吗？评分能帮助他人发现它，用时不到一分钟。你也可以在评价中请求功能或推荐其他产品。"
-  },
-  "setReviewBtn": {
-    "message": "在 Chrome 应用商店评分"
-  },
   "setPrivacy": {
     "message": "隐私政策"
   },
-  "setPrivacyDesc": {
-    "message": "查看 Claude Usage Bar 访问什么、存储什么，以及绝不会发送给开发者的内容。"
-  },
-  "setPrivacyBtn": {
-    "message": "打开隐私政策"
-  },
   "setProject": {
     "message": "GitHub"
-  },
-  "setProjectDesc": {
-    "message": "打开 GitHub 仓库查看源码、Issues 和支持。"
-  },
-  "setProjectBtn": {
-    "message": "打开 GitHub"
-  },
-  "setShowBar": {
-    "message": "显示进度条"
-  },
-  "setShowBarDesc": {
-    "message": "在输入框工具栏中显示横向用量计。"
-  },
-  "setBarShows": {
-    "message": "进度条显示"
-  },
-  "setBarShowsDesc": {
-    "message": "进度条填充表示的用量指标。"
-  },
-  "setShowPctLabel": {
-    "message": "显示百分比标签"
-  },
-  "setBarLabelDesc": {
-    "message": "在进度条旁以文字显示当前百分比。"
-  },
-  "setShowWheel": {
-    "message": "显示上下文窗口"
-  },
-  "setShowWheelDesc": {
-    "message": "在撰写栏工具栏中显示上下文窗口指示器。"
-  },
-  "setWheelShows": {
-    "message": "圆环显示"
-  },
-  "setWheelShowsDesc": {
-    "message": "圆环填充表示的用量指标。"
-  },
-  "setWheelLabelDesc": {
-    "message": "在圆环下方以小号文字显示当前百分比。"
-  },
-  "setShowCacheTimer": {
-    "message": "显示缓存计时器"
-  },
-  "setShowCacheTimerDesc": {
-    "message": "在聊天标题栏显示提示缓存保持热状态的倒计时。关闭以隐藏。"
-  },
-  "setLearnWeekly": {
-    "message": "学习每周模式"
-  },
-  "setLearnWeeklyDesc": {
-    "message": "使用本地数值样本来调整每周预估。关闭可让每周节奏保持在固定的手动计划上。"
   },
   "setWeeklyEstimate": {
     "message": "每周预估"
   },
   "setWeeklyEstimateDesc": {
-    "message": "智能模式从每周约十个 5 小时窗口开始，然后从本地数值用量样本中学习你的活跃 Claude 模式。"
-  },
-  "setWeeklyDisplay": {
-    "message": "每周预估显示"
-  },
-  "setWeeklyDisplayDesc": {
-    "message": "活跃时间显示可用的剩余 Claude 时间。天 / 时间预测你将用尽的本地日期和时间。"
-  },
-  "setManualDays": {
-    "message": "手动工作日"
-  },
-  "setManualDaysDesc": {
-    "message": "在智能每周指标学习期间，或选择手动模式时，用作默认计划。"
-  },
-  "setManualDaysAria": {
-    "message": "手动每周工作日"
-  },
-  "setManualHours": {
-    "message": "每个工作日的手动小时数"
-  },
-  "setManualHoursDesc": {
-    "message": "在智能指标积累足够历史之前，用作每周节奏的起始上限。"
-  },
-  "setManualStart": {
-    "message": "手动开始时间"
-  },
-  "setManualStartDesc": {
-    "message": "与手动天数配合使用的本地时间，用于将每周用量放入日历时间。"
-  },
-  "setLearnedPattern": {
-    "message": "已学习的模式"
-  },
-  "setLearnedPatternDesc": {
-    "message": "本地存储在此浏览器中。不会存储任何提示、回复、Cookie 或 Claude 原始载荷。"
+    "message": "剩余可用时长、预计用完的日期和时间，或重置时的用量。"
   },
   "setDeleteHistory": {
     "message": "删除历史"
   },
-  "setReady": {
-    "message": "就绪"
-  },
-  "setLearning": {
-    "message": "学习中"
-  },
   "setSamples": {
     "message": "$1 个样本"
-  },
-  "setActiveDays": {
-    "message": "$1 个活跃天"
-  },
-  "setHoursPerDay": {
-    "message": "$1 小时/天"
-  },
-  "setShowPace": {
-    "message": "显示节奏"
-  },
-  "setShowPaceDesc": {
-    "message": "在用量条旁显示节奏预估。精确的节奏需要模式学习；若不使用基于模式的节奏，请关闭。"
-  },
-  "setPaceFormat": {
-    "message": "节奏格式"
-  },
-  "setPaceFormatDesc": {
-    "message": "在 5 小时百分比旁显示的内容：重置时你将达到的百分比、重置后你将多出的时间，或在你所用模型下剩余消息数的预估。"
   },
   "setOptPctReset": {
     "message": "重置时百分比"
@@ -371,38 +233,11 @@
   "setOptMsgsLeft": {
     "message": "剩余消息"
   },
-  "setOptSmart": {
-    "message": "智能计划"
-  },
-  "setOptManual": {
-    "message": "手动计划"
-  },
   "setOptActiveHours": {
     "message": "活跃时间"
   },
   "setOptDaysTime": {
     "message": "天 / 时间"
-  },
-  "setDaySun": {
-    "message": "日"
-  },
-  "setDayMon": {
-    "message": "一"
-  },
-  "setDayTue": {
-    "message": "二"
-  },
-  "setDayWed": {
-    "message": "三"
-  },
-  "setDayThu": {
-    "message": "四"
-  },
-  "setDayFri": {
-    "message": "五"
-  },
-  "setDaySat": {
-    "message": "六"
   },
   "ctxBreakdownTitle": {
     "message": "上下文窗口占用明细"
@@ -464,62 +299,23 @@
   "resetBannerSessionTitle": {
     "message": "你的 Claude 5 小时额度已重置"
   },
-  "resetBannerSessionBody": {
-    "message": "本次会话用量已归零。"
-  },
   "resetBannerWeeklyTitle": {
     "message": "你的 Claude 每周额度已重置"
-  },
-  "resetBannerWeeklyBody": {
-    "message": "新的一周用量已开始。"
   },
   "resetBannerAction": {
     "message": "打开 Claude"
   },
-  "resetBannerSessionTag": {
-    "message": "5HR"
-  },
-  "resetBannerWeeklyTag": {
-    "message": "每周"
-  },
   "setSecResetAlerts": {
     "message": "重置提醒"
   },
-  "setResetBanner": {
-    "message": "显示重置提醒"
-  },
-  "setResetBannerDesc": {
-    "message": "额度重置时弹出提醒，让你知道可以继续使用了。"
-  },
   "setResetBannerScope": {
     "message": "提醒显示位置"
-  },
-  "setResetBannerScopeDesc": {
-    "message": "选择任意网站后，你在浏览其他网页时也能收到提醒。Chrome 会请求权限。"
   },
   "setResetScopeClaude": {
     "message": "仅 claude.ai"
   },
   "setResetScopeEverywhere": {
     "message": "任意网站"
-  },
-  "setResetBannerSession": {
-    "message": "5 小时额度"
-  },
-  "setResetBannerSessionDesc": {
-    "message": "5 小时会话额度重置时提醒。"
-  },
-  "setResetBannerWeekly": {
-    "message": "每周额度"
-  },
-  "setResetBannerWeeklyDesc": {
-    "message": "全模型每周额度重置时提醒。"
-  },
-  "setResetBannerTest": {
-    "message": "预览提醒"
-  },
-  "setResetBannerTestDesc": {
-    "message": "5 秒后发送一条真实提醒，你可以切换标签页查看它出现的位置。"
   },
   "setResetBannerTestGo": {
     "message": "发送测试"
@@ -542,16 +338,58 @@
   "grantCancel": {
     "message": "取消"
   },
-  "setContextDisplay": {
-    "message": "显示为"
-  },
-  "setContextDisplayDesc": {
-    "message": "逐渐填满的圆环，或以文字显示百分比。"
-  },
   "setOptRing": {
     "message": "圆环"
   },
   "setOptPercentText": {
     "message": "百分比"
+  },
+  "setSecDisplay": {
+    "message": "显示"
+  },
+  "setSecPacing": {
+    "message": "节奏"
+  },
+  "setOptOff": {
+    "message": "关闭"
+  },
+  "setUsageBar": {
+    "message": "用量条"
+  },
+  "setUsageBarDesc": {
+    "message": "用量条跟踪的限额。"
+  },
+  "setShowPct": {
+    "message": "显示 %"
+  },
+  "setContextDesc": {
+    "message": "当前对话已用多少。"
+  },
+  "setCacheTimerDesc": {
+    "message": "提示缓存有效期间，在对话标题栏显示倒计时。"
+  },
+  "setPacing": {
+    "message": "显示节奏预估"
+  },
+  "setPacingDesc": {
+    "message": "预估基于仅保存在此浏览器中的数值用量样本进行学习。关闭后将停止收集。"
+  },
+  "set5hrPace": {
+    "message": "5 小时节奏"
+  },
+  "set5hrPaceDesc": {
+    "message": "显示在 5 小时百分比旁边。"
+  },
+  "setLearnedData": {
+    "message": "已学习的用量"
+  },
+  "setResetAlertsDesc": {
+    "message": "当 5 小时或每周限额重置时显示横幅。“任意网站”需要 Chrome 权限。"
+  },
+  "setLanguageShortDesc": {
+    "message": "翻译可能不准确。"
+  },
+  "setReviewLink": {
+    "message": "在 Chrome 应用商店评分"
   }
 }

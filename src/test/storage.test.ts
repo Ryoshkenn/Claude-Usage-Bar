@@ -86,7 +86,6 @@ describe("storage helpers", () => {
       showCacheTimer: false,
       paceSurplusFormat: "percent",
       weeklyMetricsEnabled: true,
-      weeklyPaceMode: "smart",
       weeklyEstimateDisplay: "active_hours",
       weeklyManualWorkDays: [1, 2, 3, 4, 5],
       weeklyManualActiveHoursPerDay: 5,
@@ -95,8 +94,6 @@ describe("storage helpers", () => {
       showClipboard: true,
       language: "en",
       resetBannerScope: "claude",
-      resetBannerSession: true,
-      resetBannerWeekly: true,
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
@@ -130,11 +127,39 @@ describe("storage helpers", () => {
     expect(reread.settings.showBar).toBe(true);
   });
 
-  it("defaults weekly learning on with smart pacing", async () => {
+  it("defaults weekly learning on", async () => {
     const state = await getStorage(createAdapter());
 
     expect(state.settings.weeklyMetricsEnabled).toBe(true);
-    expect(state.settings.weeklyPaceMode).toBe("smart");
+  });
+
+  it("drops settings removed in the settings rework", async () => {
+    const adapter = createAdapter({
+      settings: { weeklyPaceMode: "manual", weeklyManualWorkDays: [1, 3], resetBannerSession: false, resetBannerWeekly: true },
+    });
+    const state = await getStorage(adapter);
+    expect(state.settings).not.toHaveProperty("weeklyPaceMode");
+    expect(state.settings).not.toHaveProperty("resetBannerSession");
+    expect(state.settings).not.toHaveProperty("resetBannerWeekly");
+    // A schedule from the old manual mode is kept as the learning fallback.
+    expect(state.settings.weeklyManualWorkDays).toEqual([1, 3]);
+    // Muting only one window used to leave the other on; banners now cover both.
+    expect(state.settings.resetBannerScope).toBe("claude");
+
+    // The next write persists the cleaned-up object.
+    await updateSettings({ mode: "expanded" }, adapter);
+    expect(adapter.data.settings).not.toHaveProperty("weeklyPaceMode");
+  });
+
+  it("turns reset banners off for anyone who had muted both windows", async () => {
+    const adapter = createAdapter({
+      settings: { resetBannerScope: "everywhere", resetBannerSession: false, resetBannerWeekly: false },
+    });
+    expect((await getStorage(adapter)).settings.resetBannerScope).toBe("off");
+
+    // Picking a scope again sticks: the legacy flags are gone after the write.
+    await updateSettings({ resetBannerScope: "claude" }, adapter);
+    expect((await getStorage(adapter)).settings.resetBannerScope).toBe("claude");
   });
 
   it("merges settings", async () => {
@@ -154,7 +179,6 @@ describe("storage helpers", () => {
       showCacheTimer: false,
       paceSurplusFormat: "percent",
       weeklyMetricsEnabled: true,
-      weeklyPaceMode: "smart",
       weeklyEstimateDisplay: "active_hours",
       weeklyManualWorkDays: [1, 2, 3, 4, 5],
       weeklyManualActiveHoursPerDay: 5,
@@ -163,8 +187,6 @@ describe("storage helpers", () => {
       showClipboard: true,
       language: "en",
       resetBannerScope: "claude",
-      resetBannerSession: true,
-      resetBannerWeekly: true,
     });
     expect(adapter.data.settings).toEqual(settings);
   });
@@ -198,7 +220,7 @@ describe("storage helpers", () => {
 
   it("clears learned weekly patterns without clearing settings", async () => {
     const adapter = createAdapter({
-      settings: { weeklyPaceMode: "smart" },
+      settings: { showPace: true },
       usageHistory: [{ capturedAt: 1, weeklyUsedPercent: 50 }],
       weeklyUsageMetrics: {
         startedAt: 1,
@@ -214,7 +236,7 @@ describe("storage helpers", () => {
 
     const metrics = await clearWeeklyUsageMetrics(adapter);
 
-    expect(adapter.data.settings).toEqual({ weeklyPaceMode: "smart" });
+    expect(adapter.data.settings).toEqual({ showPace: true });
     expect(adapter.data.usageHistory).toBeUndefined();
     expect(metrics.sampleCount).toBe(0);
     expect((adapter.data.weeklyUsageMetrics as { sampleCount: number }).sampleCount).toBe(0);

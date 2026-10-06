@@ -230,6 +230,25 @@ interface PaceSummary {
   kind: "good" | "bad";
 }
 
+// Weekly "Percentage at reset": always the projected percent, whatever the
+// projection's status. Reaching 100% means running out before reset, so only
+// staying under it counts as good.
+const buildPercentAtResetSummary = (
+  projection: UsageProjection | null,
+  usedPercent: number | undefined,
+): PaceSummary | null => {
+  if (!projection || projection.status === "insufficient_data" || typeof usedPercent !== "number") {
+    return null;
+  }
+  const projected = Math.round(
+    Math.max(usedPercent, projection.projectedPercentAtReset ?? (projection.status === "projected_empty" ? 100 : usedPercent)),
+  );
+  return {
+    text: t("pacePctAtReset", "$1% at reset", projected),
+    kind: projected < 100 ? "good" : "bad",
+  };
+};
+
 const buildPaceSummary = (
   projection: UsageProjection | null,
   usedPercent: number | undefined,
@@ -489,7 +508,7 @@ export const ContentApp = ({
           realUsageSnapshot.weeklyAllModelsResetsAt,
           Date.now(),
           {
-            mode: settings.weeklyMetricsEnabled === false ? "manual" : (settings.weeklyPaceMode ?? "smart"),
+            mode: settings.weeklyMetricsEnabled === false ? "manual" : "smart",
             display: settings.weeklyEstimateDisplay ?? "active_hours",
             metrics: settings.weeklyMetricsEnabled === false ? undefined : weeklyUsageMetrics,
             manualWorkDays: settings.weeklyManualWorkDays ?? [1, 2, 3, 4, 5],
@@ -513,16 +532,18 @@ export const ContentApp = ({
         );
   // "Messages left" is a 5-hour, single-model concept; the weekly row (all models)
   // keeps showing percentage-at-reset in that mode.
-  const weeklyPaceSummary = buildPaceSummary(
-    weeklyProjection,
-    weeklyAllModelsPercentage,
-    realUsageSnapshot?.weeklyAllModelsResetsAt,
-    paceFormat === "messages" ? "percent" : paceFormat,
-    nowMs,
-  );
+  const weeklyPaceSummary =
+    settings.weeklyEstimateDisplay === "percent_at_reset"
+      ? buildPercentAtResetSummary(weeklyProjection, weeklyAllModelsPercentage)
+      : buildPaceSummary(
+          weeklyProjection,
+          weeklyAllModelsPercentage,
+          realUsageSnapshot?.weeklyAllModelsResetsAt,
+          paceFormat === "messages" ? "percent" : paceFormat,
+          nowMs,
+        );
   const showWeeklyLearningNotice =
     settings.weeklyMetricsEnabled !== false &&
-    settings.weeklyPaceMode !== "manual" &&
     weeklyUsageMetrics?.confidence !== "ready";
 
   const ringTooltip = (() => {

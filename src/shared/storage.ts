@@ -79,7 +79,6 @@ export const DEFAULT_SETTINGS: Settings = {
   showCacheTimer: false,
   paceSurplusFormat: "percent",
   weeklyMetricsEnabled: true,
-  weeklyPaceMode: "smart",
   weeklyEstimateDisplay: "active_hours",
   weeklyManualWorkDays: [1, 2, 3, 4, 5],
   weeklyManualActiveHoursPerDay: 5,
@@ -90,15 +89,27 @@ export const DEFAULT_SETTINGS: Settings = {
   // Banners default to claude.ai only: useful out of the box, and it needs no
   // permission beyond the one the extension already has.
   resetBannerScope: "claude",
-  resetBannerSession: true,
-  resetBannerWeekly: true,
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The
 // "design" (Claude Design) metric was removed in 1.0.1 — Claude folded that
 // usage into normal weekly usage — so any bar/wheel still set to it falls back
 // to "weekly" instead of showing a dead, blank metric.
-const migrateSettings = (settings: Settings): Settings => {
+// Settings removed in the settings rework. They're stripped on read so the next
+// write drops them from storage, after mapping anything that still matters.
+interface RemovedSettings {
+  // Smart/manual weekly pacing — only smart remains.
+  weeklyPaceMode?: unknown;
+  // Per-window reset banner toggles — the banner now covers both windows.
+  resetBannerSession?: boolean;
+  resetBannerWeekly?: boolean;
+}
+
+const migrateSettings = (stored: Settings & RemovedSettings): Settings => {
+  const { weeklyPaceMode: _paceMode, resetBannerSession, resetBannerWeekly, ...settings } = stored;
+  // Someone who had muted both windows had effectively turned banners off.
+  const resetBannerScope =
+    resetBannerSession === false && resetBannerWeekly === false ? "off" : settings.resetBannerScope;
   const remapDesign = <T,>(value: T): T | "weekly" =>
     (value as unknown) === "design" ? "weekly" : value;
   // "context" is not a valid bar metric; an older bar set to it falls back to session.
@@ -111,6 +122,7 @@ const migrateSettings = (settings: Settings): Settings => {
     barMetric: bar === "context" ? "session" : bar,
     ringTarget: "context",
     showWheelLabel: false,
+    resetBannerScope,
   };
 };
 

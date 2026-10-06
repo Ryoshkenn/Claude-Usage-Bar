@@ -8,10 +8,12 @@ Public pages:
 - GitHub: `https://github.com/Ryoshkenn/Claude-Usage-Bar`
 - Privacy policy: `https://sites.google.com/view/claude-usage-bar-privacy/home`
 
-Weekly learning is **on by default**: `weeklyMetricsEnabled: true` and `weeklyPaceMode: "smart"`
-(`weeklyManualActiveHoursPerDay: 5`). Learning is local-only — it records numeric usage samples
-in `chrome.storage.local` to model your pacing, and nothing leaves the machine. Users can turn it
-off under Weekly in the settings panel, which drops the pace estimate back to the manual schedule.
+Weekly learning is **on by default** (`weeklyMetricsEnabled: true`). Learning is local-only — it
+records numeric usage samples in `chrome.storage.local` to model your pacing, and nothing leaves the
+machine. The **Pacing** switch in the settings panel controls both `showPace` and
+`weeklyMetricsEnabled`, so turning pace estimates off also stops collection. There is no manual
+pacing mode any more; `weeklyManual*` survive only as the hidden fallback schedule used while
+learning (or with learning off).
 Core live display state persists locally regardless so the overlay works.
 
 ## Commands
@@ -66,12 +68,12 @@ every banner would be suppressed. `undefined` announces, so unknown state never 
 
 Controls live in the injected settings panel under **Reset alerts** (`settingsPage.tsx`), including
 a "Send test" button that fires the real path after 5s via `MESSAGE_TYPES.testResetBanner`. The
-test passes `force: true`, which skips the per-window toggles, the once-only dedupe, and the
-unused-window check but still honours scope — so a broken scope shows up in testing instead of
+test passes `force: true`, which skips the once-only dedupe and the unused-window check but still
+honours scope — so a broken scope shows up in testing instead of
 being masked.
 
 Scope is `settings.resetBannerScope`: `"off"` | `"claude"` (default, no extra permission) |
-`"everywhere"`. `"everywhere"` needs the **optional** `*://*/*` host permission, declared under
+`"everywhere"`, and it covers both windows — there are no per-window toggles. `"everywhere"` needs the **optional** `*://*/*` host permission, declared under
 `optional_host_permissions` rather than `host_permissions` on purpose — a required all-sites
 permission would disable the extension for every existing install until each user re-accepted it.
 `chrome.permissions.request()` can't run in a content script (and needs a user gesture on an
@@ -93,6 +95,8 @@ token estimation).
   verbatim from Claude's DOM (`settingsPage.tsx`).
 - New `Settings` fields: add to `types.ts` **and** `DEFAULT_SETTINGS`, and update the settings
   fixtures in `storage.test.ts` and `ContentApp.test.tsx` (they assert the full object).
+- Removing a `Settings` field: strip it in `migrateSettings` (`storage.ts`) so the next write drops
+  it from storage, mapping any stored value that still matters onto the remaining settings.
 - Never log or persist raw API payloads; strip all debug logs before finishing.
 - Two themes: every overlay style needs a `.cub-theme-light` counterpart in `styles.css`.
 - i18n: wrap user-facing strings with `t("key", "English fallback", subs?)` from `src/shared/i18n.ts`

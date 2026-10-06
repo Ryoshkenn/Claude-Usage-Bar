@@ -2074,3 +2074,24 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 .cub-nest-item:last-child::after {
   display: none;
 }
+
+/* Footer links under General (review / privacy / GitHub): small muted links
+   instead of full rows. Colour and size come from CDS's text-muted / text-body
+   classes, so they theme with Claude and need no .cub-theme-light rule. */
+.cub-settings-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding-top: 12px;
+}
+.cub-settings-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.cub-settings-links .cub-settings-link:hover,
+.cub-settings-links .cub-settings-link:focus-visible {
+  color: var(--text-primary);
+}

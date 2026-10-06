@@ -59,24 +59,24 @@ afterEach(() => {
 
 const load = async () => await import("../background/resetNotifier");
 
-const copy = { title: "t", body: "b", actionLabel: "a", tag: "5HR" };
+const copy = { title: "t", actionLabel: "a" };
 
 describe("buildBannerCopy", () => {
-  it("tags the banner with the window that reset", async () => {
+  it("names the window that reset in the title", async () => {
     const { buildBannerCopy } = await load();
     const t = (_key: string, fallback: string) => fallback;
 
-    expect(buildBannerCopy("session", t).tag).toBe("5HR");
-    expect(buildBannerCopy("weekly", t).tag).toBe("Weekly");
+    expect(buildBannerCopy("session", t).title).toMatch(/5-hour/);
+    expect(buildBannerCopy("weekly", t).title).toMatch(/weekly/);
   });
 
-  it("passes the tag through to the injected banner", async () => {
+  it("passes the copy through to the injected banner", async () => {
     const { announceReset } = await load();
 
-    await announceReset("weekly", 6_000, copy, settingsWith());
+    await announceReset("weekly", 6_000, { title: "Weekly reset", actionLabel: "Open" }, settingsWith());
 
     const args = (executeScript.mock.calls[0]?.[0] as { args?: unknown }).args as string[];
-    expect(args).toContain("5HR");
+    expect(args).toEqual(["Weekly reset", "Open", "https://claude.ai/new"]);
   });
 });
 
@@ -155,25 +155,22 @@ describe("announceReset", () => {
     expect(executeScript).not.toHaveBeenCalled();
   });
 
-  it("respects a per-window opt-out", async () => {
+  it("announces both the 5-hour and weekly windows", async () => {
     const { announceReset } = await load();
 
-    await announceReset("session", 5_000, copy, settingsWith({ resetBannerSession: false }));
-    expect(executeScript).not.toHaveBeenCalled();
-
-    await announceReset("weekly", 6_000, copy, settingsWith({ resetBannerSession: false }));
-    expect(executeScript).toHaveBeenCalledTimes(1);
+    await announceReset("session", 5_000, copy, settingsWith());
+    await announceReset("weekly", 6_000, copy, settingsWith());
+    expect(executeScript).toHaveBeenCalledTimes(2);
   });
 
-  it("force ignores the per-window toggles and the once-only dedupe", async () => {
+  it("force ignores the once-only dedupe", async () => {
     const { announceReset } = await load();
-    const off = settingsWith({ resetBannerSession: false });
 
-    await announceReset("session", 5_000, copy, off, { force: true });
+    await announceReset("session", 5_000, copy, settingsWith(), { force: true });
     expect(executeScript).toHaveBeenCalledTimes(1);
 
     // Same resetAt twice: the dedupe would normally swallow the second.
-    await announceReset("session", 5_000, copy, off, { force: true });
+    await announceReset("session", 5_000, copy, settingsWith(), { force: true });
     expect(executeScript).toHaveBeenCalledTimes(2);
   });
 

@@ -446,7 +446,11 @@ const computeScheduleAwareWeeklyPace = (
 ): UsageProjection | null => {
   const windowStart = resetsAt - WEEKLY_WINDOW_MS;
   const display = options.display ?? "active_hours";
-  const learnedSlots = display === "calendar_time" && options.mode === "smart" ? getLearnedSlotSet(options.metrics) : null;
+  // Calendar ETAs and percent-at-reset both depend on *when* in the week you
+  // actually use Claude, so they spread the window over learned day-hour slots.
+  // Active hours only needs the size of the weekly budget.
+  const learnedSlots =
+    display !== "active_hours" && options.mode === "smart" ? getLearnedSlotSet(options.metrics) : null;
   const totalActiveHours =
     learnedSlots
       ? countLearnedSlotHours(windowStart, resetsAt, learnedSlots)
@@ -557,6 +561,30 @@ const projectionPercentAtReset = (projection: UsageProjection, usedPercent: numb
   return projection.status === "projected_empty" ? 100 : usedPercent;
 };
 
+// The schedule-aware model sets projectedPercentAtReset itself; the fallback and
+// history-weighted paths only know a calendar burn rate. Fill it in for those so
+// every weekly projection can be shown as a percent at reset. Their rate is per
+// wall-clock hour, so it extends over the real time left until reset.
+const withPercentAtReset = (
+  projection: UsageProjection,
+  usedPercent: number,
+  resetsAt: number,
+  now: number,
+): UsageProjection => {
+  if (projection.status === "insufficient_data" || typeof projection.projectedPercentAtReset === "number") {
+    return projection;
+  }
+  if (projection.status === "projected_empty") {
+    return { ...projection, projectedPercentAtReset: 100 };
+  }
+  const rate = projection.drainRatePerHour ?? 0;
+  const hoursUntilReset = Math.max(0, (resetsAt - now) / 3_600_000);
+  return {
+    ...projection,
+    projectedPercentAtReset: Math.min(100, Math.max(usedPercent, usedPercent + rate * hoursUntilReset)),
+  };
+};
+
 export const computeWeeklyProjection = (
   history: UsageLogEntry[],
   weeklyUsedPercent: number,
@@ -597,8 +625,13 @@ export const computeWeeklyProjection = (
   // learned pattern never saw), fall back to the honest calendar-time projection.
   const calendarAtReset = calendarProjectedPercentAtReset(weeklyUsedPercent, weeklyResetsAt, now);
   if (calendarAtReset > projectionPercentAtReset(chosen, weeklyUsedPercent) + 0.5) {
-    return computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now);
+    return withPercentAtReset(
+      computeWeeklyFallbackPace(weeklyUsedPercent, weeklyResetsAt, now),
+      weeklyUsedPercent,
+      weeklyResetsAt,
+      now,
+    );
   }
 
-  return chosen;
+  return withPercentAtReset(chosen, weeklyUsedPercent, weeklyResetsAt, now);
 };

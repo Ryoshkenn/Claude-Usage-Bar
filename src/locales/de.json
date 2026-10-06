@@ -185,182 +185,44 @@
   "setSecGeneral": {
     "message": "Allgemein"
   },
-  "setSecBar": {
-    "message": "Balken"
-  },
   "setSecWheel": {
     "message": "Kontextfenster"
   },
   "setSecCacheTimer": {
     "message": "Cache-Timer"
   },
-  "setSecWeekly": {
-    "message": "Wöchentliche Nutzungsmetriken"
-  },
-  "setSec5hr": {
-    "message": "5-Stunden-Nutzungsmetriken"
-  },
   "setShowOverlay": {
     "message": "Overlay anzeigen"
   },
   "setShowOverlayDesc": {
-    "message": "Das Overlay der Nutzungsleiste im Claude-Chat-Editor anzeigen."
+    "message": "Alles im Eingabefeld ein- oder ausblenden."
   },
   "setLanguage": {
     "message": "Sprache"
   },
-  "setLanguageDesc": {
-    "message": "Sprache für Nutzungs-Overlay und Popup. Standard ist Englisch. Übersetzungen können ungenau sein."
-  },
   "setTour": {
     "message": "Funktionstour"
-  },
-  "setTourDesc": {
-    "message": "Gehe Schritt für Schritt durch die Funktionen der Erweiterung."
   },
   "setTourBtn": {
     "message": "Tour wiederholen"
   },
-  "setReview": {
-    "message": "Bewertung abgeben"
-  },
-  "setReviewDesc": {
-    "message": "Gefällt dir Claude Usage Bar? Eine Bewertung hilft anderen, es zu entdecken, und dauert weniger als eine Minute. Du kannst in deiner Bewertung auch Funktionen wünschen oder andere Produkte vorschlagen."
-  },
-  "setReviewBtn": {
-    "message": "Im Chrome Web Store bewerten"
-  },
   "setPrivacy": {
     "message": "Datenschutzrichtlinie"
-  },
-  "setPrivacyDesc": {
-    "message": "Sieh, worauf Claude Usage Bar zugreift, was es speichert und was es nie an den Entwickler sendet."
-  },
-  "setPrivacyBtn": {
-    "message": "Datenschutzrichtlinie öffnen"
   },
   "setProject": {
     "message": "GitHub"
   },
-  "setProjectDesc": {
-    "message": "Öffne das GitHub-Repository für Quellcode, Issues und Support."
-  },
-  "setProjectBtn": {
-    "message": "GitHub öffnen"
-  },
-  "setShowBar": {
-    "message": "Balken anzeigen"
-  },
-  "setShowBarDesc": {
-    "message": "Die horizontale Nutzungsanzeige in der Editor-Symbolleiste anzeigen."
-  },
-  "setBarShows": {
-    "message": "Balken zeigt"
-  },
-  "setBarShowsDesc": {
-    "message": "Welche Nutzungsmetrik die Balkenfüllung darstellt."
-  },
-  "setShowPctLabel": {
-    "message": "Prozentlabel anzeigen"
-  },
-  "setBarLabelDesc": {
-    "message": "Den aktuellen Prozentsatz als Text neben dem Balken anzeigen."
-  },
-  "setShowWheel": {
-    "message": "Kontextfenster anzeigen"
-  },
-  "setShowWheelDesc": {
-    "message": "Die Kontextfenster-Anzeige in der Composer-Symbolleiste anzeigen."
-  },
-  "setWheelShows": {
-    "message": "Rad zeigt"
-  },
-  "setWheelShowsDesc": {
-    "message": "Welche Nutzungsmetrik die Radfüllung darstellt."
-  },
-  "setWheelLabelDesc": {
-    "message": "Den aktuellen Prozentsatz als kleinen Text unter dem Rad anzeigen."
-  },
-  "setShowCacheTimer": {
-    "message": "Cache-Timer anzeigen"
-  },
-  "setShowCacheTimerDesc": {
-    "message": "Im Chat-Header einen Countdown anzeigen, wie lange der Prompt-Cache warm bleibt. Zum Ausblenden deaktivieren."
-  },
-  "setLearnWeekly": {
-    "message": "Wöchentliche Muster lernen"
-  },
-  "setLearnWeeklyDesc": {
-    "message": "Lokale numerische Stichproben nutzen, um wöchentliche Schätzungen zu verfeinern. Deaktivieren, um das wöchentliche Tempo beim festen manuellen Zeitplan zu belassen."
-  },
   "setWeeklyEstimate": {
-    "message": "Wöchentliche Schätzung"
+    "message": "Wochenschätzung"
   },
   "setWeeklyEstimateDesc": {
-    "message": "Der Smart-Modus startet mit etwa zehn 5-Stunden-Fenstern pro Woche und lernt dann dein aktives Claude-Muster aus lokalen numerischen Nutzungsstichproben."
-  },
-  "setWeeklyDisplay": {
-    "message": "Anzeige der wöchentlichen Schätzung"
-  },
-  "setWeeklyDisplayDesc": {
-    "message": "Aktive Stunden zeigt die verbleibende nutzbare Claude-Zeit. Tage / Uhrzeit sagt den lokalen Tag und die Uhrzeit voraus, an dem es aufgebraucht ist."
-  },
-  "setManualDays": {
-    "message": "Manuelle Arbeitstage"
-  },
-  "setManualDaysDesc": {
-    "message": "Wird als Standardzeitplan verwendet, während smarte wöchentliche Metriken lernen, oder wenn der manuelle Modus gewählt ist."
-  },
-  "setManualDaysAria": {
-    "message": "Manuelle wöchentliche Arbeitstage"
-  },
-  "setManualHours": {
-    "message": "Manuelle Stunden pro Arbeitstag"
-  },
-  "setManualHoursDesc": {
-    "message": "Wird als Startobergrenze für das wöchentliche Tempo verwendet, bevor smarte Metriken genug Verlauf haben."
-  },
-  "setManualStart": {
-    "message": "Manuelle Startzeit"
-  },
-  "setManualStartDesc": {
-    "message": "Lokale Zeit, die mit den manuellen Tagen verwendet wird, um die wöchentliche Nutzung in die Kalenderzeit einzuordnen."
-  },
-  "setLearnedPattern": {
-    "message": "Gelerntes Muster"
-  },
-  "setLearnedPatternDesc": {
-    "message": "Lokal in diesem Browser gespeichert. Es werden keine Prompts, Antworten, Cookies oder rohen Claude-Payloads gespeichert."
+    "message": "Verbleibende nutzbare Stunden, Tag und Uhrzeit, an dem dein Limit erreicht ist, oder dein Stand beim Zurücksetzen."
   },
   "setDeleteHistory": {
     "message": "Verlauf löschen"
   },
-  "setReady": {
-    "message": "Bereit"
-  },
-  "setLearning": {
-    "message": "Lernt"
-  },
   "setSamples": {
     "message": "$1 Stichproben"
-  },
-  "setActiveDays": {
-    "message": "$1 aktive Tage"
-  },
-  "setHoursPerDay": {
-    "message": "$1 Std./Tag"
-  },
-  "setShowPace": {
-    "message": "Tempo anzeigen"
-  },
-  "setShowPaceDesc": {
-    "message": "Die Tempo-Schätzung neben der Nutzungsleiste anzeigen. Genaues Tempo erfordert Musterlernen — zum Deaktivieren des musterbasierten Tempos ausschalten."
-  },
-  "setPaceFormat": {
-    "message": "Tempo-Format"
-  },
-  "setPaceFormatDesc": {
-    "message": "Was neben dem 5-Stunden-Prozentsatz angezeigt wird: der Prozentsatz beim Zurücksetzen, die zusätzliche Zeit nach dem Zurücksetzen, oder eine Schätzung, wie viele Nachrichten dir mit dem genutzten Modell bleiben."
   },
   "setOptPctReset": {
     "message": "Prozent beim Zurücksetzen"
@@ -371,38 +233,11 @@
   "setOptMsgsLeft": {
     "message": "Verbleibende Nachrichten"
   },
-  "setOptSmart": {
-    "message": "Smarter Zeitplan"
-  },
-  "setOptManual": {
-    "message": "Manueller Zeitplan"
-  },
   "setOptActiveHours": {
     "message": "Aktive Stunden"
   },
   "setOptDaysTime": {
     "message": "Tage / Uhrzeit"
-  },
-  "setDaySun": {
-    "message": "S"
-  },
-  "setDayMon": {
-    "message": "M"
-  },
-  "setDayTue": {
-    "message": "D"
-  },
-  "setDayWed": {
-    "message": "M"
-  },
-  "setDayThu": {
-    "message": "D"
-  },
-  "setDayFri": {
-    "message": "F"
-  },
-  "setDaySat": {
-    "message": "S"
   },
   "ctxBreakdownTitle": {
     "message": "Was das Kontextfenster belegt"
@@ -464,62 +299,23 @@
   "resetBannerSessionTitle": {
     "message": "Dein 5-Stunden-Limit für Claude wurde zurückgesetzt"
   },
-  "resetBannerSessionBody": {
-    "message": "Deine Sitzungsnutzung steht wieder bei null."
-  },
   "resetBannerWeeklyTitle": {
     "message": "Dein Wochenlimit für Claude wurde zurückgesetzt"
-  },
-  "resetBannerWeeklyBody": {
-    "message": "Eine neue Nutzungswoche hat begonnen."
   },
   "resetBannerAction": {
     "message": "Claude öffnen"
   },
-  "resetBannerSessionTag": {
-    "message": "5HR"
-  },
-  "resetBannerWeeklyTag": {
-    "message": "Wöchentlich"
-  },
   "setSecResetAlerts": {
     "message": "Reset-Hinweise"
   },
-  "setResetBanner": {
-    "message": "Reset-Hinweise anzeigen"
-  },
-  "setResetBannerDesc": {
-    "message": "Zeigt einen Hinweis, wenn ein Limit zurückgesetzt wird, damit du weißt, dass es weitergeht."
-  },
   "setResetBannerScope": {
     "message": "Hinweise anzeigen auf"
-  },
-  "setResetBannerScopeDesc": {
-    "message": "Jede Website lässt den Hinweis dich auch anderswo erreichen. Chrome fragt nach Erlaubnis."
   },
   "setResetScopeClaude": {
     "message": "Nur claude.ai"
   },
   "setResetScopeEverywhere": {
     "message": "Jede Website"
-  },
-  "setResetBannerSession": {
-    "message": "5-Stunden-Limit"
-  },
-  "setResetBannerSessionDesc": {
-    "message": "Hinweis, wenn das 5-Stunden-Fenster zurückgesetzt wird."
-  },
-  "setResetBannerWeekly": {
-    "message": "Wochenlimit"
-  },
-  "setResetBannerWeeklyDesc": {
-    "message": "Hinweis, wenn das Wochenfenster für alle Modelle zurückgesetzt wird."
-  },
-  "setResetBannerTest": {
-    "message": "Hinweis testen"
-  },
-  "setResetBannerTestDesc": {
-    "message": "Sendet nach 5 Sekunden einen echten Hinweis, damit du den Tab wechseln kannst."
   },
   "setResetBannerTestGo": {
     "message": "Test senden"
@@ -542,16 +338,58 @@
   "grantCancel": {
     "message": "Abbrechen"
   },
-  "setContextDisplay": {
-    "message": "Anzeigen als"
-  },
-  "setContextDisplayDesc": {
-    "message": "Ein Ring, der sich füllt, oder der Prozentwert als Text."
-  },
   "setOptRing": {
     "message": "Ring"
   },
   "setOptPercentText": {
     "message": "Prozentwert"
+  },
+  "setSecDisplay": {
+    "message": "Anzeige"
+  },
+  "setSecPacing": {
+    "message": "Tempo"
+  },
+  "setOptOff": {
+    "message": "Aus"
+  },
+  "setUsageBar": {
+    "message": "Nutzungsleiste"
+  },
+  "setUsageBarDesc": {
+    "message": "Welches Limit die Leiste anzeigt."
+  },
+  "setShowPct": {
+    "message": "% anzeigen"
+  },
+  "setContextDesc": {
+    "message": "Wie voll der aktuelle Chat ist."
+  },
+  "setCacheTimerDesc": {
+    "message": "Countdown im Chat-Kopf, solange der Prompt-Cache warm ist."
+  },
+  "setPacing": {
+    "message": "Tempo-Schätzungen anzeigen"
+  },
+  "setPacingDesc": {
+    "message": "Die Schätzungen lernen aus numerischen Nutzungsdaten, die nur in diesem Browser gespeichert werden. Wenn du dies ausschaltest, werden keine mehr gesammelt."
+  },
+  "set5hrPace": {
+    "message": "5-Stunden-Tempo"
+  },
+  "set5hrPaceDesc": {
+    "message": "Wird neben dem 5-Stunden-Prozentwert angezeigt."
+  },
+  "setLearnedData": {
+    "message": "Gelernte Nutzung"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner, wenn dein 5-Stunden- oder Wochenlimit zurückgesetzt wird. „Jede Website“ erfordert eine Chrome-Berechtigung."
+  },
+  "setLanguageShortDesc": {
+    "message": "Übersetzungen können ungenau sein."
+  },
+  "setReviewLink": {
+    "message": "Im Chrome Web Store bewerten"
   }
 }

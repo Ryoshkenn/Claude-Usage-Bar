@@ -17,7 +17,6 @@ const settings: Settings = {
   showCacheTimer: true,
   paceSurplusFormat: "percent",
   weeklyMetricsEnabled: true,
-  weeklyPaceMode: "smart",
   weeklyEstimateDisplay: "active_hours",
   weeklyManualWorkDays: [1, 2, 3, 4, 5],
   weeklyManualActiveHoursPerDay: 10,
@@ -26,8 +25,6 @@ const settings: Settings = {
   showClipboard: true,
   language: "en",
   resetBannerScope: "claude",
-  resetBannerSession: true,
-  resetBannerWeekly: true,
 };
 
 const baseChatUsage: ChatUsage = {
@@ -276,13 +273,37 @@ describe("ContentApp", () => {
     expect(screen.getAllByText(/% at reset|active left/).length).toBeGreaterThan(0);
   });
 
+  it("shows the weekly projection as a percent at reset when chosen", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-01T14:00:00"));
+
+    render(
+      <ContentApp
+        settings={{ ...settings, weeklyEstimateDisplay: "percent_at_reset", weeklyMetricsEnabled: false }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 20,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+          weeklyAllModelsPercentageUsed: 50,
+          weeklyAllModelsResetsAt: new Date("2026-06-08T00:00:00").getTime(),
+        }}
+      />,
+    );
+
+    // The same 50% that shows as a Monday run-out time in days/time mode.
+    expect(screen.getByText("100% at reset")).toHaveAttribute("data-kind", "bad");
+    expect(screen.queryByText(/empty |active left/)).not.toBeInTheDocument();
+  });
+
   it("shows a calendar run-out time when weekly display is days and time", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-06-01T14:00:00"));
 
     render(
       <ContentApp
-        settings={{ ...settings, weeklyEstimateDisplay: "calendar_time", weeklyPaceMode: "manual" }}
+        settings={{ ...settings, weeklyEstimateDisplay: "calendar_time", weeklyMetricsEnabled: false }}
         chatUsage={baseChatUsage}
         realUsageSnapshot={{
           source: "real",
@@ -304,7 +325,7 @@ describe("ContentApp", () => {
 
     render(
       <ContentApp
-        settings={{ ...settings, weeklyPaceMode: "manual" }}
+        settings={{ ...settings, weeklyMetricsEnabled: false }}
         chatUsage={baseChatUsage}
         realUsageSnapshot={{
           source: "real",

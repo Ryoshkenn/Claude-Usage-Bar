@@ -71,7 +71,7 @@ const markAnnounced = async (resetAt: number): Promise<void> => {
 
 // Runs inside the target page. Must be fully self-contained: chrome.scripting
 // serializes the function, so it closes over nothing from this module.
-const renderResetBanner = (title: string, body: string, actionLabel: string, claudeUrl: string, tag: string) => {
+const renderResetBanner = (title: string, actionLabel: string, claudeUrl: string) => {
   const HOST_ID = "claude-usage-bar-reset-banner";
   document.getElementById(HOST_ID)?.remove();
 
@@ -94,33 +94,25 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
       font-family: ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
       font-size: 13px; line-height: 1.45;
       animation: slide-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer; outline: none; transition: background-color 150ms ease;
+      /* Horizontal trackpad swipes move the card, not the page history. */
+      overscroll-behavior: contain;
     }
+    .card:hover, .card:focus-visible { background: rgb(46 46 44); }
+    .card:focus-visible { box-shadow: 0 16px 40px rgb(0 0 0 / 38%), 0 0 0 2px rgb(204 124 94 / 60%); }
     @media (prefers-color-scheme: light) {
       .card {
         background: rgb(255 255 255); color: rgb(40 40 38);
         border-color: rgb(0 0 0 / 10%); box-shadow: 0 16px 40px rgb(0 0 0 / 14%);
       }
-      .body { color: rgb(110 108 101); }
+      .card:hover, .card:focus-visible { background: rgb(247 246 242); }
     }
     @keyframes slide-in {
       from { opacity: 0; transform: translateX(16px); }
       to { opacity: 1; transform: translateX(0); }
     }
     .text { flex: 1; min-width: 0; }
-    .title-row { display: flex; align-items: center; gap: 6px; }
     .title { font-weight: 500; }
-    .tag {
-      flex-shrink: 0; font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
-      white-space: nowrap; padding: 1px 6px; border-radius: 999px;
-      border: 1px solid rgb(204 124 94 / 55%); color: rgb(204 124 94);
-    }
-    .body { color: rgb(158 157 148); font-size: 12px; }
-    .go {
-      margin-top: 8px; padding: 0; border: 0; background: none;
-      color: rgb(204 124 94); font: inherit; font-size: 12px; cursor: pointer;
-      text-decoration: none; display: inline-block;
-    }
-    .go:hover { text-decoration: underline; }
     .close {
       flex-shrink: 0; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 4px;
       background: none; color: currentColor; opacity: 0.5; cursor: pointer;
@@ -128,16 +120,24 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
     }
     .close:hover { opacity: 1; }
 
-    .meter-wrap { position: relative; margin-top: 10px; }
+    .meter-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    /* Fixed width + tabular digits so the bar doesn't shift as the count grows. */
+    .pct {
+      flex-shrink: 0; width: 4ch; font-size: 12px; font-weight: 500;
+      font-variant-numeric: tabular-nums; color: rgb(204 124 94);
+    }
+    .meter-wrap { position: relative; width: 160px; }
     .meter {
-      height: 4px; border-radius: 999px; overflow: hidden;
+      height: 8px; border-radius: 999px; overflow: hidden;
       background: rgb(255 255 255 / 12%);
     }
     @media (prefers-color-scheme: light) { .meter { background: rgb(0 0 0 / 10%); } }
+    /* Width is animated from JS (Web Animations) alongside the count; only the
+       celebration colour change is a CSS transition. */
     .meter-fill {
       display: block; width: 0; height: 100%; border-radius: inherit;
       background: rgb(204 124 94);
-      transition: width 1700ms cubic-bezier(0.33, 1, 0.68, 1), background-color 380ms ease;
+      transition: background-color 380ms ease;
     }
     /* Confetti bursts from the bar, so the layer tracks the bar's own box and
        is allowed to overflow the card. */
@@ -156,28 +156,27 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
     }
     @media (prefers-reduced-motion: reduce) {
       .card { animation: none; }
-      .meter-fill { transition: none; }
     }
   `;
 
+  // The whole card is the link to Claude; only the close button opts out.
   const card = document.createElement("div");
   card.className = "card";
+  card.tabIndex = 0;
+  card.setAttribute("role", "link");
+  card.setAttribute("aria-label", `${title}. ${actionLabel}`);
 
   const text = document.createElement("div");
   text.className = "text";
-  const titleRow = document.createElement("div");
-  titleRow.className = "title-row";
-  const tagEl = document.createElement("span");
-  tagEl.className = "tag";
-  tagEl.textContent = tag;
   const titleEl = document.createElement("div");
   titleEl.className = "title";
   titleEl.textContent = title;
-  titleRow.append(tagEl, titleEl);
-  const bodyEl = document.createElement("div");
-  bodyEl.className = "body";
-  bodyEl.textContent = body;
 
+  const meterRow = document.createElement("div");
+  meterRow.className = "meter-row";
+  const pct = document.createElement("span");
+  pct.className = "pct";
+  pct.textContent = "0%";
   const meterWrap = document.createElement("div");
   meterWrap.className = "meter-wrap";
   const meter = document.createElement("div");
@@ -188,14 +187,8 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
   const confettiLayer = document.createElement("div");
   confettiLayer.className = "confetti-layer";
   meterWrap.append(meter, confettiLayer);
-
-  const go = document.createElement("a");
-  go.className = "go";
-  go.href = claudeUrl;
-  go.target = "_blank";
-  go.rel = "noopener noreferrer";
-  go.textContent = actionLabel;
-  text.append(titleRow, bodyEl, meterWrap, go);
+  meterRow.append(pct, meterWrap);
+  text.append(titleEl, meterRow);
 
   const close = document.createElement("button");
   close.className = "close";
@@ -217,13 +210,72 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
   const after = (ms: number, fn: () => void) => {
     timers.push(setTimeout(fn, ms) as unknown as number);
   };
+  let frame = 0;
+  let swipeSettleTimer = 0;
 
   const dismiss = () => {
     timers.forEach(clearTimeout);
+    clearTimeout(swipeSettleTimer);
+    cancelAnimationFrame(frame);
+    fill.getAnimations().forEach((animation) => animation.cancel());
     host.remove();
   };
-  close.addEventListener("click", dismiss);
-  go.addEventListener("click", dismiss);
+  const openClaude = () => {
+    window.open(claudeUrl, "_blank", "noopener,noreferrer");
+    dismiss();
+  };
+  close.addEventListener("click", (event) => {
+    // Don't let the dismiss click fall through to the card and open Claude.
+    event.stopPropagation();
+    dismiss();
+  });
+  card.addEventListener("click", openClaude);
+  card.addEventListener("keydown", (event) => {
+    if (event.target !== card) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openClaude();
+    }
+  });
+
+  // Two-finger trackpad swipe. Right flings the card off and dismisses it; left
+  // only gives a little and springs back. Trackpads report swipes as wheel
+  // events and never send an "end", so a short quiet gap counts as letting go.
+  const SWIPE_DISMISS_PX = 90;
+  const SWIPE_SETTLE_MS = 140;
+  let swipeTravel = 0;
+  let swipeLeaving = false;
+  const placeCard = (offset: number, transition: string) => {
+    card.style.transition = transition;
+    card.style.transform = offset === 0 ? "" : `translateX(${offset}px)`;
+    card.style.opacity = offset > 0 ? String(Math.max(0.3, 1 - offset / (SWIPE_DISMISS_PX * 1.6))) : "";
+  };
+  card.addEventListener(
+    "wheel",
+    (event) => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      // Claim the gesture so Chrome doesn't treat it as back/forward navigation.
+      event.preventDefault();
+      if (swipeLeaving) return;
+      // Fingers moving right report a negative deltaX.
+      swipeTravel -= event.deltaX;
+      const offset = swipeTravel > 0 ? swipeTravel : Math.max(-40, swipeTravel * 0.25);
+      clearTimeout(swipeSettleTimer);
+      if (offset >= SWIPE_DISMISS_PX) {
+        swipeLeaving = true;
+        placeCard(360, "transform 180ms ease-out, opacity 180ms ease-out");
+        card.style.opacity = "0";
+        after(180, dismiss);
+        return;
+      }
+      placeCard(offset, "none");
+      swipeSettleTimer = setTimeout(() => {
+        swipeTravel = 0;
+        placeCard(0, "transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 240ms ease, background-color 150ms ease");
+      }, SWIPE_SETTLE_MS) as unknown as number;
+    },
+    { passive: false },
+  );
 
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
@@ -255,20 +307,46 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
   root.append(style, card);
   document.documentElement.appendChild(host);
 
-  // Fill → flash green with confetti → settle back to orange, then sit for the
-  // rest of the 10s. Reduced motion gets the end state with no celebration.
+  const showPercent = (value: number) => {
+    pct.textContent = `${Math.round(value * 100)}%`;
+  };
+
+  // Count 0 → 100% with the bar, easing in and out, then flash green with
+  // confetti and settle back to orange for the rest of the 10s. Reduced motion
+  // gets the end state with no celebration.
   if (reduceMotion) {
     fill.style.width = "100%";
+    showPercent(1);
   } else {
-    requestAnimationFrame(() => {
-      fill.style.width = "100%";
-    });
-    after(1_800, () => {
-      fill.style.backgroundColor = GREEN;
-      burstConfetti();
-    });
-    after(2_900, () => {
-      fill.style.backgroundColor = ORANGE;
+    // Kicked off from the first frame rather than at injection: frames don't run
+    // in a background tab, so the fill starts when the banner is actually seen.
+    frame = requestAnimationFrame(() => {
+      // The bar is a real Web Animation so it stays smooth even if frames are
+      // throttled; the count just reads its eased progress, keeping the two in
+      // lockstep.
+      const fillAnimation = fill.animate([{ width: "0%" }, { width: "100%" }], {
+        duration: 1_600,
+        easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+        fill: "forwards",
+      });
+      const tick = () => {
+        showPercent(fillAnimation.effect?.getComputedTiming().progress ?? 0);
+        frame = requestAnimationFrame(tick);
+      };
+      tick();
+      void fillAnimation.finished.then(
+        () => {
+          cancelAnimationFrame(frame);
+          showPercent(1);
+          fill.style.backgroundColor = GREEN;
+          burstConfetti();
+          after(1_100, () => {
+            fill.style.backgroundColor = ORANGE;
+          });
+        },
+        // Cancelled by dismiss — nothing left to celebrate.
+        () => undefined,
+      );
     });
   }
 
@@ -277,9 +355,7 @@ const renderResetBanner = (title: string, body: string, actionLabel: string, cla
 
 interface BannerCopy {
   title: string;
-  body: string;
   actionLabel: string;
-  tag: string;
 }
 
 const injectInto = async (tabId: number, copy: BannerCopy): Promise<void> => {
@@ -287,7 +363,7 @@ const injectInto = async (tabId: number, copy: BannerCopy): Promise<void> => {
     await chrome.scripting.executeScript({
       target: { tabId },
       func: renderResetBanner,
-      args: [copy.title, copy.body, copy.actionLabel, "https://claude.ai/", copy.tag],
+      args: [copy.title, copy.actionLabel, "https://claude.ai/new"],
     });
   } catch {
     // Restricted page, tab closed mid-flight, or permission revoked. Not worth
@@ -313,15 +389,11 @@ export const buildBannerCopy = (
   kind === "session"
     ? {
         title: translate("resetBannerSessionTitle", "Your 5-hour Claude limit reset"),
-        body: translate("resetBannerSessionBody", "Your session usage is back to zero."),
         actionLabel: translate("resetBannerAction", "Open Claude"),
-        tag: translate("resetBannerSessionTag", "5HR"),
       }
     : {
         title: translate("resetBannerWeeklyTitle", "Your weekly Claude limit reset"),
-        body: translate("resetBannerWeeklyBody", "A fresh week of usage just started."),
         actionLabel: translate("resetBannerAction", "Open Claude"),
-        tag: translate("resetBannerWeeklyTag", "Weekly"),
       };
 
 export const announceReset = async (
@@ -329,9 +401,8 @@ export const announceReset = async (
   resetAt: number,
   copy: BannerCopy,
   settings: Settings,
-  // `force` (the test button) pushes past the per-window toggles, the once-only
-  // dedupe, and the idle-window check so it can be pressed repeatedly. Scope is
-  // still honoured — testing the delivery path is the point, and we can't inject
+  // `force` (the test button) pushes past the once-only dedupe and the
+  // idle-window check so it can be pressed repeatedly. Scope is still honoured — testing the delivery path is the point, and we can't inject
   // where the user hasn't granted access anyway.
   // `usedPercentBeforeReset` is how much of the window that just closed was
   // actually consumed; undefined means "unknown", which announces rather than
@@ -342,12 +413,6 @@ export const announceReset = async (
     return;
   }
   if (!options.force) {
-    if (kind === "session" && !settings.resetBannerSession) {
-      return;
-    }
-    if (kind === "weekly" && !settings.resetBannerWeekly) {
-      return;
-    }
     // Nothing was spent in the window that just rolled over, so nothing changed
     // for the user — the meter read empty before and reads empty now. Announcing
     // that is pure noise, and it's the common case for the 5-hour window, which

@@ -418,6 +418,50 @@ describe("weekly smart metrics", () => {
     expect(projection.etaMs).toBe(new Date("2026-06-01T19:00:00").getTime());
   });
 
+  it("projects percent at reset from learned day-hour slots", () => {
+    // Saturday noon. Usage is learned only for weekend mornings (Sat/Sun
+    // 10:00–12:00). Saturday's 2 hours already took 30%, and Sunday's 2 are
+    // still ahead → 60% at reset. Straight calendar pacing would only say ~38%,
+    // because it spreads the 30% across the whole quiet week.
+    const now = new Date("2026-06-06T12:00:00").getTime();
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+    const metrics = {
+      startedAt: now - 8 * 24 * 60 * 60_000,
+      lastUpdatedAt: now,
+      sampleCount: 8,
+      activeDayBuckets: { "6": 4, "0": 4 },
+      activeHourBuckets: { "10": 4, "11": 4 },
+      activeSlotBuckets: { "6:10": 4, "6:11": 4, "0:10": 4, "0:11": 4 },
+      averageActiveHoursPerDay: 2,
+      confidence: "ready" as const,
+    };
+
+    const projection = computeWeeklyProjection([], 30, resetAt, now, {
+      mode: "smart",
+      display: "percent_at_reset",
+      metrics,
+      manualWorkDays: [1, 2, 3, 4, 5],
+      manualActiveHoursPerDay: 10,
+      manualStartHour: 9,
+    });
+
+    expect(projection.status).toBe("lasting_to_reset");
+    expect(projection.projectedPercentAtReset).toBeCloseTo(60, 5);
+    expect(projection.calendarEta).toBeUndefined();
+  });
+
+  it("fills in percent at reset on the calendar fallback path", () => {
+    // No schedule options: the projection falls back to the plain calendar
+    // burn rate, 10% over the first day → 70% by the end of the week.
+    const resetAt = new Date("2026-06-08T00:00:00").getTime();
+    const now = resetAt - 6 * 24 * 60 * 60_000;
+
+    const projection = computeWeeklyProjection([], 10, resetAt, now);
+
+    expect(projection.status).toBe("lasting_to_reset");
+    expect(projection.projectedPercentAtReset).toBeCloseTo(70, 5);
+  });
+
   it("uses learned day-hour slots for smart calendar timestamps", () => {
     const now = new Date("2026-06-01T12:00:00").getTime();
     const resetAt = new Date("2026-06-08T00:00:00").getTime();
