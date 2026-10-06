@@ -2,6 +2,26 @@
 
 All notable changes since the 1.0.0 Chrome Web Store release are documented here.
 
+## [1.5.0] - 2026-10-06
+
+### Added
+- Added a "Percentage at reset" option for the weekly estimate. It projects where your weekly usage will land at reset, using the days and hours you usually use Claude once those are learned.
+- Added a percentage display for the context window indicator, as an alternative to the ring.
+- Reset banners can now be swiped away to the right with a two-finger trackpad swipe.
+
+### Changed
+- Reorganized settings from seven sections into four (Display, Pacing, Reset alerts, General) with fewer, shorter rows. Existing choices carry over.
+- The usage bar and context window each use a single picker that includes "Off", instead of a separate on/off switch.
+- Pacing has a single switch that turns pace estimates on or off. Turning it off also stops collecting local usage samples.
+- Removed the manual weekly schedule. Weekly estimates always learn from local usage, and fall back to a default schedule while learning or when pacing is off.
+- Reset alerts now always cover both the 5-hour and weekly limits. If you had turned off both, alerts are now off.
+- Review, privacy policy, and GitHub links moved to a compact row of icon links under General.
+- The reset banner is simpler: a title and a shorter, thicker bar with a percentage that counts up from 0% to 100%. Clicking anywhere on the banner opens a new Claude chat.
+- The usage bar now sits in the empty space of the composer toolbar, or on its own row below it when the chat column is too narrow.
+
+### Fixed
+- Fixed the reset banner's bar appearing already full instead of filling up, and the green celebration firing before the bar finished.
+
 ## [1.2.0] - 2026-06-06
 
 ### Added

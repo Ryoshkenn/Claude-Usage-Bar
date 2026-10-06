@@ -4,7 +4,7 @@ import { EXTENSION_NAME } from "./shared/constants";
 export default defineManifest({
   manifest_version: 3,
   name: EXTENSION_NAME,
-  version: "1.4.0",
+  version: "1.5.0",
   description: "Claude usage overlay with privacy-safe usage metadata.",
   // "alarms" wakes the service worker at reset time (MV3 kills it after ~30s
   // idle, so setTimeout can never survive to a reset hours away). "scripting"
