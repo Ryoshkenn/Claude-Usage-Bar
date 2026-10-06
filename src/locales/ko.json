@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "취소"
+  },
+  "setContextDisplay": {
+    "message": "표시 방식"
+  },
+  "setContextDisplayDesc": {
+    "message": "채워지는 링 또는 텍스트 백분율."
+  },
+  "setOptRing": {
+    "message": "링"
+  },
+  "setOptPercentText": {
+    "message": "백분율"
   }
 }

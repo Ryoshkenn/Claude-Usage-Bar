@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "Annuler"
+  },
+  "setContextDisplay": {
+    "message": "Afficher comme"
+  },
+  "setContextDisplayDesc": {
+    "message": "Un anneau qui se remplit, ou le pourcentage en texte."
+  },
+  "setOptRing": {
+    "message": "Anneau"
+  },
+  "setOptPercentText": {
+    "message": "Pourcentage"
   }
 }

@@ -72,6 +72,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showBarLabel: false,
   showWheel: true,
   showWheelLabel: false,
+  contextDisplay: "ring",
   showPace: true,
   // Bar + cache timer default off; the user can turn either on and the choice
   // sticks (reads honor the stored value).

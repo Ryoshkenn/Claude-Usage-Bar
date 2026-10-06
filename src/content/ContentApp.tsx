@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type MouseEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import type {
   ChatUsage,
   MetricTarget,
@@ -411,6 +411,7 @@ export const ContentApp = ({
   const showBar = settings.showBar !== false;
   const showBarLabel = settings.showBarLabel === true;
   const showWheel = settings.showWheel !== false;
+  const contextDisplay = settings.contextDisplay ?? "ring";
   const showPace = settings.showPace !== false;
   const showClipboard = settings.showClipboard !== false;
 
@@ -431,12 +432,10 @@ export const ContentApp = ({
   const contextLengthTokens = chatUsage.currentContextTokens ?? chatUsage.estimatedTokens;
   const contextFillPercentage = getContextFillPercentage(chatUsage, contextLimit);
   const contextBreakdown = chatUsage.contextBreakdown;
-  // Only the context percent has something to expand into, and only once the worker
-  // has finished counting — otherwise the label stays a plain hover-tooltip target.
-  const canOpenBreakdown =
-    ringTarget === "context" &&
-    !isRefreshingContext &&
-    Boolean(contextBreakdown && contextBreakdown.totalTokens > 0);
+  // The detailed breakdown is the default view whenever one exists. A recount
+  // (after every send, on navigation, on hover) keeps showing the last
+  // breakdown rather than dropping back to the simplified tooltip.
+  const canOpenBreakdown = ringTarget === "context" && Boolean(contextBreakdown);
 
   useEffect(() => {
     if (!canOpenBreakdown) {
@@ -703,9 +702,18 @@ export const ContentApp = ({
             aria-haspopup={canOpenBreakdown ? "dialog" : undefined}
             data-clickable={String(canOpenBreakdown)}
             data-loading={String(ringTarget === "context" && isRefreshingContext)}
+            data-display={contextDisplay}
             onClick={canOpenBreakdown ? () => setIsBreakdownOpen((open) => !open) : undefined}
           >
-            {ringPercentage}%
+            {contextDisplay === "ring" ? (
+              <span
+                className="cub-token-ring"
+                aria-hidden="true"
+                style={{ "--cub-token-percentage": `${ringPercentage}%` } as CSSProperties}
+              />
+            ) : (
+              `${ringPercentage}%`
+            )}
             <span className="cub-token-tooltip" role="tooltip">
               {ringTooltip}
             </span>

@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "Abbrechen"
+  },
+  "setContextDisplay": {
+    "message": "Anzeigen als"
+  },
+  "setContextDisplayDesc": {
+    "message": "Ein Ring, der sich füllt, oder der Prozentwert als Text."
+  },
+  "setOptRing": {
+    "message": "Ring"
+  },
+  "setOptPercentText": {
+    "message": "Prozentwert"
   }
 }

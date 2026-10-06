@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "रद्द करें"
+  },
+  "setContextDisplay": {
+    "message": "इस रूप में दिखाएँ"
+  },
+  "setContextDisplayDesc": {
+    "message": "भरने वाला रिंग, या टेक्स्ट में प्रतिशत।"
+  },
+  "setOptRing": {
+    "message": "रिंग"
+  },
+  "setOptPercentText": {
+    "message": "प्रतिशत"
   }
 }

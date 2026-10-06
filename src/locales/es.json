@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "Cancelar"
+  },
+  "setContextDisplay": {
+    "message": "Mostrar como"
+  },
+  "setContextDisplayDesc": {
+    "message": "Un anillo que se llena o el porcentaje como texto."
+  },
+  "setOptRing": {
+    "message": "Anillo"
+  },
+  "setOptPercentText": {
+    "message": "Porcentaje"
   }
 }

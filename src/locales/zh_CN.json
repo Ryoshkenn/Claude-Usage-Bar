@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "取消"
+  },
+  "setContextDisplay": {
+    "message": "显示为"
+  },
+  "setContextDisplayDesc": {
+    "message": "逐渐填满的圆环，或以文字显示百分比。"
+  },
+  "setOptRing": {
+    "message": "圆环"
+  },
+  "setOptPercentText": {
+    "message": "百分比"
   }
 }

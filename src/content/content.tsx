@@ -16,7 +16,17 @@ import type { ConversationContextResponse, RealUsageSnapshot, StorageShape, Thin
 import { readClaudeDomSnapshot, readThinkingEnabled, resolveEffectiveThinkingLevel } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
 import { OnboardingTour } from "./OnboardingTour";
-import { findCoworkControlsAnchor, findDisclaimerMount, findNewChatInsertionPoint } from "./composerMount";
+import {
+  findChinDisclaimer,
+  findChinSlot,
+  findCoworkControlsAnchor,
+  findDisclaimerMount,
+  findNewChatInsertionPoint,
+  measureCardActionStrip,
+  measureChinGap,
+  type ChinSlot,
+  type NewChatInsertionPoint,
+} from "./composerMount";
 import {
   hasMeaningfulChatUsageChange,
   hasMeaningfulDailyUsageChange,
@@ -46,6 +56,12 @@ let host: HTMLElement | null = null;
 let updateTimer: number | undefined;
 let mountedDisclaimerMount: HTMLElement | null = null;
 let disclaimerResizeObserver: ResizeObserver | null = null;
+// Chin placement: the composer we watch for size changes, and the chin
+// disclaimer we hid because the bar sits on top of its slot.
+let chinObservedComposer: HTMLElement | null = null;
+let chinHiddenDisclaimer: HTMLElement | null = null;
+let observedBarRoot: Element | null = null;
+let chinSpacer: HTMLElement | null = null;
 let lastSentCount = 0;
 let lastApiRefreshUrl = "";
 let lastConversationContextUrl = "";
@@ -192,7 +208,6 @@ const applyFixedHostStyles = () => {
     return;
   }
   host.style.setProperty("position", "fixed", "important");
-  host.style.setProperty("z-index", "2147483647", "important");
   host.style.setProperty("pointer-events", "auto", "important");
 };
 
@@ -217,10 +232,16 @@ const removeStaleHosts = () => {
       element.remove();
     }
   });
+  document.querySelectorAll<HTMLElement>("#claude-usage-bar-spacer").forEach((element) => {
+    if (element !== chinSpacer) {
+      element.remove();
+    }
+  });
 };
 
 const removeUsageBarHost = () => {
   root?.render(null);
+  releaseChin();
   if (mountedDisclaimerMount) {
     disclaimerResizeObserver?.unobserve(mountedDisclaimerMount);
   }
@@ -407,13 +428,12 @@ const checkStreamingState = () => {
   wasStreaming = isStreaming;
 };
 
-const mountHostInlineInNewChat = (): boolean => {
+const mountHostInline = (insertion: NewChatInsertionPoint | null): boolean => {
   ensureHost();
   if (!host) {
     return false;
   }
 
-  const insertion = findNewChatInsertionPoint();
   if (!insertion || !document.body.contains(insertion.parent)) {
     return false;
   }
@@ -453,6 +473,171 @@ const mountHostInlineInNewChat = (): boolean => {
   return true;
 };
 
+// Breathing room between the bar and the chin controls on each side.
+const CHIN_GAP_PADDING_PX = 12;
+
+const setChinDisclaimerHidden = (disclaimer: HTMLElement | null) => {
+  if (chinHiddenDisclaimer && chinHiddenDisclaimer !== disclaimer) {
+    chinHiddenDisclaimer.style.removeProperty("visibility");
+  }
+  chinHiddenDisclaimer = disclaimer;
+  disclaimer?.style.setProperty("visibility", "hidden", "important");
+};
+
+const observeChinComposer = (composer: HTMLElement | null) => {
+  if (chinObservedComposer === composer) {
+    return;
+  }
+  if (chinObservedComposer) {
+    disclaimerResizeObserver?.unobserve(chinObservedComposer);
+  }
+  chinObservedComposer = composer;
+  if (composer) {
+    disclaimerResizeObserver?.observe(composer);
+  }
+};
+
+// Height of the reserved row under the chin when the bar doesn't fit inside it.
+const CHIN_ROW_HEIGHT_PX = 28;
+
+const removeChinSpacer = () => {
+  chinSpacer?.remove();
+  chinSpacer = null;
+};
+
+// An empty row appended to the composer so Claude lays out (and pushes the
+// composer up) around the bar. The bar itself stays a body-level fixed overlay
+// on top of it: mounted inside Claude's column, its popovers got clipped and
+// the clipboard's full-page backdrop was trapped in the composer.
+const ensureChinSpacer = (composer: HTMLElement): HTMLElement => {
+  if (!chinSpacer) {
+    chinSpacer = document.createElement("div");
+    chinSpacer.id = "claude-usage-bar-spacer";
+    chinSpacer.setAttribute("aria-hidden", "true");
+    chinSpacer.style.setProperty("height", `${CHIN_ROW_HEIGHT_PX}px`, "important");
+    chinSpacer.style.setProperty("flex", "none", "important");
+    chinSpacer.style.setProperty("pointer-events", "none", "important");
+  }
+  if (chinSpacer.parentElement !== composer || chinSpacer.nextElementSibling) {
+    composer.appendChild(chinSpacer);
+  }
+  return chinSpacer;
+};
+
+const releaseChin = () => {
+  setChinDisclaimerHidden(null);
+  observeChinComposer(null);
+  removeChinSpacer();
+  host?.classList.remove("cub-chin-overlay");
+};
+
+// Natural width of the rendered bar content (0 before the first render).
+const measureBarWidth = (): number => {
+  const barRoot = host?.querySelector(".cub-root");
+  if (!barRoot) {
+    return 0;
+  }
+  if (barRoot !== observedBarRoot) {
+    if (observedBarRoot) {
+      disclaimerResizeObserver?.unobserve(observedBarRoot);
+    }
+    observedBarRoot = barRoot;
+    disclaimerResizeObserver?.observe(barRoot);
+  }
+  return Math.ceil(Math.max(barRoot.scrollWidth, barRoot.getBoundingClientRect().width));
+};
+
+// Sit in the empty middle of the chin (between + / mic and the model picker)
+// while it fits; otherwise take a real row under the chin so the composer is
+// pushed up instead of the bar overlapping controls.
+const mountHostInChin = ({ composer, row }: ChinSlot): boolean => {
+  if (!host) {
+    return false;
+  }
+  if (mountedDisclaimerMount) {
+    disclaimerResizeObserver?.unobserve(mountedDisclaimerMount);
+    mountedDisclaimerMount = null;
+  }
+  observeChinComposer(composer);
+
+  const barWidth = measureBarWidth();
+  const fitsIn = (gap: { left: number; right: number } | null) =>
+    gap !== null && gap.right - gap.left - CHIN_GAP_PADDING_PX * 2 >= barWidth;
+  // Preferred on /new: the strip inside the card between + and dictate/voice.
+  const strip = measureCardActionStrip(composer);
+  const stripFits = strip !== null && fitsIn(strip.gap);
+  const gap = stripFits ? null : measureChinGap(row);
+  const rowRect = row.getBoundingClientRect();
+  const fits = !stripFits && rowRect.height > 0 && fitsIn(gap);
+
+  if (host.classList.contains("cub-new-chat-inline")) {
+    host.classList.remove("cub-new-chat-inline");
+    host.style.removeProperty("display");
+    applyFixedHostStyles();
+  }
+  host.classList.add("cub-chin-overlay");
+  if (host.parentElement !== document.body) {
+    document.body.appendChild(host);
+  }
+  removeStaleHosts();
+
+  let left: number;
+  let top: number;
+  let height: number;
+  if (stripFits && strip?.gap) {
+    removeChinSpacer();
+    setChinDisclaimerHidden(null);
+    left = strip.gap.left + CHIN_GAP_PADDING_PX;
+    top = strip.top;
+    height = strip.height;
+  } else if (fits && gap) {
+    // Left-aligned in the free middle of the chin, just past + / mic.
+    removeChinSpacer();
+    setChinDisclaimerHidden(findChinDisclaimer(row));
+    left = gap.left + CHIN_GAP_PADDING_PX;
+    top = rowRect.top;
+    height = rowRect.height;
+  } else {
+    // Its own row under the chin, lined up with the first chin control.
+    setChinDisclaimerHidden(null);
+    const spacerRect = ensureChinSpacer(composer).getBoundingClientRect();
+    const firstControl = row.querySelector<HTMLElement>("button")?.getBoundingClientRect();
+    left = firstControl && firstControl.width > 0 ? firstControl.left : spacerRect.left;
+    top = spacerRect.top;
+    height = spacerRect.height;
+  }
+
+  host.style.setProperty("display", "flex", "important");
+  host.style.setProperty("left", `${Math.round(left)}px`, "important");
+  host.style.setProperty("top", `${Math.round(top)}px`, "important");
+  host.style.removeProperty("width");
+  host.style.setProperty("height", `${Math.max(24, Math.round(height))}px`, "important");
+  host.style.removeProperty("background-color");
+  return true;
+};
+
+// Window resize / scroll / observed size changes, coalesced per frame.
+let repositionFrame: number | undefined;
+
+const repositionHost = () => {
+  if (repositionFrame !== undefined) {
+    return;
+  }
+  repositionFrame = requestAnimationFrame(() => {
+    repositionFrame = undefined;
+    if (!isActiveInstance()) {
+      return;
+    }
+    if (chinObservedComposer) {
+      if (storageState?.settings.showOverlay) {
+        mountHostOverDisclaimer();
+      }
+      return;
+    }
+    positionUsageBarHost();
+  });
+};
+
 const mountHostOverDisclaimer = (): boolean => {
   ensureHost();
   if (!host) {
@@ -460,10 +645,16 @@ const mountHostOverDisclaimer = (): boolean => {
   }
 
   const disclaimerMount = findDisclaimerMount();
+  const chin = isDesignPage() ? null : findChinSlot();
+  // Cowork rows keep their own anchoring next to Skip/Approve.
+  if (chin && !findCoworkControlsAnchor(disclaimerMount)) {
+    return mountHostInChin(chin);
+  }
+  releaseChin();
   if (!disclaimerMount) {
     // No disclaimer row (e.g. claude.ai/new): fall back to a row directly
     // below the whole composer card, scoped to /new.
-    if (isNewChatPage() && mountHostInlineInNewChat()) {
+    if (isNewChatPage() && mountHostInline(findNewChatInsertionPoint())) {
       return true;
     }
     removeUsageBarHost();
@@ -534,6 +725,8 @@ const render = () => {
   );
   renderTour();
   syncTheme();
+  // Chin placement depends on the rendered bar width; re-check once it's laid out.
+  repositionHost();
 };
 
 // Claude is an SPA: a route change swaps out the composer/disclaimer DOM, which
@@ -873,10 +1066,10 @@ const init = async () => {
   setLanguage(storageState.settings.language);
   initSettingsPage();
   if (typeof ResizeObserver !== "undefined") {
-    disclaimerResizeObserver = new ResizeObserver(positionUsageBarHost);
+    disclaimerResizeObserver = new ResizeObserver(repositionHost);
   }
-  window.addEventListener("resize", positionUsageBarHost, { passive: true });
-  window.addEventListener("scroll", positionUsageBarHost, { capture: true, passive: true });
+  window.addEventListener("resize", repositionHost, { passive: true });
+  window.addEventListener("scroll", repositionHost, { capture: true, passive: true });
   // TEMP: message rail disabled for now — remove any rail left by a previous
   // version and don't start a new one. Revert to the rail tick to re-enable.
   document.querySelectorAll("#claude-user-message-rail").forEach((el) => el.remove());

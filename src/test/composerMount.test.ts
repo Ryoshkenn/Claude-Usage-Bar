@@ -1,9 +1,12 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   findComposer,
   findComposerControls,
   findComposerInsertionPoint,
   findCoworkControlsAnchor,
+  findChinSlot,
+  findLargestGap,
+  measureCardActionStrip,
   findDisclaimerMount,
   findNewChatActions,
   findNewChatComposerCard,
@@ -28,6 +31,81 @@ describe("composer mounting", () => {
     `;
 
     expect(findDisclaimerMount()).toBe(document.querySelector('[data-testid="disclaimer-mount"]'));
+  });
+
+  describe("chin slot", () => {
+    it("descends single-child wrappers to the controls row", () => {
+      document.body.innerHTML = `
+        <div data-cds="ChatComposer" data-testid="composer">
+          <div data-cds="ChatComposerChin"><div><div>
+            <div data-testid="row"><div><button>+</button></div><div class="ms-auto"><button>Sonnet</button></div></div>
+          </div></div></div>
+        </div>
+      `;
+
+      expect(findChinSlot()).toEqual({
+        composer: document.querySelector('[data-testid="composer"]'),
+        row: document.querySelector('[data-testid="row"]'),
+      });
+    });
+
+    it("returns null without a chin inside a composer", () => {
+      document.body.innerHTML = `<div data-cds="ChatComposerChin"><button>+</button></div>`;
+      expect(findChinSlot()).toBeNull();
+    });
+
+    it("finds the widest free stretch between controls", () => {
+      // + and mic on the left, model + Auto (overlapping hidden toggle) on the right.
+      const spans = [
+        { left: 35, right: 59 },
+        { left: 63, right: 104 },
+        { left: 206, right: 342 },
+        { left: 344, right: 392 },
+        { left: 340, right: 400 },
+      ];
+      expect(findLargestGap(28, 401, spans)).toEqual({ left: 104, right: 206 });
+    });
+
+    it("measures the /new in-card action strip between + and dictate", () => {
+      document.body.innerHTML = `
+        <div data-cds="ChatComposer">
+          <div data-testid="wrapper" style="padding-bottom: 34px">
+            <div data-cds="ChatComposerEditor"></div>
+          </div>
+          <button data-testid="add">+</button>
+          <button data-testid="dictate">mic</button>
+          <div data-cds="ChatComposerChin"><button data-testid="project">Project</button></div>
+        </div>
+      `;
+      const rects: Record<string, [number, number, number, number]> = {
+        wrapper: [235, 431, 859, 518],
+        add: [235, 486, 267, 518],
+        dictate: [772, 486, 804, 518],
+        project: [235, 534, 306, 558],
+      };
+      for (const [testId, [left, top, right, bottom]] of Object.entries(rects)) {
+        const el = document.querySelector(`[data-testid="${testId}"]`) as HTMLElement;
+        vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+          left, top, right, bottom, width: right - left, height: bottom - top, x: left, y: top, toJSON: () => ({}),
+        } as DOMRect);
+      }
+
+      const composer = document.querySelector('[data-cds="ChatComposer"]') as HTMLElement;
+      expect(measureCardActionStrip(composer)).toEqual({ top: 484, height: 34, gap: { left: 267, right: 772 } });
+    });
+
+    it("reports no strip when the editor wrapper reserves no bottom padding", () => {
+      document.body.innerHTML = `
+        <div data-cds="ChatComposer"><div><div data-cds="ChatComposerEditor"></div></div></div>
+      `;
+      expect(measureCardActionStrip(document.querySelector('[data-cds="ChatComposer"]') as HTMLElement)).toBeNull();
+    });
+
+    it("treats the row edges as gap bounds", () => {
+      expect(findLargestGap(0, 500, [{ left: 0, right: 50 }])).toEqual({ left: 50, right: 500 });
+      expect(findLargestGap(0, 100, [])).toEqual({ left: 0, right: 100 });
+      expect(findLargestGap(0, 100, [{ left: 0, right: 100 }])).toBeNull();
+    });
   });
 
   it("targets Claude's current composer toolbar row from the add-files button", () => {

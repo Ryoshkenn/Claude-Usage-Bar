@@ -4,6 +4,7 @@ import { clearWeeklyUsageMetrics, DEFAULT_SETTINGS, getStorage, updateSettings }
 import { SUPPORTED_LANGUAGES, setLanguage, t } from "../shared/i18n";
 import { MESSAGE_TYPES } from "../shared/constants";
 import type {
+  ContextDisplay,
   MetricTarget,
   PaceSurplusFormat,
   ResetBannerScope,
@@ -531,6 +532,11 @@ const barMetricOptions = (): { value: MetricTarget; label: string }[] => [
   { value: "weekly_fable", label: t("ringWeeklyFable", "Weekly · Fable") },
 ];
 
+const contextDisplayOptions = (): { value: ContextDisplay; label: string }[] => [
+  { value: "ring", label: t("setOptRing", "Ring") },
+  { value: "text", label: t("setOptPercentText", "Percentage") },
+];
+
 const paceSurplusOptions = (): { value: PaceSurplusFormat; label: string }[] => [
   { value: "percent", label: t("setOptPctReset", "Percentage at reset") },
   { value: "time", label: t("setOptTimePast", "Time past reset") },
@@ -771,6 +777,14 @@ const SettingsPage = () => {
             id={id("show-wheel")}
             checked={settings.showWheel}
             onChange={(v) => update({ showWheel: v })}
+          />
+        </Row>
+        <Row labelId={id("context-display")} label={t("setContextDisplay", "Show as")} description={t("setContextDisplayDesc", "A ring that fills up, or the percentage as text.")}>
+          <CdsSelect
+            id={id("context-display")}
+            value={settings.contextDisplay ?? "ring"}
+            options={contextDisplayOptions()}
+            onChange={(v) => update({ contextDisplay: v as ContextDisplay })}
           />
         </Row>
       </Section>

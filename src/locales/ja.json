@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "キャンセル"
+  },
+  "setContextDisplay": {
+    "message": "表示形式"
+  },
+  "setContextDisplayDesc": {
+    "message": "満ちていくリング、またはテキストのパーセント表示。"
+  },
+  "setOptRing": {
+    "message": "リング"
+  },
+  "setOptPercentText": {
+    "message": "パーセント"
   }
 }

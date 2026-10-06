@@ -12,6 +12,7 @@ const settings: Settings = {
   showBarLabel: false,
   showWheel: true,
   showWheelLabel: false,
+  contextDisplay: "text",
   showPace: true,
   showCacheTimer: true,
   paceSurplusFormat: "percent",
@@ -47,6 +48,17 @@ describe("ContentApp", () => {
     expect(screen.getByLabelText("Context window 12% full")).toBeInTheDocument();
     expect(screen.getByText("24k / 200k context length")).toBeInTheDocument();
     expect(screen.getByText("24k current context")).toBeInTheDocument();
+  });
+
+  it("renders the context window as a filling ring when set to ring", () => {
+    const { container } = render(
+      <ContentApp settings={{ ...settings, contextDisplay: "ring" }} chatUsage={baseChatUsage} />,
+    );
+
+    const button = container.querySelector("button.cub-ctx-percent");
+    expect(button).toHaveAttribute("data-display", "ring");
+    expect(button?.querySelector(".cub-token-ring")).toHaveStyle({ "--cub-token-percentage": "12%" });
+    expect(button?.firstChild).toBe(button?.querySelector(".cub-token-ring"));
   });
 
   it("scales the context window to the active model", () => {

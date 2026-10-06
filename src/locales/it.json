@@ -541,5 +541,17 @@
   },
   "grantCancel": {
     "message": "Annulla"
+  },
+  "setContextDisplay": {
+    "message": "Mostra come"
+  },
+  "setContextDisplayDesc": {
+    "message": "Un anello che si riempie o la percentuale come testo."
+  },
+  "setOptRing": {
+    "message": "Anello"
+  },
+  "setOptPercentText": {
+    "message": "Percentuale"
   }
 }

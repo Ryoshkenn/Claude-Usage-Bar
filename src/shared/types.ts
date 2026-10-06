@@ -2,6 +2,8 @@ export type OverlayMode = "compact" | "expanded";
 export type UsageSource = "estimated" | "real";
 export type MetricTarget = "session" | "weekly" | "weekly_fable" | "context";
 export type RingTarget = MetricTarget | "hidden";
+// How the context window indicator renders: a filling ring or the percentage as text.
+export type ContextDisplay = "ring" | "text";
 export type PaceSurplusFormat = "percent" | "time" | "messages";
 export type WeeklyPaceMode = "smart" | "manual";
 export type WeeklyEstimateDisplay = "active_hours" | "calendar_time";
@@ -29,6 +31,7 @@ export interface Settings {
   showBarLabel: boolean;
   showWheel: boolean;
   showWheelLabel: boolean;
+  contextDisplay: ContextDisplay;
   showPace: boolean;
   showCacheTimer: boolean;
   paceSurplusFormat: PaceSurplusFormat;

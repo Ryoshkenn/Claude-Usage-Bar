@@ -565,5 +565,17 @@
   },
   "grantCancel": {
     "message": "Cancel"
+  },
+  "setContextDisplay": {
+    "message": "Show as"
+  },
+  "setContextDisplayDesc": {
+    "message": "A ring that fills up, or the percentage as text."
+  },
+  "setOptRing": {
+    "message": "Ring"
+  },
+  "setOptPercentText": {
+    "message": "Percentage"
   }
 }

@@ -13,7 +13,7 @@ describe("content styles", () => {
     expect(styles).toContain("position: fixed !important;");
     expect(styles).toContain("z-index: 2147483647 !important;");
     expect(contentScript).toContain("document.body.appendChild(host);");
-    expect(contentScript).toContain("window.addEventListener(\"scroll\", positionUsageBarHost");
+    expect(contentScript).toContain("window.addEventListener(\"scroll\", repositionHost");
   });
 
   it("uses a thicker rounded-rectangle main meter", () => {
