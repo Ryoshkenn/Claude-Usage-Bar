@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CacheTimer, ContentApp } from "../content/ContentApp";
 import type { ChatUsage, Settings } from "../shared/types";
@@ -27,6 +27,12 @@ const settings: Settings = {
   resetBannerScope: "claude",
 };
 
+const hoverContext = () => {
+  const wrap = document.querySelector(".cub-wheel-wrap");
+  if (!wrap) throw new Error("context ring not rendered");
+  fireEvent.mouseEnter(wrap);
+};
+
 const baseChatUsage: ChatUsage = {
   estimatedTokens: 24_000,
   currentContextTokens: 24_000,
@@ -39,12 +45,13 @@ afterEach(() => {
 });
 
 describe("ContentApp", () => {
-  it("renders current context as the primary token metric", () => {
+  it("opens the breakdown panel on hover even before a breakdown exists", () => {
     render(<ContentApp settings={settings} chatUsage={baseChatUsage} />);
 
     expect(screen.getByLabelText("Context window 12% full")).toBeInTheDocument();
-    expect(screen.getByText("24k / 200k context length")).toBeInTheDocument();
-    expect(screen.getByText("24k current context")).toBeInTheDocument();
+    expect(document.querySelector(".cub-token-tooltip")).toBeNull();
+    hoverContext();
+    expect(screen.getByRole("dialog")).toHaveTextContent("24k of 200k · 12%");
   });
 
   it("renders the context window as a filling ring when set to ring", () => {
@@ -69,14 +76,16 @@ describe("ContentApp", () => {
       <ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot("Opus 5")} />,
     );
     expect(screen.getByLabelText("Context window 2% full")).toBeInTheDocument();
-    expect(screen.getByText("24k / 1M context length")).toBeInTheDocument();
+    hoverContext();
+    expect(screen.getByRole("dialog")).toHaveTextContent("24k of 1M");
     unmount();
 
     render(
       <ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot("Opus 4.8")} />,
     );
     expect(screen.getByLabelText("Context window 5% full")).toBeInTheDocument();
-    expect(screen.getByText("24k / 500k context length")).toBeInTheDocument();
+    hoverContext();
+    expect(screen.getByRole("dialog")).toHaveTextContent("24k of 500k");
   });
 
   it("reads 0% on an empty chat instead of rounding the overhead up", () => {
@@ -88,6 +97,8 @@ describe("ContentApp", () => {
     );
 
     expect(screen.getByLabelText("Context window 0% full")).toBeInTheDocument();
+    hoverContext();
+    expect(screen.getByText("Nothing in the context window yet.")).toBeInTheDocument();
   });
 
   it("shows loading copy and spinner state while context is refreshing", () => {
@@ -102,8 +113,8 @@ describe("ContentApp", () => {
     );
 
     expect(screen.getByLabelText("Context calculation loading")).toHaveAttribute("data-loading", "true");
+    hoverContext();
     expect(screen.getByText("Calculating context usage...")).toBeInTheDocument();
-    expect(screen.getByText("Loading exact token count")).toBeInTheDocument();
   });
 
   it("says not used yet when the session is at zero with no session reset", () => {

@@ -62,24 +62,6 @@
   "ctxCalculating": {
     "message": "正在计算上下文用量..."
   },
-  "ctxLoadingExact": {
-    "message": "正在加载精确 token 数"
-  },
-  "ctxSpinnerHint": {
-    "message": "转圈表示后台正在重新统计此对话。"
-  },
-  "ctxUsageTitle": {
-    "message": "上下文与 token 用量："
-  },
-  "ctxPctUsed": {
-    "message": "已使用上下文窗口的 $1%"
-  },
-  "ctxLength": {
-    "message": "上下文长度 $1 / $2"
-  },
-  "ctxCurrent": {
-    "message": "当前上下文 $1"
-  },
   "ariaClaudeUsage": {
     "message": "Claude 用量 $1"
   },

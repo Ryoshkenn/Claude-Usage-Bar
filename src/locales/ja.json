@@ -62,24 +62,6 @@
   "ctxCalculating": {
     "message": "コンテキスト使用量を計算中..."
   },
-  "ctxLoadingExact": {
-    "message": "正確なトークン数を読み込み中"
-  },
-  "ctxSpinnerHint": {
-    "message": "スピナーはワーカーがこのチャットを再カウント中であることを示します。"
-  },
-  "ctxUsageTitle": {
-    "message": "コンテキストとトークンの使用量:"
-  },
-  "ctxPctUsed": {
-    "message": "コンテキストウィンドウの $1% を使用"
-  },
-  "ctxLength": {
-    "message": "コンテキスト長 $1 / $2"
-  },
-  "ctxCurrent": {
-    "message": "現在のコンテキスト $1"
-  },
   "ariaClaudeUsage": {
     "message": "Claude 使用量 $1"
   },

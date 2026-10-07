@@ -4,8 +4,12 @@ import { formatCompactNumber } from "../shared/formatNumber";
 import { t } from "../shared/i18n";
 
 interface ContextBreakdownPanelProps {
-  breakdown: ContextBreakdown;
+  // Absent until the first count lands; the panel then shows only the total.
+  breakdown?: ContextBreakdown;
+  // Headline total used when there is no breakdown yet.
+  totalTokens?: number;
   contextLimit: number;
+  isRefreshing?: boolean;
   lengthIsEstimate?: boolean;
   onClose: () => void;
 }
@@ -82,7 +86,9 @@ const categoryCountLabel = (category: ContextCategory, count: number): string | 
 
 export const ContextBreakdownPanel = ({
   breakdown,
+  totalTokens = 0,
   contextLimit,
+  isRefreshing = false,
   lengthIsEstimate,
   onClose,
 }: ContextBreakdownPanelProps) => {
@@ -113,11 +119,13 @@ export const ContextBreakdownPanel = ({
     };
   }, [onClose]);
 
-  const total = breakdown.totalTokens;
-  const rows = ROW_ORDER.map((category) => ({
-    category,
-    ...breakdown.entries[category],
-  })).filter((row) => row.tokens > 0);
+  const total = breakdown?.totalTokens ?? totalTokens;
+  const rows = breakdown
+    ? ROW_ORDER.map((category) => ({
+        category,
+        ...breakdown.entries[category],
+      })).filter((row) => row.tokens > 0)
+    : [];
 
   // Row % labels stay as shares of tokens USED; the STACK widths below are
   // shares of the full window so a small usage shows a mostly-empty bar.
@@ -141,7 +149,11 @@ export const ContextBreakdownPanel = ({
       </div>
 
       {rows.length === 0 ? (
-        <p className="cub-ctx-panel-empty">{t("ctxBreakdownEmpty", "Nothing in the context window yet.")}</p>
+        isRefreshing ? (
+          <p className="cub-ctx-panel-empty">{t("ctxCalculating", "Calculating context usage...")}</p>
+        ) : total === 0 ? (
+          <p className="cub-ctx-panel-empty">{t("ctxBreakdownEmpty", "Nothing in the context window yet.")}</p>
+        ) : null
       ) : (
         <>
           <div className="cub-ctx-stack" aria-hidden="true">

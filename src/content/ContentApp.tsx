@@ -27,7 +27,6 @@ import {
 } from "../shared/modelUsage";
 import { PromptClipboard } from "./PromptClipboard";
 import { ContextBreakdownPanel } from "./ContextBreakdownPanel";
-import { formatCompactNumber } from "../shared/formatNumber";
 import { openUsageBarSettings } from "./settingsPage";
 
 interface ContentAppProps {
@@ -447,14 +446,14 @@ export const ContentApp = ({
     ringTarget === "hidden" ? 0 : (getMetricPercentage(ringTarget, realUsageSnapshot, chatUsage, contextLimit) ?? 0);
 
   const isRefreshingContext = Boolean(chatUsage.isRefreshingContext);
-  const totalTokensUsed = chatUsage.estimatedTokens;
   const contextLengthTokens = chatUsage.currentContextTokens ?? chatUsage.estimatedTokens;
   const contextFillPercentage = getContextFillPercentage(chatUsage, contextLimit);
   const contextBreakdown = chatUsage.contextBreakdown;
-  // The detailed breakdown is the default view whenever one exists. A recount
-  // (after every send, on navigation, on hover) keeps showing the last
-  // breakdown rather than dropping back to the simplified tooltip.
-  const canOpenBreakdown = ringTarget === "context" && Boolean(contextBreakdown);
+  // The breakdown panel is the only context view. Before the first count lands
+  // (fresh chat, first fetch in flight) it opens with just the headline total.
+  // A recount (after every send, on navigation, on hover) keeps showing the
+  // last breakdown.
+  const canOpenBreakdown = ringTarget === "context";
 
   useEffect(() => {
     if (!canOpenBreakdown) {
@@ -548,28 +547,8 @@ export const ContentApp = ({
 
   const ringTooltip = (() => {
     if (ringTarget === "hidden") return null;
-    if (ringTarget === "context") {
-      return isRefreshingContext ? (
-        <>
-          <span>{t("ctxCalculating", "Calculating context usage...")}</span>
-          <span>{t("ctxLoadingExact", "Loading exact token count")}</span>
-          <span>{t("ctxSpinnerHint", "Spinner means the worker is recounting this chat.")}</span>
-        </>
-      ) : (
-        <>
-          <span>{t("ctxUsageTitle", "Context & token usage:")}</span>
-          <span>{t("ctxPctUsed", "$1% of context window used", contextFillPercentage)}</span>
-          <span>
-            {t(
-              "ctxLength",
-              "$1 / $2 context length",
-              [formatCompactNumber(contextLengthTokens), formatCompactNumber(contextLimit)],
-            )}
-          </span>
-          <span>{t("ctxCurrent", "$1 current context", formatCompactNumber(totalTokensUsed))}</span>
-        </>
-      );
-    }
+    // Context uses the breakdown panel instead of a tooltip.
+    if (ringTarget === "context") return null;
     return (
       <>
         <span>{ringMetricLabel(ringTarget)}:</span>
@@ -735,14 +714,18 @@ export const ContentApp = ({
             ) : (
               `${ringPercentage}%`
             )}
-            <span className="cub-token-tooltip" role="tooltip">
-              {ringTooltip}
-            </span>
+            {ringTooltip && (
+              <span className="cub-token-tooltip" role="tooltip">
+                {ringTooltip}
+              </span>
+            )}
           </button>
-          {canOpenBreakdown && isBreakdownOpen && contextBreakdown && (
+          {canOpenBreakdown && isBreakdownOpen && (
             <ContextBreakdownPanel
               breakdown={contextBreakdown}
+              totalTokens={contextLengthTokens}
               contextLimit={contextLimit}
+              isRefreshing={isRefreshingContext}
               lengthIsEstimate={chatUsage.lengthIsEstimate}
               onClose={() => setIsBreakdownOpen(false)}
             />

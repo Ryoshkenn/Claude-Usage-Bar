@@ -62,24 +62,6 @@
   "ctxCalculating": {
     "message": "Calculando uso de contexto..."
   },
-  "ctxLoadingExact": {
-    "message": "Carregando contagem exata de tokens"
-  },
-  "ctxSpinnerHint": {
-    "message": "O indicador significa que o worker está recontando este chat."
-  },
-  "ctxUsageTitle": {
-    "message": "Uso de contexto e tokens:"
-  },
-  "ctxPctUsed": {
-    "message": "$1% da janela de contexto usada"
-  },
-  "ctxLength": {
-    "message": "$1 / $2 de comprimento de contexto"
-  },
-  "ctxCurrent": {
-    "message": "$1 contexto atual"
-  },
   "ariaClaudeUsage": {
     "message": "Uso do Claude $1"
   },

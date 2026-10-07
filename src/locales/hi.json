@@ -62,24 +62,6 @@
   "ctxCalculating": {
     "message": "कॉन्टेक्स्ट उपयोग की गणना हो रही है..."
   },
-  "ctxLoadingExact": {
-    "message": "सटीक टोकन गिनती लोड हो रही है"
-  },
-  "ctxSpinnerHint": {
-    "message": "स्पिनर का अर्थ है कि वर्कर इस चैट को फिर से गिन रहा है।"
-  },
-  "ctxUsageTitle": {
-    "message": "कॉन्टेक्स्ट और टोकन उपयोग:"
-  },
-  "ctxPctUsed": {
-    "message": "कॉन्टेक्स्ट विंडो का $1% उपयोग"
-  },
-  "ctxLength": {
-    "message": "कॉन्टेक्स्ट लंबाई $1 / $2"
-  },
-  "ctxCurrent": {
-    "message": "वर्तमान कॉन्टेक्स्ट $1"
-  },
   "ariaClaudeUsage": {
     "message": "Claude उपयोग $1"
   },

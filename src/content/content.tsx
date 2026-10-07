@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { CLAUDE_ORIGIN, MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import {
   appendDailyModelUsage,
+  defaultChatUsage,
   getStorage,
   saveChatUsage,
   saveDailyUsage,
@@ -337,23 +338,27 @@ const positionUsageBarHost = () => {
 // Selector for Claude's stop-generation button (appears while streaming)
 const STOP_BTN_SELECTOR = 'button[aria-label*="Stop"]';
 
-const findChatMenuParent = (): HTMLElement | null => {
-  // Anchor to the title group's *parent*, not chat-title-split itself: clicking
-  // the title makes Claude tear down and rebuild chat-title-split, which would
-  // destroy a host injected inside it (and the re-mount races into the wrong
-  // slot). The parent survives that teardown. The host's CSS `order:1` keeps it
-  // right of the title. (Was [data-testid="chat-menu-trigger"]'s parent before
-  // Claude's header rework.)
-  return document.querySelector<HTMLElement>('[data-testid="chat-title-split"]')?.parentElement ?? null;
+const getConversationId = (): string | null => location.pathname.match(/\/chat\/([^/?]+)/)?.[1] ?? null;
+
+const findCacheTimerParent = (): HTMLElement | null => {
+  // Mount inside the header's flexible spacer so the timer sits left-aligned
+  // right after the title area. The spacer is a plain div Claude never puts
+  // children in, so React won't reconcile our host away. It exists on every
+  // page (not just conversations), so gate on a conversation URL ourselves.
+  // (Was chat-title-split's parent before Claude dropped that testid.)
+  if (!getConversationId()) {
+    return null;
+  }
+  return document.querySelector<HTMLElement>("[data-header-spacer]");
 };
 
 const mountCacheTimerInHeader = (): boolean => {
-  const parent = findChatMenuParent();
+  const parent = findCacheTimerParent();
   if (!parent) {
     return false;
   }
 
-  if (parent !== cacheTimerParent) {
+  if (parent !== cacheTimerParent || (cacheTimerHost && !parent.contains(cacheTimerHost))) {
     cacheTimerHost?.remove();
     cacheTimerHost = null;
     cacheTimerRoot = null;
@@ -385,6 +390,8 @@ const renderCacheTimer = () => {
     return;
   }
   if (!mountCacheTimerInHeader()) {
+    // The spacer outlives navigation to non-conversation pages; drop the host.
+    removeCacheTimer();
     return;
   }
   cacheTimerRoot?.render(
@@ -807,8 +814,6 @@ const maybeRefreshUsage = () => {
   requestApiUsageRefresh(resetPassed, undefined, true);
 };
 
-const getConversationId = (): string | null => location.pathname.match(/\/chat\/([^/?]+)/)?.[1] ?? null;
-
 const requestConversationContextRefresh = (conversationId: string) => {
   if (!extensionAlive()) return;
   chrome.runtime.sendMessage(
@@ -816,6 +821,11 @@ const requestConversationContextRefresh = (conversationId: string) => {
     (response: ConversationContextResponse | undefined) => {
       void chrome.runtime.lastError;
       if (!storageState) {
+        return;
+      }
+      // A late reply for a chat we've since left (e.g. moved to /new) must not
+      // paint that chat's token count onto the current page.
+      if (getConversationId() !== conversationId) {
         return;
       }
 
@@ -931,11 +941,15 @@ const refreshUsage = async () => {
   }
 
   if (conversationId && (currentUrl !== lastConversationContextUrl || messageSent)) {
+    const enteredConversation = currentUrl !== lastConversationContextUrl;
     lastConversationContextUrl = currentUrl;
     storageState = {
       ...storageState,
       chatUsage: {
-        ...storageState.chatUsage,
+        // On entering a chat, start from this page's DOM estimate: the stored
+        // value belongs to whichever chat was counted last. After a send, keep
+        // the current breakdown on screen while the recount runs.
+        ...(enteredConversation ? chatUsage : storageState.chatUsage),
         source: "conversation_api",
         isRefreshingContext: true,
       },
@@ -1062,7 +1076,9 @@ const init = async () => {
   document.querySelectorAll("#claude-cache-timer-host").forEach((el) => el.remove());
 
   injectPageProbe();
-  storageState = await getStorage();
+  // Don't paint the stored chatUsage: it's whichever chat any tab counted last.
+  // refreshUsage fills in this page's own value moments later.
+  storageState = { ...(await getStorage()), chatUsage: defaultChatUsage() };
   setLanguage(storageState.settings.language);
   initSettingsPage();
   if (typeof ResizeObserver !== "undefined") {
@@ -1132,7 +1148,10 @@ const init = async () => {
       ...storageState,
       settings: (changes.settings?.newValue ?? storageState.settings) as StorageShape["settings"],
       dailyUsage: (changes.dailyUsage?.newValue ?? storageState.dailyUsage) as StorageShape["dailyUsage"],
-      chatUsage: (changes.chatUsage?.newValue ?? storageState.chatUsage) as StorageShape["chatUsage"],
+      // chatUsage is per-page: this tab sets it from its own DOM read or its own
+      // context fetch. The stored copy is whatever any tab counted last, so
+      // adopting it would show another chat's context here.
+      chatUsage: storageState.chatUsage,
       realUsageSnapshot: (changes.realUsageSnapshot?.newValue ?? storageState.realUsageSnapshot) as RealUsageSnapshot | undefined,
       usageHistory: Array.isArray(changes.usageHistory?.newValue)
         ? (changes.usageHistory.newValue as StorageShape["usageHistory"])

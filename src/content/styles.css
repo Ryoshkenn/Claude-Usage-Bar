@@ -171,9 +171,9 @@ body.cub-tour-bar-open #claude-usage-bar-root {
   flex-direction: row;
   align-items: center;
   gap: 4px;
-  /* Positioning ancestor for the breakdown panel (absolute; right: 0):
+  /* Positioning ancestor for the breakdown panel (absolute, centered):
      without this the panel anchors to the fixed overlay host and renders
-     offset to the right of the label. */
+     offset from the label. */
   position: relative;
 }
 
@@ -583,10 +583,11 @@ button.cub-ctx-percent[data-loading="true"] {
 #claude-cache-timer-host {
   display: inline-flex;
   align-items: center;
-  /* The title group rebuilds itself on click and re-appends to this flex parent,
-     which can land it after our host. order:1 keeps the timer right of the title
-     regardless of DOM order. */
-  order: 1;
+  height: 100%;
+  /* Lives inside Claude's header spacer, which is pointer-events:none and a
+     window drag region in the desktop app; re-enable hover for the tooltip. */
+  pointer-events: auto;
+  -webkit-app-region: no-drag;
 }
 
 .cub-cache-timer {
@@ -1659,7 +1660,7 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 
 .cub-ctx-panel {
   position: absolute;
-  right: 0;
+  left: 50%;
   bottom: calc(100% + 10px);
   z-index: 2147483647;
   width: 288px;
@@ -1675,18 +1676,20 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   line-height: 1.4;
   pointer-events: auto;
   text-align: left;
+  /* Centered over the percent/ring, like the other overlay tooltips. */
+  transform: translateX(-50%);
   animation: cub-ctx-panel-in 130ms ease-out;
 }
 
 @keyframes cub-ctx-panel-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateX(-50%) translateY(4px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
 }
 

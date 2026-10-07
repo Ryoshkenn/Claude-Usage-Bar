@@ -62,24 +62,6 @@
   "ctxCalculating": {
     "message": "컨텍스트 사용량 계산 중..."
   },
-  "ctxLoadingExact": {
-    "message": "정확한 토큰 수 불러오는 중"
-  },
-  "ctxSpinnerHint": {
-    "message": "스피너는 워커가 이 채팅을 다시 계산 중임을 의미합니다."
-  },
-  "ctxUsageTitle": {
-    "message": "컨텍스트 및 토큰 사용량:"
-  },
-  "ctxPctUsed": {
-    "message": "컨텍스트 창의 $1% 사용"
-  },
-  "ctxLength": {
-    "message": "컨텍스트 길이 $1 / $2"
-  },
-  "ctxCurrent": {
-    "message": "현재 컨텍스트 $1"
-  },
   "ariaClaudeUsage": {
     "message": "Claude 사용량 $1"
   },
