@@ -50,9 +50,20 @@
   display: none !important;
 }
 
-/* Between the recent band (3000+) and the settled band (5000+). */
+/* Between the open band (3000+) and the settled band (5000+), and locked to
+   the bottom of the scroll column: pushed down there while the cards are few,
+   stuck there while they're many and scroll under it. Open, it also sticks to
+   the top as its rows scroll under it, so it can always be folded again. */
 #cub-thread-settled-toggle {
   order: 4000;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin-top: auto;
+}
+
+[data-cub-threads-settled="open"] #cub-thread-settled-toggle {
+  top: 0;
 }
 
 [data-cub-threads-settled="closed"] [data-cub-thread="settled"] {
@@ -250,7 +261,7 @@
 }
 
 /* Divider above the first card of each section after the first (pinned →
-   live → recent). */
+   live → open). */
 [data-cub-thread-first]::before {
   content: "";
   display: block;
@@ -463,23 +474,41 @@
   outline-offset: -2px;
 }
 
-#cub-thread-settled-toggle:hover,
 #cub-thread-nav-toggle:hover {
   background: var(--cub-thread-hover, color-mix(in srgb, currentColor 8%, transparent));
 }
 
-/* Settled (N) ───────── ⌄ */
+/* Settled (N) ───────── ⌄ — opaque, in the sidebar's own colour (read by
+   threadSidebar.ts), since rows pass under it. */
 #cub-thread-settled-toggle {
   gap: 10px;
-  margin-top: 12px;
-  padding: 6px 12px;
+  padding: 8px 12px;
+  border-radius: 0;
+  background: var(--cub-thread-bar-bg, var(--cub-thread-menu-bg));
   font-size: var(--df-group-font, 12px);
   line-height: 16px;
   color: var(--cds-text-muted, color-mix(in srgb, currentColor 55%, transparent));
 }
 
+/* Rows fade out as they slide under it. Resting, it lies over the free space
+   or a card's bottom padding, where there's nothing to fade. */
+#cub-thread-settled-toggle::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 100%;
+  height: 12px;
+  background: inherit;
+  -webkit-mask-image: linear-gradient(transparent, #000);
+  mask-image: linear-gradient(transparent, #000);
+  pointer-events: none;
+}
+
 #cub-thread-settled-toggle:hover {
   color: var(--cds-text-secondary, currentColor);
+}
+
+#cub-thread-settled-toggle:hover .cub-thread-settled-rule {
+  background: color-mix(in srgb, currentColor 34%, transparent);
 }
 
 .cub-thread-settled-label {

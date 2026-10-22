@@ -420,16 +420,7 @@
     "message": "스레드 보기"
   },
   "setThreadSidebarDesc": {
-    "message": "고정된 채팅, 작업 중인 채팅, 최근 채팅은 카드로 표시하고 나머지는 접습니다."
-  },
-  "setThreadRecent": {
-    "message": "최근 카드"
-  },
-  "setThreadRecentDesc": {
-    "message": "작업 중인 항목 외에 표시합니다."
-  },
-  "setThreadRecentCount": {
-    "message": "$1개"
+    "message": "처음에는 모두 완료됨 상태입니다. 새 활동이 생긴 채팅은 완료 처리할 때까지 카드로 표시됩니다."
   },
   "threadNavLabel": {
     "message": "프로젝트 및 도구"

@@ -420,16 +420,7 @@
     "message": "Vista conversazioni"
   },
   "setThreadSidebarDesc": {
-    "message": "Le chat fissate, in corso e recenti diventano schede; il resto viene compresso."
-  },
-  "setThreadRecent": {
-    "message": "Schede recenti"
-  },
-  "setThreadRecentDesc": {
-    "message": "Oltre a quelle in corso."
-  },
-  "setThreadRecentCount": {
-    "message": "$1 conversazioni"
+    "message": "All'inizio è tutto concluso. Una chat diventa una scheda appena ha nuova attività, finché non la concludi."
   },
   "threadNavLabel": {
     "message": "Progetti e strumenti"

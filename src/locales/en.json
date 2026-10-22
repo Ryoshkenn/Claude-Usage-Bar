@@ -420,16 +420,7 @@
     "message": "Thread view"
   },
   "setThreadSidebarDesc": {
-    "message": "Pinned, working and recent chats become cards; the rest folds away."
-  },
-  "setThreadRecent": {
-    "message": "Recent cards"
-  },
-  "setThreadRecentDesc": {
-    "message": "Shown besides the ones that are working."
-  },
-  "setThreadRecentCount": {
-    "message": "$1 threads"
+    "message": "Everything starts settled. A chat becomes a card once it has new activity, until you settle it."
   },
   "threadNavLabel": {
     "message": "Projects & tools"

@@ -420,16 +420,7 @@
     "message": "对话视图"
   },
   "setThreadSidebarDesc": {
-    "message": "已置顶、进行中和最近的对话显示为卡片，其余折叠起来。"
-  },
-  "setThreadRecent": {
-    "message": "最近卡片"
-  },
-  "setThreadRecentDesc": {
-    "message": "在进行中的对话之外额外显示。"
-  },
-  "setThreadRecentCount": {
-    "message": "$1 个对话"
+    "message": "一开始全部为已完成。对话有新动态后会显示为卡片，直到你将其标为完成。"
   },
   "threadNavLabel": {
     "message": "项目和工具"

@@ -4,13 +4,14 @@ import { updateSettings } from "../shared/storage";
 import type { ThreadSort } from "../shared/types";
 import "./threadSidebar.css";
 
-// Thread sidebar: a T3-style view of Claude's sidebar. Pinned threads, threads
-// that are working, waiting on you or freshly done, and the most recent few
-// render as cards; the rest fold away under a "Settled (N)" toggle, and any
-// card can be settled by hand. Pinned projects leave the list (they're still
-// under Projects), Claude's nav rows — Projects, Artifacts, Scheduled, … — fold
-// into one "Projects & tools" row, and a Search / sort / new-chat row sits at
-// the top.
+// Thread sidebar: a T3-style view of Claude's sidebar. Everything starts
+// settled, folded under a "Settled (N)" bar locked to the bottom of the list.
+// A thread that does something — you start it or send to it, Claude works on
+// it, it changes in Claude's list — opens as a card and stays one until you
+// settle it; there's no cap, the list just scrolls. Pinned threads always lead
+// as cards. Pinned projects leave the list (they're still under Projects),
+// Claude's nav rows — Projects, Artifacts, Scheduled, … — fold into one
+// "Projects & tools" row, and a Search / sort / new-chat row sits at the top.
 //
 // claude.ai's sidebar is a React tree we don't own, so this never moves, clones
 // or re-parents its nodes. It tags them with data-cub-thread* attributes, sets
@@ -23,9 +24,9 @@ import "./threadSidebar.css";
 //
 // "Done" is tracked here, not by Claude: a thread seen working that stops
 // working, while you weren't looking at it, is done until you open it. That
-// state is shared by every claude.ai tab through chrome.storage.session; the
-// hand-settled set lives in chrome.storage.local. Both hold row keys and
-// timestamps only.
+// state is shared by every claude.ai tab through chrome.storage.session; which
+// threads are open or settled lives in chrome.storage.local and is forgotten
+// when the view is turned off. Both hold row keys and timestamps only.
 
 const SIDEBAR_SELECTOR = '[data-testid="sidebar"]';
 const RECENTS_SELECTOR = '[data-testid="sidebar-recents"]';
@@ -85,8 +86,6 @@ const WATCHED_ATTRIBUTES = [
   "href",
 ];
 
-export const THREAD_RECENT_COUNTS = [3, 5, 8, 12] as const;
-const DEFAULT_RECENT_COUNT = 5;
 // Relative times ("12m") are refreshed this often while the view is on.
 const CLOCK_TICK_MS = 30_000;
 // Done marks that were never opened, and working marks never seen to finish
@@ -94,16 +93,18 @@ const CLOCK_TICK_MS = 30_000;
 const DONE_TTL_MS = 24 * 60 * 60_000;
 const WORKING_TTL_MS = 12 * 60 * 60_000;
 const MAX_THREAD_TIMES = 2_000;
-// Hand-settled threads are forgotten after this long, or past this many.
-const SETTLED_TTL_MS = 60 * 24 * 60 * 60_000;
-const MAX_SETTLED = 500;
+// Open and hand-settled threads kept in storage, newest first. Only bounds the
+// store; the list itself has no cap.
+const MAX_PLACES = 1_000;
 // Claude bumps updated_at when a thread is merely opened; only a change this
 // long after settling counts as new activity.
 const SETTLE_GRACE_MS = 5_000;
+// The flex gap between rows (threadSidebar.css).
+const ROW_GAP_PX = 2;
 
 // Flex `order` bands. Each row adds its position in the sorted list, so rows
 // stay sorted inside their band; the settled toggle sits between the bands.
-const ORDER_BASE = { label: 100, pinned: 1_000, live: 2_000, recent: 3_000, settled: 5_000 } as const;
+const ORDER_BASE = { label: 100, pinned: 1_000, live: 2_000, open: 3_000, settled: 5_000 } as const;
 
 export type ThreadKind = "chat" | "cowork" | "routine" | "code" | "project" | "other";
 export type ThreadStatus = "working" | "awaiting" | "error" | "done" | "unread";
@@ -113,7 +114,7 @@ export type ThreadPlacement =
   | "hidden"
   | "pinned"
   | "live"
-  | "recent"
+  | "open"
   | "settled";
 
 export interface ThreadRowInfo {
@@ -122,13 +123,14 @@ export interface ThreadRowInfo {
   current: boolean;
   pinned?: boolean;
   hidden?: boolean;
+  // Has done something since it was last settled (or since the view started).
+  open?: boolean;
   // Settled by hand and quiet since.
   settled?: boolean;
 }
 
 export interface ThreadSidebarOptions {
   threadSidebar?: boolean;
-  threadSidebarRecentCount?: number;
   threadSidebarSort?: ThreadSort;
 }
 
@@ -161,7 +163,7 @@ const STATUS_PRIORITY: ThreadStatus[] = ["awaiting", "error", "working", "done",
 
 // Sections that render as cards, top to bottom. A divider separates each from
 // the one above it.
-const CARD_SECTIONS: ThreadPlacement[] = ["pinned", "live", "recent"];
+const CARD_SECTIONS: ThreadPlacement[] = ["pinned", "live", "open"];
 
 export const threadKindOf = (rowKey: string): ThreadKind => {
   const prefix = rowKey.slice(0, rowKey.indexOf(":"));
@@ -207,13 +209,14 @@ const isCurrentRow = (row: Element): boolean => {
 
 // Rows arrive in display order. Pinned threads lead the list. Threads settled
 // by hand stay settled. After them, live threads (working, waiting on you, done
-// but unseen) always get a card, then the first `recentCount` threads, and the
-// open thread is never folded away unless you settled it. Only
-// the first group label survives (it carries Claude's Search / Filter / View all
-// buttons); later ones would split the re-sectioned list in odd places.
-export const placeThreadRows = (rows: ThreadRowInfo[], recentCount: number): ThreadPlacement[] => {
+// but unseen) get a card, then every open one — no cap. The rest are settled.
+// The thread you're on is lifted out of a folded Settled section so it can
+// always be seen (`liftCurrent`), but never out of an open one, where it would
+// jump away from under the click that opened it. Only the first group label
+// survives (it carries Claude's Search / Filter / View all buttons); later ones
+// would split the re-sectioned list in odd places.
+export const placeThreadRows = (rows: ThreadRowInfo[], liftCurrent = true): ThreadPlacement[] => {
   let seenLabel = false;
-  let recent = 0;
   return rows.map((row) => {
     if (row.hidden) return "hidden";
     if (row.label) {
@@ -224,11 +227,8 @@ export const placeThreadRows = (rows: ThreadRowInfo[], recentCount: number): Thr
     if (row.pinned) return "pinned";
     if (row.settled) return "settled";
     if (row.status) return "live";
-    if (recent < recentCount) {
-      recent += 1;
-      return "recent";
-    }
-    return row.current ? "recent" : "settled";
+    if (row.open || (row.current && liftCurrent)) return "open";
+    return "settled";
   });
 };
 
@@ -322,7 +322,6 @@ export const threadWhenText = (
 // ── State ────────────────────────────────────────────────────────────────────
 
 let enabled = false;
-let recentCount = DEFAULT_RECENT_COUNT;
 let sort: ThreadSort = "edited";
 let lightTheme = false;
 // Both start collapsed, like T3; remembered for the life of the tab only.
@@ -335,6 +334,9 @@ let observedSidebar: Element | null = null;
 let attachFrame: number | undefined;
 let clockTimer: number | undefined;
 let claudeSearchBar: HTMLElement | null = null;
+// The sidebar's painted background, for the Settled bar that sticks over the
+// list. Read lazily, again after a theme change or a new sidebar.
+let sidebarBackground: string | null = null;
 let sortMenuOpen = false;
 // When no bar was found, the scan (every button in the aside) is skipped for a
 // few seconds rather than repeated on every sidebar mutation.
@@ -346,8 +348,17 @@ const SEARCH_RESCAN_MS = 3_000;
 const threadTimes = new Map<string, ThreadTimes>();
 // Row key → working / done timestamps, mirrored to chrome.storage.session.
 let activity: Record<string, ThreadActivity> = {};
-// Row key → when it was settled by hand, mirrored to chrome.storage.local.
+// Where each thread sits, mirrored to chrome.storage.local. Every thread counts
+// as settled as of `viewSince` (when the view was turned on); `opened` holds
+// row key → when it opened, `settled` row key → when it was settled by hand. A
+// key is in one of the two at most. Nothing opens until they've loaded, so a
+// page load can't open threads against a made-up baseline.
+let viewSince: number | undefined;
+let opened: Record<string, number> = {};
 let settled: Record<string, number> = {};
+let placesLoaded = false;
+let placesLoad = 0;
+let startedAt = 0;
 
 const extensionAlive = (): boolean => typeof chrome !== "undefined" && Boolean(chrome.runtime?.id);
 
@@ -393,43 +404,99 @@ const loadActivity = (): void => {
     .catch(() => undefined);
 };
 
-const sanitizeSettled = (value: unknown, now = Date.now()): Record<string, number> => {
-  if (!value || typeof value !== "object") return {};
-  const entries = Object.entries(value as Record<string, unknown>)
-    .filter(
-      (entry): entry is [string, number] =>
-        ROW_KEY_PATTERN.test(entry[0]) && typeof entry[1] === "number" && now - entry[1] < SETTLED_TTL_MS,
-    )
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, MAX_SETTLED);
-  return Object.fromEntries(entries);
+interface ThreadPlaces {
+  since?: number;
+  open: Record<string, number>;
+  settled: Record<string, number>;
+}
+
+const sanitizeKeyTimes = (value: unknown): [string, number][] =>
+  value && typeof value === "object"
+    ? Object.entries(value as Record<string, unknown>).filter(
+        (entry): entry is [string, number] =>
+          ROW_KEY_PATTERN.test(entry[0]) && typeof entry[1] === "number" && Number.isFinite(entry[1]),
+      )
+    : [];
+
+// A key in both maps keeps whichever happened last; a hand-settle from before
+// the view started is already covered by its baseline.
+const sanitizePlaces = (value: unknown): ThreadPlaces => {
+  const raw = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
+  const since = typeof raw.since === "number" && Number.isFinite(raw.since) ? raw.since : undefined;
+  const open = sanitizeKeyTimes(raw.open);
+  const settledEntries = sanitizeKeyTimes(raw.settled).filter(([, at]) => since === undefined || at > since);
+  const openAt = new Map(open);
+  const settledAt = new Map(settledEntries);
+  const keep = (entries: [string, number][], other: Map<string, number>) =>
+    Object.fromEntries(
+      entries
+        .filter(([key, at]) => (other.get(key) ?? Number.NEGATIVE_INFINITY) < at)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, MAX_PLACES),
+    );
+  return { since, open: keep(open, settledAt), settled: keep(settledEntries, openAt) };
 };
 
-const saveSettled = (): void => {
-  settled = sanitizeSettled(settled);
+const savePlaces = (): void => {
+  const places = sanitizePlaces({ since: viewSince, open: opened, settled });
+  opened = places.open;
+  settled = places.settled;
   void localArea()
-    ?.set({ [STORAGE_KEYS.threadSettled]: settled })
+    ?.set({ [STORAGE_KEYS.threadPlaces]: places })
     .catch(() => undefined);
 };
 
-const loadSettled = (): void => {
-  void localArea()
-    ?.get(STORAGE_KEYS.threadSettled)
+const adoptPlaces = (places: ThreadPlaces): void => {
+  viewSince = places.since ?? startedAt;
+  opened = places.open;
+  settled = places.settled;
+  placesLoaded = true;
+};
+
+// A view turned on for the first time (or again after being off) has nothing
+// stored, and starts its baseline at the moment it was turned on.
+const loadPlaces = (): void => {
+  const area = localArea();
+  const load = ++placesLoad;
+  if (!area) {
+    adoptPlaces({ open: {}, settled: {} });
+    return;
+  }
+  void area
+    .get(STORAGE_KEYS.threadPlaces)
     .then((data) => {
-      settled = { ...sanitizeSettled(data[STORAGE_KEYS.threadSettled]), ...settled };
+      if (load !== placesLoad || !enabled) return;
+      const stored = sanitizePlaces(data[STORAGE_KEYS.threadPlaces]);
+      adoptPlaces(stored);
+      if (stored.since === undefined) savePlaces();
       applyThreadSidebar();
     })
+    .catch(() => {
+      if (load === placesLoad && !placesLoaded) adoptPlaces({ open: {}, settled: {} });
+    });
+};
+
+const forgetPlaces = (): void => {
+  placesLoad += 1;
+  placesLoaded = false;
+  viewSince = undefined;
+  opened = {};
+  settled = {};
+  void localArea()
+    ?.remove(STORAGE_KEYS.threadPlaces)
     .catch(() => undefined);
 };
 
 // Both shared stores: done marks from other claude.ai tabs (session), and
-// threads settled in another tab (local).
+// threads opened or settled in another tab (local).
 const onStorageChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string): void => {
   if (area === "session" && changes[STORAGE_KEYS.threadActivity]) {
     activity = sanitizeActivity(changes[STORAGE_KEYS.threadActivity].newValue);
     applyThreadSidebar();
-  } else if (area === "local" && changes[STORAGE_KEYS.threadSettled]) {
-    settled = sanitizeSettled(changes[STORAGE_KEYS.threadSettled].newValue);
+  } else if (area === "local" && changes[STORAGE_KEYS.threadPlaces] && placesLoaded) {
+    // Gone means another tab turned the view off; this one is about to follow.
+    const next = changes[STORAGE_KEYS.threadPlaces].newValue;
+    adoptPlaces(next === undefined ? { since: Date.now(), open: {}, settled: {} } : sanitizePlaces(next));
     applyThreadSidebar();
   }
 };
@@ -601,6 +668,7 @@ const buildSettledToggle = (): HTMLButtonElement => {
   const toggle = buildButton(SETTLED_TOGGLE_ID, "", () => {
     settledOpen = !settledOpen;
     applyThreadSidebar();
+    if (settledOpen) revealSettled(toggle);
   });
   const label = document.createElement("span");
   label.className = "cub-thread-settled-label";
@@ -904,12 +972,73 @@ const ensureToggle = (
   return toggle;
 };
 
+// Alpha of a computed colour: rgb() / rgba() or a modern "… / a" form.
+const colorAlpha = (color: string): number => {
+  if (!color || color === "transparent") return 0;
+  const slash = /\/\s*([\d.]+)(%?)\s*\)$/.exec(color);
+  if (slash) return Number(slash[1]) / (slash[2] ? 100 : 1);
+  const rgba = /^rgba\((?:[^,]+,){3}\s*([\d.]+)\s*\)$/.exec(color);
+  return rgba ? Number(rgba[1]) : 1;
+};
+
+// What the sidebar paints behind its rows, as a background value: each
+// translucent layer up to the first opaque one, so the Settled bar can cover
+// the rows scrolling under it with exactly the colour around it.
+const paintedBackground = (from: Element): string => {
+  const layers: string[] = [];
+  for (let el: Element | null = from; el; el = el.parentElement) {
+    const style = getComputedStyle(el);
+    const alpha = colorAlpha(style.backgroundColor);
+    if (alpha <= 0 || style.display === "contents") continue;
+    layers.push(style.backgroundColor);
+    if (alpha >= 1) break;
+  }
+  if (!layers.length) return "";
+  // Translucent layers stack as flat gradients over the opaque base (or over
+  // the menu surface if nothing up the tree was opaque).
+  const base = colorAlpha(layers[layers.length - 1]) >= 1 ? (layers.pop() as string) : "var(--cub-thread-menu-bg)";
+  return [...layers.map((color) => `linear-gradient(${color}, ${color})`), base].join(", ");
+};
+
 const syncSettledToggle = (recents: Element, settledCount: number): void => {
   const toggle = ensureToggle(SETTLED_TOGGLE_ID, recents, settledCount > 0, buildSettledToggle);
   if (!toggle) return;
   const label = toggle.querySelector(".cub-thread-settled-label");
   if (label) setText(label, t("threadSettled", "Settled ($1)", settledCount));
   setAttr(toggle, "aria-expanded", settledOpen ? "true" : "false");
+  sidebarBackground ??= paintedBackground(recents);
+  if (toggle.style.getPropertyValue("--cub-thread-bar-bg") !== sidebarBackground) {
+    if (sidebarBackground) toggle.style.setProperty("--cub-thread-bar-bg", sidebarBackground);
+    else toggle.style.removeProperty("--cub-thread-bar-bg");
+  }
+};
+
+const scrollParentOf = (el: Element): HTMLElement | null => {
+  for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (/^(auto|scroll|overlay)$/.test(overflowY) && node.scrollHeight > node.clientHeight) return node;
+  }
+  return null;
+};
+
+// The Settled bar is locked to the bottom of the scroll area, so over a long
+// list of cards the rows it just opened land out of sight below it. Scroll the
+// bar up to the top of the column to show them.
+const revealSettled = (toggle: HTMLElement): void => {
+  let first: HTMLElement | null = null;
+  for (const row of document.querySelectorAll<HTMLElement>('[data-cub-thread="settled"]')) {
+    if (!first || Number(row.style.order) < Number(first.style.order)) first = row;
+  }
+  const scroller = scrollParentOf(toggle);
+  if (!first || !scroller) return;
+  const view = scroller.getBoundingClientRect();
+  const row = first.getBoundingClientRect();
+  if (row.bottom <= view.bottom) return;
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  scroller.scrollBy?.({
+    top: row.top - view.top - toggle.offsetHeight - ROW_GAP_PX,
+    behavior: reduceMotion ? "auto" : "smooth",
+  });
 };
 
 // Projects, Artifacts, Scheduled, Design, Customize and More fold into one row
@@ -1006,13 +1135,14 @@ const syncSettleButton = (card: HTMLElement, key: string, wanted: boolean): void
 };
 
 const settleThread = (key: string): void => {
-  if (!ROW_KEY_PATTERN.test(key)) return;
+  if (!ROW_KEY_PATTERN.test(key) || !placesLoaded) return;
   settled[key] = Date.now();
+  delete opened[key];
   if (activity[key]?.doneAt) {
     delete activity[key];
     saveActivity();
   }
-  saveSettled();
+  savePlaces();
   applyThreadSidebar();
 };
 
@@ -1045,17 +1175,17 @@ const trackActivity = (
   return { status: info.status ?? (next?.doneAt ? "done" : null), changed };
 };
 
-// A hand-settled thread stays settled until it does something after being
-// settled: starts working, finishes, or changes in Claude's list.
-const stillSettled = (key: string): boolean => {
-  const settledAt = settled[key];
-  if (settledAt === undefined) return false;
+// Whether a thread did something after it was settled (by hand, or by the view
+// starting): started working or finished, as seen by any tab, or changed in
+// Claude's list — which also catches chats made or answered elsewhere.
+const activeSince = (key: string, since: number | undefined): boolean => {
+  if (since === undefined) return false;
   const local = activity[key];
   const updatedAt = threadTimes.get(threadIdOf(key))?.updatedAt ?? 0;
   return (
-    (local?.workingSince ?? 0) <= settledAt &&
-    (local?.doneAt ?? 0) <= settledAt &&
-    updatedAt <= settledAt + SETTLE_GRACE_MS
+    (local?.workingSince ?? 0) >= since ||
+    (local?.doneAt ?? 0) >= since ||
+    updatedAt > since + SETTLE_GRACE_MS
   );
 };
 
@@ -1097,7 +1227,7 @@ export const applyThreadSidebar = (): void => {
   const now = Date.now();
   const visible = document.visibilityState === "visible";
   let activityChanged = false;
-  let settledChanged = false;
+  let placesChanged = false;
   rows.forEach((_row, index) => {
     const info = infos[index];
     const key = keys[index];
@@ -1105,17 +1235,17 @@ export const applyThreadSidebar = (): void => {
     const tracked = trackActivity(key, info, now, info.current && visible);
     info.status = tracked.status;
     activityChanged ||= tracked.changed;
-    if (settled[key] !== undefined && !info.pinned) {
-      if (stillSettled(key)) {
-        info.settled = true;
-      } else {
-        delete settled[key];
-        settledChanged = true;
-      }
+    if (info.pinned || !placesLoaded) return;
+    if (opened[key] === undefined && activeSince(key, settled[key] ?? viewSince)) {
+      opened[key] = now;
+      delete settled[key];
+      placesChanged = true;
     }
+    info.open = opened[key] !== undefined;
+    info.settled = settled[key] !== undefined;
   });
   if (activityChanged) saveActivity();
-  if (settledChanged) saveSettled();
+  if (placesChanged) savePlaces();
 
   // Display order: labels and pinned rows keep Claude's order; everything else
   // is sorted by the chosen rule, then sectioned.
@@ -1134,7 +1264,7 @@ export const applyThreadSidebar = (): void => {
   const ordered = [...fixed, ...sortedSortable];
   const orderedPlacements = placeThreadRows(
     ordered.map((index) => infos[index]),
-    recentCount,
+    !settledOpen,
   );
   const placements: ThreadPlacement[] = [];
   const rank: number[] = [];
@@ -1214,6 +1344,7 @@ const clearThreadSidebar = (): void => {
   });
   claudeSearchBar = null;
   searchScanAt = 0;
+  sidebarBackground = null;
 };
 
 // ── Lifecycle ────────────────────────────────────────────────────────────────
@@ -1227,6 +1358,7 @@ const attach = (): void => {
     observedSidebar = sidebar;
     claudeSearchBar = null;
     searchScanAt = 0;
+    sidebarBackground = null;
     // Observe the whole aside when there is one: Claude's top search bar can
     // sit outside the sidebar body.
     const target = sidebar?.closest("aside") ?? sidebar;
@@ -1298,15 +1430,19 @@ const start = (): void => {
   }, CLOCK_TICK_MS);
   document.addEventListener("visibilitychange", onVisibilityChange);
   if (extensionAlive()) chrome.storage.onChanged?.addListener(onStorageChanged);
+  startedAt = Date.now();
   loadActivity();
-  loadSettled();
+  loadPlaces();
   attach();
 };
 
+// Turning the view off forgets which threads were open, so turning it back on
+// starts from everything settled again.
 const stop = (): void => {
   enabled = false;
   stopObserving();
   clearThreadSidebar();
+  forgetPlaces();
 };
 
 export const initThreadSidebar = (activeInstance: () => boolean): void => {
@@ -1316,16 +1452,13 @@ export const initThreadSidebar = (activeInstance: () => boolean): void => {
 export const syncThreadSidebarTheme = (light: boolean): void => {
   if (lightTheme === light) return;
   lightTheme = light;
+  sidebarBackground = null;
   applyThreadSidebar();
 };
-
-const normalizeRecentCount = (value: number | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) && value >= 0 ? Math.floor(value) : DEFAULT_RECENT_COUNT;
 
 // Called on every render: cheap when nothing changed, and it re-applies so the
 // open-thread highlight follows SPA navigation.
 export const syncThreadSidebar = (settings: ThreadSidebarOptions): void => {
-  recentCount = normalizeRecentCount(settings.threadSidebarRecentCount);
   sort = settings.threadSidebarSort === "created" ? "created" : "edited";
   if (settings.threadSidebar === true) {
     if (enabled) applyThreadSidebar();
@@ -1340,12 +1473,10 @@ export const resetThreadSidebarForTests = (): void => {
   stop();
   settledOpen = false;
   navOpen = false;
-  recentCount = DEFAULT_RECENT_COUNT;
   sort = "edited";
   lightTheme = false;
   isActive = () => true;
   threadTimes.clear();
   activity = {};
-  settled = {};
   sortMenuOpen = false;
 };

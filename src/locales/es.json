@@ -420,16 +420,7 @@
     "message": "Vista de conversaciones"
   },
   "setThreadSidebarDesc": {
-    "message": "Las conversaciones fijadas, en curso y recientes se muestran como tarjetas; el resto se pliega."
-  },
-  "setThreadRecent": {
-    "message": "Tarjetas recientes"
-  },
-  "setThreadRecentDesc": {
-    "message": "Además de las que están en curso."
-  },
-  "setThreadRecentCount": {
-    "message": "$1 conversaciones"
+    "message": "Al principio todo está resuelto. Una conversación pasa a ser una tarjeta cuando tiene actividad nueva, hasta que la resuelvas."
   },
   "threadNavLabel": {
     "message": "Proyectos y herramientas"

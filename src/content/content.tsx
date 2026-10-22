@@ -1143,10 +1143,10 @@ const init = async () => {
       return;
     }
 
-    // Prompt clipboard and the thread view's settled list manage their own
-    // storage; skip their changes to avoid flicker.
+    // Prompt clipboard and the thread view's open / settled lists manage their
+    // own storage; skip their changes to avoid flicker.
     const changeKeys = Object.keys(changes);
-    const selfManaged: string[] = [STORAGE_KEYS.prompts, STORAGE_KEYS.threadSettled];
+    const selfManaged: string[] = [STORAGE_KEYS.prompts, STORAGE_KEYS.threadPlaces];
     if (changeKeys.every((key) => selfManaged.includes(key))) {
       return;
     }

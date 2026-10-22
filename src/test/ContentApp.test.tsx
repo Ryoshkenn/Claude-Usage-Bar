@@ -26,7 +26,6 @@ const settings: Settings = {
   language: "en",
   resetBannerScope: "claude",
   threadSidebar: false,
-  threadSidebarRecentCount: 5,
   threadSidebarSort: "edited",
 };
 

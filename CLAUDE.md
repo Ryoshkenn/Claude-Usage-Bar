@@ -87,9 +87,14 @@ types predate it. Verify it survives into `dist/manifest.json` after touching th
 
 ### Thread sidebar (`src/content/threadSidebar.ts`)
 Optional T3-style sidebar (`settings.threadSidebar`, off by default, under **Sidebar** in the
-settings panel): pinned, live (working / waiting / done / unread) and the N most recent threads
-become cards, the rest fold under "Settled (N)" (a card's hover Settle button files it there until
-its next activity), pinned projects are hidden (they stay under Projects), Claude's nav rows fold into
+settings panel). Everything starts settled under a "Settled (N)" bar; a thread becomes a card once it
+has activity after that — seen working or done in any tab, or an `updated_at` past the baseline
+(which also catches chats made on another device) — and stays one, uncapped, until its hover Settle
+button files it back (until its next activity). Pinned threads and live ones (working / waiting /
+done / unread) are always cards. The Settled bar is `position: sticky` at the bottom of the scroll
+column (pushed there with `margin-top: auto` when the cards are few) and also at the top while
+open; it paints the sidebar's own computed background so rows can pass under it, and opening it
+over a long list scrolls its rows into view. Pinned projects are hidden (they stay under Projects), Claude's nav rows fold into
 one "Projects & tools" row, and a T3-style Search / sort / new-chat row sits at the top — in place of
 Claude's top search bar when the layout shows one (only a *visible*, bar-wide match is replaced),
 else of the New row. Search and New always drive Claude's own controls. Claude's sidebar is React we don't own, so the module never moves, clones or
@@ -107,10 +112,13 @@ DOM while the sidebar is in Code mode; nothing merges them into the chat list.
 
 "Done" is ours: a row this tab saw working that stops while you weren't looking at it. The marks
 live in `chrome.storage.session` (`threadActivity`, row keys + timestamps only, shared by every
-claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). Hand-settled
-threads live in `chrome.storage.local` (`threadSettled`, row key → time, capped and expiring). Those
-row keys are the only non-numeric thing the extension stores. There is deliberately no "task
-finished" banner — it was tried and removed.
+claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). Placement lives
+in `chrome.storage.local` (`threadPlaces`: `since` — when the view was turned on, the baseline every
+thread counts as settled at — plus `open` and hand-`settled` maps of row key → time). Turning the view
+off removes it, so turning it on again starts from everything settled. Nothing opens until it has
+loaded, or a page load would judge activity against a made-up baseline. Those row keys are the only
+non-numeric thing the extension stores. There is deliberately no "task finished" banner — it was
+tried and removed.
 
 Sorting ("newest edited" / "newest created") uses timestamps the page probe lifts from Claude's own
 **list** responses (`MESSAGE_TYPES.threadTimes`): ids and created/updated times only — never names

@@ -420,16 +420,7 @@
     "message": "スレッド表示"
   },
   "setThreadSidebarDesc": {
-    "message": "ピン留め・作業中・最近のチャットをカードで表示し、それ以外は折りたたみます。"
-  },
-  "setThreadRecent": {
-    "message": "最近のカード"
-  },
-  "setThreadRecentDesc": {
-    "message": "作業中のものに加えて表示します。"
-  },
-  "setThreadRecentCount": {
-    "message": "$1 件"
+    "message": "最初はすべて完了済みです。新しい動きがあったチャットは、完了にするまでカードとして表示されます。"
   },
   "threadNavLabel": {
     "message": "プロジェクトとツール"

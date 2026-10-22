@@ -95,7 +95,6 @@ describe("storage helpers", () => {
       language: "en",
       resetBannerScope: "claude",
       threadSidebar: false,
-      threadSidebarRecentCount: 5,
       threadSidebarSort: "edited",
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
@@ -165,10 +164,13 @@ describe("storage helpers", () => {
     expect((await getStorage(adapter)).settings.resetBannerScope).toBe("claude");
   });
 
-  it("drops the thread view's removed task-alert setting", async () => {
-    const adapter = createAdapter({ settings: { threadSidebar: true, threadDoneAlerts: "everywhere" } });
+  it("drops the thread view's removed task-alert and recent-count settings", async () => {
+    const adapter = createAdapter({
+      settings: { threadSidebar: true, threadDoneAlerts: "everywhere", threadSidebarRecentCount: 8 },
+    });
     const { settings } = await getStorage(adapter);
     expect(settings).not.toHaveProperty("threadDoneAlerts");
+    expect(settings).not.toHaveProperty("threadSidebarRecentCount");
     expect(settings.threadSidebar).toBe(true);
   });
 
@@ -198,7 +200,6 @@ describe("storage helpers", () => {
       language: "en",
       resetBannerScope: "claude",
       threadSidebar: false,
-      threadSidebarRecentCount: 5,
       threadSidebarSort: "edited",
     });
     expect(adapter.data.settings).toEqual(settings);

@@ -420,16 +420,7 @@
     "message": "Vue des conversations"
   },
   "setThreadSidebarDesc": {
-    "message": "Les conversations épinglées, en cours et récentes deviennent des cartes ; le reste est replié."
-  },
-  "setThreadRecent": {
-    "message": "Cartes récentes"
-  },
-  "setThreadRecentDesc": {
-    "message": "En plus de celles en cours."
-  },
-  "setThreadRecentCount": {
-    "message": "$1 conversations"
+    "message": "Au départ, tout est terminé. Une conversation devient une carte dès qu'il s'y passe quelque chose, jusqu'à ce que vous la terminiez."
   },
   "threadNavLabel": {
     "message": "Projets et outils"

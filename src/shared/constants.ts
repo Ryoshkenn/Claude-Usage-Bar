@@ -21,9 +21,11 @@ export const STORAGE_KEYS = {
   // done timestamps keyed by Claude's row key ("chat:<uuid>"). Ids and numbers
   // only — never titles — and gone when the browser closes.
   threadActivity: "threadActivity",
-  // chrome.storage.local: threads the user settled by hand, row key → when.
-  // A thread leaves the list again on its next activity. Ids and times only.
-  threadSettled: "threadSettled",
+  // chrome.storage.local: where the thread view has put each thread — when the
+  // view was turned on (everything counts as settled as of then), plus row key
+  // → when it opened and row key → when it was settled by hand. Ids and times
+  // only, and removed when the view is turned off.
+  threadPlaces: "threadPlaces",
 } as const;
 
 export const MESSAGE_TYPES = {

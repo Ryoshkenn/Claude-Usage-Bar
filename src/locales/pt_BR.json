@@ -420,16 +420,7 @@
     "message": "Visão de conversas"
   },
   "setThreadSidebarDesc": {
-    "message": "Conversas fixadas, em andamento e recentes viram cartões; o resto fica recolhido."
-  },
-  "setThreadRecent": {
-    "message": "Cartões recentes"
-  },
-  "setThreadRecentDesc": {
-    "message": "Além das que estão em andamento."
-  },
-  "setThreadRecentCount": {
-    "message": "$1 conversas"
+    "message": "No início, tudo fica concluído. Uma conversa vira cartão quando tem atividade nova, até você concluí-la."
   },
   "threadNavLabel": {
     "message": "Projetos e ferramentas"

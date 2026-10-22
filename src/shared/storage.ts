@@ -90,7 +90,6 @@ export const DEFAULT_SETTINGS: Settings = {
   // permission beyond the one the extension already has.
   resetBannerScope: "claude",
   threadSidebar: false,
-  threadSidebarRecentCount: 5,
   threadSidebarSort: "edited",
 };
 
@@ -106,14 +105,17 @@ interface RemovedSettings {
   // Per-window reset banner toggles — the banner now covers both windows.
   resetBannerSession?: boolean;
   resetBannerWeekly?: boolean;
-  // Thread view task-alert banners, dropped before release.
+  // Thread view task-alert banners, and its "recent cards" count (threads now
+  // open on activity, uncapped) — both dropped before release.
   threadDoneAlerts?: unknown;
+  threadSidebarRecentCount?: unknown;
 }
 
 const migrateSettings = (stored: Settings & RemovedSettings): Settings => {
   const {
     weeklyPaceMode: _paceMode,
     threadDoneAlerts: _threadDoneAlerts,
+    threadSidebarRecentCount: _threadRecentCount,
     resetBannerSession,
     resetBannerWeekly,
     ...settings

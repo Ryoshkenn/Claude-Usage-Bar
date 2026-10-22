@@ -420,16 +420,7 @@
     "message": "थ्रेड व्यू"
   },
   "setThreadSidebarDesc": {
-    "message": "पिन की गई, चल रही और हाल की चैट कार्ड के रूप में दिखती हैं; बाकी समेट दी जाती हैं।"
-  },
-  "setThreadRecent": {
-    "message": "हाल के कार्ड"
-  },
-  "setThreadRecentDesc": {
-    "message": "चल रही चैट के अलावा।"
-  },
-  "setThreadRecentCount": {
-    "message": "$1 थ्रेड"
+    "message": "शुरुआत में सब कुछ निपटाया हुआ रहता है। किसी चैट में नई गतिविधि होते ही वह कार्ड बन जाती है, जब तक आप उसे निपटा न दें।"
   },
   "threadNavLabel": {
     "message": "प्रोजेक्ट और टूल"

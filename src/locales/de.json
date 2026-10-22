@@ -420,16 +420,7 @@
     "message": "Unterhaltungsansicht"
   },
   "setThreadSidebarDesc": {
-    "message": "Angeheftete, laufende und neue Chats werden zu Karten; der Rest wird eingeklappt."
-  },
-  "setThreadRecent": {
-    "message": "Aktuelle Karten"
-  },
-  "setThreadRecentDesc": {
-    "message": "Zusätzlich zu denen, die gerade laufen."
-  },
-  "setThreadRecentCount": {
-    "message": "$1 Unterhaltungen"
+    "message": "Anfangs ist alles erledigt. Ein Chat wird zur Karte, sobald sich darin etwas tut, bis du ihn erledigst."
   },
   "threadNavLabel": {
     "message": "Projekte & Tools"
