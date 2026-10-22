@@ -10,6 +10,7 @@ import type {
   PaceSurplusFormat,
   ResetBannerScope,
   Settings,
+  ThreadSort,
   WeeklyEstimateDisplay,
   WeeklyUsageMetrics,
 } from "../shared/types";
@@ -557,6 +558,11 @@ const threadRecentOptions = (): { value: string; label: string }[] =>
     label: t("setThreadRecentCount", "$1 threads", count),
   }));
 
+const threadSortOptions = (): { value: ThreadSort; label: string }[] => [
+  { value: "edited", label: t("threadSortEdited", "Newest edited") },
+  { value: "created", label: t("threadSortCreated", "Newest created") },
+];
+
 const weeklyDisplayOptions = (): { value: WeeklyEstimateDisplay; label: string }[] => [
   { value: "active_hours", label: t("setOptActiveHours", "Active hours") },
   { value: "calendar_time", label: t("setOptDaysTime", "Days / time") },
@@ -664,6 +670,18 @@ const SettingsPage = () => {
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.syncResetBanner }, () => {
       void chrome.runtime.lastError;
     });
+  };
+
+  // Same route as reset alerts, tagged so the grant window records the answer
+  // against task alerts.
+  const changeThreadAlerts = (next: ResetBannerScope) => {
+    if (next === "everywhere") {
+      chrome.runtime.sendMessage({ type: MESSAGE_TYPES.requestAllSites, purpose: "threads" }, () => {
+        void chrome.runtime.lastError;
+      });
+      return;
+    }
+    update({ threadDoneAlerts: next });
   };
 
   const sendTestBanner = () => {
@@ -777,6 +795,37 @@ const SettingsPage = () => {
                   value={String(settings.threadSidebarRecentCount ?? 5)}
                   options={threadRecentOptions()}
                   onChange={(v) => update({ threadSidebarRecentCount: Number(v) })}
+                />
+              </Row>
+            </NestItem>
+            <NestItem>
+              <Row
+                labelId={id("thread-sort")}
+                label={t("setThreadSort", "Order")}
+                description={t("setThreadSortDesc", "Newest edited moves a thread up when it changes or Claude replies.")}
+              >
+                <CdsSelect
+                  id={id("thread-sort")}
+                  value={settings.threadSidebarSort ?? "edited"}
+                  options={threadSortOptions()}
+                  onChange={(v) => update({ threadSidebarSort: v as ThreadSort })}
+                />
+              </Row>
+            </NestItem>
+            <NestItem>
+              <Row
+                labelId={id("thread-alerts")}
+                label={t("setThreadAlerts", "Task alerts")}
+                description={t(
+                  "setThreadAlertsDesc",
+                  "Banner when a thread finishes or needs you while you're elsewhere. Any site needs Chrome permission.",
+                )}
+              >
+                <CdsSelect
+                  id={id("thread-alerts")}
+                  value={settings.threadDoneAlerts ?? "claude"}
+                  options={resetScopeOptions()}
+                  onChange={(v) => changeThreadAlerts(v as ResetBannerScope)}
                 />
               </Row>
             </NestItem>

@@ -402,13 +402,10 @@
     "message": "In corso"
   },
   "threadStatusAwaiting": {
-    "message": "Richiede input"
+    "message": "In attesa"
   },
   "threadStatusError": {
     "message": "Errore"
-  },
-  "threadStatusReady": {
-    "message": "Pronta"
   },
   "threadStatusUnread": {
     "message": "Non letta"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "Fissata"
+  },
+  "threadStatusDone": {
+    "message": "Completata"
+  },
+  "threadWorkingFor": {
+    "message": "In corso $1"
+  },
+  "threadWaitingFor": {
+    "message": "In attesa $1"
+  },
+  "threadDoneAgo": {
+    "message": "Completata $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1g"
+  },
+  "threadAgoWeeks": {
+    "message": "$1sett"
+  },
+  "threadSearch": {
+    "message": "Cerca"
+  },
+  "threadNewChat": {
+    "message": "Nuova chat"
+  },
+  "threadSort": {
+    "message": "Ordina conversazioni"
+  },
+  "threadSortEdited": {
+    "message": "Modificate di recente"
+  },
+  "threadSortCreated": {
+    "message": "Create di recente"
+  },
+  "setThreadSort": {
+    "message": "Ordine"
+  },
+  "setThreadSortDesc": {
+    "message": "Con «Modificate di recente» una conversazione sale quando cambia o Claude risponde."
+  },
+  "setThreadAlerts": {
+    "message": "Avvisi attività"
+  },
+  "setThreadAlertsDesc": {
+    "message": "Banner quando una conversazione finisce o ha bisogno di te mentre sei altrove. Qualsiasi sito richiede l’autorizzazione di Chrome."
+  },
+  "threadBannerDone": {
+    "message": "Claude ha finito"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude ha bisogno di una tua risposta"
+  },
+  "threadBannerOpen": {
+    "message": "Apri"
+  },
+  "threadBannerDismiss": {
+    "message": "Chiudi"
+  },
+  "grantThreadsTitle": {
+    "message": "Mostra avvisi attività su qualsiasi sito"
+  },
+  "grantThreadsDenied": {
+    "message": "Autorizzazione non concessa. Gli avvisi attività restano solo su claude.ai."
   }
 }

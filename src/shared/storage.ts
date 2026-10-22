@@ -91,6 +91,8 @@ export const DEFAULT_SETTINGS: Settings = {
   resetBannerScope: "claude",
   threadSidebar: false,
   threadSidebarRecentCount: 5,
+  threadSidebarSort: "edited",
+  threadDoneAlerts: "claude",
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The

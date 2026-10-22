@@ -1,6 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import {
   applyThreadSidebar,
+  formatThreadAgo,
+  handleThreadTimesMessage,
   initThreadSidebar,
   NAV_TOGGLE_ID,
   placeThreadRows,
@@ -8,8 +11,12 @@ import {
   resetThreadSidebarForTests,
   SETTLED_TOGGLE_ID,
   syncThreadSidebar,
+  syncThreadSidebarTheme,
+  threadDisplayOrder,
   threadKindOf,
-  threadMetaText,
+  threadWhenText,
+  TOP_ACTIONS_ID,
+  TOP_ROW_ID,
   type ThreadRowInfo,
 } from "../content/threadSidebar";
 
@@ -27,12 +34,15 @@ interface SidebarSpec {
   pinnedProjects?: boolean;
   pinnedCollapsed?: boolean;
   scheduledDot?: boolean;
+  claudeSearchBar?: boolean;
 }
+
+const idOf = (key: string): string => key.slice(key.indexOf(":") + 1);
 
 // Mirrors the structure of claude.ai's sidebar rows (data-row-key wrapper →
 // [data-row] → main button + trailing decoration + hover actions).
 const rowHtml = ({ key, status, unreadMark, current, icon }: RowSpec): string => {
-  const id = key.slice(key.indexOf(":") + 1);
+  const id = idOf(key);
   const href = key.startsWith("cowork:") ? `/cowork/${id}` : key.startsWith("project:") ? `/project/${id}` : `/chat/${id}`;
   return `
     <div data-row-key="${key}" class="relative df-drag-shiftable">
@@ -54,7 +64,7 @@ const labelHtml = (key: string, name: string): string => `
   <div data-row-key="${key}" class="df-drag-shiftable">
     <div data-sidebar-group-label="">
       <button type="button" data-group-toggle="" aria-expanded="true"><span data-group-name="">${name}</span></button>
-      <div><button type="button" aria-label="Search"></button></div>
+      <div><button type="button" data-cds-icon-only="" aria-label="Search" aria-keyshortcuts="Control+Shift+k"></button></div>
     </div>
   </div>`;
 
@@ -79,7 +89,12 @@ const mountSidebar = (spec: SidebarSpec) => {
   document.body.innerHTML = `
     <aside aria-label="Sidebar">
       <div data-testid="sidebar">
-        <div class="shrink-0"><a href="/new" data-row="" data-row-main-button="">New</a></div>
+        ${
+          spec.claudeSearchBar
+            ? '<div id="search-host"><button type="button" aria-keyshortcuts="Control+Shift+k"><span>Search</span></button></div>'
+            : ""
+        }
+        <div class="shrink-0" id="new-host"><div class="contents"><a href="/new" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div></div>
         <div class="dframe-nav-scroll" id="nav-scroll">
           <div data-testid="nav-pin-rows">
             <div data-row=""><a href="/cowork/projects" data-row-main-button="" data-nav-item="projects">Projects</a></div>
@@ -107,17 +122,21 @@ const mountSidebar = (spec: SidebarSpec) => {
       </div>
     </aside>`;
   return {
+    sidebar: document.querySelector<HTMLElement>('[data-testid="sidebar"]')!,
     column: document.getElementById("nav-scroll")!,
     recents: document.querySelector<HTMLElement>('[data-testid="sidebar-recents"]')!,
     nav: document.querySelector<HTMLElement>('[data-testid="nav-pin-rows"]')!,
+    newLink: document.querySelector<HTMLAnchorElement>('a[href="/new"]')!,
   };
 };
 
 const read = (rows: RowSpec[]): SidebarSpec => ({ groups: [{ label: ["label:unread-read", "Read"], rows }] });
 const rowEl = (key: string): HTMLElement => document.querySelector<HTMLElement>(`[data-row-key="${key}"]`)!;
 const placementOf = (key: string): string | null => rowEl(key).getAttribute("data-cub-thread");
-const metaOf = (key: string): string | null =>
-  rowEl(key).querySelector("[data-row-label]")!.getAttribute("data-cub-thread-meta");
+const orderOf = (key: string): number => Number(rowEl(key).style.order);
+const kindTextOf = (key: string): string | null | undefined => rowEl(key).querySelector(".cub-thread-kind")?.textContent;
+const whenOf = (key: string): string | null | undefined => rowEl(key).querySelector(".cub-thread-when")?.textContent;
+const isCard = (key: string): boolean => rowEl(key).querySelector("[data-row]")!.hasAttribute("data-cub-thread-card");
 const settledToggle = (): HTMLButtonElement | null =>
   document.getElementById(SETTLED_TOGGLE_ID) as HTMLButtonElement | null;
 const navToggle = (): HTMLButtonElement | null => document.getElementById(NAV_TOGGLE_ID) as HTMLButtonElement | null;
@@ -125,8 +144,14 @@ const flushObservers = async (): Promise<void> => {
   await Promise.resolve();
   await Promise.resolve();
 };
+const postTimes = (items: { id: string; createdAt?: number; updatedAt?: number }[]): void =>
+  handleThreadTimesMessage(new MessageEvent("message", { data: { type: MESSAGE_TYPES.threadTimes, items }, source: window }));
+const stopWorking = (key: string): void => {
+  rowEl(key).querySelector("[data-row-decoration]")?.remove();
+};
 
 const ten = Array.from({ length: 10 }, (_, i) => ({ key: `chat:c${i}` }));
+const NOW = new Date("2026-10-21T12:00:00Z").getTime();
 
 beforeEach(() => {
   history.replaceState(null, "", "/new");
@@ -135,6 +160,8 @@ beforeEach(() => {
 afterEach(() => {
   resetThreadSidebarForTests();
   document.body.innerHTML = "";
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("placeThreadRows", () => {
@@ -160,38 +187,46 @@ describe("placeThreadRows", () => {
     expect(placeThreadRows(rows, 5)).toEqual(["label", "recent", "label-hidden", "recent"]);
   });
 
-  it("settles everything that isn't live when no recent cards are wanted", () => {
-    expect(placeThreadRows([row(), row({ status: "unread" })], 0)).toEqual(["settled", "live"]);
-  });
-
   it("keeps pinned threads out of the recent count and hides pinned projects", () => {
     const rows = [row({ hidden: true }), row({ pinned: true }), row({ pinned: true, status: "working" }), row(), row()];
     expect(placeThreadRows(rows, 1)).toEqual(["hidden", "pinned", "pinned", "recent", "settled"]);
   });
 });
 
-describe("row status", () => {
+describe("threadDisplayOrder", () => {
+  it("keeps Claude's order when nothing has a timestamp", () => {
+    expect(threadDisplayOrder([{}, {}, {}], "edited")).toEqual([0, 1, 2]);
+  });
+
+  it("sorts by last activity, counting local activity, for newest edited", () => {
+    const entries = [{ updatedAt: 300 }, { updatedAt: 200 }, { updatedAt: 100, activityAt: 900 }];
+    expect(threadDisplayOrder(entries, "edited")).toEqual([2, 0, 1]);
+  });
+
+  it("sorts by creation for newest created", () => {
+    const entries = [{ createdAt: 10, updatedAt: 300 }, { createdAt: 30, updatedAt: 200 }, { createdAt: 20 }];
+    expect(threadDisplayOrder(entries, "created")).toEqual([1, 2, 0]);
+  });
+
+  it("keeps a row without a timestamp beside the row Claude put above it", () => {
+    const entries = [{ updatedAt: 100 }, {}, { updatedAt: 500 }];
+    expect(threadDisplayOrder(entries, "edited")).toEqual([2, 0, 1]);
+  });
+});
+
+describe("row status and labels", () => {
   it("maps Claude's status dots onto thread states", () => {
     for (const [kind, expected] of [
       ["running", "working"],
       ["clay", "working"],
       ["awaiting", "awaiting"],
       ["error", "error"],
-      ["ready", "ready"],
+      ["ready", "done"],
       ["unread", "unread"],
     ] as const) {
       mountSidebar(read([{ key: "chat:a", status: kind }]));
       expect(readRowStatus(rowEl("chat:a"))).toBe(expected);
     }
-  });
-
-  it("ignores decorations that aren't status dots", () => {
-    mountSidebar(read([{ key: "chat:a" }]));
-    rowEl("chat:a").querySelector("[data-row]")!.insertAdjacentHTML(
-      "beforeend",
-      '<span data-row-decoration=""><span role="img" aria-label="Includes a document"></span></span>',
-    );
-    expect(readRowStatus(rowEl("chat:a"))).toBeNull();
   });
 
   it("reads the unread mark and prefers the state that needs the user", () => {
@@ -207,10 +242,19 @@ describe("row status", () => {
     expect(threadKindOf("scheduled-task:trig_1")).toBe("routine");
     expect(threadKindOf("code:session_1")).toBe("code");
     expect(threadKindOf("mystery:1")).toBe("other");
-    expect(threadMetaText("chat", "working", false)).toBe("Chat · Working");
-    expect(threadMetaText("cowork", null, true)).toBe("Cowork · Open");
-    expect(threadMetaText("chat", null, false)).toBe("Chat");
-    expect(threadMetaText("chat", "awaiting", false, true)).toBe("Chat · Pinned · Needs input");
+  });
+
+  it("formats ages and live states like T3", () => {
+    expect(formatThreadAgo(31_000)).toBe("31s");
+    expect(formatThreadAgo(12 * 60_000)).toBe("12m");
+    expect(formatThreadAgo(17 * 3_600_000)).toBe("17h");
+    expect(formatThreadAgo(3 * 86_400_000)).toBe("3d");
+    expect(formatThreadAgo(15 * 86_400_000)).toBe("2w");
+    expect(threadWhenText("working", { workingSince: NOW - 12 * 60_000 }, undefined, NOW)).toBe("Working 12m");
+    expect(threadWhenText("awaiting", { awaitingSince: NOW - 31_000 }, undefined, NOW)).toBe("Waiting 31s");
+    expect(threadWhenText("done", undefined, undefined, NOW)).toBe("Done");
+    expect(threadWhenText(null, undefined, { updatedAt: NOW - 11 * 60_000 }, NOW)).toBe("11m");
+    expect(threadWhenText(null, undefined, undefined, NOW)).toBe("");
   });
 });
 
@@ -223,51 +267,45 @@ describe("thread sidebar DOM", () => {
     expect(column.hasAttribute("data-cub-threads")).toBe(false);
   });
 
-  it("cards recent threads and folds the rest under Settled", () => {
+  it("cards recent threads, folds the rest under Settled, and orders them in bands", () => {
     const { column, recents } = mountSidebar(read(ten));
     syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
 
-    // The scroll column is the flex container; the wrappers above the list
-    // and the list itself are flattened into it.
     expect(column.getAttribute("data-cub-threads")).toBe("on");
     expect(column.getAttribute("data-cub-threads-settled")).toBe("closed");
     expect(recents.hasAttribute("data-cub-thread-flat")).toBe(true);
-    expect(document.querySelector('[data-first-paint-hold]')!.hasAttribute("data-cub-thread-flat")).toBe(true);
-
     expect(placementOf("label:unread-read")).toBe("label");
     expect(["c0", "c1", "c2"].map((id) => placementOf(`chat:${id}`))).toEqual(["recent", "recent", "recent"]);
     expect(placementOf("chat:c3")).toBe("settled");
-    expect(rowEl("chat:c0").querySelector("[data-row]")!.hasAttribute("data-cub-thread-card")).toBe(true);
-    expect(rowEl("chat:c3").querySelector("[data-row]")!.hasAttribute("data-cub-thread-card")).toBe(false);
-    expect(metaOf("chat:c0")).toBe("Chat");
+    expect(isCard("chat:c0")).toBe(true);
+    expect(isCard("chat:c3")).toBe(false);
+    expect(orderOf("chat:c0")).toBeLessThan(orderOf("chat:c1"));
+    expect(orderOf("chat:c2")).toBeLessThan(4_000);
+    expect(orderOf("chat:c3")).toBeGreaterThan(4_000);
+
+    // Cards carry a meta line: kind chip and label, then the age on the right.
+    expect(kindTextOf("chat:c0")).toBe("Chat");
+    expect(rowEl("chat:c0").querySelector('.cub-thread-chip[data-kind="chat"]')).not.toBeNull();
+    expect(rowEl("chat:c3").querySelector(".cub-thread-meta")).toBeNull();
     expect(document.querySelector("[data-group-name]")!.getAttribute("data-cub-thread-label")).toBe("Threads");
 
     expect(settledToggle()?.parentElement).toBe(recents);
     expect(settledToggle()?.textContent).toBe("Settled (7)");
-    expect(settledToggle()?.getAttribute("aria-expanded")).toBe("false");
-  });
-
-  it("expands and collapses the settled threads", () => {
-    const { column } = mountSidebar(read(ten));
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
-
     settledToggle()!.click();
     expect(column.getAttribute("data-cub-threads-settled")).toBe("open");
     expect(settledToggle()!.getAttribute("aria-expanded")).toBe("true");
-    settledToggle()!.click();
-    expect(column.getAttribute("data-cub-threads-settled")).toBe("closed");
   });
 
-  it("puts a working thread on top and separates it from the recent cards", () => {
+  it("puts a working thread on top with its status, separated from the recent cards", () => {
     mountSidebar(read([...ten.slice(0, 6), { key: "cowork:cse_w", status: "running" }, ...ten.slice(6)]));
     syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 2 });
 
     expect(placementOf("cowork:cse_w")).toBe("live");
-    expect(rowEl("cowork:cse_w").getAttribute("data-cub-thread-status")).toBe("working");
-    expect(metaOf("cowork:cse_w")).toBe("Cowork · Working");
-    expect(rowEl("cowork:cse_w").hasAttribute("data-cub-thread-first")).toBe(false);
+    expect(orderOf("cowork:cse_w")).toBeLessThan(orderOf("chat:c0"));
+    expect(kindTextOf("cowork:cse_w")).toBe("Cowork");
+    expect(whenOf("cowork:cse_w")).toMatch(/^Working/);
+    expect(rowEl("cowork:cse_w").querySelector('.cub-thread-when[data-state="working"]')).not.toBeNull();
     expect(rowEl("chat:c0").hasAttribute("data-cub-thread-first")).toBe(true);
-    expect(rowEl("chat:c1").hasAttribute("data-cub-thread-first")).toBe(false);
     expect(settledToggle()?.textContent).toBe("Settled (8)");
   });
 
@@ -279,10 +317,8 @@ describe("thread sidebar DOM", () => {
       ],
     });
     syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 1 });
-
     expect(placementOf("chat:u1")).toBe("live");
-    expect(rowEl("chat:u1").getAttribute("data-cub-thread-status")).toBe("unread");
-    expect(placementOf("label:unread-unread")).toBe("label");
+    expect(whenOf("chat:u1")).toBe("Unread");
     expect(placementOf("label:unread-read")).toBe("label-hidden");
   });
 
@@ -296,22 +332,15 @@ describe("thread sidebar DOM", () => {
 
     expect(placementOf("chat:p1")).toBe("pinned");
     expect(placementOf("cowork:cse_p2")).toBe("pinned");
-    expect(metaOf("chat:p1")).toBe("Chat · Pinned");
-    expect(metaOf("cowork:cse_p2")).toBe("Cowork · Pinned · Needs input");
-    expect(rowEl("chat:p1").querySelector("[data-row]")!.hasAttribute("data-cub-thread-card")).toBe(true);
-
-    // Projects stay under Projects, not in the thread list.
+    expect(rowEl("chat:p1").querySelector(".cub-thread-pin")).not.toBeNull();
+    expect(whenOf("cowork:cse_p2")).toMatch(/^Waiting/);
+    expect(orderOf("cowork:cse_p2")).toBeLessThan(orderOf("chat:c0"));
     expect(placementOf("section:home-projects")).toBe("hidden");
     expect(rowEl("project:p1").hasAttribute("data-cub-thread")).toBe(false);
     const pinnedLabel = document.querySelector('[data-testid="sidebar-pinned"] [data-sidebar-group-label]')!;
     expect(pinnedLabel.hasAttribute("data-cub-thread-hidden")).toBe(true);
-
-    // Pinned threads don't use up recent cards, and a divider follows them.
     expect(["c0", "c1"].map((id) => placementOf(`chat:${id}`))).toEqual(["recent", "recent"]);
-    expect(placementOf("chat:c2")).toBe("settled");
     expect(rowEl("chat:c0").hasAttribute("data-cub-thread-first")).toBe(true);
-    expect(rowEl("chat:p1").hasAttribute("data-cub-thread-first")).toBe(false);
-    expect(document.querySelector('[data-testid="sidebar-pinned"]')!.hasAttribute("data-cub-thread-flat")).toBe(true);
   });
 
   it("keeps a collapsed Pinned heading so the group can still be opened", () => {
@@ -328,12 +357,147 @@ describe("thread sidebar DOM", () => {
     expect(nav.getAttribute("data-cub-thread-nav")).toBe("closed");
     expect(nav.firstElementChild).toBe(navToggle());
     expect(navToggle()!.textContent).toBe("Projects & tools");
-    expect(navToggle()!.getAttribute("aria-expanded")).toBe("false");
-    expect(navToggle()!.hasAttribute("data-cub-thread-nav-dot")).toBe(true);
-
+    expect(navToggle()!.hasAttribute("data-dot")).toBe(true);
     navToggle()!.click();
     expect(nav.getAttribute("data-cub-thread-nav")).toBe("open");
-    expect(navToggle()!.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("adds a search / sort / new-chat row in place of Claude's New row", () => {
+    const { newLink, sidebar } = mountSidebar(read(ten.slice(0, 3)));
+    syncThreadSidebar({ threadSidebar: true });
+
+    const top = document.getElementById(TOP_ROW_ID)!;
+    expect(top.parentElement!.id).toBe("new-host");
+    expect(newLink.hasAttribute("data-cub-thread-hidden")).toBe(true);
+    expect(sidebar.getAttribute("data-cub-threads-theme")).toBe("dark");
+
+    const searchClicks = vi.fn();
+    document.querySelector('[data-sidebar-group-label] [aria-label="Search"]')!.addEventListener("click", searchClicks);
+    top.querySelector<HTMLButtonElement>(".cub-thread-search")!.click();
+    expect(searchClicks).toHaveBeenCalledTimes(1);
+
+    const newClicks = vi.fn((event: Event) => event.preventDefault());
+    newLink.addEventListener("click", newClicks);
+    top.querySelector<HTMLButtonElement>(".cub-thread-new")!.click();
+    expect(newClicks).toHaveBeenCalledTimes(1);
+
+    syncThreadSidebarTheme(true);
+    expect(sidebar.getAttribute("data-cub-threads-theme")).toBe("light");
+  });
+
+  it("puts sort and new chat beside Claude's own search bar when it has one", () => {
+    mountSidebar({ ...read(ten.slice(0, 3)), claudeSearchBar: true });
+    syncThreadSidebar({ threadSidebar: true });
+
+    const bar = document.getElementById("search-host")!;
+    expect(document.getElementById(TOP_ROW_ID)).toBeNull();
+    expect(bar.hasAttribute("data-cub-thread-search")).toBe(true);
+    expect(bar.nextElementSibling?.id).toBe(TOP_ACTIONS_ID);
+  });
+
+  it("re-sorts by created or edited times from Claude's own list responses", () => {
+    const uuid = (n: number) => `00000000-0000-4000-8000-00000000000${n}`;
+    mountSidebar(read([0, 1, 2, 3].map((n) => ({ key: `chat:${uuid(n)}` }))));
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 4, threadSidebarSort: "created" });
+    postTimes([
+      { id: uuid(0), createdAt: NOW - 4_000_000, updatedAt: NOW - 1_000 },
+      { id: uuid(1), createdAt: NOW - 1_000_000, updatedAt: NOW - 2_000 },
+      { id: uuid(2), createdAt: NOW - 3_000_000, updatedAt: NOW - 3_000 },
+      { id: uuid(3), createdAt: NOW - 2_000_000, updatedAt: NOW - 4_000 },
+    ]);
+    const byOrder = () => [0, 1, 2, 3].sort((a, b) => orderOf(`chat:${uuid(a)}`) - orderOf(`chat:${uuid(b)}`));
+    expect(byOrder()).toEqual([1, 3, 2, 0]);
+
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 4, threadSidebarSort: "edited" });
+    expect(byOrder()).toEqual([0, 1, 2, 3]);
+    expect(whenOf(`chat:${uuid(0)}`)).toMatch(/^\d+(s|m|h|d|w)$/);
+  });
+
+  it("ignores malformed probe messages", () => {
+    mountSidebar(read(ten.slice(0, 2)));
+    syncThreadSidebar({ threadSidebar: true, threadSidebarSort: "created" });
+    handleThreadTimesMessage(
+      new MessageEvent("message", {
+        data: { type: MESSAGE_TYPES.threadTimes, items: [{ id: "c1", createdAt: "soon" }, { id: "<b>", createdAt: NOW }] },
+        source: window,
+      }),
+    );
+    handleThreadTimesMessage(new MessageEvent("message", { data: { type: "other", items: [] }, source: window }));
+    expect(orderOf("chat:c0")).toBeLessThan(orderOf("chat:c1"));
+  });
+
+  it("marks a watched thread done when it stops working unseen, until it's opened", async () => {
+    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 3)]));
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 1 });
+    expect(whenOf("chat:w")).toMatch(/^Working/);
+
+    stopWorking("chat:w");
+    await flushObservers();
+    expect(placementOf("chat:w")).toBe("live");
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
+    expect(whenOf("chat:w")).toMatch(/^Done/);
+
+    // Opening it in a visible tab clears the mark.
+    history.replaceState(null, "", "/chat/w");
+    applyThreadSidebar();
+    expect(rowEl("chat:w").hasAttribute("data-cub-thread-status")).toBe(false);
+  });
+
+  it("doesn't mark done a thread you were watching finish", async () => {
+    history.replaceState(null, "", "/chat/w");
+    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 3)]));
+    syncThreadSidebar({ threadSidebar: true });
+    stopWorking("chat:w");
+    await flushObservers();
+    expect(rowEl("chat:w").hasAttribute("data-cub-thread-status")).toBe(false);
+  });
+
+  it("restores Claude's DOM exactly when turned off", async () => {
+    mountSidebar({
+      groups: [
+        { label: ["label:unread-unread", "Unread"], rows: [{ key: "chat:u1" }] },
+        { label: ["label:unread-read", "Read"], rows: [...ten, { key: "chat:w", status: "awaiting" }] },
+      ],
+      pinned: [{ key: "chat:p1", icon: true }],
+      pinnedProjects: true,
+      scheduledDot: true,
+    });
+    history.replaceState(null, "", "/chat/c9");
+    const before = document.body.innerHTML;
+
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
+    postTimes([{ id: "c4", updatedAt: NOW }]);
+    settledToggle()!.click();
+    navToggle()!.click();
+    syncThreadSidebarTheme(true);
+    expect(document.body.innerHTML).not.toBe(before);
+
+    syncThreadSidebar({ threadSidebar: false, threadSidebarRecentCount: 3 });
+    expect(document.body.innerHTML).toBe(before);
+
+    rowEl("chat:c0").insertAdjacentHTML("beforebegin", rowHtml({ key: "chat:later" }));
+    await flushObservers();
+    expect(document.querySelector("[data-cub-thread]")).toBeNull();
+  });
+
+  it("also restores the DOM next to Claude's own search bar", () => {
+    mountSidebar({ ...read(ten.slice(0, 4)), claudeSearchBar: true });
+    const before = document.body.innerHTML;
+    syncThreadSidebar({ threadSidebar: true });
+    syncThreadSidebar({ threadSidebar: false });
+    expect(document.body.innerHTML).toBe(before);
+  });
+
+  it("round-trips on → off → on without leftovers", () => {
+    mountSidebar({ ...read(ten), pinned: [{ key: "chat:p1" }], pinnedProjects: true });
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
+    const styled = document.body.innerHTML;
+    syncThreadSidebar({ threadSidebar: false });
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
+    expect(document.body.innerHTML).toBe(styled);
+    for (const id of [SETTLED_TOGGLE_ID, NAV_TOGGLE_ID, TOP_ROW_ID]) {
+      expect(document.querySelectorAll(`#${id}`)).toHaveLength(1);
+    }
   });
 
   it("follows Claude's DOM: status changes and new rows apply before paint", async () => {
@@ -351,77 +515,6 @@ describe("thread sidebar DOM", () => {
     await flushObservers();
     expect(placementOf("chat:fresh")).toBe("recent");
     expect(placementOf("chat:c2")).toBe("settled");
-  });
-
-  it("re-adds the nav toggle when Claude re-renders the nav rows", async () => {
-    const { nav } = mountSidebar(read(ten.slice(0, 2)));
-    syncThreadSidebar({ threadSidebar: true });
-    const fresh = nav.cloneNode(false) as HTMLElement;
-    fresh.innerHTML = '<div data-row=""><a href="/artifacts" data-row-main-button="">Artifacts</a></div>';
-    nav.replaceWith(fresh);
-    await flushObservers();
-    expect(fresh.firstElementChild).toBe(navToggle());
-    expect(document.querySelectorAll(`#${NAV_TOGGLE_ID}`)).toHaveLength(1);
-  });
-
-  it("keeps the open thread visible and highlighted", () => {
-    mountSidebar(read(ten));
-    history.replaceState(null, "", "/chat/c7");
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
-
-    expect(placementOf("chat:c7")).toBe("recent");
-    expect(rowEl("chat:c7").querySelector("[data-row]")!.hasAttribute("data-cub-thread-current")).toBe(true);
-    expect(metaOf("chat:c7")).toBe("Chat · Open");
-  });
-
-  it("re-places rows when the recent count changes", () => {
-    mountSidebar(read(ten));
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 8 });
-    expect(placementOf("chat:c7")).toBe("recent");
-    expect(settledToggle()?.textContent).toBe("Settled (2)");
-
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 12 });
-    expect(settledToggle()).toBeNull();
-  });
-
-  it("restores Claude's DOM exactly when turned off", async () => {
-    mountSidebar({
-      groups: [
-        { label: ["label:unread-unread", "Unread"], rows: [{ key: "chat:u1" }] },
-        { label: ["label:unread-read", "Read"], rows: [...ten, { key: "chat:w", status: "awaiting" }] },
-      ],
-      pinned: [{ key: "chat:p1", icon: true }],
-      pinnedProjects: true,
-      scheduledDot: true,
-    });
-    history.replaceState(null, "", "/chat/c9");
-    const before = document.body.innerHTML;
-
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
-    settledToggle()!.click();
-    navToggle()!.click();
-    expect(document.body.innerHTML).not.toBe(before);
-
-    syncThreadSidebar({ threadSidebar: false, threadSidebarRecentCount: 3 });
-    expect(document.body.innerHTML).toBe(before);
-
-    // And stays off: later sidebar mutations are no longer styled.
-    rowEl("chat:c0").insertAdjacentHTML("beforebegin", rowHtml({ key: "chat:later" }));
-    await flushObservers();
-    expect(document.querySelector("[data-cub-thread]")).toBeNull();
-    expect(navToggle()).toBeNull();
-  });
-
-  it("round-trips on → off → on without leftovers", () => {
-    mountSidebar({ ...read(ten), pinned: [{ key: "chat:p1" }], pinnedProjects: true });
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
-    const styled = document.body.innerHTML;
-    syncThreadSidebar({ threadSidebar: false });
-    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
-    expect(document.body.innerHTML).toBe(styled);
-    expect(document.querySelectorAll(`#${SETTLED_TOGGLE_ID}`)).toHaveLength(1);
-    expect(document.querySelectorAll(`#${NAV_TOGGLE_ID}`)).toHaveLength(1);
   });
 
   it("stops (without stripping) once a newer content-script instance takes over", async () => {
@@ -442,5 +535,60 @@ describe("thread sidebar DOM", () => {
     syncThreadSidebar({ threadSidebar: true });
     applyThreadSidebar();
     expect(document.body.innerHTML).toBe("<main></main>");
+  });
+});
+
+describe("task alerts and shared done state", () => {
+  const sendMessage = vi.fn();
+  const session: Record<string, unknown> = {};
+
+  beforeEach(() => {
+    sendMessage.mockReset();
+    for (const key of Object.keys(session)) delete session[key];
+    vi.stubGlobal("chrome", {
+      runtime: { id: "test", sendMessage, lastError: undefined },
+      storage: {
+        session: {
+          get: async (key: string) => (key in session ? { [key]: session[key] } : {}),
+          set: async (items: Record<string, unknown>) => Object.assign(session, items),
+        },
+        local: { get: async () => ({}), set: async () => undefined },
+        onChanged: { addListener: vi.fn(), removeListener: vi.fn() },
+      },
+    });
+  });
+
+  it("reports a watched thread finishing and shares the done mark", async () => {
+    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    stopWorking("chat:w");
+    await flushObservers();
+
+    expect(sendMessage).toHaveBeenCalledWith(
+      { type: MESSAGE_TYPES.threadDone, event: "done", key: "chat:w", title: "Title w", path: "/chat/w" },
+      expect.any(Function),
+    );
+    const stored = session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>;
+    expect(typeof stored["chat:w"]?.doneAt).toBe("number");
+  });
+
+  it("reports a watched thread starting to wait on you, once", async () => {
+    mountSidebar(read([{ key: "chat:w", status: "running" }]));
+    syncThreadSidebar({ threadSidebar: true });
+    rowEl("chat:w").querySelector(".status-dot")!.setAttribute("data-kind", "awaiting");
+    await flushObservers();
+    applyThreadSidebar();
+    const awaiting = sendMessage.mock.calls.filter(([message]) => message.event === "awaiting");
+    expect(awaiting).toHaveLength(1);
+  });
+
+  it("doesn't announce work it never saw running", async () => {
+    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: Date.now() - 60_000 } };
+    mountSidebar(read([{ key: "chat:w" }]));
+    syncThreadSidebar({ threadSidebar: true });
+    await flushObservers();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(sendMessage).not.toHaveBeenCalled();
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
   });
 });

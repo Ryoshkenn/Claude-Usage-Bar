@@ -27,6 +27,8 @@ const settings: Settings = {
   resetBannerScope: "claude",
   threadSidebar: false,
   threadSidebarRecentCount: 5,
+  threadSidebarSort: "edited",
+  threadDoneAlerts: "claude",
 };
 
 const hoverContext = () => {

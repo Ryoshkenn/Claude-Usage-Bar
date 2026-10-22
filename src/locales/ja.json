@@ -402,13 +402,10 @@
     "message": "作業中"
   },
   "threadStatusAwaiting": {
-    "message": "入力待ち"
+    "message": "待機中"
   },
   "threadStatusError": {
     "message": "エラー"
-  },
-  "threadStatusReady": {
-    "message": "返信あり"
   },
   "threadStatusUnread": {
     "message": "未読"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "ピン留め"
+  },
+  "threadStatusDone": {
+    "message": "完了"
+  },
+  "threadWorkingFor": {
+    "message": "作業中 $1"
+  },
+  "threadWaitingFor": {
+    "message": "待機中 $1"
+  },
+  "threadDoneAgo": {
+    "message": "完了 $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1秒"
+  },
+  "threadAgoMinutes": {
+    "message": "$1分"
+  },
+  "threadAgoHours": {
+    "message": "$1時間"
+  },
+  "threadAgoDays": {
+    "message": "$1日"
+  },
+  "threadAgoWeeks": {
+    "message": "$1週"
+  },
+  "threadSearch": {
+    "message": "検索"
+  },
+  "threadNewChat": {
+    "message": "新しいチャット"
+  },
+  "threadSort": {
+    "message": "スレッドを並べ替え"
+  },
+  "threadSortEdited": {
+    "message": "編集が新しい順"
+  },
+  "threadSortCreated": {
+    "message": "作成が新しい順"
+  },
+  "setThreadSort": {
+    "message": "並び順"
+  },
+  "setThreadSortDesc": {
+    "message": "「編集が新しい順」では、変更や Claude の返信があったスレッドが上に移動します。"
+  },
+  "setThreadAlerts": {
+    "message": "タスク通知"
+  },
+  "setThreadAlertsDesc": {
+    "message": "別のサイトを見ている間にスレッドが完了したり入力が必要になったりするとバナーを表示します。すべてのサイトには Chrome の許可が必要です。"
+  },
+  "threadBannerDone": {
+    "message": "Claude が完了しました"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude が入力を待っています"
+  },
+  "threadBannerOpen": {
+    "message": "開く"
+  },
+  "threadBannerDismiss": {
+    "message": "閉じる"
+  },
+  "grantThreadsTitle": {
+    "message": "すべてのサイトでタスク通知を表示"
+  },
+  "grantThreadsDenied": {
+    "message": "許可されませんでした。タスク通知は claude.ai のみに表示されます。"
   }
 }

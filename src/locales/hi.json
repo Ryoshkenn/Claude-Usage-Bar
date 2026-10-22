@@ -402,13 +402,10 @@
     "message": "चल रहा है"
   },
   "threadStatusAwaiting": {
-    "message": "इनपुट चाहिए"
+    "message": "प्रतीक्षा में"
   },
   "threadStatusError": {
     "message": "त्रुटि"
-  },
-  "threadStatusReady": {
-    "message": "जवाब तैयार"
   },
   "threadStatusUnread": {
     "message": "अपठित"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "पिन किया गया"
+  },
+  "threadStatusDone": {
+    "message": "पूरा"
+  },
+  "threadWorkingFor": {
+    "message": "चल रहा है $1"
+  },
+  "threadWaitingFor": {
+    "message": "प्रतीक्षा में $1"
+  },
+  "threadDoneAgo": {
+    "message": "पूरा $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1w"
+  },
+  "threadSearch": {
+    "message": "खोजें"
+  },
+  "threadNewChat": {
+    "message": "नई चैट"
+  },
+  "threadSort": {
+    "message": "थ्रेड क्रमबद्ध करें"
+  },
+  "threadSortEdited": {
+    "message": "हाल में संपादित"
+  },
+  "threadSortCreated": {
+    "message": "हाल में बनाए गए"
+  },
+  "setThreadSort": {
+    "message": "क्रम"
+  },
+  "setThreadSortDesc": {
+    "message": "“हाल में संपादित” में बदलाव होने या Claude के जवाब देने पर थ्रेड ऊपर आ जाता है।"
+  },
+  "setThreadAlerts": {
+    "message": "टास्क अलर्ट"
+  },
+  "setThreadAlertsDesc": {
+    "message": "जब आप किसी और साइट पर हों और कोई थ्रेड पूरा हो या आपकी ज़रूरत हो, तो बैनर दिखाता है। किसी भी साइट के लिए Chrome की अनुमति चाहिए।"
+  },
+  "threadBannerDone": {
+    "message": "Claude ने काम पूरा किया"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude को आपके इनपुट की ज़रूरत है"
+  },
+  "threadBannerOpen": {
+    "message": "खोलें"
+  },
+  "threadBannerDismiss": {
+    "message": "हटाएँ"
+  },
+  "grantThreadsTitle": {
+    "message": "किसी भी साइट पर टास्क अलर्ट दिखाएँ"
+  },
+  "grantThreadsDenied": {
+    "message": "अनुमति नहीं मिली। टास्क अलर्ट सिर्फ़ claude.ai पर रहेंगे।"
   }
 }

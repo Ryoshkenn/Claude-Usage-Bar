@@ -402,13 +402,10 @@
     "message": "작업 중"
   },
   "threadStatusAwaiting": {
-    "message": "입력 필요"
+    "message": "대기 중"
   },
   "threadStatusError": {
     "message": "오류"
-  },
-  "threadStatusReady": {
-    "message": "응답 도착"
   },
   "threadStatusUnread": {
     "message": "읽지 않음"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "고정됨"
+  },
+  "threadStatusDone": {
+    "message": "완료"
+  },
+  "threadWorkingFor": {
+    "message": "작업 중 $1"
+  },
+  "threadWaitingFor": {
+    "message": "대기 중 $1"
+  },
+  "threadDoneAgo": {
+    "message": "완료 $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1초"
+  },
+  "threadAgoMinutes": {
+    "message": "$1분"
+  },
+  "threadAgoHours": {
+    "message": "$1시간"
+  },
+  "threadAgoDays": {
+    "message": "$1일"
+  },
+  "threadAgoWeeks": {
+    "message": "$1주"
+  },
+  "threadSearch": {
+    "message": "검색"
+  },
+  "threadNewChat": {
+    "message": "새 채팅"
+  },
+  "threadSort": {
+    "message": "스레드 정렬"
+  },
+  "threadSortEdited": {
+    "message": "최근 수정순"
+  },
+  "threadSortCreated": {
+    "message": "최근 생성순"
+  },
+  "setThreadSort": {
+    "message": "정렬"
+  },
+  "setThreadSortDesc": {
+    "message": "‘최근 수정순’에서는 변경되거나 Claude가 답한 스레드가 위로 올라갑니다."
+  },
+  "setThreadAlerts": {
+    "message": "작업 알림"
+  },
+  "setThreadAlertsDesc": {
+    "message": "다른 사이트에 있는 동안 스레드가 끝나거나 입력이 필요하면 배너를 표시합니다. 모든 사이트에는 Chrome 권한이 필요합니다."
+  },
+  "threadBannerDone": {
+    "message": "Claude가 완료했습니다"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude가 입력을 기다리고 있습니다"
+  },
+  "threadBannerOpen": {
+    "message": "열기"
+  },
+  "threadBannerDismiss": {
+    "message": "닫기"
+  },
+  "grantThreadsTitle": {
+    "message": "모든 사이트에서 작업 알림 표시"
+  },
+  "grantThreadsDenied": {
+    "message": "권한이 허용되지 않았습니다. 작업 알림은 claude.ai에서만 표시됩니다."
   }
 }

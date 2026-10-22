@@ -402,13 +402,10 @@
     "message": "进行中"
   },
   "threadStatusAwaiting": {
-    "message": "需要输入"
+    "message": "等待中"
   },
   "threadStatusError": {
     "message": "错误"
-  },
-  "threadStatusReady": {
-    "message": "有新回复"
   },
   "threadStatusUnread": {
     "message": "未读"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "已置顶"
+  },
+  "threadStatusDone": {
+    "message": "已完成"
+  },
+  "threadWorkingFor": {
+    "message": "进行中 $1"
+  },
+  "threadWaitingFor": {
+    "message": "等待中 $1"
+  },
+  "threadDoneAgo": {
+    "message": "已完成 $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1秒"
+  },
+  "threadAgoMinutes": {
+    "message": "$1分钟"
+  },
+  "threadAgoHours": {
+    "message": "$1小时"
+  },
+  "threadAgoDays": {
+    "message": "$1天"
+  },
+  "threadAgoWeeks": {
+    "message": "$1周"
+  },
+  "threadSearch": {
+    "message": "搜索"
+  },
+  "threadNewChat": {
+    "message": "新对话"
+  },
+  "threadSort": {
+    "message": "排序对话"
+  },
+  "threadSortEdited": {
+    "message": "最近编辑"
+  },
+  "threadSortCreated": {
+    "message": "最近创建"
+  },
+  "setThreadSort": {
+    "message": "顺序"
+  },
+  "setThreadSortDesc": {
+    "message": "选择“最近编辑”时，有变化或 Claude 回复的对话会移到上方。"
+  },
+  "setThreadAlerts": {
+    "message": "任务提醒"
+  },
+  "setThreadAlertsDesc": {
+    "message": "在其他网站时，对话完成或需要你处理会显示横幅。任意网站需要 Chrome 权限。"
+  },
+  "threadBannerDone": {
+    "message": "Claude 已完成"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude 需要你的输入"
+  },
+  "threadBannerOpen": {
+    "message": "打开"
+  },
+  "threadBannerDismiss": {
+    "message": "关闭"
+  },
+  "grantThreadsTitle": {
+    "message": "在任意网站显示任务提醒"
+  },
+  "grantThreadsDenied": {
+    "message": "未授予权限。任务提醒仅在 claude.ai 显示。"
   }
 }

@@ -37,7 +37,7 @@ import "./pageOverrides.css";
 import { syncMessageRailTheme } from "./messageRail";
 import { initSettingsPage, openUsageBarSettings, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
-import { initThreadSidebar, syncThreadSidebar } from "./threadSidebar";
+import { initThreadSidebar, syncThreadSidebar, syncThreadSidebarTheme } from "./threadSidebar";
 import { buildChatUsage, deriveDailyIncrement, rollDailyUsageForward } from "./usageEstimator";
 import { messageToSnapshot } from "./usageProbeBridge";
 
@@ -199,6 +199,7 @@ const syncTheme = () => {
   host?.classList.toggle("cub-theme-light", light);
   cacheTimerHost?.classList.toggle("cub-theme-light", light);
   syncMessageRailTheme(light);
+  syncThreadSidebarTheme(light);
   if (theme !== lastSyncedTheme && extensionAlive()) {
     lastSyncedTheme = theme;
     void chrome.storage.local.set({ [STORAGE_KEYS.detectedTheme]: light ? "light" : "dark" });

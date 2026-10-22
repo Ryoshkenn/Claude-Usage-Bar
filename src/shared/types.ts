@@ -59,7 +59,14 @@ export interface Settings {
   threadSidebar: boolean;
   // How many recent threads keep a card besides the live (working) ones.
   threadSidebarRecentCount: number;
+  // Thread order: by last activity (a reply moves a thread up) or by creation.
+  threadSidebarSort: ThreadSort;
+  // Where the "task finished" banner shows. Same scopes as resetBannerScope;
+  // "everywhere" needs the same optional all-sites permission.
+  threadDoneAlerts: ResetBannerScope;
 }
+
+export type ThreadSort = "edited" | "created";
 
 export type ResetBannerScope = "off" | "claude" | "everywhere";
 

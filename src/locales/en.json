@@ -402,13 +402,10 @@
     "message": "Working"
   },
   "threadStatusAwaiting": {
-    "message": "Needs input"
+    "message": "Waiting"
   },
   "threadStatusError": {
     "message": "Error"
-  },
-  "threadStatusReady": {
-    "message": "Ready"
   },
   "threadStatusUnread": {
     "message": "Unread"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "Pinned"
+  },
+  "threadStatusDone": {
+    "message": "Done"
+  },
+  "threadWorkingFor": {
+    "message": "Working $1"
+  },
+  "threadWaitingFor": {
+    "message": "Waiting $1"
+  },
+  "threadDoneAgo": {
+    "message": "Done $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1w"
+  },
+  "threadSearch": {
+    "message": "Search"
+  },
+  "threadNewChat": {
+    "message": "New chat"
+  },
+  "threadSort": {
+    "message": "Sort threads"
+  },
+  "threadSortEdited": {
+    "message": "Newest edited"
+  },
+  "threadSortCreated": {
+    "message": "Newest created"
+  },
+  "setThreadSort": {
+    "message": "Order"
+  },
+  "setThreadSortDesc": {
+    "message": "Newest edited moves a thread up when it changes or Claude replies."
+  },
+  "setThreadAlerts": {
+    "message": "Task alerts"
+  },
+  "setThreadAlertsDesc": {
+    "message": "Banner when a thread finishes or needs you while you're elsewhere. Any site needs Chrome permission."
+  },
+  "threadBannerDone": {
+    "message": "Claude finished"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude needs your input"
+  },
+  "threadBannerOpen": {
+    "message": "Open"
+  },
+  "threadBannerDismiss": {
+    "message": "Dismiss"
+  },
+  "grantThreadsTitle": {
+    "message": "Show task alerts on any site"
+  },
+  "grantThreadsDenied": {
+    "message": "Permission was not granted. Task alerts stay on claude.ai only."
   }
 }

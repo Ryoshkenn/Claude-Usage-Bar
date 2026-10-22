@@ -13,6 +13,9 @@ import { setLanguage, t } from "../shared/i18n";
 import "./grant.css";
 
 const ALL_SITES = { origins: ["*://*/*"] };
+// Opened for task alerts (thread view) or reset alerts; the grant is the same,
+// only the setting it unlocks differs.
+const FOR_THREADS = new URLSearchParams(location.search).get("purpose") === "threads";
 
 const Grant = () => {
   const [denied, setDenied] = useState(false);
@@ -31,7 +34,7 @@ const Grant = () => {
         setDenied(true);
         return;
       }
-      await updateSettings({ resetBannerScope: "everywhere" });
+      await updateSettings(FOR_THREADS ? { threadDoneAlerts: "everywhere" } : { resetBannerScope: "everywhere" });
       chrome.runtime.sendMessage({ type: MESSAGE_TYPES.syncResetBanner }, () => {
         void chrome.runtime.lastError;
       });
@@ -43,14 +46,24 @@ const Grant = () => {
 
   return (
     <main className="cub-grant">
-      <h1>{t("grantTitle", "Show reset alerts on any site")}</h1>
+      <h1>
+        {FOR_THREADS
+          ? t("grantThreadsTitle", "Show task alerts on any site")
+          : t("grantTitle", "Show reset alerts on any site")}
+      </h1>
       <p>
         {t(
           "grantBody",
           "Chrome needs your permission before the extension can draw a banner outside claude.ai. It is only used to show the banner — no page content is ever read or sent anywhere.",
         )}
       </p>
-      {denied && <p className="cub-grant-denied">{t("grantDenied", "Permission was not granted. Reset alerts stay on claude.ai only.")}</p>}
+      {denied && (
+        <p className="cub-grant-denied">
+          {FOR_THREADS
+            ? t("grantThreadsDenied", "Permission was not granted. Task alerts stay on claude.ai only.")
+            : t("grantDenied", "Permission was not granted. Reset alerts stay on claude.ai only.")}
+        </p>
+      )}
       <div className="cub-grant-actions">
         <button type="button" className="cub-grant-cancel" onClick={() => window.close()}>
           {t("grantCancel", "Cancel")}

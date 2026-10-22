@@ -87,20 +87,36 @@ types predate it. Verify it survives into `dist/manifest.json` after touching th
 
 ### Thread sidebar (`src/content/threadSidebar.ts`)
 Optional T3-style sidebar (`settings.threadSidebar`, off by default, under **Sidebar** in the
-settings panel): pinned, live and the N most recent threads become cards, the rest fold under
-"Settled (N)", pinned projects are hidden (they stay under Projects), and Claude's nav rows fold
-into one "Projects & tools" row. Claude's sidebar is React we don't own, so the module never moves,
-clones or re-parents its nodes — it only sets `data-cub-thread*` attributes, and `threadSidebar.css`
-sections the rows with flex `order` inside the sidebar's scroll column (wrappers in between are
-flattened with `display: contents`). The only injected nodes are `#cub-thread-settled-toggle` and
-`#cub-thread-nav-toggle`. Turning it off strips everything, and a test asserts the DOM is
-byte-identical afterwards — keep it that way. Styles use Claude's CDS tokens and `currentColor`, so
-they theme themselves without a `.cub-theme-light` copy.
+settings panel): pinned, live (working / waiting / done / unread) and the N most recent threads
+become cards, the rest fold under "Settled (N)", pinned projects are hidden (they stay under
+Projects), Claude's nav rows fold into one "Projects & tools" row, and a Search / sort / new-chat row
+sits at the top (beside Claude's own search bar when the layout has one; Search and New always drive
+Claude's own controls). Claude's sidebar is React we don't own, so the module never moves, clones or
+re-parents its nodes — it sets `data-cub-thread*` attributes and an inline `order` per row, and
+`threadSidebar.css` sections the rows inside the sidebar's scroll column (wrappers in between are
+flattened with `display: contents`). Its own nodes are the two toggles, the top row / actions and a
+`.cub-thread-meta` line inside each card. Turning it off strips everything, and tests assert the DOM
+is byte-identical afterwards — keep it that way. Text uses Claude's CDS tokens; the only per-theme
+values are the surface tints keyed off `data-cub-threads-theme` (set from `syncTheme`).
 
 Live state is read from Claude's own markers: `.status-dot[data-kind=running|clay|awaiting|error|ready|unread]`,
 `[data-unread-mark]`, and rows under the `label:unread-unread` group. Don't put a `::before` on
 `[data-row-main-button]`: Claude uses it for the row's hit area. Claude Code sessions are only in the
 DOM while the sidebar is in Code mode; nothing merges them into the chat list.
+
+"Done" is ours: a row this tab saw working that stops while you weren't looking at it. The marks
+live in `chrome.storage.session` (`threadActivity`, row keys + timestamps only, shared by every
+claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). The transition
+is sent to the worker (`MESSAGE_TYPES.threadDone`), which banners the active tab of each window per
+`settings.threadDoneAlerts` (`src/background/threadNotifier.ts`) — one-shot, deduped across tabs,
+never stored. The banner carries the thread title only to label itself, inside a closed shadow root
+in the isolated world; "Any site" reuses the reset alerts' optional all-sites grant
+(`grant.html?purpose=threads`).
+
+Sorting ("newest edited" / "newest created") uses timestamps the page probe lifts from Claude's own
+**list** responses (`MESSAGE_TYPES.threadTimes`): ids and created/updated times only — never names
+or titles — and single-thread endpoints are skipped because they carry the transcript. The shipped
+probe is `public/pageProbe.js`; `src/pageProbe/pageProbe.ts` mirrors it, so change both.
 
 Shared logic in `src/shared/`: `storage.ts` (`DEFAULT_SETTINGS`, typed `chrome.storage.local`
 wrappers), `types.ts` (all interfaces — `Settings`, `RealUsageSnapshot`, etc.), `claudeUsageApi.ts`

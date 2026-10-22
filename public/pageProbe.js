@@ -241,6 +241,79 @@
     }
   };
 
+  // Thread times for the thread sidebar: the ids in the lists Claude's sidebar
+  // loads, with their created / updated timestamps, so rows can be sorted and
+  // aged. Only ids and numbers leave this script — never names, titles or any
+  // other field — and only list endpoints are read: a single thread's response
+  // carries its whole transcript.
+  const threadTimesType = "CLAUDE_USAGE_BAR_THREAD_TIMES";
+  const threadIdPattern =
+    /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[a-z]{2,12}_[A-Za-z0-9]{8,64})$/;
+  const threadListSegmentPattern = /(conversation|session|recent|sidebar|thread|task|trigger|routine)/i;
+  const skipThreadKeyPattern = /(message|content|text|prompt|attachment|file|block|summary|name|title)/i;
+  const maxThreadTimes = 500;
+
+  const toThreadTime = (value) => {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      if (value > 1e12) return value;
+      return value > 1e9 ? value * 1000 : undefined;
+    }
+    if (typeof value === "string" && value.length <= 40) {
+      const parsed = Date.parse(value);
+      return Number.isFinite(parsed) ? parsed : undefined;
+    }
+    return undefined;
+  };
+
+  const collectThreadTimes = (value, out, depth) => {
+    if (!value || typeof value !== "object" || depth > 3 || out.length >= maxThreadTimes) {
+      return;
+    }
+    if (Array.isArray(value)) {
+      for (const item of value.slice(0, maxThreadTimes)) {
+        collectThreadTimes(item, out, depth + 1);
+      }
+      return;
+    }
+    const id = typeof value.uuid === "string" ? value.uuid : typeof value.id === "string" ? value.id : undefined;
+    if (id && threadIdPattern.test(id)) {
+      const createdAt = toThreadTime(value.created_at ?? value.createdAt);
+      const updatedAt = toThreadTime(
+        value.updated_at ?? value.updatedAt ?? value.last_activity_at ?? value.lastActivityAt ?? value.last_message_at,
+      );
+      if (createdAt !== undefined || updatedAt !== undefined) {
+        out.push({ id, createdAt, updatedAt });
+      }
+    }
+    for (const [key, nested] of Object.entries(value)) {
+      if (nested && typeof nested === "object" && !skipThreadKeyPattern.test(key)) {
+        collectThreadTimes(nested, out, depth + 1);
+      }
+    }
+  };
+
+  const inspectThreadTimes = (value) => {
+    const items = [];
+    collectThreadTimes(value, items, 0);
+    if (items.length > 0) {
+      window.postMessage({ type: threadTimesType, items }, window.location.origin);
+    }
+  };
+
+  const isThreadListEndpoint = (input) => {
+    try {
+      const url = typeof input === "string" || input instanceof URL ? new URL(input, location.href) : new URL(input.url);
+      if (!/^\/(api|v1)\//.test(url.pathname)) {
+        return false;
+      }
+      const segments = url.pathname.split("/").filter(Boolean);
+      const last = segments[segments.length - 1] ?? "";
+      return threadListSegmentPattern.test(last) && !threadIdPattern.test(last);
+    } catch {
+      return false;
+    }
+  };
+
   const originalFetch = window.fetch.bind(window);
   window.fetch = async (...args) => {
     const response = await originalFetch(...args);
@@ -249,6 +322,12 @@
         .clone()
         .json()
         .then(inspectJson)
+        .catch(() => undefined);
+    } else if (sameOrigin(args[0]) && isThreadListEndpoint(args[0])) {
+      response
+        .clone()
+        .json()
+        .then(inspectThreadTimes)
         .catch(() => undefined);
     }
     return response;
@@ -263,7 +342,8 @@
 
     send(body) {
       this.addEventListener("load", () => {
-        if (!sameOrigin(this.requestUrl) || !isUsageEndpoint(this.requestUrl)) {
+        const usage = isUsageEndpoint(this.requestUrl);
+        if (!sameOrigin(this.requestUrl) || (!usage && !isThreadListEndpoint(this.requestUrl))) {
           return;
         }
         const contentType = this.getResponseHeader("content-type") ?? "";
@@ -271,7 +351,12 @@
           return;
         }
         try {
-          inspectJson(JSON.parse(this.responseText));
+          const parsed = JSON.parse(this.responseText);
+          if (usage) {
+            inspectJson(parsed);
+          } else {
+            inspectThreadTimes(parsed);
+          }
         } catch {
           // Ignore non-JSON responses.
         }

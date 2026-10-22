@@ -91,4 +91,65 @@ describe("pageProbe", () => {
       },
     });
   });
+  const captureProbe = (payload: unknown) => {
+    const posted: unknown[] = [];
+    const originalPostMessage = window.postMessage.bind(window);
+    vi.spyOn(window, "postMessage").mockImplementation((message: unknown) => {
+      posted.push(message);
+      originalPostMessage(message, window.location.origin);
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({ clone: () => ({ json: async () => payload }) })),
+    );
+    window.eval(pageProbeSource);
+    return posted;
+  };
+
+  it("passes on only ids and timestamps from Claude's thread lists", async () => {
+    const posted = captureProbe({
+      data: [
+        {
+          uuid: "3224989d-2473-4ebb-a864-e6533bee0a17",
+          name: "Secret plans",
+          summary: "Private summary",
+          created_at: "2026-10-20T10:00:00.000Z",
+          updated_at: "2026-10-21T09:30:00.000Z",
+          project: { uuid: "01a12ec8-6eea-7723-b6af-612b60c2f520", name: "Project name" },
+        },
+        { id: "cse_01JBfMdEAB5BFkL9M9H7vjjY", title: "Cowork title", created_at: 1_792_600_000 },
+        { uuid: "not-an-id", created_at: "2026-10-20T10:00:00.000Z" },
+      ],
+    });
+    await window.fetch("/api/organizations/123e4567-e89b-12d3-a456-426614174000/chat_conversations_v2?limit=30");
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(posted).toContainEqual({
+      type: MESSAGE_TYPES.threadTimes,
+      items: [
+        {
+          id: "3224989d-2473-4ebb-a864-e6533bee0a17",
+          createdAt: new Date("2026-10-20T10:00:00.000Z").getTime(),
+          updatedAt: new Date("2026-10-21T09:30:00.000Z").getTime(),
+        },
+        { id: "cse_01JBfMdEAB5BFkL9M9H7vjjY", createdAt: 1_792_600_000_000, updatedAt: undefined },
+      ],
+    });
+    expect(JSON.stringify(posted)).not.toMatch(/Secret|Private|Project name|Cowork title/);
+  });
+
+  it("never reads a single thread's response, which carries its transcript", async () => {
+    const posted = captureProbe({
+      uuid: "3224989d-2473-4ebb-a864-e6533bee0a17",
+      created_at: "2026-10-20T10:00:00.000Z",
+      chat_messages: [{ uuid: "4224989d-2473-4ebb-a864-e6533bee0a17", created_at: "2026-10-20T10:00:00.000Z" }],
+    });
+    await window.fetch(
+      "/api/organizations/123e4567-e89b-12d3-a456-426614174000/chat_conversations/3224989d-2473-4ebb-a864-e6533bee0a17",
+    );
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(posted.filter((message) => (message as { type?: string }).type === MESSAGE_TYPES.threadTimes)).toEqual([]);
+  });
 });

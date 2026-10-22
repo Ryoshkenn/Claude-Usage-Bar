@@ -402,13 +402,10 @@
     "message": "Läuft"
   },
   "threadStatusAwaiting": {
-    "message": "Eingabe nötig"
+    "message": "Wartet"
   },
   "threadStatusError": {
     "message": "Fehler"
-  },
-  "threadStatusReady": {
-    "message": "Fertig"
   },
   "threadStatusUnread": {
     "message": "Ungelesen"
@@ -439,5 +436,77 @@
   },
   "threadStatusPinned": {
     "message": "Angeheftet"
+  },
+  "threadStatusDone": {
+    "message": "Fertig"
+  },
+  "threadWorkingFor": {
+    "message": "Läuft $1"
+  },
+  "threadWaitingFor": {
+    "message": "Wartet $1"
+  },
+  "threadDoneAgo": {
+    "message": "Fertig $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1T"
+  },
+  "threadAgoWeeks": {
+    "message": "$1W"
+  },
+  "threadSearch": {
+    "message": "Suchen"
+  },
+  "threadNewChat": {
+    "message": "Neuer Chat"
+  },
+  "threadSort": {
+    "message": "Unterhaltungen sortieren"
+  },
+  "threadSortEdited": {
+    "message": "Zuletzt bearbeitet"
+  },
+  "threadSortCreated": {
+    "message": "Zuletzt erstellt"
+  },
+  "setThreadSort": {
+    "message": "Reihenfolge"
+  },
+  "setThreadSortDesc": {
+    "message": "Bei „Zuletzt bearbeitet“ rückt eine Unterhaltung nach oben, wenn sie sich ändert oder Claude antwortet."
+  },
+  "setThreadAlerts": {
+    "message": "Aufgaben-Hinweise"
+  },
+  "setThreadAlertsDesc": {
+    "message": "Banner, wenn eine Unterhaltung fertig ist oder dich braucht, während du woanders bist. Alle Websites erfordern eine Chrome-Berechtigung."
+  },
+  "threadBannerDone": {
+    "message": "Claude ist fertig"
+  },
+  "threadBannerAwaiting": {
+    "message": "Claude braucht deine Eingabe"
+  },
+  "threadBannerOpen": {
+    "message": "Öffnen"
+  },
+  "threadBannerDismiss": {
+    "message": "Schließen"
+  },
+  "grantThreadsTitle": {
+    "message": "Aufgaben-Hinweise auf allen Websites anzeigen"
+  },
+  "grantThreadsDenied": {
+    "message": "Berechtigung nicht erteilt. Aufgaben-Hinweise bleiben auf claude.ai."
   }
 }
