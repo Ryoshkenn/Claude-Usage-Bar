@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Noter sur le Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Conversations"
+  },
+  "threadSettled": {
+    "message": "Terminées ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Projet"
+  },
+  "threadKindOther": {
+    "message": "Conversation"
+  },
+  "threadStatusWorking": {
+    "message": "En cours"
+  },
+  "threadStatusAwaiting": {
+    "message": "Réponse requise"
+  },
+  "threadStatusError": {
+    "message": "Erreur"
+  },
+  "threadStatusReady": {
+    "message": "Prête"
+  },
+  "threadStatusUnread": {
+    "message": "Non lue"
+  },
+  "threadStatusOpen": {
+    "message": "Ouverte"
+  },
+  "setSecSidebar": {
+    "message": "Barre latérale"
+  },
+  "setThreadSidebar": {
+    "message": "Vue des conversations"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Les conversations épinglées, en cours et récentes deviennent des cartes ; le reste est replié."
+  },
+  "setThreadRecent": {
+    "message": "Cartes récentes"
+  },
+  "setThreadRecentDesc": {
+    "message": "En plus de celles en cours."
+  },
+  "setThreadRecentCount": {
+    "message": "$1 conversations"
+  },
+  "threadNavLabel": {
+    "message": "Projets et outils"
+  },
+  "threadStatusPinned": {
+    "message": "Épinglée"
   }
 }

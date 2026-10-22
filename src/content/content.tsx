@@ -37,6 +37,7 @@ import "./pageOverrides.css";
 import { syncMessageRailTheme } from "./messageRail";
 import { initSettingsPage, openUsageBarSettings, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
+import { initThreadSidebar, syncThreadSidebar } from "./threadSidebar";
 import { buildChatUsage, deriveDailyIncrement, rollDailyUsageForward } from "./usageEstimator";
 import { messageToSnapshot } from "./usageProbeBridge";
 
@@ -697,6 +698,8 @@ const render = () => {
   if (!storageState || !isActiveInstance()) {
     return;
   }
+  // Independent of showOverlay: the sidebar view is its own option.
+  syncThreadSidebar(storageState.settings);
   renderCacheTimer();
   if (!storageState.settings.showOverlay) {
     removeUsageBarHost();
@@ -1081,6 +1084,7 @@ const init = async () => {
   storageState = { ...(await getStorage()), chatUsage: defaultChatUsage() };
   setLanguage(storageState.settings.language);
   initSettingsPage();
+  initThreadSidebar(isActiveInstance);
   if (typeof ResizeObserver !== "undefined") {
     disclaimerResizeObserver = new ResizeObserver(repositionHost);
   }

@@ -85,6 +85,23 @@ Verify `dist/src/grant/grant.html` still emits after touching the build config.
 ⚠️ `optional_host_permissions` is spread in with a cast in `manifest.ts` — `@crxjs/vite-plugin`'s
 types predate it. Verify it survives into `dist/manifest.json` after touching that file.
 
+### Thread sidebar (`src/content/threadSidebar.ts`)
+Optional T3-style sidebar (`settings.threadSidebar`, off by default, under **Sidebar** in the
+settings panel): pinned, live and the N most recent threads become cards, the rest fold under
+"Settled (N)", pinned projects are hidden (they stay under Projects), and Claude's nav rows fold
+into one "Projects & tools" row. Claude's sidebar is React we don't own, so the module never moves,
+clones or re-parents its nodes — it only sets `data-cub-thread*` attributes, and `threadSidebar.css`
+sections the rows with flex `order` inside the sidebar's scroll column (wrappers in between are
+flattened with `display: contents`). The only injected nodes are `#cub-thread-settled-toggle` and
+`#cub-thread-nav-toggle`. Turning it off strips everything, and a test asserts the DOM is
+byte-identical afterwards — keep it that way. Styles use Claude's CDS tokens and `currentColor`, so
+they theme themselves without a `.cub-theme-light` copy.
+
+Live state is read from Claude's own markers: `.status-dot[data-kind=running|clay|awaiting|error|ready|unread]`,
+`[data-unread-mark]`, and rows under the `label:unread-unread` group. Don't put a `::before` on
+`[data-row-main-button]`: Claude uses it for the row's hit area. Claude Code sessions are only in the
+DOM while the sidebar is in Code mode; nothing merges them into the chat list.
+
 Shared logic in `src/shared/`: `storage.ts` (`DEFAULT_SETTINGS`, typed `chrome.storage.local`
 wrappers), `types.ts` (all interfaces — `Settings`, `RealUsageSnapshot`, etc.), `claudeUsageApi.ts`
 (payload parsers), `usageProjection.ts` (weekly pacing/learning), `claudeTokenizer.ts` (context

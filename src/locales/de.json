@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Im Chrome Web Store bewerten"
+  },
+  "threadsLabel": {
+    "message": "Unterhaltungen"
+  },
+  "threadSettled": {
+    "message": "Erledigt ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Projekt"
+  },
+  "threadKindOther": {
+    "message": "Unterhaltung"
+  },
+  "threadStatusWorking": {
+    "message": "Läuft"
+  },
+  "threadStatusAwaiting": {
+    "message": "Eingabe nötig"
+  },
+  "threadStatusError": {
+    "message": "Fehler"
+  },
+  "threadStatusReady": {
+    "message": "Fertig"
+  },
+  "threadStatusUnread": {
+    "message": "Ungelesen"
+  },
+  "threadStatusOpen": {
+    "message": "Geöffnet"
+  },
+  "setSecSidebar": {
+    "message": "Seitenleiste"
+  },
+  "setThreadSidebar": {
+    "message": "Unterhaltungsansicht"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Angeheftete, laufende und neue Chats werden zu Karten; der Rest wird eingeklappt."
+  },
+  "setThreadRecent": {
+    "message": "Aktuelle Karten"
+  },
+  "setThreadRecentDesc": {
+    "message": "Zusätzlich zu denen, die gerade laufen."
+  },
+  "setThreadRecentCount": {
+    "message": "$1 Unterhaltungen"
+  },
+  "threadNavLabel": {
+    "message": "Projekte & Tools"
+  },
+  "threadStatusPinned": {
+    "message": "Angeheftet"
   }
 }

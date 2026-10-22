@@ -25,6 +25,8 @@ const settings: Settings = {
   showClipboard: true,
   language: "en",
   resetBannerScope: "claude",
+  threadSidebar: false,
+  threadSidebarRecentCount: 5,
 };
 
 const hoverContext = () => {

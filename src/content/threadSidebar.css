@@ -1,0 +1,276 @@
+/* Thread sidebar (threadSidebar.ts). These rules restyle Claude's own sidebar
+   rows, tagged with data-cub-thread* attributes. Colors come from Claude's tokens
+   and currentColor, so light and dark both follow Claude's own palette with no
+   .cub-theme-light copy. Nothing here applies unless the option is on: every
+   rule hangs off an attribute or element only threadSidebar.ts adds. */
+
+/* The sidebar's scroll column: pinned and recent rows both become its flex
+   items, sectioned with `order`. Claude's nav rows keep order 0 at the top. */
+[data-cub-threads="on"] {
+  display: flex !important;
+  flex-direction: column;
+  gap: 1px;
+  position: relative;
+}
+
+/* Wrappers between the column and its rows, so every row is a flex item. */
+[data-cub-threads="on"] [data-cub-thread-flat] {
+  display: contents !important;
+}
+
+[data-cub-thread="label"] {
+  order: 1;
+}
+
+[data-cub-thread="label-hidden"],
+[data-cub-thread="hidden"],
+[data-cub-thread-hidden] {
+  display: none !important;
+}
+
+[data-cub-thread="pinned"] {
+  order: 3;
+}
+
+[data-cub-thread="live"] {
+  order: 4;
+}
+
+[data-cub-thread="recent"] {
+  order: 5;
+}
+
+#cub-thread-settled-toggle {
+  order: 6;
+}
+
+[data-cub-thread="settled"] {
+  order: 7;
+}
+
+[data-cub-threads-settled="closed"] [data-cub-thread="settled"] {
+  display: none !important;
+}
+
+/* Group label: Claude's says "Read" / "Unread", which no longer describes the
+   re-sectioned list. */
+[data-group-name][data-cub-thread-label] {
+  font-size: 0 !important;
+}
+
+[data-group-name][data-cub-thread-label]::after {
+  content: attr(data-cub-thread-label);
+  font-size: var(--df-group-font, 12px);
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+
+[data-cub-thread-card] {
+  margin-block: 2px;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 7%, transparent);
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+[data-cub-thread-card]:hover {
+  background: var(--df-hover, color-mix(in srgb, currentColor 8%, transparent));
+}
+
+[data-cub-thread-card][data-cub-thread-current] {
+  background: var(--df-selected, color-mix(in srgb, currentColor 10%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* Claude's row buttons are a fixed-height single line; a card grows to fit the
+   meta line. Their ::before is Claude's own hit area, so the meta line hangs
+   off the label span instead. */
+[data-cub-thread-card] > [data-row-main-button] {
+  height: auto !important;
+  min-height: 54px;
+  padding-block: 8px !important;
+  padding-inline: 8px !important;
+}
+
+/* Pinned rows carry a leading kind icon that recents don't; cards drop it so
+   every title starts at the same edge. */
+[data-cub-thread-card] > [data-row-main-button] > .df-leading-slot {
+  display: none !important;
+}
+
+[data-cub-thread-card] [data-row-label][data-cub-thread-meta] {
+  padding-inline-start: var(--df-iconless-pad, 4px) !important;
+  font-size: 14px;
+  line-height: 19px;
+  color: var(--cds-text-primary, currentColor);
+}
+
+/* Meta line above the title: thread kind plus its live state. */
+[data-cub-thread-card] [data-row-label][data-cub-thread-meta]::before {
+  content: attr(data-cub-thread-meta);
+  display: block;
+  margin-bottom: 2px;
+  padding-inline-end: 24px;
+  overflow: hidden;
+  font-size: 11.5px;
+  line-height: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--cds-text-muted, color-mix(in srgb, currentColor 55%, transparent));
+}
+
+[data-cub-thread-status="working"] [data-cub-thread-card] [data-row-label][data-cub-thread-meta]::before,
+[data-cub-thread-status="ready"] [data-cub-thread-card] [data-row-label][data-cub-thread-meta]::before {
+  color: var(--cds-text-accent, rgb(204 124 94));
+}
+
+[data-cub-thread-status="awaiting"] [data-cub-thread-card] [data-row-label][data-cub-thread-meta]::before {
+  color: var(--cds-text-warning, rgb(214 160 60));
+}
+
+[data-cub-thread-status="error"] [data-cub-thread-card] [data-row-label][data-cub-thread-meta]::before {
+  color: var(--cds-text-danger, rgb(220 90 80));
+}
+
+[data-cub-thread-status="unread"] [data-cub-thread-card] [data-row-label][data-cub-thread-meta]::before {
+  color: var(--cds-text-secondary, currentColor);
+}
+
+/* Divider above the first card of each section after the first (pinned →
+   live → recent), as in T3. */
+[data-cub-thread-first]::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 6px 10px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+/* ── Toggles ────────────────────────────────────────────────────────────── */
+
+.cub-thread-caret {
+  flex: none;
+  transition: transform 150ms ease;
+}
+
+#cub-thread-settled-toggle[aria-expanded="true"] .cub-thread-caret,
+#cub-thread-nav-toggle[aria-expanded="true"] .cub-thread-caret {
+  transform: rotate(180deg);
+}
+
+#cub-thread-settled-toggle,
+#cub-thread-nav-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 0;
+  border-radius: var(--df-radius-pill, 8px);
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+#cub-thread-settled-toggle:focus-visible,
+#cub-thread-nav-toggle:focus-visible {
+  outline: 2px solid var(--cds-fill-accent, rgb(204 124 94));
+  outline-offset: -2px;
+}
+
+#cub-thread-settled-toggle:hover,
+#cub-thread-nav-toggle:hover {
+  background: var(--df-hover, color-mix(in srgb, currentColor 8%, transparent));
+}
+
+/* Settled (N) ───────── ⌄ */
+#cub-thread-settled-toggle {
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px var(--df-row-px, 8px);
+  font-size: var(--df-group-font, 12px);
+  line-height: 16px;
+  color: var(--cds-text-muted, color-mix(in srgb, currentColor 55%, transparent));
+}
+
+#cub-thread-settled-toggle:hover {
+  color: var(--cds-text-secondary, currentColor);
+}
+
+.cub-thread-settled-label {
+  flex: none;
+  white-space: nowrap;
+}
+
+.cub-thread-settled-rule {
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+/* Claude's nav rows (Projects, Artifacts, Scheduled, …) folded under one row
+   that matches their own height and icon column. */
+[data-cub-thread-nav] {
+  display: flex !important;
+  flex-direction: column;
+}
+
+[data-cub-thread-nav="closed"] > :not(#cub-thread-nav-toggle) {
+  display: none !important;
+}
+
+#cub-thread-nav-toggle {
+  order: -1;
+  flex: none;
+  gap: var(--df-row-gap, 8px);
+  height: var(--df-row-h, 32px);
+  padding: 0 var(--df-row-px, 8px);
+  font-size: var(--df-row-font, 14px);
+  color: var(--cds-text-secondary, currentColor);
+}
+
+[data-cub-thread-nav="closed"] > #cub-thread-nav-toggle {
+  margin-bottom: 8px;
+}
+
+#cub-thread-nav-toggle:hover {
+  color: var(--cds-text-primary, currentColor);
+}
+
+.cub-thread-nav-icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--df-leading-slot, 28px);
+}
+
+.cub-thread-nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cub-thread-nav-dot {
+  display: none;
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cds-fill-accent, rgb(204 124 94));
+}
+
+/* Only while folded: open, the row Claude dotted shows its own. */
+#cub-thread-nav-toggle[aria-expanded="false"][data-cub-thread-nav-dot] .cub-thread-nav-dot {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cub-thread-card],
+  .cub-thread-caret {
+    transition: none;
+  }
+}

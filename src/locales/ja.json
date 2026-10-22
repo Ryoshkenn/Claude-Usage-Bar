@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Chrome ウェブストアで評価"
+  },
+  "threadsLabel": {
+    "message": "スレッド"
+  },
+  "threadSettled": {
+    "message": "完了済み ($1)"
+  },
+  "threadKindChat": {
+    "message": "チャット"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "ルーティン"
+  },
+  "threadKindCode": {
+    "message": "コード"
+  },
+  "threadKindProject": {
+    "message": "プロジェクト"
+  },
+  "threadKindOther": {
+    "message": "スレッド"
+  },
+  "threadStatusWorking": {
+    "message": "作業中"
+  },
+  "threadStatusAwaiting": {
+    "message": "入力待ち"
+  },
+  "threadStatusError": {
+    "message": "エラー"
+  },
+  "threadStatusReady": {
+    "message": "返信あり"
+  },
+  "threadStatusUnread": {
+    "message": "未読"
+  },
+  "threadStatusOpen": {
+    "message": "表示中"
+  },
+  "setSecSidebar": {
+    "message": "サイドバー"
+  },
+  "setThreadSidebar": {
+    "message": "スレッド表示"
+  },
+  "setThreadSidebarDesc": {
+    "message": "ピン留め・作業中・最近のチャットをカードで表示し、それ以外は折りたたみます。"
+  },
+  "setThreadRecent": {
+    "message": "最近のカード"
+  },
+  "setThreadRecentDesc": {
+    "message": "作業中のものに加えて表示します。"
+  },
+  "setThreadRecentCount": {
+    "message": "$1 件"
+  },
+  "threadNavLabel": {
+    "message": "プロジェクトとツール"
+  },
+  "threadStatusPinned": {
+    "message": "ピン留め"
   }
 }

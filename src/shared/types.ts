@@ -54,6 +54,11 @@ export interface Settings {
   // banners any normal site and requires the optional all-sites host permission.
   // Covers both the 5-hour and weekly windows.
   resetBannerScope: ResetBannerScope;
+  // T3-style thread list in Claude's sidebar: working and recent threads as
+  // cards, the rest folded under "Settled". Off by default — purely additive.
+  threadSidebar: boolean;
+  // How many recent threads keep a card besides the live (working) ones.
+  threadSidebarRecentCount: number;
 }
 
 export type ResetBannerScope = "off" | "claude" | "everywhere";

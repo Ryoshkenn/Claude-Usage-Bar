@@ -89,6 +89,8 @@ export const DEFAULT_SETTINGS: Settings = {
   // Banners default to claude.ai only: useful out of the box, and it needs no
   // permission beyond the one the extension already has.
   resetBannerScope: "claude",
+  threadSidebar: false,
+  threadSidebarRecentCount: 5,
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The

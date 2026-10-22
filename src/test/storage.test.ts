@@ -94,6 +94,8 @@ describe("storage helpers", () => {
       showClipboard: true,
       language: "en",
       resetBannerScope: "claude",
+      threadSidebar: false,
+      threadSidebarRecentCount: 5,
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
@@ -187,6 +189,8 @@ describe("storage helpers", () => {
       showClipboard: true,
       language: "en",
       resetBannerScope: "claude",
+      threadSidebar: false,
+      threadSidebarRecentCount: 5,
     });
     expect(adapter.data.settings).toEqual(settings);
   });

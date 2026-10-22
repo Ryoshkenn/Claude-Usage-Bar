@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Chrome 웹 스토어에서 평가하기"
+  },
+  "threadsLabel": {
+    "message": "스레드"
+  },
+  "threadSettled": {
+    "message": "완료됨 ($1)"
+  },
+  "threadKindChat": {
+    "message": "채팅"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "루틴"
+  },
+  "threadKindCode": {
+    "message": "코드"
+  },
+  "threadKindProject": {
+    "message": "프로젝트"
+  },
+  "threadKindOther": {
+    "message": "스레드"
+  },
+  "threadStatusWorking": {
+    "message": "작업 중"
+  },
+  "threadStatusAwaiting": {
+    "message": "입력 필요"
+  },
+  "threadStatusError": {
+    "message": "오류"
+  },
+  "threadStatusReady": {
+    "message": "응답 도착"
+  },
+  "threadStatusUnread": {
+    "message": "읽지 않음"
+  },
+  "threadStatusOpen": {
+    "message": "열림"
+  },
+  "setSecSidebar": {
+    "message": "사이드바"
+  },
+  "setThreadSidebar": {
+    "message": "스레드 보기"
+  },
+  "setThreadSidebarDesc": {
+    "message": "고정된 채팅, 작업 중인 채팅, 최근 채팅은 카드로 표시하고 나머지는 접습니다."
+  },
+  "setThreadRecent": {
+    "message": "최근 카드"
+  },
+  "setThreadRecentDesc": {
+    "message": "작업 중인 항목 외에 표시합니다."
+  },
+  "setThreadRecentCount": {
+    "message": "$1개"
+  },
+  "threadNavLabel": {
+    "message": "프로젝트 및 도구"
+  },
+  "threadStatusPinned": {
+    "message": "고정됨"
   }
 }

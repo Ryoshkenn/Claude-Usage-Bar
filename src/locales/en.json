@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Rate on Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Threads"
+  },
+  "threadSettled": {
+    "message": "Settled ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Project"
+  },
+  "threadKindOther": {
+    "message": "Thread"
+  },
+  "threadStatusWorking": {
+    "message": "Working"
+  },
+  "threadStatusAwaiting": {
+    "message": "Needs input"
+  },
+  "threadStatusError": {
+    "message": "Error"
+  },
+  "threadStatusReady": {
+    "message": "Ready"
+  },
+  "threadStatusUnread": {
+    "message": "Unread"
+  },
+  "threadStatusOpen": {
+    "message": "Open"
+  },
+  "setSecSidebar": {
+    "message": "Sidebar"
+  },
+  "setThreadSidebar": {
+    "message": "Thread view"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Pinned, working and recent chats become cards; the rest folds away."
+  },
+  "setThreadRecent": {
+    "message": "Recent cards"
+  },
+  "setThreadRecentDesc": {
+    "message": "Shown besides the ones that are working."
+  },
+  "setThreadRecentCount": {
+    "message": "$1 threads"
+  },
+  "threadNavLabel": {
+    "message": "Projects & tools"
+  },
+  "threadStatusPinned": {
+    "message": "Pinned"
   }
 }

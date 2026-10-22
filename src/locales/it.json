@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Valuta sul Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Conversazioni"
+  },
+  "threadSettled": {
+    "message": "Concluse ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Codice"
+  },
+  "threadKindProject": {
+    "message": "Progetto"
+  },
+  "threadKindOther": {
+    "message": "Conversazione"
+  },
+  "threadStatusWorking": {
+    "message": "In corso"
+  },
+  "threadStatusAwaiting": {
+    "message": "Richiede input"
+  },
+  "threadStatusError": {
+    "message": "Errore"
+  },
+  "threadStatusReady": {
+    "message": "Pronta"
+  },
+  "threadStatusUnread": {
+    "message": "Non letta"
+  },
+  "threadStatusOpen": {
+    "message": "Aperta"
+  },
+  "setSecSidebar": {
+    "message": "Barra laterale"
+  },
+  "setThreadSidebar": {
+    "message": "Vista conversazioni"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Le chat fissate, in corso e recenti diventano schede; il resto viene compresso."
+  },
+  "setThreadRecent": {
+    "message": "Schede recenti"
+  },
+  "setThreadRecentDesc": {
+    "message": "Oltre a quelle in corso."
+  },
+  "setThreadRecentCount": {
+    "message": "$1 conversazioni"
+  },
+  "threadNavLabel": {
+    "message": "Progetti e strumenti"
+  },
+  "threadStatusPinned": {
+    "message": "Fissata"
   }
 }

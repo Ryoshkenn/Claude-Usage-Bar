@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { clearWeeklyUsageMetrics, DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
 import { SUPPORTED_LANGUAGES, setLanguage, t } from "../shared/i18n";
 import { MESSAGE_TYPES } from "../shared/constants";
+import { THREAD_RECENT_COUNTS } from "./threadSidebar";
 import type {
   ContextDisplay,
   MetricTarget,
@@ -550,6 +551,12 @@ const paceSurplusOptions = (): { value: PaceSurplusFormat; label: string }[] => 
   { value: "messages", label: t("setOptMsgsLeft", "Messages left") },
 ];
 
+const threadRecentOptions = (): { value: string; label: string }[] =>
+  THREAD_RECENT_COUNTS.map((count) => ({
+    value: String(count),
+    label: t("setThreadRecentCount", "$1 threads", count),
+  }));
+
 const weeklyDisplayOptions = (): { value: WeeklyEstimateDisplay; label: string }[] => [
   { value: "active_hours", label: t("setOptActiveHours", "Active hours") },
   { value: "calendar_time", label: t("setOptDaysTime", "Days / time") },
@@ -740,6 +747,41 @@ const SettingsPage = () => {
             onChange={(v) => update({ showCacheTimer: v })}
           />
         </Row>
+      </Section>
+
+      <Section id="cub-section-sidebar" title={t("setSecSidebar", "Sidebar")}>
+        <MetricGroup>
+          <Row
+            labelId={id("thread-sidebar")}
+            label={t("setThreadSidebar", "Thread view")}
+            description={t(
+              "setThreadSidebarDesc",
+              "Pinned, working and recent chats become cards; the rest folds away.",
+            )}
+          >
+            <Switch
+              id={id("thread-sidebar")}
+              checked={settings.threadSidebar === true}
+              onChange={(v) => update({ threadSidebar: v })}
+            />
+          </Row>
+          <NestGroup open={settings.threadSidebar === true}>
+            <NestItem>
+              <Row
+                labelId={id("thread-recent")}
+                label={t("setThreadRecent", "Recent cards")}
+                description={t("setThreadRecentDesc", "Shown besides the ones that are working.")}
+              >
+                <CdsSelect
+                  id={id("thread-recent")}
+                  value={String(settings.threadSidebarRecentCount ?? 5)}
+                  options={threadRecentOptions()}
+                  onChange={(v) => update({ threadSidebarRecentCount: Number(v) })}
+                />
+              </Row>
+            </NestItem>
+          </NestGroup>
+        </MetricGroup>
       </Section>
 
       <Section id="cub-section-pacing" title={t("setSecPacing", "Pacing")}>

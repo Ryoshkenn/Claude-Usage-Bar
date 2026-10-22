@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "Chrome वेब स्टोर पर रेटिंग दें"
+  },
+  "threadsLabel": {
+    "message": "थ्रेड"
+  },
+  "threadSettled": {
+    "message": "निपटाए गए ($1)"
+  },
+  "threadKindChat": {
+    "message": "चैट"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "रूटीन"
+  },
+  "threadKindCode": {
+    "message": "कोड"
+  },
+  "threadKindProject": {
+    "message": "प्रोजेक्ट"
+  },
+  "threadKindOther": {
+    "message": "थ्रेड"
+  },
+  "threadStatusWorking": {
+    "message": "चल रहा है"
+  },
+  "threadStatusAwaiting": {
+    "message": "इनपुट चाहिए"
+  },
+  "threadStatusError": {
+    "message": "त्रुटि"
+  },
+  "threadStatusReady": {
+    "message": "जवाब तैयार"
+  },
+  "threadStatusUnread": {
+    "message": "अपठित"
+  },
+  "threadStatusOpen": {
+    "message": "खुला"
+  },
+  "setSecSidebar": {
+    "message": "साइडबार"
+  },
+  "setThreadSidebar": {
+    "message": "थ्रेड व्यू"
+  },
+  "setThreadSidebarDesc": {
+    "message": "पिन की गई, चल रही और हाल की चैट कार्ड के रूप में दिखती हैं; बाकी समेट दी जाती हैं।"
+  },
+  "setThreadRecent": {
+    "message": "हाल के कार्ड"
+  },
+  "setThreadRecentDesc": {
+    "message": "चल रही चैट के अलावा।"
+  },
+  "setThreadRecentCount": {
+    "message": "$1 थ्रेड"
+  },
+  "threadNavLabel": {
+    "message": "प्रोजेक्ट और टूल"
+  },
+  "threadStatusPinned": {
+    "message": "पिन किया गया"
   }
 }

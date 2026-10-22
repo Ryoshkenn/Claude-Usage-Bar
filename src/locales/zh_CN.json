@@ -373,5 +373,71 @@
   },
   "setReviewLink": {
     "message": "在 Chrome 应用商店评分"
+  },
+  "threadsLabel": {
+    "message": "对话"
+  },
+  "threadSettled": {
+    "message": "已完成 ($1)"
+  },
+  "threadKindChat": {
+    "message": "聊天"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "例行任务"
+  },
+  "threadKindCode": {
+    "message": "代码"
+  },
+  "threadKindProject": {
+    "message": "项目"
+  },
+  "threadKindOther": {
+    "message": "对话"
+  },
+  "threadStatusWorking": {
+    "message": "进行中"
+  },
+  "threadStatusAwaiting": {
+    "message": "需要输入"
+  },
+  "threadStatusError": {
+    "message": "错误"
+  },
+  "threadStatusReady": {
+    "message": "有新回复"
+  },
+  "threadStatusUnread": {
+    "message": "未读"
+  },
+  "threadStatusOpen": {
+    "message": "已打开"
+  },
+  "setSecSidebar": {
+    "message": "侧边栏"
+  },
+  "setThreadSidebar": {
+    "message": "对话视图"
+  },
+  "setThreadSidebarDesc": {
+    "message": "已置顶、进行中和最近的对话显示为卡片，其余折叠起来。"
+  },
+  "setThreadRecent": {
+    "message": "最近卡片"
+  },
+  "setThreadRecentDesc": {
+    "message": "在进行中的对话之外额外显示。"
+  },
+  "setThreadRecentCount": {
+    "message": "$1 个对话"
+  },
+  "threadNavLabel": {
+    "message": "项目和工具"
+  },
+  "threadStatusPinned": {
+    "message": "已置顶"
   }
 }
