@@ -150,6 +150,15 @@ const stopWorking = (key: string): void => {
   rowEl(key).querySelector("[data-row-decoration]")?.remove();
 };
 
+// jsdom has no layout; give Claude's search bar the box a real one would have.
+const layOutSearchBar = (): HTMLElement => {
+  const button = document.querySelector<HTMLElement>("#search-host > button")!;
+  button.getClientRects = () => [new DOMRect(0, 0, 260, 32)] as unknown as DOMRectList;
+  button.getBoundingClientRect = () => new DOMRect(0, 0, 260, 32);
+  document.querySelector("aside")!.getBoundingClientRect = () => new DOMRect(0, 0, 300, 900);
+  return document.getElementById("search-host")!;
+};
+
 const ten = Array.from({ length: 10 }, (_, i) => ({ key: `chat:c${i}` }));
 const NOW = new Date("2026-10-21T12:00:00Z").getTime();
 
@@ -369,10 +378,21 @@ describe("thread sidebar DOM", () => {
     const top = document.getElementById(TOP_ROW_ID)!;
     expect(top.parentElement!.id).toBe("new-host");
     expect(newLink.hasAttribute("data-cub-thread-hidden")).toBe(true);
-    expect(sidebar.getAttribute("data-cub-threads-theme")).toBe("dark");
+    const aside = sidebar.closest("aside")!;
+    expect(aside.getAttribute("data-cub-threads-theme")).toBe("dark");
 
+    // No search button on screen: Claude's shortcut opens its search.
+    const shortcuts = vi.fn();
+    document.addEventListener("keydown", shortcuts);
+    top.querySelector<HTMLButtonElement>(".cub-thread-search")!.click();
+    expect(shortcuts).toHaveBeenCalledWith(expect.objectContaining({ key: "k", shiftKey: true }));
+    document.removeEventListener("keydown", shortcuts);
+
+    // With Claude's own search button showing, that's what gets pressed.
+    const headingSearch = document.querySelector<HTMLElement>('[data-sidebar-group-label] [aria-label="Search"]')!;
+    headingSearch.getClientRects = () => [new DOMRect(0, 0, 24, 24)] as unknown as DOMRectList;
     const searchClicks = vi.fn();
-    document.querySelector('[data-sidebar-group-label] [aria-label="Search"]')!.addEventListener("click", searchClicks);
+    headingSearch.addEventListener("click", searchClicks);
     top.querySelector<HTMLButtonElement>(".cub-thread-search")!.click();
     expect(searchClicks).toHaveBeenCalledTimes(1);
 
@@ -382,17 +402,84 @@ describe("thread sidebar DOM", () => {
     expect(newClicks).toHaveBeenCalledTimes(1);
 
     syncThreadSidebarTheme(true);
-    expect(sidebar.getAttribute("data-cub-threads-theme")).toBe("light");
+    expect(aside.getAttribute("data-cub-threads-theme")).toBe("light");
   });
 
-  it("puts sort and new chat beside Claude's own search bar when it has one", () => {
+  it("takes the place of Claude's own search bar when the layout has one", () => {
     mountSidebar({ ...read(ten.slice(0, 3)), claudeSearchBar: true });
+    const bar = layOutSearchBar();
     syncThreadSidebar({ threadSidebar: true });
 
-    const bar = document.getElementById("search-host")!;
-    expect(document.getElementById(TOP_ROW_ID)).toBeNull();
-    expect(bar.hasAttribute("data-cub-thread-search")).toBe(true);
-    expect(bar.nextElementSibling?.id).toBe(TOP_ACTIONS_ID);
+    const top = document.getElementById(TOP_ROW_ID)!;
+    expect(top.nextElementSibling).toBe(bar);
+    expect(bar.hasAttribute("data-cub-thread-hidden")).toBe(true);
+    expect(top.querySelector(".cub-thread-new")).not.toBeNull();
+    expect(document.querySelector("aside")!.getAttribute("data-cub-threads-theme")).toBe("dark");
+  });
+
+  it("ignores a search control that isn't on screen", () => {
+    mountSidebar({ ...read(ten.slice(0, 3)), claudeSearchBar: true });
+    syncThreadSidebar({ threadSidebar: true });
+    expect(document.getElementById(TOP_ROW_ID)!.parentElement!.id).toBe("new-host");
+    expect(document.getElementById("search-host")!.hasAttribute("data-cub-thread-hidden")).toBe(false);
+  });
+
+  it("sorts from its own menu", () => {
+    mountSidebar(read(ten.slice(0, 3)));
+    syncThreadSidebar({ threadSidebar: true });
+    const button = document.querySelector<HTMLButtonElement>(".cub-thread-sort-btn")!;
+    const menu = document.querySelector<HTMLElement>(".cub-thread-menu")!;
+    expect(menu.hidden).toBe(true);
+
+    button.click();
+    expect(menu.hidden).toBe(false);
+    expect(button.getAttribute("aria-expanded")).toBe("true");
+    const items = [...menu.querySelectorAll<HTMLButtonElement>("[role=menuitemradio]")];
+    expect(items.map((item) => item.textContent)).toEqual(["Newest edited", "Newest created"]);
+    expect(items[0].getAttribute("aria-checked")).toBe("true");
+
+    items[1].click();
+    expect(menu.hidden).toBe(true);
+    expect(items[1].getAttribute("aria-checked")).toBe("true");
+
+    button.click();
+    menu.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(menu.hidden).toBe(true);
+    button.click();
+    document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    expect(menu.hidden).toBe(true);
+  });
+
+  it("settles a card by hand from its Settle button, until it has new activity", async () => {
+    mountSidebar({ ...read(ten.slice(0, 6)), pinned: [{ key: "chat:p1" }] });
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
+    expect(rowEl("chat:p1").querySelector(".cub-thread-settle")).toBeNull();
+    expect(settledToggle()?.textContent).toBe("Settled (3)");
+
+    const settle = rowEl("chat:c1").querySelector<HTMLButtonElement>("[data-row] > .cub-thread-settle")!;
+    expect(settle.textContent).toBe("Settle");
+    settle.click();
+    expect(placementOf("chat:c1")).toBe("settled");
+    expect(placementOf("chat:c3")).toBe("recent");
+    expect(settledToggle()?.textContent).toBe("Settled (3)");
+    expect(rowEl("chat:c1").querySelector(".cub-thread-settle")).toBeNull();
+
+    // Starting work again brings it back.
+    rowEl("chat:c1").querySelector("[data-row]")!.insertAdjacentHTML(
+      "beforeend",
+      '<span data-row-decoration=""><span class="status-dot" data-kind="running"></span></span>',
+    );
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    applyThreadSidebar();
+    expect(placementOf("chat:c1")).toBe("live");
+  });
+
+  it("settles the open thread too when asked", () => {
+    history.replaceState(null, "", "/chat/c0");
+    mountSidebar(read(ten.slice(0, 4)));
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 3 });
+    rowEl("chat:c0").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    expect(placementOf("chat:c0")).toBe("settled");
   });
 
   it("re-sorts by created or edited times from Claude's own list responses", () => {
@@ -480,10 +567,13 @@ describe("thread sidebar DOM", () => {
     expect(document.querySelector("[data-cub-thread]")).toBeNull();
   });
 
-  it("also restores the DOM next to Claude's own search bar", () => {
+  it("also restores the DOM when it replaced Claude's own search bar", () => {
     mountSidebar({ ...read(ten.slice(0, 4)), claudeSearchBar: true });
+    layOutSearchBar();
     const before = document.body.innerHTML;
     syncThreadSidebar({ threadSidebar: true });
+    rowEl("chat:c1").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    document.querySelector<HTMLButtonElement>(".cub-thread-sort-btn")!.click();
     syncThreadSidebar({ threadSidebar: false });
     expect(document.body.innerHTML).toBe(before);
   });
@@ -538,57 +628,53 @@ describe("thread sidebar DOM", () => {
   });
 });
 
-describe("task alerts and shared done state", () => {
-  const sendMessage = vi.fn();
+describe("shared state", () => {
   const session: Record<string, unknown> = {};
+  const local: Record<string, unknown> = {};
+  const area = (store: Record<string, unknown>) => ({
+    get: async (key: string) => (key in store ? { [key]: store[key] } : {}),
+    set: async (items: Record<string, unknown>) => Object.assign(store, items),
+  });
 
   beforeEach(() => {
-    sendMessage.mockReset();
-    for (const key of Object.keys(session)) delete session[key];
+    for (const store of [session, local]) for (const key of Object.keys(store)) delete store[key];
     vi.stubGlobal("chrome", {
-      runtime: { id: "test", sendMessage, lastError: undefined },
+      runtime: { id: "test", sendMessage: vi.fn(), lastError: undefined },
       storage: {
-        session: {
-          get: async (key: string) => (key in session ? { [key]: session[key] } : {}),
-          set: async (items: Record<string, unknown>) => Object.assign(session, items),
-        },
-        local: { get: async () => ({}), set: async () => undefined },
+        session: area(session),
+        local: area(local),
         onChanged: { addListener: vi.fn(), removeListener: vi.fn() },
       },
     });
   });
 
-  it("reports a watched thread finishing and shares the done mark", async () => {
+  it("shares the done mark across tabs through session storage", async () => {
     mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
     syncThreadSidebar({ threadSidebar: true });
     stopWorking("chat:w");
     await flushObservers();
-
-    expect(sendMessage).toHaveBeenCalledWith(
-      { type: MESSAGE_TYPES.threadDone, event: "done", key: "chat:w", title: "Title w", path: "/chat/w" },
-      expect.any(Function),
-    );
     const stored = session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>;
     expect(typeof stored["chat:w"]?.doneAt).toBe("number");
   });
 
-  it("reports a watched thread starting to wait on you, once", async () => {
-    mountSidebar(read([{ key: "chat:w", status: "running" }]));
-    syncThreadSidebar({ threadSidebar: true });
-    rowEl("chat:w").querySelector(".status-dot")!.setAttribute("data-kind", "awaiting");
-    await flushObservers();
-    applyThreadSidebar();
-    const awaiting = sendMessage.mock.calls.filter(([message]) => message.event === "awaiting");
-    expect(awaiting).toHaveLength(1);
-  });
-
-  it("doesn't announce work it never saw running", async () => {
+  it("picks up a done mark another tab recorded", async () => {
     session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: Date.now() - 60_000 } };
     mountSidebar(read([{ key: "chat:w" }]));
     syncThreadSidebar({ threadSidebar: true });
-    await flushObservers();
     await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(sendMessage).not.toHaveBeenCalled();
     expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
+  });
+
+  it("keeps hand-settled threads in local storage, ids and times only", async () => {
+    local[STORAGE_KEYS.threadSettled] = { "chat:c4": Date.now() - 1_000, "<bad>": 1 };
+    mountSidebar(read(ten.slice(0, 6)));
+    syncThreadSidebar({ threadSidebar: true, threadSidebarRecentCount: 5 });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(placementOf("chat:c4")).toBe("settled");
+
+    rowEl("chat:c0").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    const stored = local[STORAGE_KEYS.threadSettled] as Record<string, number>;
+    expect(Object.keys(stored).sort()).toEqual(["chat:c0", "chat:c4"]);
+    expect(Object.values(stored).every((value) => typeof value === "number")).toBe(true);
   });
 });

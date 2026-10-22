@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "Con «Modificate di recente» una conversazione sale quando cambia o Claude risponde."
   },
-  "setThreadAlerts": {
-    "message": "Avvisi attività"
-  },
-  "setThreadAlertsDesc": {
-    "message": "Banner quando una conversazione finisce o ha bisogno di te mentre sei altrove. Qualsiasi sito richiede l’autorizzazione di Chrome."
-  },
-  "threadBannerDone": {
-    "message": "Claude ha finito"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude ha bisogno di una tua risposta"
-  },
-  "threadBannerOpen": {
-    "message": "Apri"
-  },
-  "threadBannerDismiss": {
-    "message": "Chiudi"
-  },
-  "grantThreadsTitle": {
-    "message": "Mostra avvisi attività su qualsiasi sito"
-  },
-  "grantThreadsDenied": {
-    "message": "Autorizzazione non concessa. Gli avvisi attività restano solo su claude.ai."
+  "threadSettle": {
+    "message": "Concludi"
   }
 }

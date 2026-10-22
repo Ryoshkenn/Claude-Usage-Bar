@@ -6,24 +6,26 @@ import "./threadSidebar.css";
 
 // Thread sidebar: a T3-style view of Claude's sidebar. Pinned threads, threads
 // that are working, waiting on you or freshly done, and the most recent few
-// render as cards; the rest fold away under a "Settled (N)" toggle. Pinned
-// projects leave the list (they're still under Projects), Claude's nav rows —
-// Projects, Artifacts, Scheduled, … — fold into one "Projects & tools" row, and
-// a Search / sort / new-chat row sits at the top.
+// render as cards; the rest fold away under a "Settled (N)" toggle, and any
+// card can be settled by hand. Pinned projects leave the list (they're still
+// under Projects), Claude's nav rows — Projects, Artifacts, Scheduled, … — fold
+// into one "Projects & tools" row, and a Search / sort / new-chat row sits at
+// the top.
 //
 // claude.ai's sidebar is a React tree we don't own, so this never moves, clones
 // or re-parents its nodes. It tags them with data-cub-thread* attributes, sets
 // a flex `order` on each row, and adds a few nodes of its own (the toggles, the
-// top row, and a meta line inside each card). threadSidebar.css does the rest.
+// top row, and a meta line and Settle button on each card). threadSidebar.css
+// does the rest.
 // Claude's own handlers (navigation, hover menus, rename, drag) keep running on
 // the real rows, and turning the option off removes every attribute, style and
 // node this module added, which leaves Claude's DOM exactly as it was.
 //
 // "Done" is tracked here, not by Claude: a thread seen working that stops
 // working, while you weren't looking at it, is done until you open it. That
-// state is shared by every claude.ai tab through chrome.storage.session (row
-// keys and timestamps only), and the transition is reported to the background
-// worker, which can show a banner on whatever site you're on.
+// state is shared by every claude.ai tab through chrome.storage.session; the
+// hand-settled set lives in chrome.storage.local. Both hold row keys and
+// timestamps only.
 
 const SIDEBAR_SELECTOR = '[data-testid="sidebar"]';
 const RECENTS_SELECTOR = '[data-testid="sidebar-recents"]';
@@ -48,7 +50,6 @@ const FLAT_ATTR = "data-cub-thread-flat";
 const LABEL_ATTR = "data-cub-thread-label";
 const HIDDEN_ATTR = "data-cub-thread-hidden";
 const NAV_ATTR = "data-cub-thread-nav";
-const SEARCH_ATTR = "data-cub-thread-search";
 const OWN_ATTRS = [
   ROOT_ATTR,
   SETTLED_ATTR,
@@ -62,7 +63,6 @@ const OWN_ATTRS = [
   LABEL_ATTR,
   HIDDEN_ATTR,
   NAV_ATTR,
-  SEARCH_ATTR,
 ];
 
 export const SETTLED_TOGGLE_ID = "cub-thread-settled-toggle";
@@ -70,7 +70,8 @@ export const NAV_TOGGLE_ID = "cub-thread-nav-toggle";
 export const TOP_ROW_ID = "cub-thread-top";
 export const TOP_ACTIONS_ID = "cub-thread-top-actions";
 const META_CLASS = "cub-thread-meta";
-const OWN_NODE_SELECTOR = `#${SETTLED_TOGGLE_ID}, #${NAV_TOGGLE_ID}, #${TOP_ROW_ID}, #${TOP_ACTIONS_ID}, .${META_CLASS}`;
+const SETTLE_CLASS = "cub-thread-settle";
+const OWN_NODE_SELECTOR = `#${SETTLED_TOGGLE_ID}, #${NAV_TOGGLE_ID}, #${TOP_ROW_ID}, .${META_CLASS}, .${SETTLE_CLASS}`;
 
 // Attributes Claude flips when a row's state changes. Ours are deliberately
 // absent so writing them never re-triggers the observer.
@@ -93,6 +94,12 @@ const CLOCK_TICK_MS = 30_000;
 const DONE_TTL_MS = 24 * 60 * 60_000;
 const WORKING_TTL_MS = 12 * 60 * 60_000;
 const MAX_THREAD_TIMES = 2_000;
+// Hand-settled threads are forgotten after this long, or past this many.
+const SETTLED_TTL_MS = 60 * 24 * 60 * 60_000;
+const MAX_SETTLED = 500;
+// Claude bumps updated_at when a thread is merely opened; only a change this
+// long after settling counts as new activity.
+const SETTLE_GRACE_MS = 5_000;
 
 // Flex `order` bands. Each row adds its position in the sorted list, so rows
 // stay sorted inside their band; the settled toggle sits between the bands.
@@ -115,6 +122,8 @@ export interface ThreadRowInfo {
   current: boolean;
   pinned?: boolean;
   hidden?: boolean;
+  // Settled by hand and quiet since.
+  settled?: boolean;
 }
 
 export interface ThreadSidebarOptions {
@@ -196,9 +205,10 @@ const isCurrentRow = (row: Element): boolean => {
   return Boolean(href) && href === location.pathname;
 };
 
-// Rows arrive in display order. Pinned threads lead the list. After them, live
-// threads (working, waiting on you, done but unseen) always get a card, then the
-// first `recentCount` threads, and the open thread is never folded away. Only
+// Rows arrive in display order. Pinned threads lead the list. Threads settled
+// by hand stay settled. After them, live threads (working, waiting on you, done
+// but unseen) always get a card, then the first `recentCount` threads, and the
+// open thread is never folded away unless you settled it. Only
 // the first group label survives (it carries Claude's Search / Filter / View all
 // buttons); later ones would split the re-sectioned list in odd places.
 export const placeThreadRows = (rows: ThreadRowInfo[], recentCount: number): ThreadPlacement[] => {
@@ -212,6 +222,7 @@ export const placeThreadRows = (rows: ThreadRowInfo[], recentCount: number): Thr
       return placement;
     }
     if (row.pinned) return "pinned";
+    if (row.settled) return "settled";
     if (row.status) return "live";
     if (recent < recentCount) {
       recent += 1;
@@ -324,6 +335,7 @@ let observedSidebar: Element | null = null;
 let attachFrame: number | undefined;
 let clockTimer: number | undefined;
 let claudeSearchBar: HTMLElement | null = null;
+let sortMenuOpen = false;
 // When no bar was found, the scan (every button in the aside) is skipped for a
 // few seconds rather than repeated on every sidebar mutation.
 let searchScanAt = 0;
@@ -334,20 +346,24 @@ const SEARCH_RESCAN_MS = 3_000;
 const threadTimes = new Map<string, ThreadTimes>();
 // Row key → working / done timestamps, mirrored to chrome.storage.session.
 let activity: Record<string, ThreadActivity> = {};
-// Rows this tab watched start working. Only those can raise a "done" alert, so
-// opening claude.ai after a task finished elsewhere doesn't announce it late.
-const watchedWorking = new Set<string>();
+// Row key → when it was settled by hand, mirrored to chrome.storage.local.
+let settled: Record<string, number> = {};
 
 const extensionAlive = (): boolean => typeof chrome !== "undefined" && Boolean(chrome.runtime?.id);
 
 const sessionArea = (): chrome.storage.StorageArea | null =>
   extensionAlive() && chrome.storage?.session ? chrome.storage.session : null;
 
+const localArea = (): chrome.storage.StorageArea | null =>
+  extensionAlive() && chrome.storage?.local ? chrome.storage.local : null;
+
+const ROW_KEY_PATTERN = /^[a-z-]+:[\w-]{1,80}$/;
+
 const sanitizeActivity = (value: unknown, now = Date.now()): Record<string, ThreadActivity> => {
   const out: Record<string, ThreadActivity> = {};
   if (!value || typeof value !== "object") return out;
   for (const [key, raw] of Object.entries(value as Record<string, unknown>)) {
-    if (!/^[a-z-]+:[\w-]{1,80}$/.test(key) || !raw || typeof raw !== "object") continue;
+    if (!ROW_KEY_PATTERN.test(key) || !raw || typeof raw !== "object") continue;
     const { workingSince, awaitingSince, doneAt } = raw as ThreadActivity;
     const entry: ThreadActivity = {};
     if (typeof workingSince === "number" && now - workingSince < WORKING_TTL_MS) {
@@ -377,10 +393,45 @@ const loadActivity = (): void => {
     .catch(() => undefined);
 };
 
-const onSessionChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string): void => {
-  if (area !== "session" || !changes[STORAGE_KEYS.threadActivity]) return;
-  activity = sanitizeActivity(changes[STORAGE_KEYS.threadActivity].newValue);
-  applyThreadSidebar();
+const sanitizeSettled = (value: unknown, now = Date.now()): Record<string, number> => {
+  if (!value || typeof value !== "object") return {};
+  const entries = Object.entries(value as Record<string, unknown>)
+    .filter(
+      (entry): entry is [string, number] =>
+        ROW_KEY_PATTERN.test(entry[0]) && typeof entry[1] === "number" && now - entry[1] < SETTLED_TTL_MS,
+    )
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, MAX_SETTLED);
+  return Object.fromEntries(entries);
+};
+
+const saveSettled = (): void => {
+  settled = sanitizeSettled(settled);
+  void localArea()
+    ?.set({ [STORAGE_KEYS.threadSettled]: settled })
+    .catch(() => undefined);
+};
+
+const loadSettled = (): void => {
+  void localArea()
+    ?.get(STORAGE_KEYS.threadSettled)
+    .then((data) => {
+      settled = { ...sanitizeSettled(data[STORAGE_KEYS.threadSettled]), ...settled };
+      applyThreadSidebar();
+    })
+    .catch(() => undefined);
+};
+
+// Both shared stores: done marks from other claude.ai tabs (session), and
+// threads settled in another tab (local).
+const onStorageChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string): void => {
+  if (area === "session" && changes[STORAGE_KEYS.threadActivity]) {
+    activity = sanitizeActivity(changes[STORAGE_KEYS.threadActivity].newValue);
+    applyThreadSidebar();
+  } else if (area === "local" && changes[STORAGE_KEYS.threadSettled]) {
+    settled = sanitizeSettled(changes[STORAGE_KEYS.threadSettled].newValue);
+    applyThreadSidebar();
+  }
 };
 
 const THREAD_ID_PATTERN =
@@ -581,16 +632,28 @@ const buildNavToggle = (): HTMLButtonElement => {
 
 const isMac = (): boolean => /Mac|iPhone|iPad|iPod/.test(navigator.platform) || /Mac OS X/.test(navigator.userAgent);
 
-// Claude's own search: its search button where it has one, otherwise the
-// shortcut that button advertises (Claude's keydown handler doesn't check
-// isTrusted, the same route the settings panel uses).
+const isShown = (el: Element): boolean => el.getClientRects().length > 0;
+
+// Claude's own search, from our Search row: its search button in the Threads
+// heading where that layout has one; else its top search bar, which this view
+// hides in favour of our row; else the shortcut both advertise (Claude's
+// keydown handler doesn't check isTrusted — the route the settings panel uses).
 const openClaudeSearch = (): void => {
-  const sidebar = document.querySelector(SIDEBAR_SELECTOR);
-  const button = sidebar?.querySelector<HTMLElement>(
+  const scope = document.querySelector(SIDEBAR_SELECTOR)?.closest("aside") ?? document;
+  const headingButton = scope.querySelector<HTMLElement>(
     `${GROUP_LABEL_SELECTOR} [aria-keyshortcuts$="+k" i], ${GROUP_LABEL_SELECTOR} [aria-label="Search"]`,
   );
-  if (button) {
-    button.click();
+  if (headingButton && isShown(headingButton)) {
+    headingButton.click();
+    return;
+  }
+  const barTrigger = claudeSearchBar?.isConnected
+    ? claudeSearchBar.matches('button, [role="button"]')
+      ? claudeSearchBar
+      : claudeSearchBar.querySelector<HTMLElement>('button, [role="button"]')
+    : null;
+  if (barTrigger) {
+    barTrigger.click();
     return;
   }
   const mac = isMac();
@@ -622,53 +685,130 @@ const sortOptions = (): { value: ThreadSort; label: string }[] => [
   { value: "created", label: t("threadSortCreated", "Newest created") },
 ];
 
-const buildTopActions = (): HTMLElement => {
-  const actions = document.createElement("div");
-  actions.id = TOP_ACTIONS_ID;
+const sortItems = (menu: Element): HTMLElement[] => [...menu.querySelectorAll<HTMLElement>("[role=menuitemradio]")];
 
-  // A native <select> laid over the icon: Chrome draws the menu, so it's never
-  // clipped by the sidebar and works from the keyboard.
-  const sortButton = document.createElement("span");
-  sortButton.className = "cub-thread-icon-btn";
-  sortButton.innerHTML = svg(ICONS.sort);
-  const select = document.createElement("select");
-  select.addEventListener("change", () => {
-    const next = select.value === "created" ? "created" : "edited";
-    sort = next;
-    applyThreadSidebar();
-    void updateSettings({ threadSidebarSort: next }).catch(() => undefined);
-  });
-  sortButton.appendChild(select);
-
-  const newButton = buildButton(null, "cub-thread-icon-btn cub-thread-new", startNewChat);
-  newButton.innerHTML = svg(ICONS.compose);
-
-  actions.append(sortButton, newButton);
-  return actions;
+const closeSortMenu = (focusButton = false): void => {
+  if (!sortMenuOpen) return;
+  sortMenuOpen = false;
+  document.removeEventListener("pointerdown", onSortMenuOutside, true);
+  const menu = document.querySelector<HTMLElement>(`#${TOP_ROW_ID} .cub-thread-menu`);
+  if (menu) menu.hidden = true;
+  const button = document.querySelector<HTMLElement>(`#${TOP_ROW_ID} .cub-thread-sort-btn`);
+  button?.setAttribute("aria-expanded", "false");
+  if (focusButton) button?.focus();
 };
 
-const syncTopActions = (actions: HTMLElement): void => {
-  const select = actions.querySelector("select");
-  if (select) {
-    const options = sortOptions();
-    if (select.options.length !== options.length) {
-      select.replaceChildren(
-        ...options.map(({ value }) => {
-          const option = document.createElement("option");
-          option.value = value;
-          return option;
-        }),
-      );
+const onSortMenuOutside = (event: PointerEvent): void => {
+  const wrap = document.querySelector(`#${TOP_ROW_ID} .cub-thread-sort`);
+  if (wrap && event.target instanceof Node && wrap.contains(event.target)) return;
+  closeSortMenu();
+};
+
+const openSortMenu = (): void => {
+  const menu = document.querySelector<HTMLElement>(`#${TOP_ROW_ID} .cub-thread-menu`);
+  if (!menu) return;
+  sortMenuOpen = true;
+  menu.hidden = false;
+  document.querySelector(`#${TOP_ROW_ID} .cub-thread-sort-btn`)?.setAttribute("aria-expanded", "true");
+  document.addEventListener("pointerdown", onSortMenuOutside, true);
+  (sortItems(menu).find((item) => item.getAttribute("aria-checked") === "true") ?? sortItems(menu)[0])?.focus();
+};
+
+const chooseSort = (next: ThreadSort): void => {
+  closeSortMenu(true);
+  if (next === sort) return;
+  sort = next;
+  applyThreadSidebar();
+  void updateSettings({ threadSidebarSort: next }).catch(() => undefined);
+};
+
+// Sort picker: an icon button with a small menu of our own, so it matches the
+// sidebar instead of opening the OS menu.
+const buildSortPicker = (): HTMLElement => {
+  const wrap = document.createElement("span");
+  wrap.className = "cub-thread-sort";
+  const button = buildButton(null, "cub-thread-icon-btn cub-thread-sort-btn", () =>
+    sortMenuOpen ? closeSortMenu(true) : openSortMenu(),
+  );
+  button.setAttribute("aria-haspopup", "menu");
+  button.setAttribute("aria-expanded", "false");
+  button.innerHTML = svg(ICONS.sort);
+  const menu = document.createElement("div");
+  menu.className = "cub-thread-menu";
+  menu.setAttribute("role", "menu");
+  menu.hidden = true;
+  wrap.append(button, menu);
+  wrap.addEventListener("keydown", (event) => {
+    if (!sortMenuOpen) return;
+    const items = sortItems(menu);
+    const index = items.indexOf(document.activeElement as HTMLElement);
+    if (event.key === "Escape") {
+      // Ours to handle; Claude would otherwise act on it too.
+      event.preventDefault();
+      event.stopPropagation();
+      closeSortMenu(true);
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const step = event.key === "ArrowDown" ? 1 : -1;
+      items[(index + step + items.length) % items.length]?.focus();
+    } else if (event.key === "Tab") {
+      closeSortMenu();
     }
-    options.forEach(({ label }, index) => {
-      if (select.options[index].textContent !== label) select.options[index].textContent = label;
-    });
-    if (select.value !== sort) select.value = sort;
-    const sortLabel = t("threadSort", "Sort threads");
-    setAttr(select, "aria-label", sortLabel);
-    setAttr(select, "title", sortLabel);
+  });
+  return wrap;
+};
+
+const syncSortPicker = (wrap: Element): void => {
+  const menu = wrap.querySelector(".cub-thread-menu");
+  if (!menu) return;
+  const options = sortOptions();
+  if (sortItems(menu).length !== options.length) {
+    menu.replaceChildren(
+      ...options.map(({ value }) => {
+        const item = buildButton(null, "cub-thread-menu-item", () => chooseSort(value));
+        item.setAttribute("role", "menuitemradio");
+        item.dataset.value = value;
+        item.innerHTML = `<span class="cub-thread-menu-label"></span>${svg(ICONS.check, 14, 2.5)}`;
+        return item;
+      }),
+    );
   }
-  const newButton = actions.querySelector(".cub-thread-new");
+  sortItems(menu).forEach((item, index) => {
+    const label = item.querySelector(".cub-thread-menu-label");
+    if (label) setText(label, options[index].label);
+    setAttr(item, "aria-checked", options[index].value === sort ? "true" : "false");
+  });
+  const button = wrap.querySelector(".cub-thread-sort-btn");
+  if (button) {
+    const label = t("threadSort", "Sort threads");
+    setAttr(button, "aria-label", label);
+    setAttr(button, "title", label);
+  }
+};
+
+// Search, sort and new chat at the top, as in T3.
+const buildTopRow = (): HTMLElement => {
+  const row = document.createElement("div");
+  row.id = TOP_ROW_ID;
+  const search = buildButton(null, "cub-thread-search", openClaudeSearch);
+  search.innerHTML = `${svg(ICONS.search, 17)}<span class="cub-thread-search-label"></span>`;
+  const actions = document.createElement("div");
+  actions.id = TOP_ACTIONS_ID;
+  const newButton = buildButton(null, "cub-thread-icon-btn cub-thread-new", startNewChat);
+  newButton.innerHTML = svg(ICONS.compose);
+  actions.append(buildSortPicker(), newButton);
+  row.append(search, actions);
+  return row;
+};
+
+const syncTopRowContent = (row: Element): void => {
+  const searchLabel = row.querySelector(".cub-thread-search-label");
+  if (searchLabel) setText(searchLabel, t("threadSearch", "Search"));
+  const search = row.querySelector(".cub-thread-search");
+  if (search) setAttr(search, "aria-label", t("threadSearch", "Search"));
+  const sortPicker = row.querySelector(".cub-thread-sort");
+  if (sortPicker) syncSortPicker(sortPicker);
+  const newButton = row.querySelector(".cub-thread-new");
   if (newButton) {
     const label = t("threadNewChat", "New chat");
     setAttr(newButton, "aria-label", label);
@@ -676,45 +816,38 @@ const syncTopActions = (actions: HTMLElement): void => {
   }
 };
 
-const buildTopRow = (): HTMLElement => {
-  const row = document.createElement("div");
-  row.id = TOP_ROW_ID;
-  const search = buildButton(null, "cub-thread-search", openClaudeSearch);
-  search.innerHTML = `${svg(ICONS.search)}<span class="cub-thread-search-label"></span>`;
-  row.append(search, buildTopActions());
-  return row;
-};
-
-// Claude's own top search bar, in layouts that have one: matched by the
-// Ctrl/⌘+Shift+K shortcut it advertises or its "Search" label, skipping the
-// icon-only search button in the Threads heading. Climbs to the outermost box
-// that holds nothing else, so the buttons line up with the visible bar.
-const findClaudeSearchBar = (sidebar: Element): HTMLElement | null => {
-  if (claudeSearchBar?.isConnected && !claudeSearchBar.closest(OWN_NODE_SELECTOR)) return claudeSearchBar;
+// Claude's own top search bar, in layouts that have one: a *visible*, bar-wide
+// control matched by the Ctrl/⌘+Shift+K shortcut it advertises or its
+// "Search" label (the icon-only search in the Threads heading and any hidden
+// variant for other layouts don't count). Climbs to the outermost wrapper that
+// is just the bar, so hiding it leaves no gap. A bar with a text field in it
+// filters in place, so it's left alone rather than hidden.
+const findClaudeSearchBar = (scope: Element, sidebar: Element): HTMLElement | null => {
+  if (claudeSearchBar?.isConnected) return claudeSearchBar;
   claudeSearchBar = null;
   const now = Date.now();
   if (now - searchScanAt < SEARCH_RESCAN_MS) return null;
   searchScanAt = now;
-  const scope = sidebar.closest("aside") ?? sidebar;
-  const candidates = scope.querySelectorAll<HTMLElement>(
-    '[aria-keyshortcuts], input, [role="searchbox"], [role="combobox"], button',
-  );
+  const scopeWidth = scope.getBoundingClientRect().width;
+  const candidates = scope.querySelectorAll<HTMLElement>('[aria-keyshortcuts], [role="search"], button, [role="button"]');
   for (const el of candidates) {
     if (el.hasAttribute("data-cds-icon-only") || el.hasAttribute("data-row-main-button")) continue;
     if (el.closest(`${GROUP_LABEL_SELECTOR}, ${RECENTS_SELECTOR}, ${PINNED_SELECTOR}, ${NAV_ROWS_SELECTOR}, ${OWN_NODE_SELECTOR}`)) {
       continue;
     }
     const shortcut = el.getAttribute("aria-keyshortcuts") ?? "";
-    const label = (el.getAttribute("aria-label") ?? el.getAttribute("placeholder") ?? el.textContent ?? "").trim();
+    const label = (el.getAttribute("aria-label") ?? el.textContent ?? "").trim();
     if (!/shift\+k$/i.test(shortcut) && !/^search\b/i.test(label)) continue;
+    if (!isShown(el)) continue;
+    const rect = el.getBoundingClientRect();
+    if (rect.width < Math.max(120, scopeWidth * 0.45)) continue;
+    if (el.querySelector('input, textarea, [contenteditable="true"], [role="searchbox"]')) continue;
     let bar: HTMLElement = el;
-    while (
-      bar.parentElement &&
-      bar.parentElement.childElementCount === 1 &&
-      bar.parentElement !== sidebar &&
-      bar.parentElement !== scope
-    ) {
-      bar = bar.parentElement;
+    for (let parent = bar.parentElement; parent; parent = bar.parentElement) {
+      if (parent === sidebar || parent === scope || parent.childElementCount !== 1) break;
+      const parentRect = parent.getBoundingClientRect();
+      if (parentRect.width > rect.width + 24 || parentRect.height > rect.height + 20) break;
+      bar = parent;
     }
     claudeSearchBar = bar;
     return bar;
@@ -722,52 +855,30 @@ const findClaudeSearchBar = (sidebar: Element): HTMLElement | null => {
   return null;
 };
 
-// Search, sort and new chat at the top, as in T3. Where Claude already shows a
-// search bar it stays, and the sort / new-chat buttons sit at its right end;
-// otherwise a search row of ours (opening Claude's search) takes the New row's
-// place.
-const syncTopRow = (sidebar: Element): void => {
-  const newLink = sidebar.querySelector<HTMLElement>(NEW_LINK_SELECTOR);
+// Our row takes the place of Claude's top search bar when the layout has one,
+// otherwise of Claude's New row. Both of Claude's are hidden: our row drives
+// them.
+const syncTopRow = (scope: Element, sidebar: Element): void => {
+  const newLink = scope.querySelector<HTMLElement>(NEW_LINK_SELECTOR);
   if (newLink) setAttr(newLink, HIDDEN_ATTR, "");
+  const bar = findClaudeSearchBar(scope, sidebar);
 
-  const bar = findClaudeSearchBar(sidebar);
-  document.querySelectorAll(`[${SEARCH_ATTR}]`).forEach((el) => {
-    if (el !== bar) el.removeAttribute(SEARCH_ATTR);
-  });
-
-  if (bar?.parentElement) {
-    document.getElementById(TOP_ROW_ID)?.remove();
-    let actions = document.getElementById(TOP_ACTIONS_ID);
-    if (!actions || actions.previousElementSibling !== bar) {
-      actions?.remove();
-      actions = buildTopActions();
-      bar.after(actions);
-    }
-    setAttr(bar, SEARCH_ATTR, "");
-    // Beside the bar in a row layout; otherwise pulled up over its right end.
-    const parentStyle = getComputedStyle(bar.parentElement);
-    const inRow = parentStyle.display.includes("flex") && !parentStyle.flexDirection.startsWith("column");
-    const height = `${bar.offsetHeight || 32}px`;
-    actions.style.height = inRow ? "" : height;
-    actions.style.marginTop = inRow ? "" : `-${height}`;
-    setAttr(actions, "data-placement", inRow ? "inline" : "overlay");
-    syncTopActions(actions);
-    return;
-  }
-
-  const host = newLink?.closest(".shrink-0") ?? newLink?.parentElement ?? sidebar.firstElementChild;
-  if (!host) return;
   let row = document.getElementById(TOP_ROW_ID);
-  if (!row || row.parentElement !== host) {
-    row?.remove();
-    document.getElementById(TOP_ACTIONS_ID)?.remove();
-    row = buildTopRow();
-    host.insertBefore(row, host.firstChild);
+  if (bar?.parentElement) {
+    setAttr(bar, HIDDEN_ATTR, "");
+    if (!row || row.nextElementSibling !== bar) {
+      row ??= buildTopRow();
+      bar.before(row);
+    }
+  } else {
+    const host = newLink?.closest(".shrink-0") ?? newLink?.parentElement ?? sidebar.firstElementChild;
+    if (!host) return;
+    if (!row || row.parentElement !== host) {
+      row ??= buildTopRow();
+      host.insertBefore(row, host.firstChild);
+    }
   }
-  const searchLabel = row.querySelector(".cub-thread-search-label");
-  if (searchLabel) setText(searchLabel, t("threadSearch", "Search"));
-  const actions = row.querySelector<HTMLElement>(`#${TOP_ACTIONS_ID}`);
-  if (actions) syncTopActions(actions);
+  syncTopRowContent(row);
 };
 
 // Our toggles are the only nodes this module adds outside a row. Any copy
@@ -870,58 +981,57 @@ const removeCardMeta = (main: Element): void => {
   main.querySelector(`:scope > .${META_CLASS}`)?.remove();
 };
 
-const threadTitleOf = (row: Element): string =>
-  (row.querySelector("[data-row-label]")?.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 120);
-
-// Tells the background worker a watched thread finished or now needs you, so
-// it can banner whatever page you're on. The title travels with the message
-// for the banner only; nothing stores it.
-const reportThreadEvent = (row: Element, key: string, event: "done" | "awaiting"): void => {
-  if (!extensionAlive()) return;
-  const href = row.querySelector(MAIN_BUTTON_SELECTOR)?.getAttribute("href") ?? null;
-  try {
-    chrome.runtime.sendMessage(
-      {
-        type: MESSAGE_TYPES.threadDone,
-        event,
-        key,
-        title: threadTitleOf(row),
-        path: href && href.startsWith("/") ? href : null,
-      },
-      () => {
-        void chrome.runtime.lastError;
-      },
-    );
-  } catch {
-    // Extension reloaded under us; the next instance takes over.
+// T3's Settle, next to Claude's ⋮ on a card's hover: files the thread under
+// Settled until it next has activity. Sits on Claude's row box rather than in
+// its link, so it's its own button; placed just left of Claude's actions,
+// whose width is measured since rows can carry more than one.
+const syncSettleButton = (card: HTMLElement, key: string, wanted: boolean): void => {
+  let button = card.querySelector<HTMLElement>(`:scope > .${SETTLE_CLASS}`);
+  if (!wanted) {
+    button?.remove();
+    return;
   }
+  if (!button) {
+    button = buildButton(null, SETTLE_CLASS, () => settleThread(button?.dataset.key ?? ""));
+    button.innerHTML = `${svg(ICONS.check, 13, 2.5)}<span class="cub-thread-settle-label"></span>`;
+    card.appendChild(button);
+  }
+  button.dataset.key = key;
+  const label = button.querySelector(".cub-thread-settle-label");
+  if (label) setText(label, t("threadSettle", "Settle"));
+  const actions = card.querySelector<HTMLElement>(":scope > div:not([data-row-main-button])");
+  const offset = actions?.offsetWidth ? card.clientWidth - actions.offsetLeft + 2 : 34;
+  const inset = `${Math.max(0, Math.round(offset))}px`;
+  if (button.style.insetInlineEnd !== inset) button.style.insetInlineEnd = inset;
+};
+
+const settleThread = (key: string): void => {
+  if (!ROW_KEY_PATTERN.test(key)) return;
+  settled[key] = Date.now();
+  if (activity[key]?.doneAt) {
+    delete activity[key];
+    saveActivity();
+  }
+  saveSettled();
+  applyThreadSidebar();
 };
 
 // Working → done bookkeeping for one row. Returns the status to show, which
-// adds "done" for threads that finished while you weren't looking. Alerts only
-// fire for rows this tab watched working and only on the transition itself.
+// adds "done" for threads that finished while you weren't looking.
 const trackActivity = (
-  row: Element,
   key: string,
   info: ThreadRowInfo,
   now: number,
   looking: boolean,
 ): { status: ThreadStatus | null; changed: boolean } => {
   const previous = activity[key];
-  const watched = watchedWorking.has(key);
   let next: ThreadActivity | undefined = previous;
 
   if (info.status === "working" || info.status === "awaiting") {
     next = { workingSince: previous?.workingSince ?? now };
-    if (info.status === "awaiting") {
-      next.awaitingSince = previous?.awaitingSince ?? now;
-      if (!previous?.awaitingSince && watched && !looking) reportThreadEvent(row, key, "awaiting");
-    }
-    watchedWorking.add(key);
+    if (info.status === "awaiting") next.awaitingSince = previous?.awaitingSince ?? now;
   } else if (previous?.workingSince) {
     next = looking ? undefined : { doneAt: now };
-    if (!looking && watched) reportThreadEvent(row, key, "done");
-    watchedWorking.delete(key);
   } else if (previous?.doneAt && looking) {
     next = undefined;
   }
@@ -935,14 +1045,31 @@ const trackActivity = (
   return { status: info.status ?? (next?.doneAt ? "done" : null), changed };
 };
 
+// A hand-settled thread stays settled until it does something after being
+// settled: starts working, finishes, or changes in Claude's list.
+const stillSettled = (key: string): boolean => {
+  const settledAt = settled[key];
+  if (settledAt === undefined) return false;
+  const local = activity[key];
+  const updatedAt = threadTimes.get(threadIdOf(key))?.updatedAt ?? 0;
+  return (
+    (local?.workingSince ?? 0) <= settledAt &&
+    (local?.doneAt ?? 0) <= settledAt &&
+    updatedAt <= settledAt + SETTLE_GRACE_MS
+  );
+};
+
 // ── Apply ────────────────────────────────────────────────────────────────────
 
 export const applyThreadSidebar = (): void => {
   if (!enabled) return;
   const sidebar = document.querySelector(SIDEBAR_SELECTOR);
   if (sidebar) {
-    setAttr(sidebar, THEME_ATTR, lightTheme ? "light" : "dark");
-    syncTopRow(sidebar);
+    // On the whole aside: Claude's search bar, and so our row, can sit above
+    // the sidebar body.
+    const scope = sidebar.closest("aside") ?? sidebar;
+    setAttr(scope, THEME_ATTR, lightTheme ? "light" : "dark");
+    syncTopRow(scope, sidebar);
     syncNavRows(sidebar);
   }
 
@@ -970,14 +1097,25 @@ export const applyThreadSidebar = (): void => {
   const now = Date.now();
   const visible = document.visibilityState === "visible";
   let activityChanged = false;
-  rows.forEach((row, index) => {
+  let settledChanged = false;
+  rows.forEach((_row, index) => {
     const info = infos[index];
-    if (info.label || info.hidden || !keys[index]) return;
-    const tracked = trackActivity(row, keys[index], info, now, info.current && visible);
+    const key = keys[index];
+    if (info.label || info.hidden || !key) return;
+    const tracked = trackActivity(key, info, now, info.current && visible);
     info.status = tracked.status;
     activityChanged ||= tracked.changed;
+    if (settled[key] !== undefined && !info.pinned) {
+      if (stillSettled(key)) {
+        info.settled = true;
+      } else {
+        delete settled[key];
+        settledChanged = true;
+      }
+    }
   });
   if (activityChanged) saveActivity();
+  if (settledChanged) saveSettled();
 
   // Display order: labels and pinned rows keep Claude's order; everything else
   // is sorted by the chosen rule, then sectioned.
@@ -1038,9 +1176,10 @@ export const applyThreadSidebar = (): void => {
     const isCard = CARD_SECTIONS.includes(placement);
     const main = row.querySelector(MAIN_BUTTON_SELECTOR);
     const card = main?.closest("[data-row]") ?? null;
-    if (card) {
+    if (card instanceof HTMLElement) {
       setAttr(card, CARD_ATTR, isCard ? "" : null);
       setAttr(card, CURRENT_ATTR, isCard && info.current ? "" : null);
+      syncSettleButton(card, key, isCard && placement !== "pinned");
     }
     if (main) {
       if (isCard) {
@@ -1066,6 +1205,7 @@ export const applyThreadSidebar = (): void => {
 };
 
 const clearThreadSidebar = (): void => {
+  closeSortMenu();
   document.querySelectorAll<HTMLElement>(`[${ROW_ATTR}]`).forEach((row) => setOrder(row, null));
   document.querySelectorAll(OWN_NODE_SELECTOR).forEach((el) => el.remove());
   const selector = OWN_ATTRS.map((name) => `[${name}]`).join(",");
@@ -1121,7 +1261,7 @@ const stopObserving = (): void => {
     clockTimer = undefined;
   }
   document.removeEventListener("visibilitychange", onVisibilityChange);
-  if (extensionAlive()) chrome.storage.onChanged?.removeListener(onSessionChanged);
+  if (extensionAlive()) chrome.storage.onChanged?.removeListener(onStorageChanged);
 };
 
 // A displaced content-script instance (after an extension reload) must stop
@@ -1157,8 +1297,9 @@ const start = (): void => {
     if (stillActive()) applyThreadSidebar();
   }, CLOCK_TICK_MS);
   document.addEventListener("visibilitychange", onVisibilityChange);
-  if (extensionAlive()) chrome.storage.onChanged?.addListener(onSessionChanged);
+  if (extensionAlive()) chrome.storage.onChanged?.addListener(onStorageChanged);
   loadActivity();
+  loadSettled();
   attach();
 };
 
@@ -1205,5 +1346,6 @@ export const resetThreadSidebarForTests = (): void => {
   isActive = () => true;
   threadTimes.clear();
   activity = {};
-  watchedWorking.clear();
+  settled = {};
+  sortMenuOpen = false;
 };

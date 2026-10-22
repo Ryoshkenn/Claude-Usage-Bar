@@ -28,7 +28,6 @@ const settings: Settings = {
   threadSidebar: false,
   threadSidebarRecentCount: 5,
   threadSidebarSort: "edited",
-  threadDoneAlerts: "claude",
 };
 
 const hoverContext = () => {

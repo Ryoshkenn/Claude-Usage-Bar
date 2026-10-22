@@ -2,24 +2,28 @@
    restyle Claude's own sidebar rows, tagged with data-cub-thread* attributes,
    plus the few nodes threadSidebar.ts adds. Nothing here applies unless the
    option is on: every rule hangs off an attribute or element only that module
-   sets. Text colours come from Claude's tokens; the two surface tints below are
-   the only per-theme values, switched by data-cub-threads-theme (set from the
-   same theme detection as the rest of the overlay). */
+   sets. Text colours come from Claude's tokens; the surface tints below are the
+   only per-theme values, switched by data-cub-threads-theme on the sidebar's
+   aside (set from the same theme detection as the rest of the overlay). */
 
 [data-cub-threads-theme] {
   /* Cards have no surface at rest; hover darkens a touch, the open thread a
      touch more. */
   --cub-thread-hover: rgb(0 0 0 / 22%);
   --cub-thread-current: rgb(0 0 0 / 32%);
-  --cub-thread-field: rgb(255 255 255 / 5%);
-  --cub-thread-field-hover: rgb(255 255 255 / 8%);
+  --cub-thread-menu-bg: rgb(44 44 43);
+  --cub-thread-menu-border: rgb(255 255 255 / 9%);
+  --cub-thread-menu-shadow: 0 12px 32px rgb(0 0 0 / 40%);
+  --cub-thread-settle-bg: rgb(52 51 49);
 }
 
 [data-cub-threads-theme="light"] {
   --cub-thread-hover: rgb(92 62 30 / 7%);
   --cub-thread-current: rgb(92 62 30 / 11%);
-  --cub-thread-field: rgb(92 62 30 / 6%);
-  --cub-thread-field-hover: rgb(92 62 30 / 9%);
+  --cub-thread-menu-bg: rgb(255 255 255);
+  --cub-thread-menu-border: rgb(0 0 0 / 9%);
+  --cub-thread-menu-shadow: 0 12px 32px rgb(0 0 0 / 14%);
+  --cub-thread-settle-bg: rgb(246 243 238);
 }
 
 /* The sidebar's scroll column: pinned and recent rows both become its flex
@@ -255,36 +259,78 @@
   background: color-mix(in srgb, currentColor 10%, transparent);
 }
 
+/* ── Settle (T3's row action), left of Claude's ⋮ on hover ────────────────── */
+
+.cub-thread-settle {
+  position: absolute;
+  top: 7px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--cub-thread-settle-bg);
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--cds-text-secondary, currentColor);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+[data-cub-thread-card]:hover > .cub-thread-settle,
+[data-cub-thread-card]:focus-within > .cub-thread-settle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cub-thread-settle:hover {
+  color: var(--cds-text-primary, currentColor);
+}
+
 /* ── Top row: search, sort, new chat ────────────────────────────────────── */
 
 #cub-thread-top {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 6px;
+  gap: 2px;
+  margin: 2px 0 8px;
 }
 
+/* T3's search: no box, just the glass and a muted placeholder; a tint on
+   hover. Opens Claude's own search. */
 .cub-thread-search {
   display: flex;
   flex: 1;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
-  height: 32px;
-  padding: 0 10px;
+  height: 34px;
+  padding: 0 8px;
   border: 0;
   border-radius: 8px;
-  background: var(--cub-thread-field);
+  background: transparent;
   font: inherit;
-  font-size: var(--df-row-font, 14px);
+  font-size: 15px;
   color: var(--cds-text-muted, color-mix(in srgb, currentColor 55%, transparent));
   text-align: start;
   cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
 }
 
 .cub-thread-search:hover {
-  background: var(--cub-thread-field-hover);
+  background: var(--cub-thread-hover);
   color: var(--cds-text-secondary, currentColor);
+}
+
+.cub-thread-search svg {
+  flex: none;
 }
 
 .cub-thread-search-label {
@@ -301,26 +347,13 @@
   gap: 2px;
 }
 
-/* Next to Claude's own search bar: pulled up over its right end (the bar is
-   narrowed to make room) unless the bar already sits in a row. */
-#cub-thread-top-actions[data-placement="overlay"] {
-  position: relative;
-  width: max-content;
-  margin-inline-start: auto;
-}
-
-[data-cub-thread-search] {
-  width: calc(100% - 64px) !important;
-  max-width: calc(100% - 64px) !important;
-}
-
 .cub-thread-icon-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border: 0;
   border-radius: 7px;
@@ -330,18 +363,70 @@
 }
 
 .cub-thread-icon-btn:hover,
-.cub-thread-icon-btn:focus-within {
-  background: var(--df-hover, color-mix(in srgb, currentColor 8%, transparent));
+.cub-thread-icon-btn[aria-expanded="true"] {
+  background: var(--cub-thread-hover);
   color: var(--cds-text-primary, currentColor);
 }
 
-.cub-thread-icon-btn select {
+/* Sort menu. */
+.cub-thread-sort {
+  position: relative;
+  display: inline-flex;
+}
+
+.cub-thread-menu {
   position: absolute;
-  inset: 0;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 50;
+  min-width: 180px;
+  padding: 4px;
+  border: 1px solid var(--cub-thread-menu-border);
+  border-radius: 10px;
+  background: var(--cub-thread-menu-bg);
+  box-shadow: var(--cub-thread-menu-shadow);
+}
+
+.cub-thread-menu[hidden] {
+  display: none;
+}
+
+.cub-thread-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  height: 100%;
-  opacity: 0;
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  color: var(--cds-text-primary, currentColor);
+  text-align: start;
   cursor: pointer;
+}
+
+.cub-thread-menu-item:hover,
+.cub-thread-menu-item:focus-visible {
+  background: color-mix(in srgb, currentColor 9%, transparent);
+  outline: none;
+}
+
+.cub-thread-menu-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.cub-thread-menu-item svg {
+  flex: none;
+  visibility: hidden;
+}
+
+.cub-thread-menu-item[aria-checked="true"] svg {
+  visibility: visible;
 }
 
 /* ── Toggles ────────────────────────────────────────────────────────────── */
@@ -373,7 +458,7 @@
 #cub-thread-nav-toggle:focus-visible,
 .cub-thread-search:focus-visible,
 .cub-thread-icon-btn:focus-visible,
-.cub-thread-icon-btn select:focus-visible {
+.cub-thread-settle:focus-visible {
   outline: 2px solid var(--cds-fill-accent, rgb(204 124 94));
   outline-offset: -2px;
 }
@@ -470,7 +555,9 @@
 @media (prefers-reduced-motion: reduce) {
   [data-cub-thread-card],
   [data-cub-thread-card] [data-row-label],
-  .cub-thread-caret {
+  .cub-thread-caret,
+  .cub-thread-settle,
+  .cub-thread-search {
     transition: none;
   }
 

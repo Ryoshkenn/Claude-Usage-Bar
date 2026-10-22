@@ -25,7 +25,7 @@ const MAX_ANNOUNCED = 12;
 // doesn't count as "you used Claude".
 const MIN_USED_PERCENT_TO_ANNOUNCE = 1;
 
-export const isNotifiableUrl = (url: string | undefined): boolean =>
+const isNotifiableUrl = (url: string | undefined): boolean =>
   Boolean(url) &&
   /^https?:/.test(url as string) &&
   // Chrome hard-blocks injection here; attempting it throws and spams the log.

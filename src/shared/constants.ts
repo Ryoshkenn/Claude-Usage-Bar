@@ -21,6 +21,9 @@ export const STORAGE_KEYS = {
   // done timestamps keyed by Claude's row key ("chat:<uuid>"). Ids and numbers
   // only — never titles — and gone when the browser closes.
   threadActivity: "threadActivity",
+  // chrome.storage.local: threads the user settled by hand, row key → when.
+  // A thread leaves the list again on its next activity. Ids and times only.
+  threadSettled: "threadSettled",
 } as const;
 
 export const MESSAGE_TYPES = {
@@ -34,8 +37,6 @@ export const MESSAGE_TYPES = {
   // Page probe → content script: thread ids with created / updated times seen in
   // Claude's own API responses. Hardcoded again in public/pageProbe.js.
   threadTimes: "CLAUDE_USAGE_BAR_THREAD_TIMES",
-  threadDone: "CLAUDE_USAGE_BAR_THREAD_DONE",
-  openThread: "CLAUDE_USAGE_BAR_OPEN_THREAD",
 } as const;
 
 export const CLAUDE_ORIGIN = "https://claude.ai";

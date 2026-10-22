@@ -10,6 +10,7 @@ const EXTENSION_NODE_SELECTOR = [
   "#cub-thread-top",
   "#cub-thread-top-actions",
   ".cub-thread-meta",
+  ".cub-thread-settle",
 ].join(",");
 
 const elementForNode = (node: Node): Element | null => {

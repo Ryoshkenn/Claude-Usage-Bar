@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "选择“最近编辑”时，有变化或 Claude 回复的对话会移到上方。"
   },
-  "setThreadAlerts": {
-    "message": "任务提醒"
-  },
-  "setThreadAlertsDesc": {
-    "message": "在其他网站时，对话完成或需要你处理会显示横幅。任意网站需要 Chrome 权限。"
-  },
-  "threadBannerDone": {
-    "message": "Claude 已完成"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude 需要你的输入"
-  },
-  "threadBannerOpen": {
-    "message": "打开"
-  },
-  "threadBannerDismiss": {
-    "message": "关闭"
-  },
-  "grantThreadsTitle": {
-    "message": "在任意网站显示任务提醒"
-  },
-  "grantThreadsDenied": {
-    "message": "未授予权限。任务提醒仅在 claude.ai 显示。"
+  "threadSettle": {
+    "message": "标为完成"
   }
 }

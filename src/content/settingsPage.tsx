@@ -1,4 +1,5 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { clearWeeklyUsageMetrics, DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
 import { SUPPORTED_LANGUAGES, setLanguage, t } from "../shared/i18n";
@@ -124,6 +125,8 @@ export const closeSettingsOverlay = (): void => {
 
 // ── Nav injection ────────────────────────────────────────────────────────────
 
+const PANEL_ID = "cub-settings-panel";
+
 let navLi: HTMLLIElement | null = null;
 
 // Whether our settings panel is the active section inside the overlay. Driven
@@ -230,7 +233,7 @@ const mountPanel = () => {
   }
 
   panelEl = document.createElement("div");
-  panelEl.id = "cub-settings-panel";
+  panelEl.id = PANEL_ID;
   // Claude scopes its component design tokens (--cds-switch-track/-knob/-h, etc.)
   // to the `.cds-root` class, not :root. Our panel mounts outside that subtree,
   // so without this class those vars are empty and the Switch knob/track render
@@ -373,8 +376,26 @@ const Switch = ({
   </button>
 );
 
-// Combobox: Claude's dropdown visual with a transparent native <select> overlaid for interaction
-const CdsSelect = ({
+const scrollParentOf = (el: HTMLElement): HTMLElement | null => {
+  for (let node = el.parentElement; node; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (overflowY === "auto" || overflowY === "scroll") return node;
+  }
+  return null;
+};
+
+const OPTION_HEIGHT_PX = 32;
+const MENU_MAX_HEIGHT_PX = 300;
+
+// Dropdown: Claude's combobox look on the trigger, with a menu of our own. A
+// native <select> laid over the trigger depended on Claude's utility classes to
+// stay invisible and opened the OS menu wherever the browser chose. The menu is
+// portalled into the panel root because the nested option groups clip their
+// content (overflow: hidden, for the expand animation); it opens below the
+// trigger, or above when the settings scroller has no room below. Focus stays
+// on the trigger (aria-activedescendant), and Escape closes the menu without
+// closing Claude's settings dialog.
+export const CdsSelect = ({
   id,
   value,
   onChange,
@@ -385,45 +406,198 @@ const CdsSelect = ({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) => {
-  const currentLabel = options.find((o) => o.value === value)?.label ?? value;
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const [placement, setPlacement] = useState<{ host: HTMLElement; style: React.CSSProperties } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = `${id}-menu`;
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === value),
+  );
+  const currentLabel = options.find((option) => option.value === value)?.label ?? value;
+
+  const place = useCallback(() => {
+    const trigger = triggerRef.current;
+    const host = trigger?.closest<HTMLElement>(`#${PANEL_ID}`);
+    if (!trigger || !host) return;
+    const triggerRect = trigger.getBoundingClientRect();
+    const hostRect = host.getBoundingClientRect();
+    const bounds = scrollParentOf(trigger)?.getBoundingClientRect() ?? { top: 0, bottom: window.innerHeight };
+    const menuHeight = Math.min(options.length * OPTION_HEIGHT_PX + 10, MENU_MAX_HEIGHT_PX);
+    const below = bounds.bottom - triggerRect.bottom;
+    const above = triggerRect.top - bounds.top;
+    const up = below < menuHeight + 8 && above > below;
+    setPlacement({
+      host,
+      style: {
+        right: hostRect.right - triggerRect.right,
+        minWidth: Math.max(triggerRect.width, 168),
+        ...(up ? { bottom: hostRect.bottom - triggerRect.top + 4 } : { top: triggerRect.bottom - hostRect.top + 4 }),
+      },
+    });
+  }, [options.length]);
+
+  const openMenu = () => {
+    setActive(selectedIndex);
+    place();
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const choose = (index: number) => {
+    const option = options[index];
+    if (option && option.value !== value) onChange(option.value);
+    close();
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (target && (triggerRef.current?.contains(target) || menuRef.current?.contains(target))) return;
+      setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    window.addEventListener("resize", place);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      window.removeEventListener("resize", place);
+    };
+  }, [open, place]);
+
+  useEffect(() => {
+    if (!open) return;
+    menuRef.current?.querySelector(`[data-index="${active}"]`)?.scrollIntoView?.({ block: "nearest" });
+  }, [open, active]);
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (!open) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+        event.preventDefault();
+        openMenu();
+      }
+      return;
+    }
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        setActive((index) => (index + 1) % options.length);
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        setActive((index) => (index - 1 + options.length) % options.length);
+        break;
+      case "Home":
+        event.preventDefault();
+        setActive(0);
+        break;
+      case "End":
+        event.preventDefault();
+        setActive(options.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        choose(active);
+        break;
+      case "Escape":
+        // Ours to handle: don't let Claude's dialog see it and close itself.
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+        break;
+      case "Tab":
+        setOpen(false);
+        break;
+    }
+  };
+
   return (
-    <div className={CDS_COMBOBOX_WRAP}>
+    <>
       <button
-        type="button"
-        tabIndex={-1}
-        aria-hidden="true"
-        className={CDS_COMBOBOX_BTN}
-      >
-        <span className="min-w-0 flex-1 truncate">{currentLabel}</span>
-        <svg
-          className={CDS_COMBOBOX_ICON}
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
-      <select
+        ref={triggerRef}
         id={id}
-        value={value}
-        onChange={(e) => onChange(e.currentTarget.value)}
-        className="absolute inset-0 w-full opacity-0 cursor-pointer"
-        aria-label={currentLabel}
+        type="button"
+        className={`${CDS_COMBOBOX_WRAP} cub-select-trigger`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        aria-activedescendant={open ? `${menuId}-${active}` : undefined}
+        onClick={() => (open ? close() : openMenu())}
+        onKeyDown={onKeyDown}
       >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </div>
+        <span className={CDS_COMBOBOX_BTN}>
+          <span className="min-w-0 flex-1 truncate">{currentLabel}</span>
+          <svg
+            className={`${CDS_COMBOBOX_ICON} cub-select-caret`}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </span>
+      </button>
+      {open &&
+        placement &&
+        createPortal(
+          <div
+            ref={menuRef}
+            id={menuId}
+            role="listbox"
+            aria-labelledby={id}
+            className="cub-select-menu text-body"
+            style={placement.style}
+          >
+            {options.map((option, index) => (
+              <div
+                key={option.value}
+                id={`${menuId}-${index}`}
+                data-index={index}
+                role="option"
+                aria-selected={option.value === value}
+                data-active={index === active ? "true" : undefined}
+                className="cub-select-option"
+                onPointerEnter={() => setActive(index)}
+                // Keep focus on the trigger so keyboard handling stays in one place.
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => choose(index)}
+              >
+                <span className="cub-select-option-label">{option.label}</span>
+                {option.value === value && (
+                  <svg
+                    className="cub-select-check"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="5 12.5 10 17 19 7.5" />
+                  </svg>
+                )}
+              </div>
+            ))}
+          </div>,
+          placement.host,
+        )}
+    </>
   );
 };
 
@@ -672,18 +846,6 @@ const SettingsPage = () => {
     });
   };
 
-  // Same route as reset alerts, tagged so the grant window records the answer
-  // against task alerts.
-  const changeThreadAlerts = (next: ResetBannerScope) => {
-    if (next === "everywhere") {
-      chrome.runtime.sendMessage({ type: MESSAGE_TYPES.requestAllSites, purpose: "threads" }, () => {
-        void chrome.runtime.lastError;
-      });
-      return;
-    }
-    update({ threadDoneAlerts: next });
-  };
-
   const sendTestBanner = () => {
     if (testCountdown > 0) return;
     chrome.runtime.sendMessage(
@@ -809,23 +971,6 @@ const SettingsPage = () => {
                   value={settings.threadSidebarSort ?? "edited"}
                   options={threadSortOptions()}
                   onChange={(v) => update({ threadSidebarSort: v as ThreadSort })}
-                />
-              </Row>
-            </NestItem>
-            <NestItem>
-              <Row
-                labelId={id("thread-alerts")}
-                label={t("setThreadAlerts", "Task alerts")}
-                description={t(
-                  "setThreadAlertsDesc",
-                  "Banner when a thread finishes or needs you while you're elsewhere. Any site needs Chrome permission.",
-                )}
-              >
-                <CdsSelect
-                  id={id("thread-alerts")}
-                  value={settings.threadDoneAlerts ?? "claude"}
-                  options={resetScopeOptions()}
-                  onChange={(v) => changeThreadAlerts(v as ResetBannerScope)}
                 />
               </Row>
             </NestItem>

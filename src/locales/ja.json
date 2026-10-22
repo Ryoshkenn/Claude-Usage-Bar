@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "「編集が新しい順」では、変更や Claude の返信があったスレッドが上に移動します。"
   },
-  "setThreadAlerts": {
-    "message": "タスク通知"
-  },
-  "setThreadAlertsDesc": {
-    "message": "別のサイトを見ている間にスレッドが完了したり入力が必要になったりするとバナーを表示します。すべてのサイトには Chrome の許可が必要です。"
-  },
-  "threadBannerDone": {
-    "message": "Claude が完了しました"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude が入力を待っています"
-  },
-  "threadBannerOpen": {
-    "message": "開く"
-  },
-  "threadBannerDismiss": {
-    "message": "閉じる"
-  },
-  "grantThreadsTitle": {
-    "message": "すべてのサイトでタスク通知を表示"
-  },
-  "grantThreadsDenied": {
-    "message": "許可されませんでした。タスク通知は claude.ai のみに表示されます。"
+  "threadSettle": {
+    "message": "完了にする"
   }
 }

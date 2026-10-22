@@ -92,7 +92,6 @@ export const DEFAULT_SETTINGS: Settings = {
   threadSidebar: false,
   threadSidebarRecentCount: 5,
   threadSidebarSort: "edited",
-  threadDoneAlerts: "claude",
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The
@@ -107,10 +106,18 @@ interface RemovedSettings {
   // Per-window reset banner toggles — the banner now covers both windows.
   resetBannerSession?: boolean;
   resetBannerWeekly?: boolean;
+  // Thread view task-alert banners, dropped before release.
+  threadDoneAlerts?: unknown;
 }
 
 const migrateSettings = (stored: Settings & RemovedSettings): Settings => {
-  const { weeklyPaceMode: _paceMode, resetBannerSession, resetBannerWeekly, ...settings } = stored;
+  const {
+    weeklyPaceMode: _paceMode,
+    threadDoneAlerts: _threadDoneAlerts,
+    resetBannerSession,
+    resetBannerWeekly,
+    ...settings
+  } = stored;
   // Someone who had muted both windows had effectively turned banners off.
   const resetBannerScope =
     resetBannerSession === false && resetBannerWeekly === false ? "off" : settings.resetBannerScope;

@@ -2,13 +2,7 @@ import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
 import { getEffectiveModelWeight } from "../shared/modelUsage";
-import {
-  appendUsageHistoryEntry,
-  getStorage,
-  saveChatUsage,
-  saveRealUsageSnapshot,
-  updateSettings,
-} from "../shared/storage";
+import { appendUsageHistoryEntry, getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
 import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot, ThinkingLevel } from "../shared/types";
 import { setLanguage, t } from "../shared/i18n";
 import {
@@ -18,7 +12,6 @@ import {
   buildBannerCopy,
   scheduleResetAlarms,
 } from "./resetNotifier";
-import { announceThreadEvent, openThread, parseThreadEvent } from "./threadNotifier";
 
 // Per-message context the content script attaches to a usage refresh, since the
 // background worker has no DOM access to the active model, thinking level, or
@@ -39,8 +32,6 @@ export const TEST_BANNER_DELAY_MS = 5_000;
 void chrome.storage.session
   ?.setAccessLevel?.({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
   .catch(() => undefined);
-
-const ALL_SITES = { origins: ["*://*/*"] };
 
 let inFlightUsageRequest: Promise<ApiUsageResponse> | null = null;
 const inFlightConversationRequests = new Map<string, Promise<ConversationContextResponse>>();
@@ -267,7 +258,7 @@ chrome.alarms?.onAlarm.addListener((alarm) => {
   })();
 });
 
-chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
   const data = message as
     | {
         type?: unknown;
@@ -278,8 +269,6 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
         thinkingLevel?: unknown;
         messageCount?: unknown;
         kind?: unknown;
-        purpose?: unknown;
-        path?: unknown;
       }
     | undefined;
 
@@ -317,44 +306,13 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
 
   // Content scripts can't call chrome.permissions.request(), so the settings
   // panel routes the all-sites grant through a small extension window.
-  // Task alerts reuse the same grant; if it's already held (say, from reset
-  // alerts) there is nothing to ask.
   if (data.type === MESSAGE_TYPES.requestAllSites) {
-    const forThreads = data.purpose === "threads";
-    void (async () => {
-      if (forThreads && (await chrome.permissions.contains(ALL_SITES))) {
-        await updateSettings({ threadDoneAlerts: "everywhere" });
-        return;
-      }
-      await chrome.windows.create({
-        url: chrome.runtime.getURL(`src/grant/grant.html${forThreads ? "?purpose=threads" : ""}`),
-        type: "popup",
-        width: 460,
-        height: 280,
-      });
-    })();
-    sendResponse({ ok: true });
-    return true;
-  }
-
-  // A claude.ai tab saw a thread finish (or start waiting on you) unwatched.
-  // Only our claude.ai content scripts may raise one.
-  if (data.type === MESSAGE_TYPES.threadDone) {
-    const details = parseThreadEvent(message);
-    if (details && sender.url?.startsWith(`${CLAUDE_API_ORIGIN}/`)) {
-      void (async () => {
-        const { settings } = await getStorage();
-        setLanguage(settings.language);
-        await announceThreadEvent(details, settings, t);
-      })();
-    }
-    sendResponse({ ok: true });
-    return true;
-  }
-
-  // Click on a task banner, from whatever site it was drawn on.
-  if (data.type === MESSAGE_TYPES.openThread) {
-    void openThread(data.path).catch(() => undefined);
+    void chrome.windows.create({
+      url: chrome.runtime.getURL("src/grant/grant.html"),
+      type: "popup",
+      width: 460,
+      height: 280,
+    });
     sendResponse({ ok: true });
     return true;
   }

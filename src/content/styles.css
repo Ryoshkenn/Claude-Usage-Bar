@@ -885,6 +885,76 @@ button.cub-ctx-percent[data-loading="true"] {
 #cub-settings-panel {
   /* Fills the same space as Claude's .flex.flex-col sections container */
   width: 100%;
+  /* Containing block for the dropdown menus portalled in here. */
+  position: relative;
+}
+
+/* Settings dropdowns (CdsSelect in settingsPage.tsx). The trigger keeps
+   Claude's combobox classes; the menu is ours. Surface and text come from
+   Claude's tokens and hovers from currentColor, so both themes follow Claude's
+   own palette inside its settings dialog and need no .cub-theme-light rule. */
+#cub-settings-panel .cub-select-trigger {
+  cursor: pointer;
+}
+#cub-settings-panel .cub-select-trigger:focus-visible {
+  box-shadow: 0 0 0 2px var(--cds-fill-accent, rgb(204 124 94));
+}
+#cub-settings-panel .cub-select-trigger[aria-expanded="true"] .cub-select-caret {
+  transform: rotate(180deg);
+}
+#cub-settings-panel .cub-select-caret {
+  transition: transform 150ms ease;
+}
+#cub-settings-panel .cub-select-menu {
+  position: absolute;
+  z-index: 40;
+  max-width: 320px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--cds-border, rgb(255 255 255 / 8%));
+  background: var(--cds-surface-3, rgb(44 44 43));
+  box-shadow: 0 12px 32px rgb(0 0 0 / 32%);
+  color: var(--cds-text-primary, rgb(240 239 236));
+  animation: cub-select-in 120ms ease-out;
+}
+#cub-settings-panel .cub-select-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+#cub-settings-panel .cub-select-option[data-active="true"] {
+  background: color-mix(in srgb, currentColor 9%, transparent);
+}
+#cub-settings-panel .cub-select-option-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#cub-settings-panel .cub-select-check {
+  flex: none;
+}
+@keyframes cub-select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #cub-settings-panel .cub-select-menu {
+    animation: none;
+  }
+  #cub-settings-panel .cub-select-caret {
+    transition: none;
+  }
 }
 
 /* ── Onboarding tour ─────────────────────────────────────────────────────── */

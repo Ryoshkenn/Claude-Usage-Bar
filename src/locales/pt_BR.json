@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "Em “Editadas recentemente”, uma conversa sobe quando muda ou o Claude responde."
   },
-  "setThreadAlerts": {
-    "message": "Alertas de tarefas"
-  },
-  "setThreadAlertsDesc": {
-    "message": "Aviso quando uma conversa termina ou precisa de você enquanto você está em outro site. Qualquer site exige permissão do Chrome."
-  },
-  "threadBannerDone": {
-    "message": "Claude terminou"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude precisa da sua resposta"
-  },
-  "threadBannerOpen": {
-    "message": "Abrir"
-  },
-  "threadBannerDismiss": {
-    "message": "Dispensar"
-  },
-  "grantThreadsTitle": {
-    "message": "Mostrar alertas de tarefas em qualquer site"
-  },
-  "grantThreadsDenied": {
-    "message": "Permissão não concedida. Os alertas de tarefas ficam só no claude.ai."
+  "threadSettle": {
+    "message": "Concluir"
   }
 }

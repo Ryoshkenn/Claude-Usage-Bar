@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "‘최근 수정순’에서는 변경되거나 Claude가 답한 스레드가 위로 올라갑니다."
   },
-  "setThreadAlerts": {
-    "message": "작업 알림"
-  },
-  "setThreadAlertsDesc": {
-    "message": "다른 사이트에 있는 동안 스레드가 끝나거나 입력이 필요하면 배너를 표시합니다. 모든 사이트에는 Chrome 권한이 필요합니다."
-  },
-  "threadBannerDone": {
-    "message": "Claude가 완료했습니다"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude가 입력을 기다리고 있습니다"
-  },
-  "threadBannerOpen": {
-    "message": "열기"
-  },
-  "threadBannerDismiss": {
-    "message": "닫기"
-  },
-  "grantThreadsTitle": {
-    "message": "모든 사이트에서 작업 알림 표시"
-  },
-  "grantThreadsDenied": {
-    "message": "권한이 허용되지 않았습니다. 작업 알림은 claude.ai에서만 표시됩니다."
+  "threadSettle": {
+    "message": "완료"
   }
 }

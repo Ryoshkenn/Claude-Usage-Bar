@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "Newest edited moves a thread up when it changes or Claude replies."
   },
-  "setThreadAlerts": {
-    "message": "Task alerts"
-  },
-  "setThreadAlertsDesc": {
-    "message": "Banner when a thread finishes or needs you while you're elsewhere. Any site needs Chrome permission."
-  },
-  "threadBannerDone": {
-    "message": "Claude finished"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude needs your input"
-  },
-  "threadBannerOpen": {
-    "message": "Open"
-  },
-  "threadBannerDismiss": {
-    "message": "Dismiss"
-  },
-  "grantThreadsTitle": {
-    "message": "Show task alerts on any site"
-  },
-  "grantThreadsDenied": {
-    "message": "Permission was not granted. Task alerts stay on claude.ai only."
+  "threadSettle": {
+    "message": "Settle"
   }
 }

@@ -485,28 +485,7 @@
   "setThreadSortDesc": {
     "message": "Bei „Zuletzt bearbeitet“ rückt eine Unterhaltung nach oben, wenn sie sich ändert oder Claude antwortet."
   },
-  "setThreadAlerts": {
-    "message": "Aufgaben-Hinweise"
-  },
-  "setThreadAlertsDesc": {
-    "message": "Banner, wenn eine Unterhaltung fertig ist oder dich braucht, während du woanders bist. Alle Websites erfordern eine Chrome-Berechtigung."
-  },
-  "threadBannerDone": {
-    "message": "Claude ist fertig"
-  },
-  "threadBannerAwaiting": {
-    "message": "Claude braucht deine Eingabe"
-  },
-  "threadBannerOpen": {
-    "message": "Öffnen"
-  },
-  "threadBannerDismiss": {
-    "message": "Schließen"
-  },
-  "grantThreadsTitle": {
-    "message": "Aufgaben-Hinweise auf allen Websites anzeigen"
-  },
-  "grantThreadsDenied": {
-    "message": "Berechtigung nicht erteilt. Aufgaben-Hinweise bleiben auf claude.ai."
+  "threadSettle": {
+    "message": "Erledigen"
   }
 }

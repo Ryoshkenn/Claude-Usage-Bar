@@ -88,14 +88,15 @@ types predate it. Verify it survives into `dist/manifest.json` after touching th
 ### Thread sidebar (`src/content/threadSidebar.ts`)
 Optional T3-style sidebar (`settings.threadSidebar`, off by default, under **Sidebar** in the
 settings panel): pinned, live (working / waiting / done / unread) and the N most recent threads
-become cards, the rest fold under "Settled (N)", pinned projects are hidden (they stay under
-Projects), Claude's nav rows fold into one "Projects & tools" row, and a Search / sort / new-chat row
-sits at the top (beside Claude's own search bar when the layout has one; Search and New always drive
-Claude's own controls). Claude's sidebar is React we don't own, so the module never moves, clones or
+become cards, the rest fold under "Settled (N)" (a card's hover Settle button files it there until
+its next activity), pinned projects are hidden (they stay under Projects), Claude's nav rows fold into
+one "Projects & tools" row, and a T3-style Search / sort / new-chat row sits at the top — in place of
+Claude's top search bar when the layout shows one (only a *visible*, bar-wide match is replaced),
+else of the New row. Search and New always drive Claude's own controls. Claude's sidebar is React we don't own, so the module never moves, clones or
 re-parents its nodes — it sets `data-cub-thread*` attributes and an inline `order` per row, and
 `threadSidebar.css` sections the rows inside the sidebar's scroll column (wrappers in between are
-flattened with `display: contents`). Its own nodes are the two toggles, the top row / actions and a
-`.cub-thread-meta` line inside each card. Turning it off strips everything, and tests assert the DOM
+flattened with `display: contents`). Its own nodes are the two toggles, the top row, and a
+`.cub-thread-meta` line and `.cub-thread-settle` button on each card. Turning it off strips everything, and tests assert the DOM
 is byte-identical afterwards — keep it that way. Text uses Claude's CDS tokens; the only per-theme
 values are the surface tints keyed off `data-cub-threads-theme` (set from `syncTheme`).
 
@@ -106,12 +107,10 @@ DOM while the sidebar is in Code mode; nothing merges them into the chat list.
 
 "Done" is ours: a row this tab saw working that stops while you weren't looking at it. The marks
 live in `chrome.storage.session` (`threadActivity`, row keys + timestamps only, shared by every
-claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). The transition
-is sent to the worker (`MESSAGE_TYPES.threadDone`), which banners the active tab of each window per
-`settings.threadDoneAlerts` (`src/background/threadNotifier.ts`) — one-shot, deduped across tabs,
-never stored. The banner carries the thread title only to label itself, inside a closed shadow root
-in the isolated world; "Any site" reuses the reset alerts' optional all-sites grant
-(`grant.html?purpose=threads`).
+claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). Hand-settled
+threads live in `chrome.storage.local` (`threadSettled`, row key → time, capped and expiring). Those
+row keys are the only non-numeric thing the extension stores. There is deliberately no "task
+finished" banner — it was tried and removed.
 
 Sorting ("newest edited" / "newest created") uses timestamps the page probe lifts from Claude's own
 **list** responses (`MESSAGE_TYPES.threadTimes`): ids and created/updated times only — never names
@@ -125,7 +124,10 @@ token estimation).
 
 ## Conventions
 - Match surrounding CDS class strings exactly when extending the settings panel — they're copied
-  verbatim from Claude's DOM (`settingsPage.tsx`).
+  verbatim from Claude's DOM (`settingsPage.tsx`). Dropdowns use `CdsSelect`, our own menu: don't
+  go back to a native `<select>` overlaid on the CDS trigger — it relied on Claude's utility classes
+  to stay invisible and opened the OS menu wherever the browser put it. The menu portals into
+  `#cub-settings-panel` because the nested option groups clip (`overflow: hidden`).
 - New `Settings` fields: add to `types.ts` **and** `DEFAULT_SETTINGS`, and update the settings
   fixtures in `storage.test.ts` and `ContentApp.test.tsx` (they assert the full object).
 - Removing a `Settings` field: strip it in `migrateSettings` (`storage.ts`) so the next write drops
