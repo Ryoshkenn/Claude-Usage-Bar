@@ -394,7 +394,9 @@ const sendToWorker = (message: Record<string, unknown>): Promise<boolean> =>
     }
     try {
       chrome.runtime.sendMessage(message, (response?: { ok?: boolean }) => {
-        void chrome.runtime.lastError;
+        // Reading lastError marks a failed send as handled; the extension can
+        // have been unloaded by the time the reply comes back.
+        if (extensionAlive()) void chrome.runtime.lastError;
         resolve(response?.ok === true);
       });
     } catch {

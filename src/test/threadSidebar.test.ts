@@ -174,8 +174,11 @@ beforeEach(() => {
   history.replaceState(null, "", "/new");
 });
 
-afterEach(() => {
+afterEach(async () => {
   resetThreadSidebarForTests();
+  // Teardown sends the worker a last message (forget places); let its reply
+  // land while the chrome mock still exists.
+  await new Promise((resolve) => setTimeout(resolve, 0));
   document.body.innerHTML = "";
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
