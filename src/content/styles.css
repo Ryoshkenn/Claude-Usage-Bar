@@ -1172,6 +1172,14 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   background: rgb(216 138 108);
 }
 
+/* The tour card's content, held to the window's height (less the card's
+   padding and margin) and scrolled past that. */
+.cub-tour-card-scroll {
+  max-height: calc(100vh - 50px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 /* A card on its own, centred: the thread view announcement (ThreadViewIntro). */
 .cub-tour-card--centered {
   top: 50%;

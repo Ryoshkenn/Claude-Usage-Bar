@@ -576,41 +576,45 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
             style={{ left: cardVp.arrowLeft }}
           />
         )}
-        <div className="cub-tour-step-count">{t("tourStepCount", "$1 of $2", [step + 1, totalSteps])}</div>
-        <div className="cub-tour-title">{title}</div>
-        <p className="cub-tour-body">{current.body()}</p>
-        {current.id === "cacheTimer" && <CacheTimerPreview />}
-        {current.id === "threadView" && <ThreadViewPreview />}
-        {current.choice && <p className="cub-tour-question">{current.choice.question()}</p>}
-        <div className="cub-tour-buttons">
-          <button className="cub-tour-btn-skip" type="button" onClick={dismiss}>
-            {t("tourSkip", "Skip")}
-          </button>
-          <div className="cub-tour-nav">
-            {step > 0 && (
-              <button
-                className="cub-tour-btn-back"
-                type="button"
-                onClick={prev}
-                aria-label={t("tourBack", "Previous step")}
-              >
-                ←
-              </button>
-            )}
-            {current.choice ? (
-              <>
-                <button className="cub-tour-btn-decline" type="button" onClick={() => choose(current.choice!, false)}>
-                  {t("tourNoThanks", "No thanks")}
+        {/* Scrolls when the card is taller than the window (a short window, or
+            zoomed in), so its buttons stay reachable; the arrows stay outside. */}
+        <div className="cub-tour-card-scroll">
+          <div className="cub-tour-step-count">{t("tourStepCount", "$1 of $2", [step + 1, totalSteps])}</div>
+          <div className="cub-tour-title">{title}</div>
+          <p className="cub-tour-body">{current.body()}</p>
+          {current.id === "cacheTimer" && <CacheTimerPreview />}
+          {current.id === "threadView" && <ThreadViewPreview />}
+          {current.choice && <p className="cub-tour-question">{current.choice.question()}</p>}
+          <div className="cub-tour-buttons">
+            <button className="cub-tour-btn-skip" type="button" onClick={dismiss}>
+              {t("tourSkip", "Skip")}
+            </button>
+            <div className="cub-tour-nav">
+              {step > 0 && (
+                <button
+                  className="cub-tour-btn-back"
+                  type="button"
+                  onClick={prev}
+                  aria-label={t("tourBack", "Previous step")}
+                >
+                  ←
                 </button>
-                <button className="cub-tour-btn-next" type="button" onClick={() => choose(current.choice!, true)}>
-                  {current.choice.accept()}
+              )}
+              {current.choice ? (
+                <>
+                  <button className="cub-tour-btn-decline" type="button" onClick={() => choose(current.choice!, false)}>
+                    {t("tourNoThanks", "No thanks")}
+                  </button>
+                  <button className="cub-tour-btn-next" type="button" onClick={() => choose(current.choice!, true)}>
+                    {current.choice.accept()}
+                  </button>
+                </>
+              ) : (
+                <button className="cub-tour-btn-next" type="button" onClick={next}>
+                  {isLast ? t("tourDone", "Done") : t("tourNext", "Next →")}
                 </button>
-              </>
-            ) : (
-              <button className="cub-tour-btn-next" type="button" onClick={next}>
-                {isLast ? t("tourDone", "Done") : t("tourNext", "Next →")}
-              </button>
-            )}
+              )}
+            </div>
           </div>
         </div>
         {cardVp.arrowSide === "top" && (
