@@ -405,6 +405,10 @@ const sanitizeActivity = (value: unknown, now = Date.now()): Record<string, Thre
 // and a write that fails stays pending and is retried on the next pass.
 const pendingActivity = new Map<string, ThreadActivity | null>();
 let activityWriting = false;
+// Activity isn't tracked until the shared marks have loaded: a row already
+// working at page load would otherwise get a fresh workingSince that, as this
+// tab's change, wins over the stored one and restarts its "Working" time.
+let activityLoaded = false;
 
 const setActivity = (key: string, entry: ThreadActivity | undefined): void => {
   if (entry) activity[key] = entry;
@@ -446,13 +450,22 @@ const saveActivity = (): void => {
 };
 
 const loadActivity = (): void => {
-  void sessionArea()
-    ?.get(STORAGE_KEYS.threadActivity)
+  const area = sessionArea();
+  if (!area) {
+    // Nothing shared to wait for: track in memory only.
+    activityLoaded = true;
+    return;
+  }
+  void area
+    .get(STORAGE_KEYS.threadActivity)
     .then((data) => {
       activity = withPendingActivity(sanitizeActivity(data[STORAGE_KEYS.threadActivity]));
-      applyThreadSidebar();
     })
-    .catch(() => undefined);
+    .catch(() => undefined)
+    .finally(() => {
+      activityLoaded = true;
+      if (enabled) applyThreadSidebar();
+    });
 };
 
 interface ThreadPlaces {
@@ -1248,6 +1261,8 @@ const trackActivity = (
   const previous = activity[key];
   const seen = localStatus.get(key);
   const live = info.status === "working" || info.status === "awaiting" ? info.status : undefined;
+  // Until the shared marks load, show only what the sidebar itself says.
+  if (!activityLoaded) return { status: info.status, changed: false };
   let next: ThreadActivity | undefined = previous;
 
   if (live) {
@@ -1582,5 +1597,6 @@ export const resetThreadSidebarForTests = (): void => {
   localStatus.clear();
   pendingActivity.clear();
   activityWriting = false;
+  activityLoaded = false;
   sortMenuOpen = false;
 };

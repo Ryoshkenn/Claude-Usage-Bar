@@ -773,10 +773,22 @@ describe("shared state", () => {
   it("shares the done mark across tabs through session storage", async () => {
     mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
     syncThreadSidebar({ threadSidebar: true });
+    await settle();
     stopWorking("chat:w");
     await flushObservers();
     const stored = session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>;
     expect(typeof stored["chat:w"]?.doneAt).toBe("number");
+  });
+
+  it("keeps a thread's stored working time when the page loads with it working", async () => {
+    const since = Date.now() - 5 * 60_000;
+    const done = { doneAt: Date.now() - 60_000 };
+    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: since }, "chat:x": done };
+    mountSidebar(read([{ key: "chat:w", status: "running" }, { key: "chat:x" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": { workingSince: since }, "chat:x": done });
+    expect(whenOf("chat:w")).toBe("Working 5m");
   });
 
   it("picks up a done mark another tab recorded", async () => {
