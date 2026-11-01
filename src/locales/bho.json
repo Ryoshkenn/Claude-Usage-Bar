@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "प्रॉम्प्ट कैश समय उपलब्ध नइखे"
+  },
+  "cacheUnknown": {
+    "message": "कैश पता नइखे"
+  },
+  "cacheExpired": {
+    "message": "प्रॉम्प्ट कैश खत्म हो गइल"
+  },
+  "cacheExpiresIn": {
+    "message": "प्रॉम्प्ट कैश $1 में खत्म होई"
+  },
+  "expiredShort": {
+    "message": "खत्म"
+  },
+  "cacheHasExpired": {
+    "message": "प्रॉम्प्ट कैश खत्म हो चुकल बा"
+  },
+  "cacheSavings": {
+    "message": "कैश टोकन से ~90% इनपुट खर्च बचेला"
+  },
+  "ringSession": {
+    "message": "5-घंटा के सेशन"
+  },
+  "ringWeekly": {
+    "message": "साप्ताहिक · सभे मॉडल"
+  },
+  "ringWeeklyFable": {
+    "message": "साप्ताहिक · Fable"
+  },
+  "ringContext": {
+    "message": "कॉन्टेक्स्ट विंडो"
+  },
+  "weeklyScoped": {
+    "message": "साप्ताहिक · $1"
+  },
+  "pacePctAtReset": {
+    "message": "रीसेट पर $1%"
+  },
+  "pacePastReset": {
+    "message": "रीसेट से +$1 आगे"
+  },
+  "lastsToReset": {
+    "message": "रीसेट ले चली"
+  },
+  "paceActiveLeft": {
+    "message": "~$1घं सक्रिय बाकी"
+  },
+  "paceEmptyDate": {
+    "message": "$1 के खाली होई"
+  },
+  "paceEmptyIn": {
+    "message": "$1 में खाली होई"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 संदेस बाकी"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 संदेस बाकी"
+  },
+  "ctxCalculating": {
+    "message": "कॉन्टेक्स्ट उपयोग गिनल जा रहल बा..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude उपयोग $1"
+  },
+  "usage": {
+    "message": "उपयोग"
+  },
+  "planUsage": {
+    "message": "प्लान उपयोग"
+  },
+  "openSettings": {
+    "message": "एक्सटेंशन सेटिंग खोलीं"
+  },
+  "fiveHourLimit": {
+    "message": "5-घंटा के सीमा"
+  },
+  "resetUnknown": {
+    "message": "रीसेट पता नइखे"
+  },
+  "weeklyLearningAria": {
+    "message": "साप्ताहिक उपयोग के अनुमान अभी सीख रहल बा"
+  },
+  "weeklyLearningTooltip": {
+    "message": "पहिला हफ्ता में साप्ताहिक अनुमान गलत हो सकेला जब ले Usage Bar रउआ के पैटर्न सीखत बा।"
+  },
+  "ctxCalcLoading": {
+    "message": "कॉन्टेक्स्ट गिनती लोड हो रहल बा"
+  },
+  "ctxWindowFull": {
+    "message": "कॉन्टेक्स्ट विंडो $1% भरल बा"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar नीमन लागल?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store पर रेट करीं ↗"
+  },
+  "otherHint": {
+    "message": "एह संदेसन खातिर मॉडल पता ना चल सकल। ई Claude Code आ cowork से आ सकेला।"
+  },
+  "noMessages": {
+    "message": "कवनो संदेस नइखे"
+  },
+  "errNoWorker": {
+    "message": "एक्सटेंशन बैकग्राउंड वर्कर से संपर्क ना हो सकल"
+  },
+  "errLoadUsage": {
+    "message": "Claude उपयोग लोड ना हो सकल"
+  },
+  "reviewEnjoyingShort": {
+    "message": "नीमन लागल?"
+  },
+  "fiveHour": {
+    "message": "5-घंटा"
+  },
+  "weekly": {
+    "message": "साप्ताहिक"
+  },
+  "refreshAll": {
+    "message": "सभे आँकड़ा रीफ्रेश करीं"
+  },
+  "customizeOverlay": {
+    "message": "ओवरले कस्टमाइज करीं"
+  },
+  "usageSummary": {
+    "message": "उपयोग के सारांश"
+  },
+  "total": {
+    "message": "कुल"
+  },
+  "avgPerMo": {
+    "message": "औसत / महीना"
+  },
+  "avgPerDay": {
+    "message": "औसत / दिन"
+  },
+  "busiest": {
+    "message": "सबसे व्यस्त"
+  },
+  "messagesSent": {
+    "message": "भेजल संदेस"
+  },
+  "fourteenDays": {
+    "message": "14 दिन"
+  },
+  "monthly": {
+    "message": "मासिक"
+  },
+  "collecting": {
+    "message": "उपयोग जुटावल जा रहल बा — जइसे रउआ claude.ai पर बतियाइब, रउआ के रोज के चार्ट भरत जाई।"
+  },
+  "allTime": {
+    "message": "अब ले के कुल"
+  },
+  "dayStreak": {
+    "message": "$1-दिन के सिलसिला"
+  },
+  "reset": {
+    "message": "रीसेट"
+  },
+  "segOther": {
+    "message": "अन्य"
+  },
+  "setSecGeneral": {
+    "message": "सामान्य"
+  },
+  "setSecWheel": {
+    "message": "कॉन्टेक्स्ट विंडो"
+  },
+  "setSecCacheTimer": {
+    "message": "कैश टाइमर"
+  },
+  "setShowOverlay": {
+    "message": "ओवरले दिखाईं"
+  },
+  "setShowOverlayDesc": {
+    "message": "कंपोजर में सभे चीज चालू भा बंद करीं।"
+  },
+  "setTour": {
+    "message": "फीचर टूर"
+  },
+  "setTourBtn": {
+    "message": "टूर दोबारा देखीं"
+  },
+  "setPrivacy": {
+    "message": "गोपनीयता नीति"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "साप्ताहिक अनुमान"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "बाकी बचल घंटा, कवना दिन आ समय पर खत्म होई, भा रीसेट के समय रउआ कहाँ रहब।"
+  },
+  "setDeleteHistory": {
+    "message": "इतिहास मिटाईं"
+  },
+  "setSamples": {
+    "message": "$1 नमूना"
+  },
+  "setOptPctReset": {
+    "message": "रीसेट पर प्रतिशत"
+  },
+  "setOptTimePast": {
+    "message": "रीसेट के बाद के समय"
+  },
+  "setOptMsgsLeft": {
+    "message": "बाकी संदेस"
+  },
+  "setOptActiveHours": {
+    "message": "सक्रिय घंटा"
+  },
+  "setOptDaysTime": {
+    "message": "दिन / समय"
+  },
+  "ctxBreakdownTitle": {
+    "message": "कॉन्टेक्स्ट विंडो के का उपयोग कर रहल बा"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2 में से $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "रउआ के संदेस"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude के जवाब"
+  },
+  "ctxBreakdownThinking": {
+    "message": "गहिरा सोच"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "टूल कॉल"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "टूल परिणाम"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "फाइल आ अटैचमेंट"
+  },
+  "ctxBreakdownProject": {
+    "message": "प्रोजेक्ट जानकारी"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "सिस्टम ओवरहेड"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "बाकी"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 संदेस"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 ब्लॉक"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 कॉल"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 परिणाम"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 फाइल"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "कॉन्टेक्स्ट विंडो में अभी कुछ नइखे।"
+  },
+  "ctxBreakdownNote": {
+    "message": "एह बातचीत से लोकल रूप से अनुमानित।"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "लोकल रूप से अनुमानित। टूल आ खोज परिणाम से ई लगभग होला।"
+  },
+  "resetBannerSessionTitle": {
+    "message": "रउआ के 5-घंटा के Claude सीमा रीसेट हो गइल"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "रउआ के साप्ताहिक Claude सीमा रीसेट हो गइल"
+  },
+  "resetBannerAction": {
+    "message": "Claude खोलीं"
+  },
+  "setSecResetAlerts": {
+    "message": "रीसेट अलर्ट"
+  },
+  "setResetBannerScope": {
+    "message": "अलर्ट इहाँ दिखाईं"
+  },
+  "setResetScopeClaude": {
+    "message": "खाली claude.ai पर"
+  },
+  "setResetScopeEverywhere": {
+    "message": "कवनो भी साइट"
+  },
+  "setResetBannerTestGo": {
+    "message": "टेस्ट भेजीं"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1से में"
+  },
+  "grantTitle": {
+    "message": "कवनो भी साइट पर रीसेट अलर्ट दिखाईं"
+  },
+  "grantBody": {
+    "message": "claude.ai के बाहर बैनर देखावे खातिर एक्सटेंशन के Chrome से रउआ के अनुमति चाहीं। एकर उपयोग खाली बैनर देखावे खातिर होला — पेज के कवनो सामग्री कबो पढ़ल भा कहीं भेजल ना जाला।"
+  },
+  "grantDenied": {
+    "message": "अनुमति ना मिलल। रीसेट अलर्ट खाली claude.ai पर रही।"
+  },
+  "grantAllow": {
+    "message": "आगे बढ़ीं"
+  },
+  "grantCancel": {
+    "message": "रद्द करीं"
+  },
+  "setOptRing": {
+    "message": "रिंग"
+  },
+  "setOptPercentText": {
+    "message": "प्रतिशत"
+  },
+  "setSecDisplay": {
+    "message": "डिस्प्ले"
+  },
+  "setSecPacing": {
+    "message": "रफ्तार (पेसिंग)"
+  },
+  "setOptOff": {
+    "message": "बंद"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "बार कवना सीमा के ट्रैक करेला।"
+  },
+  "setShowPct": {
+    "message": "% दिखाईं"
+  },
+  "setContextDesc": {
+    "message": "अभी के चैट कतना भरल बा।"
+  },
+  "setCacheTimerDesc": {
+    "message": "प्रॉम्प्ट कैश एक्टिव रहे पर चैट हेडर में उल्टी गिनती।"
+  },
+  "setPacing": {
+    "message": "रफ्तार के अनुमान दिखाईं"
+  },
+  "setPacingDesc": {
+    "message": "अनुमान खाली एह ब्राउज़र में रखल उपयोग के नमूनन से सीखेला। एकरा के बंद कइला से एकरा के जुटावल रुक जाई।"
+  },
+  "set5hrPace": {
+    "message": "5-घंटा के रफ्तार"
+  },
+  "set5hrPaceDesc": {
+    "message": "5-घंटा के प्रतिशत के बगल में देखावल जाला।"
+  },
+  "setLearnedData": {
+    "message": "सीखल उपयोग"
+  },
+  "setResetAlertsDesc": {
+    "message": "जब रउआ के 5-घंटा भा साप्ताहिक सीमा रीसेट होखे तब बैनर। कवनो भी साइट खातिर Chrome अनुमति चाहीं।"
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store पर रेट करीं"
+  },
+  "threadsLabel": {
+    "message": "थ्रेड्स"
+  },
+  "threadSettled": {
+    "message": "निपटल ($1)"
+  },
+  "threadKindChat": {
+    "message": "चैट"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "रूटीन"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "प्रोजेक्ट"
+  },
+  "threadKindOther": {
+    "message": "थ्रेड"
+  },
+  "threadStatusWorking": {
+    "message": "काम चल रहल बा"
+  },
+  "threadStatusAwaiting": {
+    "message": "इंतजार बा"
+  },
+  "threadStatusError": {
+    "message": "त्रुटि"
+  },
+  "threadStatusUnread": {
+    "message": "अनपढ़ल"
+  },
+  "threadStatusOpen": {
+    "message": "खुलल"
+  },
+  "setSecSidebar": {
+    "message": "साइडबार"
+  },
+  "setThreadSidebar": {
+    "message": "थ्रेड व्यू"
+  },
+  "setThreadSidebarDesc": {
+    "message": "सभे कुछ शुरू में निपटावल रहेला। नया गतिविधि भइला पर चैट एगो कार्ड बन जाला, जब ले रउआ ओकरा के निपटा ना दीं।"
+  },
+  "threadNavLabel": {
+    "message": "प्रोजेक्ट आ टूल"
+  },
+  "threadStatusPinned": {
+    "message": "पिन कइल"
+  },
+  "threadStatusDone": {
+    "message": "पूरा भइल"
+  },
+  "threadWorkingFor": {
+    "message": "$1 से काम चल रहल बा"
+  },
+  "threadWaitingFor": {
+    "message": "$1 से इंतजार बा"
+  },
+  "threadDoneAgo": {
+    "message": "$1 पहिले पूरा भइल"
+  },
+  "threadAgoSeconds": {
+    "message": "$1से"
+  },
+  "threadAgoMinutes": {
+    "message": "$1मि"
+  },
+  "threadAgoHours": {
+    "message": "$1घं"
+  },
+  "threadAgoDays": {
+    "message": "$1दि"
+  },
+  "threadAgoWeeks": {
+    "message": "$1ह"
+  },
+  "threadSearch": {
+    "message": "खोजीं"
+  },
+  "threadNewChat": {
+    "message": "नया चैट"
+  },
+  "threadSort": {
+    "message": "थ्रेड सजाईं"
+  },
+  "threadSortEdited": {
+    "message": "सबसे नया संपादित"
+  },
+  "threadSortCreated": {
+    "message": "सबसे नया बनावल"
+  },
+  "setThreadSort": {
+    "message": "क्रम"
+  },
+  "setThreadSortDesc": {
+    "message": "सबसे नया संपादित से कवनो बदलाव भइला पर भा Claude के जवाब अइला पर थ्रेड ऊपर आ जाला।"
+  },
+  "threadSettle": {
+    "message": "निपटाईं"
+  }
+}

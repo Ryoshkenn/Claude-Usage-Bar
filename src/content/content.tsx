@@ -72,6 +72,7 @@ let lastConversationContextUrl = "";
 // caught and the bar repositioned immediately (see handleUrlChange).
 let lastNavUrl = "";
 let lastSyncedTheme: "light" | "dark" | null = null;
+let lastSyncedLanguage = "";
 // Sticky thinking on/off state. The effort-menu switch — the only on/off
 // authority — is readable solely while the menu is open, so we remember its last
 // value across DOM reads. undefined until the switch has ever been seen.
@@ -205,6 +206,22 @@ const syncTheme = () => {
     lastSyncedTheme = theme;
     void chrome.storage.local.set({ [STORAGE_KEYS.detectedTheme]: light ? "light" : "dark" });
   }
+};
+
+// Our UI follows Claude's language (<html lang>, e.g. "fr-FR"). Mirrored to storage
+// for the popup, grant page and worker, which can't read the page. Returns whether
+// it changed, so the caller knows to re-render.
+const syncLanguage = (): boolean => {
+  const tag = document.documentElement.lang.trim();
+  if (!tag || tag === lastSyncedLanguage) {
+    return false;
+  }
+  lastSyncedLanguage = tag;
+  setLanguage(tag);
+  if (extensionAlive()) {
+    void chrome.storage.local.set({ [STORAGE_KEYS.claudeLanguage]: tag });
+  }
+  return true;
 };
 
 const applyFixedHostStyles = () => {
@@ -1090,7 +1107,7 @@ const init = async () => {
   // Don't paint the stored chatUsage: it's whichever chat any tab counted last.
   // refreshUsage fills in this page's own value moments later.
   storageState = { ...(await getStorage()), chatUsage: defaultChatUsage() };
-  setLanguage(storageState.settings.language);
+  syncLanguage();
   initSettingsPage();
   initThreadSidebar(isActiveInstance);
   if (typeof ResizeObserver !== "undefined") {
@@ -1174,9 +1191,15 @@ const init = async () => {
         (changes.weeklyUsageMetrics?.newValue as StorageShape["weeklyUsageMetrics"] | undefined) ??
         storageState.weeklyUsageMetrics,
     };
-    setLanguage(storageState.settings.language);
     render();
   });
+
+  // Claude can switch languages without a reload.
+  new MutationObserver(() => {
+    if (syncLanguage()) {
+      render();
+    }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
   // Watch Claude's theme attributes and style changes wherever the live switch applies them.
   const themeObserver = new MutationObserver(syncTheme);

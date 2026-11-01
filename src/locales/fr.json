@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "Activer ou désactiver tout dans la zone de saisie."
   },
-  "setLanguage": {
-    "message": "Langue"
-  },
   "setTour": {
     "message": "Visite des fonctionnalités"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "Bannière lorsque votre limite sur 5 heures ou hebdomadaire est réinitialisée. « N'importe quel site » nécessite une autorisation Chrome."
-  },
-  "setLanguageShortDesc": {
-    "message": "Les traductions peuvent être inexactes."
   },
   "setReviewLink": {
     "message": "Noter sur le Chrome Web Store"

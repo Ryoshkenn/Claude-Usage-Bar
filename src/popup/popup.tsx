@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { createRoot } from "react-dom/client";
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
-import { getStorage, resetUsage } from "../shared/storage";
+import { getClaudeLanguage, getStorage, resetUsage } from "../shared/storage";
 import {
   activeDayStreak,
   allTimeTotal,
@@ -181,7 +181,7 @@ export const Popup = () => {
 
   useEffect(() => {
     void getStorage().then(async (storage) => {
-      setLanguage(storage.settings.language);
+      setLanguage(await getClaudeLanguage());
       setState(storage);
       const reviewData = await chrome.storage.local.get([
         STORAGE_KEYS.reviewBannerDismissedAt,

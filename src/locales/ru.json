@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Время жизни кэша промпта недоступно"
+  },
+  "cacheUnknown": {
+    "message": "кэш неизвестен"
+  },
+  "cacheExpired": {
+    "message": "Кэш промпта истёк"
+  },
+  "cacheExpiresIn": {
+    "message": "Кэш промпта истекает через $1"
+  },
+  "expiredShort": {
+    "message": "истёк"
+  },
+  "cacheHasExpired": {
+    "message": "Срок кэша промпта истёк"
+  },
+  "cacheSavings": {
+    "message": "Кэшированные токены экономят ~90% стоимости ввода"
+  },
+  "ringSession": {
+    "message": "5-часовая сессия"
+  },
+  "ringWeekly": {
+    "message": "За неделю · все модели"
+  },
+  "ringWeeklyFable": {
+    "message": "За неделю · Fable"
+  },
+  "ringContext": {
+    "message": "Контекстное окно"
+  },
+  "weeklyScoped": {
+    "message": "За неделю · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% к сбросу"
+  },
+  "pacePastReset": {
+    "message": "+$1 после сброса"
+  },
+  "lastsToReset": {
+    "message": "хватит до сброса"
+  },
+  "paceActiveLeft": {
+    "message": "~$1 ч активности"
+  },
+  "paceEmptyDate": {
+    "message": "исчерпается $1"
+  },
+  "paceEmptyIn": {
+    "message": "исчерпается через $1"
+  },
+  "paceMsgLeft": {
+    "message": "осталось ~$1 сообщ."
+  },
+  "paceMsgsLeft": {
+    "message": "осталось ~$1 сообщ."
+  },
+  "ctxCalculating": {
+    "message": "Расчёт использования контекста..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Использование Claude $1"
+  },
+  "usage": {
+    "message": "Использование"
+  },
+  "planUsage": {
+    "message": "Использование плана"
+  },
+  "openSettings": {
+    "message": "Открыть настройки расширения"
+  },
+  "fiveHourLimit": {
+    "message": "5-часовой лимит"
+  },
+  "resetUnknown": {
+    "message": "сброс неизвестен"
+  },
+  "weeklyLearningAria": {
+    "message": "Недельный прогноз ещё обучается"
+  },
+  "weeklyLearningTooltip": {
+    "message": "В первую неделю прогнозы могут быть неточными, пока Usage Bar изучает ваш ритм использования."
+  },
+  "ctxCalcLoading": {
+    "message": "Загрузка расчёта контекста"
+  },
+  "ctxWindowFull": {
+    "message": "Контекстное окно заполнено на $1%"
+  },
+  "reviewEnjoying": {
+    "message": "Нравится Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Оценить в Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Не удалось определить модель для этих сообщений. Они могут быть из Claude Code и Cowork."
+  },
+  "noMessages": {
+    "message": "Нет сообщений"
+  },
+  "errNoWorker": {
+    "message": "Не удалось связаться с фоновым процессом расширения"
+  },
+  "errLoadUsage": {
+    "message": "Не удалось загрузить данные об использовании Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Нравится?"
+  },
+  "fiveHour": {
+    "message": "5 часов"
+  },
+  "weekly": {
+    "message": "Неделя"
+  },
+  "refreshAll": {
+    "message": "Обновить всю статистику"
+  },
+  "customizeOverlay": {
+    "message": "Настроить панель"
+  },
+  "usageSummary": {
+    "message": "Сводка использования"
+  },
+  "total": {
+    "message": "Всего"
+  },
+  "avgPerMo": {
+    "message": "Сред. / мес."
+  },
+  "avgPerDay": {
+    "message": "Сред. / день"
+  },
+  "busiest": {
+    "message": "Максимум"
+  },
+  "messagesSent": {
+    "message": "Отправлено сообщений"
+  },
+  "fourteenDays": {
+    "message": "14 дней"
+  },
+  "monthly": {
+    "message": "По месяцам"
+  },
+  "collecting": {
+    "message": "Сбор данных — дневной график заполняется по мере общения на claude.ai."
+  },
+  "allTime": {
+    "message": "За всё время"
+  },
+  "dayStreak": {
+    "message": "$1 дн. подряд"
+  },
+  "reset": {
+    "message": "Сброс"
+  },
+  "segOther": {
+    "message": "Другое"
+  },
+  "setSecGeneral": {
+    "message": "Общие"
+  },
+  "setSecWheel": {
+    "message": "Контекстное окно"
+  },
+  "setSecCacheTimer": {
+    "message": "Таймер кэша"
+  },
+  "setShowOverlay": {
+    "message": "Показывать панель"
+  },
+  "setShowOverlayDesc": {
+    "message": "Включить или отключить все элементы в поле ввода."
+  },
+  "setTour": {
+    "message": "Обзор функций"
+  },
+  "setTourBtn": {
+    "message": "Повторить обзор"
+  },
+  "setPrivacy": {
+    "message": "Политика конфиденциальности"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Недельный прогноз"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Остаток активных часов, день и время исчерпания лимита или процент к моменту сброса."
+  },
+  "setDeleteHistory": {
+    "message": "Удалить историю"
+  },
+  "setSamples": {
+    "message": "замеров: $1"
+  },
+  "setOptPctReset": {
+    "message": "Процент к сбросу"
+  },
+  "setOptTimePast": {
+    "message": "Время после сброса"
+  },
+  "setOptMsgsLeft": {
+    "message": "Остаток сообщений"
+  },
+  "setOptActiveHours": {
+    "message": "Активные часы"
+  },
+  "setOptDaysTime": {
+    "message": "Дни / время"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Что занимает контекстное окно"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 из $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Ваши сообщения"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Ответы Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Расширенное мышление"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Вызовы инструментов"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Результаты инструментов"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Файлы и вложения"
+  },
+  "ctxBreakdownProject": {
+    "message": "Знания проекта"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Системные данные"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Свободно"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "сообщений: $1"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "блоков: $1"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "вызовов: $1"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "результатов: $1"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "файлов: $1"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Контекстное окно пока пусто."
+  },
+  "ctxBreakdownNote": {
+    "message": "Оценено локально по этому диалогу."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Оценено локально. Из-за результатов инструментов и поиска расчёт приблизительный."
+  },
+  "resetBannerSessionTitle": {
+    "message": "5-часовой лимит Claude сброшен"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Недельный лимит Claude сброшен"
+  },
+  "resetBannerAction": {
+    "message": "Открыть Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Уведомления о сбросе"
+  },
+  "setResetBannerScope": {
+    "message": "Показывать уведомления"
+  },
+  "setResetScopeClaude": {
+    "message": "Только на claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "На всех сайтах"
+  },
+  "setResetBannerTestGo": {
+    "message": "Тест"
+  },
+  "setResetBannerTestCounting": {
+    "message": "через $1 с"
+  },
+  "grantTitle": {
+    "message": "Показывать уведомления о сбросе на всех сайтах"
+  },
+  "grantBody": {
+    "message": "Чтобы показывать баннер вне claude.ai, расширению нужно разрешение Chrome. Оно используется только для показа баннера — содержимое страниц никогда не читается и никуда не отправляется."
+  },
+  "grantDenied": {
+    "message": "Разрешение не выдано. Уведомления о сбросе останутся только на claude.ai."
+  },
+  "grantAllow": {
+    "message": "Продолжить"
+  },
+  "grantCancel": {
+    "message": "Отмена"
+  },
+  "setOptRing": {
+    "message": "Кольцо"
+  },
+  "setOptPercentText": {
+    "message": "Проценты"
+  },
+  "setSecDisplay": {
+    "message": "Отображение"
+  },
+  "setSecPacing": {
+    "message": "Темп расхода"
+  },
+  "setOptOff": {
+    "message": "Выкл."
+  },
+  "setUsageBar": {
+    "message": "Шкала расхода"
+  },
+  "setUsageBarDesc": {
+    "message": "Какой лимит отслеживает шкала."
+  },
+  "setShowPct": {
+    "message": "Показывать %"
+  },
+  "setContextDesc": {
+    "message": "Насколько заполнен текущий чат."
+  },
+  "setCacheTimerDesc": {
+    "message": "Обратный отсчёт в шапке чата, пока кэш промпта активен."
+  },
+  "setPacing": {
+    "message": "Показывать прогноз темпа"
+  },
+  "setPacingDesc": {
+    "message": "Прогноз обучается по числовым замерам расхода, хранящимся только в этом браузере. При отключении сбор данных прекращается."
+  },
+  "set5hrPace": {
+    "message": "Темп на 5 часов"
+  },
+  "set5hrPaceDesc": {
+    "message": "Отображается рядом с процентом 5-часового лимита."
+  },
+  "setLearnedData": {
+    "message": "Накопленные данные"
+  },
+  "setResetAlertsDesc": {
+    "message": "Баннер при сбросе 5-часового или недельного лимита. Для работы на всех сайтах требуется разрешение Chrome."
+  },
+  "setReviewLink": {
+    "message": "Оценить в Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Ветки"
+  },
+  "threadSettled": {
+    "message": "Отложенные ($1)"
+  },
+  "threadKindChat": {
+    "message": "Чат"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Рутина"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Проект"
+  },
+  "threadKindOther": {
+    "message": "Ветка"
+  },
+  "threadStatusWorking": {
+    "message": "В работе"
+  },
+  "threadStatusAwaiting": {
+    "message": "Ожидание"
+  },
+  "threadStatusError": {
+    "message": "Ошибка"
+  },
+  "threadStatusUnread": {
+    "message": "Не прочитано"
+  },
+  "threadStatusOpen": {
+    "message": "Открыто"
+  },
+  "setSecSidebar": {
+    "message": "Боковая панель"
+  },
+  "setThreadSidebar": {
+    "message": "Карточки веток"
+  },
+  "setThreadSidebarDesc": {
+    "message": "По умолчанию все чаты скрыты в «Отложенных». При новой активности чат становится карточкой, пока вы его не отложите."
+  },
+  "threadNavLabel": {
+    "message": "Проекты и инструменты"
+  },
+  "threadStatusPinned": {
+    "message": "Закреплено"
+  },
+  "threadStatusDone": {
+    "message": "Готово"
+  },
+  "threadWorkingFor": {
+    "message": "В работе $1"
+  },
+  "threadWaitingFor": {
+    "message": "Ожидание $1"
+  },
+  "threadDoneAgo": {
+    "message": "Готово $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1с"
+  },
+  "threadAgoMinutes": {
+    "message": "$1м"
+  },
+  "threadAgoHours": {
+    "message": "$1ч"
+  },
+  "threadAgoDays": {
+    "message": "$1д"
+  },
+  "threadAgoWeeks": {
+    "message": "$1н"
+  },
+  "threadSearch": {
+    "message": "Поиск"
+  },
+  "threadNewChat": {
+    "message": "Новый чат"
+  },
+  "threadSort": {
+    "message": "Сортировка веток"
+  },
+  "threadSortEdited": {
+    "message": "Недавно изменённые"
+  },
+  "threadSortCreated": {
+    "message": "Недавно созданные"
+  },
+  "setThreadSort": {
+    "message": "Порядок"
+  },
+  "setThreadSortDesc": {
+    "message": "«Недавно изменённые» поднимает ветку наверх при изменениях или ответе Claude."
+  },
+  "threadSettle": {
+    "message": "Отложить"
+  }
+}

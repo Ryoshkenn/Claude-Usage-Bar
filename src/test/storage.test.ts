@@ -4,6 +4,7 @@ import {
   appendUsageHistoryEntry,
   clearWeeklyUsageMetrics,
   containsUnsafeConversationFields,
+  getClaudeLanguage,
   getDailyModelHistory,
   getStorage,
   getUsageHistory,
@@ -92,7 +93,6 @@ describe("storage helpers", () => {
       weeklyManualStartHour: 9,
       hasSeenTour: false,
       showClipboard: true,
-      language: "en",
       resetBannerScope: "claude",
       threadSidebar: false,
       threadSidebarSort: "edited",
@@ -174,6 +174,22 @@ describe("storage helpers", () => {
     expect(settings.threadSidebar).toBe(true);
   });
 
+  it("drops the removed language picker setting; the UI follows Claude's language", async () => {
+    const adapter = createAdapter({ settings: { language: "ja", showOverlay: false } });
+    const { settings } = await getStorage(adapter);
+    expect(settings).not.toHaveProperty("language");
+    expect(settings.showOverlay).toBe(false);
+
+    await updateSettings({ mode: "expanded" }, adapter);
+    expect(adapter.data.settings).not.toHaveProperty("language");
+  });
+
+  it("reads Claude's language tag mirrored by the content script", async () => {
+    expect(await getClaudeLanguage(createAdapter())).toBeUndefined();
+    expect(await getClaudeLanguage(createAdapter({ claudeLanguage: 42 }))).toBeUndefined();
+    expect(await getClaudeLanguage(createAdapter({ claudeLanguage: "fr-FR" }))).toBe("fr-FR");
+  });
+
   it("merges settings", async () => {
     const adapter = createAdapter({ settings: { showOverlay: false, mode: "compact" } });
     const settings = await updateSettings({ mode: "expanded" }, adapter);
@@ -197,7 +213,6 @@ describe("storage helpers", () => {
       weeklyManualStartHour: 9,
       hasSeenTour: false,
       showClipboard: true,
-      language: "en",
       resetBannerScope: "claude",
       threadSidebar: false,
       threadSidebarSort: "edited",

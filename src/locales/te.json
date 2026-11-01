@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "ప్రాంప్ట్ క్యాష్ సమయం అందుబాటులో లేదు"
+  },
+  "cacheUnknown": {
+    "message": "క్యాష్ తెలియదు"
+  },
+  "cacheExpired": {
+    "message": "ప్రాంప్ట్ క్యాష్ గడువు ముగిసింది"
+  },
+  "cacheExpiresIn": {
+    "message": "ప్రాంప్ట్ క్యాష్ గడువు $1లో ముగుస్తుంది"
+  },
+  "expiredShort": {
+    "message": "గడువు ముగిసింది"
+  },
+  "cacheHasExpired": {
+    "message": "ప్రాంప్ట్ క్యాష్ గడువు ముగిసింది"
+  },
+  "cacheSavings": {
+    "message": "క్యాష్ చేసిన టోకెన్లు ~90% ఇన్‌పుట్ ఖర్చును ఆదా చేస్తాయి"
+  },
+  "ringSession": {
+    "message": "5-గంటల సెషన్"
+  },
+  "ringWeekly": {
+    "message": "వారానికి · అన్ని మోడళ్లు"
+  },
+  "ringWeeklyFable": {
+    "message": "వారానికి · Fable"
+  },
+  "ringContext": {
+    "message": "కాంటెక్స్ట్ విండో"
+  },
+  "weeklyScoped": {
+    "message": "వారానికి · $1"
+  },
+  "pacePctAtReset": {
+    "message": "రీసెట్ వద్ద $1%"
+  },
+  "pacePastReset": {
+    "message": "రీసెట్ తర్వాత +$1"
+  },
+  "lastsToReset": {
+    "message": "రీసెట్ వరకు సరిపోతుంది"
+  },
+  "paceActiveLeft": {
+    "message": "~$1గం యాక్టివ్ మిగిలి ఉంది"
+  },
+  "paceEmptyDate": {
+    "message": "$1న ఖాళీ అవుతుంది"
+  },
+  "paceEmptyIn": {
+    "message": "$1లో ఖాళీ అవుతుంది"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 మెసేజ్ మిగిలి ఉంది"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 మెసేజ్‌లు మిగిలి ఉన్నాయి"
+  },
+  "ctxCalculating": {
+    "message": "కాంటెక్స్ట్ వినియోగాన్ని లెక్కిస్తోంది..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude వినియోగం $1"
+  },
+  "usage": {
+    "message": "వినియోగం"
+  },
+  "planUsage": {
+    "message": "ప్లాన్ వినియోగం"
+  },
+  "openSettings": {
+    "message": "ఎక్స్‌టెన్షన్ సెట్టింగ్‌లను తెరువు"
+  },
+  "fiveHourLimit": {
+    "message": "5-గంటల పరిమితి"
+  },
+  "resetUnknown": {
+    "message": "రీసెట్ తెలియదు"
+  },
+  "weeklyLearningAria": {
+    "message": "వారపు వినియోగ అంచనా ఇంకా నేర్చుకుంటోంది"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar మీ వినియోగ తీరును నేర్చుకుంటున్న మొదటి వారంలో వారపు అంచనాలు ఖచ్చితంగా ఉండకపోవచ్చు."
+  },
+  "ctxCalcLoading": {
+    "message": "కాంటెక్స్ట్ లెక్కింపు లోడ్ అవుతోంది"
+  },
+  "ctxWindowFull": {
+    "message": "కాంటెక్స్ట్ విండో $1% నిండింది"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar నచ్చిందా?"
+  },
+  "reviewRate": {
+    "message": "Chrome Storeలో రేట్ చేయండి ↗"
+  },
+  "otherHint": {
+    "message": "ఈ మెసేజ్‌ల కోసం మోడల్‌ను గుర్తించడం సాధ్యపడలేదు. ఇది Claude Code మరియు Cowork నుండి రావచ్చు."
+  },
+  "noMessages": {
+    "message": "మెసేజ్‌లు లేవు"
+  },
+  "errNoWorker": {
+    "message": "ఎక్స్‌టెన్షన్ బ్యాక్‌గ్రౌండ్ వర్కర్‌ను సంప్రదించడం సాధ్యపడలేదు"
+  },
+  "errLoadUsage": {
+    "message": "Claude వినియోగాన్ని లోడ్ చేయడం సాధ్యపడలేదు"
+  },
+  "reviewEnjoyingShort": {
+    "message": "నచ్చిందా?"
+  },
+  "fiveHour": {
+    "message": "5-గంటలు"
+  },
+  "weekly": {
+    "message": "వారానికి"
+  },
+  "refreshAll": {
+    "message": "అన్ని గణాంకాలను రీఫ్రెష్ చేయి"
+  },
+  "customizeOverlay": {
+    "message": "ఓవర్‌లేను అనుకూలీకరించు"
+  },
+  "usageSummary": {
+    "message": "వినియోగ సారాంశం"
+  },
+  "total": {
+    "message": "మొత్తం"
+  },
+  "avgPerMo": {
+    "message": "సగటు / నెల"
+  },
+  "avgPerDay": {
+    "message": "సగటు / రోజు"
+  },
+  "busiest": {
+    "message": "అత్యధిక వినియోగం"
+  },
+  "messagesSent": {
+    "message": "పంపిన మెసేజ్‌లు"
+  },
+  "fourteenDays": {
+    "message": "14 రోజులు"
+  },
+  "monthly": {
+    "message": "నెలవారీ"
+  },
+  "collecting": {
+    "message": "వినియోగాన్ని సేకరిస్తోంది — మీరు claude.aiలో చాట్ చేస్తున్నప్పుడు మీ రోజువారీ చార్ట్ నిండుతుంది."
+  },
+  "allTime": {
+    "message": "మొత్తం సమయం"
+  },
+  "dayStreak": {
+    "message": "$1-రోజుల స్ట్రీక్"
+  },
+  "reset": {
+    "message": "రీసెట్"
+  },
+  "segOther": {
+    "message": "ఇతర"
+  },
+  "setSecGeneral": {
+    "message": "సాధారణం"
+  },
+  "setSecWheel": {
+    "message": "కాంటెక్స్ట్ విండో"
+  },
+  "setSecCacheTimer": {
+    "message": "క్యాష్ టైమర్"
+  },
+  "setShowOverlay": {
+    "message": "ఓవర్‌లే చూపించు"
+  },
+  "setShowOverlayDesc": {
+    "message": "కంపోజర్‌లో అన్నింటినీ ఆన్ లేదా ఆఫ్ చేయండి."
+  },
+  "setTour": {
+    "message": "ఫీచర్ టూర్"
+  },
+  "setTourBtn": {
+    "message": "టూర్ మళ్లీ ప్లే చేయి"
+  },
+  "setPrivacy": {
+    "message": "గోప్యతా విధానం"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "వారపు అంచనా"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "మిగిలి ఉన్న వినియోగ గంటలు, ముగిసే రోజు మరియు సమయం, లేదా రీసెట్ సమయానికి మీ స్థితి."
+  },
+  "setDeleteHistory": {
+    "message": "చరిత్రను తొలగించు"
+  },
+  "setSamples": {
+    "message": "$1 నమూనాలు"
+  },
+  "setOptPctReset": {
+    "message": "రీసెట్ వద్ద శాతం"
+  },
+  "setOptTimePast": {
+    "message": "రీసెట్ దాటిన సమయం"
+  },
+  "setOptMsgsLeft": {
+    "message": "మిగిలిన మెసేజ్‌లు"
+  },
+  "setOptActiveHours": {
+    "message": "యాక్టివ్ గంటలు"
+  },
+  "setOptDaysTime": {
+    "message": "రోజులు / సమయం"
+  },
+  "ctxBreakdownTitle": {
+    "message": "కాంటెక్స్ట్ విండోను ఏమి ఉపయోగిస్తోంది"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2లో $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "మీ మెసేజ్‌లు"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude సమాధానాలు"
+  },
+  "ctxBreakdownThinking": {
+    "message": "విస్తృత ఆలోచన"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "టూల్ కాల్స్"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "టూల్ ఫలితాలు"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ఫైళ్లు & జోడింపులు"
+  },
+  "ctxBreakdownProject": {
+    "message": "ప్రాజెక్ట్ పరిజ్ఞానం"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "సిస్టమ్ ఓవర్‌హెడ్"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "మిగిలినవి"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 మెసేజ్‌లు"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 బ్లాక్‌లు"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 కాల్స్"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 ఫలితాలు"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 ఫైళ్లు"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "కాంటెక్స్ట్ విండోలో ఇంకా ఏమీ లేదు."
+  },
+  "ctxBreakdownNote": {
+    "message": "ఈ సంభాషణ నుండి స్థానికంగా అంచనా వేయబడింది."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "స్థానికంగా అంచనా వేయబడింది. టూల్ మరియు సెర్చ్ ఫలితాల వల్ల ఇది సుమారుగా ఉంటుంది."
+  },
+  "resetBannerSessionTitle": {
+    "message": "మీ 5-గంటల Claude పరిమితి రీసెట్ అయింది"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "మీ వారపు Claude పరిమితి రీసెట్ అయింది"
+  },
+  "resetBannerAction": {
+    "message": "Claude తెరువు"
+  },
+  "setSecResetAlerts": {
+    "message": "రీసెట్ అలర్ట్‌లు"
+  },
+  "setResetBannerScope": {
+    "message": "అలర్ట్‌లను ఇక్కడ చూపించు"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai మాత్రమే"
+  },
+  "setResetScopeEverywhere": {
+    "message": "ఏదైనా సైట్"
+  },
+  "setResetBannerTestGo": {
+    "message": "టెస్ట్ పంపు"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1సెలో"
+  },
+  "grantTitle": {
+    "message": "ఏదైనా సైట్‌లో రీసెట్ అలర్ట్‌లను చూపించు"
+  },
+  "grantBody": {
+    "message": "claude.ai వెలుపల బ్యానర్‌ను చూపించడానికి ఎక్స్‌టెన్షన్‌కు Chromeలో మీ అనుమతి అవసరం. ఇది బ్యానర్ చూపించడానికి మాత్రమే ఉపయోగించబడుతుంది — పేజీ కంటెంట్ ఎప్పుడూ చదవబడదు లేదా ఎక్కడికీ పంపబడదు."
+  },
+  "grantDenied": {
+    "message": "అనుమతి ఇవ్వబడలేదు. రీసెట్ అలర్ట్‌లు claude.aiలో మాత్రమే ఉంటాయి."
+  },
+  "grantAllow": {
+    "message": "కొనసాగించు"
+  },
+  "grantCancel": {
+    "message": "రద్దు చేయి"
+  },
+  "setOptRing": {
+    "message": "రింగ్"
+  },
+  "setOptPercentText": {
+    "message": "శాతం"
+  },
+  "setSecDisplay": {
+    "message": "డిస్‌ప్లే"
+  },
+  "setSecPacing": {
+    "message": "పేసింగ్"
+  },
+  "setOptOff": {
+    "message": "ఆఫ్"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "బార్ ఏ పరిమితిని ట్రాక్ చేస్తుంది."
+  },
+  "setShowPct": {
+    "message": "% చూపించు"
+  },
+  "setContextDesc": {
+    "message": "ప్రస్తుత చాట్ ఎంత నిండి ఉంది."
+  },
+  "setCacheTimerDesc": {
+    "message": "ప్రాంప్ట్ క్యాష్ యాక్టివ్‌గా ఉన్నప్పుడు చాట్ హెడర్‌లో కౌంట్‌డౌన్."
+  },
+  "setPacing": {
+    "message": "పేస్ అంచనాలను చూపించు"
+  },
+  "setPacingDesc": {
+    "message": "ఈ బ్రౌజర్‌లో మాత్రమే నిల్వ చేయబడిన వినియోగ నమూనాల నుండి అంచనాలు నేర్చుకుంటాయి. దీన్ని ఆఫ్ చేస్తే వాటిని సేకరించడం ఆగిపోతుంది."
+  },
+  "set5hrPace": {
+    "message": "5-గంటల పేస్"
+  },
+  "set5hrPaceDesc": {
+    "message": "5-గంటల శాతం పక్కన చూపబడుతుంది."
+  },
+  "setLearnedData": {
+    "message": "నేర్చుకున్న వినియోగం"
+  },
+  "setResetAlertsDesc": {
+    "message": "మీ 5-గంటల లేదా వారపు పరిమితి రీసెట్ అయినప్పుడు బ్యానర్. ఏదైనా సైట్ కోసం Chrome అనుమతి అవసరం."
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Storeలో రేట్ చేయండి"
+  },
+  "threadsLabel": {
+    "message": "థ్రెడ్‌లు"
+  },
+  "threadSettled": {
+    "message": "సర్దుబాటు చేసినవి ($1)"
+  },
+  "threadKindChat": {
+    "message": "చాట్"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "రొటీన్"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "ప్రాజెక్ట్"
+  },
+  "threadKindOther": {
+    "message": "థ్రెడ్"
+  },
+  "threadStatusWorking": {
+    "message": "పనిచేస్తోంది"
+  },
+  "threadStatusAwaiting": {
+    "message": "వేచి ఉంది"
+  },
+  "threadStatusError": {
+    "message": "లోపం"
+  },
+  "threadStatusUnread": {
+    "message": "చదవనివి"
+  },
+  "threadStatusOpen": {
+    "message": "తెరిచి ఉంది"
+  },
+  "setSecSidebar": {
+    "message": "సైడ్‌బార్"
+  },
+  "setThreadSidebar": {
+    "message": "థ్రెడ్ వ్యూ"
+  },
+  "setThreadSidebarDesc": {
+    "message": "అన్నీ సర్దుబాటు చేయబడిన స్థితిలో ప్రారంభమవుతాయి. చాట్‌లో కొత్త యాక్టివిటీ వచ్చినప్పుడు, మీరు దాన్ని సర్దుబాటు చేసే వరకు అది కార్డ్‌గా మారుతుంది."
+  },
+  "threadNavLabel": {
+    "message": "ప్రాజెక్ట్‌లు & టూల్స్"
+  },
+  "threadStatusPinned": {
+    "message": "పిన్ చేసినవి"
+  },
+  "threadStatusDone": {
+    "message": "పూర్తయింది"
+  },
+  "threadWorkingFor": {
+    "message": "$1గా పనిచేస్తోంది"
+  },
+  "threadWaitingFor": {
+    "message": "$1గా వేచి ఉంది"
+  },
+  "threadDoneAgo": {
+    "message": "$1 క్రితం పూర్తయింది"
+  },
+  "threadAgoSeconds": {
+    "message": "$1సె"
+  },
+  "threadAgoMinutes": {
+    "message": "$1ని"
+  },
+  "threadAgoHours": {
+    "message": "$1గం"
+  },
+  "threadAgoDays": {
+    "message": "$1రో"
+  },
+  "threadAgoWeeks": {
+    "message": "$1వా"
+  },
+  "threadSearch": {
+    "message": "వెతుకు"
+  },
+  "threadNewChat": {
+    "message": "కొత్త చాట్"
+  },
+  "threadSort": {
+    "message": "థ్రెడ్‌లను క్రమబద్ధీకరించు"
+  },
+  "threadSortEdited": {
+    "message": "ఇటీవల సవరించినవి"
+  },
+  "threadSortCreated": {
+    "message": "ఇటీవల సృష్టించినవి"
+  },
+  "setThreadSort": {
+    "message": "క్రమం"
+  },
+  "setThreadSortDesc": {
+    "message": "ఇటీవల సవరించినవి ఎంచుకుంటే, థ్రెడ్ మారినప్పుడు లేదా Claude సమాధానం ఇచ్చినప్పుడు అది పైకి వస్తుంది."
+  },
+  "threadSettle": {
+    "message": "సర్దుబాటు చేయి"
+  }
+}

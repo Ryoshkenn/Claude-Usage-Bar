@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "开启或关闭输入框中的所有内容。"
   },
-  "setLanguage": {
-    "message": "语言"
-  },
   "setTour": {
     "message": "功能导览"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "当 5 小时或每周限额重置时显示横幅。“任意网站”需要 Chrome 权限。"
-  },
-  "setLanguageShortDesc": {
-    "message": "翻译可能不准确。"
   },
   "setReviewLink": {
     "message": "在 Chrome 应用商店评分"

@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Babu lokacin ma'ajiyar umarni"
+  },
+  "cacheUnknown": {
+    "message": "ba a san ma'ajiya ba"
+  },
+  "cacheExpired": {
+    "message": "Ma'ajiyar umarni ta ƙare"
+  },
+  "cacheExpiresIn": {
+    "message": "Ma'ajiyar umarni za ta ƙare a $1"
+  },
+  "expiredShort": {
+    "message": "ya ƙare"
+  },
+  "cacheHasExpired": {
+    "message": "Ma'ajiyar umarni ta riga ta ƙare"
+  },
+  "cacheSavings": {
+    "message": "Alamu a ma'ajiya suna rage ~90% na kuɗin shigarwa"
+  },
+  "ringSession": {
+    "message": "Zama na sa'a 5"
+  },
+  "ringWeekly": {
+    "message": "Mako-mako · duk samfura"
+  },
+  "ringWeeklyFable": {
+    "message": "Mako-mako · Fable"
+  },
+  "ringContext": {
+    "message": "Firam ɗin mahallin"
+  },
+  "weeklyScoped": {
+    "message": "Mako-mako · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% a sake saiti"
+  },
+  "pacePastReset": {
+    "message": "+$1 bayan sake saiti"
+  },
+  "lastsToReset": {
+    "message": "zai kai sake saiti"
+  },
+  "paceActiveLeft": {
+    "message": "saura ~$1h na aiki"
+  },
+  "paceEmptyDate": {
+    "message": "zai ƙare $1"
+  },
+  "paceEmptyIn": {
+    "message": "zai ƙare a $1"
+  },
+  "paceMsgLeft": {
+    "message": "saura saƙo ~$1"
+  },
+  "paceMsgsLeft": {
+    "message": "saura saƙonni ~$1"
+  },
+  "ctxCalculating": {
+    "message": "Ana lissafa amfanin mahallin..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Amfanin Claude $1"
+  },
+  "usage": {
+    "message": "Amfani"
+  },
+  "planUsage": {
+    "message": "Amfanin tsari"
+  },
+  "openSettings": {
+    "message": "Buɗe saitunan ƙari"
+  },
+  "fiveHourLimit": {
+    "message": "Iyakar sa'a 5"
+  },
+  "resetUnknown": {
+    "message": "ba a san sake saiti ba"
+  },
+  "weeklyLearningAria": {
+    "message": "Hasashen amfanin mako-mako yana kan koyo"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Hasashen mako-mako na iya zama ba daidai ba a makon farko yayin da Usage Bar ke koyon yanayin amfaninka."
+  },
+  "ctxCalcLoading": {
+    "message": "Ana loda lissafin mahallin"
+  },
+  "ctxWindowFull": {
+    "message": "Firam ɗin mahallin ya cika da $1%"
+  },
+  "reviewEnjoying": {
+    "message": "Kana jin daɗin Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Yi kima a Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Ba a iya gano samfurin waɗannan saƙonnin ba. Wannan na iya fitowa daga Claude Code da cowork."
+  },
+  "noMessages": {
+    "message": "Babu saƙonni"
+  },
+  "errNoWorker": {
+    "message": "An kasa tuntuɓar ma'aikacin bayan fage na ƙarin"
+  },
+  "errLoadUsage": {
+    "message": "An kasa loda amfanin Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Kana jin daɗinsa?"
+  },
+  "fiveHour": {
+    "message": "Sa'a 5"
+  },
+  "weekly": {
+    "message": "Mako-mako"
+  },
+  "refreshAll": {
+    "message": "Sabunta dukkan ƙididdiga"
+  },
+  "customizeOverlay": {
+    "message": "Keɓance saman nuni"
+  },
+  "usageSummary": {
+    "message": "Taƙaitaccen amfani"
+  },
+  "total": {
+    "message": "Jimilla"
+  },
+  "avgPerMo": {
+    "message": "Matsakaici / wata"
+  },
+  "avgPerDay": {
+    "message": "Matsakaici / rana"
+  },
+  "busiest": {
+    "message": "Mafi yawan aiki"
+  },
+  "messagesSent": {
+    "message": "Saƙonnin da aka tura"
+  },
+  "fourteenDays": {
+    "message": "Kwana 14"
+  },
+  "monthly": {
+    "message": "Wata-wata"
+  },
+  "collecting": {
+    "message": "Ana tattara amfani — jadawalinka na yau da kullum yana cika yayin da kake hira a claude.ai."
+  },
+  "allTime": {
+    "message": "Duk lokaci"
+  },
+  "dayStreak": {
+    "message": "Jeri na kwana $1"
+  },
+  "reset": {
+    "message": "Sake saiti"
+  },
+  "segOther": {
+    "message": "Sauran"
+  },
+  "setSecGeneral": {
+    "message": "Gabaɗaya"
+  },
+  "setSecWheel": {
+    "message": "Firam ɗin mahallin"
+  },
+  "setSecCacheTimer": {
+    "message": "Agogon ma'ajiya"
+  },
+  "setShowOverlay": {
+    "message": "Nuna saman nuni"
+  },
+  "setShowOverlayDesc": {
+    "message": "Kunna ko kashe komai a cikin wurin rubutu."
+  },
+  "setTour": {
+    "message": "Zagayen fasaloli"
+  },
+  "setTourBtn": {
+    "message": "Sake Buga Zagaye"
+  },
+  "setPrivacy": {
+    "message": "Manufar sirri"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Hasashen mako-mako"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Sa'o'in amfani da suka rage, rana da lokacin da zai ƙare, ko inda za ka kasance a lokacin sake saiti."
+  },
+  "setDeleteHistory": {
+    "message": "Goge tarihi"
+  },
+  "setSamples": {
+    "message": "samfura $1"
+  },
+  "setOptPctReset": {
+    "message": "Kashi a sake saiti"
+  },
+  "setOptTimePast": {
+    "message": "Lokaci bayan sake saiti"
+  },
+  "setOptMsgsLeft": {
+    "message": "Saƙonnin da suka rage"
+  },
+  "setOptActiveHours": {
+    "message": "Sa'o'in aiki"
+  },
+  "setOptDaysTime": {
+    "message": "Kwanaki / lokaci"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Abin da ke amfani da firam ɗin mahallin"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 cikin $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Saƙonninka"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Amsoshin Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Zurfafa tunani"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Kiran kayan aiki"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Sakamakon kayan aiki"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Fayiloli da haɗe-haɗe"
+  },
+  "ctxBreakdownProject": {
+    "message": "Ilimin aiki"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Nauyin tsarin"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Saura"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "saƙonni $1"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "shingaye $1"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "kira $1"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "sakamako $1"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "fayiloli $1"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Babu komai a firam ɗin mahallin tukuna."
+  },
+  "ctxBreakdownNote": {
+    "message": "An kiyasta a nan daga wannan hirar."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "An kiyasta a nan. Sakamakon kayan aiki da bincike na sa wannan ya zama kusan haka."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Iyakar Claude ɗinka ta sa'a 5 ta sake saiti"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Iyakar Claude ɗinka ta mako-mako ta sake saiti"
+  },
+  "resetBannerAction": {
+    "message": "Buɗe Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Sanarwar sake saiti"
+  },
+  "setResetBannerScope": {
+    "message": "Nuna sanarwa a"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai kaɗai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Kowane shafi"
+  },
+  "setResetBannerTestGo": {
+    "message": "Tura gwaji"
+  },
+  "setResetBannerTestCounting": {
+    "message": "a cikin $1s"
+  },
+  "grantTitle": {
+    "message": "Nuna sanarwar sake saiti a kowane shafi"
+  },
+  "grantBody": {
+    "message": "Chrome yana buƙatar izininka kafin ƙarin ya iya nuna sanarwa a wajen claude.ai. Ana amfani da shi don nuna sanarwar kawai — ba a taɓa karanta ko tura abubuwan da ke cikin shafin zuwa ko'ina ba."
+  },
+  "grantDenied": {
+    "message": "Ba a bada izini ba. Sanarwar sake saiti za ta tsaya a claude.ai kaɗai."
+  },
+  "grantAllow": {
+    "message": "Ci gaba"
+  },
+  "grantCancel": {
+    "message": "Soke"
+  },
+  "setOptRing": {
+    "message": "Zobe"
+  },
+  "setOptPercentText": {
+    "message": "Kashi"
+  },
+  "setSecDisplay": {
+    "message": "Nuni"
+  },
+  "setSecPacing": {
+    "message": "Gudun amfani"
+  },
+  "setOptOff": {
+    "message": "A kashe"
+  },
+  "setUsageBar": {
+    "message": "Sandar amfani"
+  },
+  "setUsageBarDesc": {
+    "message": "Wace iyaka sandar ke bi."
+  },
+  "setShowPct": {
+    "message": "Nuna %"
+  },
+  "setContextDesc": {
+    "message": "Yadda hirar yanzu ta cika."
+  },
+  "setCacheTimerDesc": {
+    "message": "Ƙirga lokaci a saman hira yayin da ma'ajiyar umarni ke aiki."
+  },
+  "setPacing": {
+    "message": "Nuna hasashen gudu"
+  },
+  "setPacingDesc": {
+    "message": "Hasashe yana koyo daga samfuran amfani na lambobi da aka adana a wannan burauzar kaɗai. Kashe wannan yana dakatar da tattara su."
+  },
+  "set5hrPace": {
+    "message": "Gudun sa'a 5"
+  },
+  "set5hrPaceDesc": {
+    "message": "Ana nunawa kusa da kashin sa'a 5."
+  },
+  "setLearnedData": {
+    "message": "Amfanin da aka koya"
+  },
+  "setResetAlertsDesc": {
+    "message": "Sanarwa idan iyakarka ta sa'a 5 ko mako-mako ta sake saiti. Kowane shafi yana buƙatar izinin Chrome."
+  },
+  "setReviewLink": {
+    "message": "Yi kima a Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Zaren hira"
+  },
+  "threadSettled": {
+    "message": "An adana ($1)"
+  },
+  "threadKindChat": {
+    "message": "Hira"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Yau da kullum"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Aiki"
+  },
+  "threadKindOther": {
+    "message": "Zare"
+  },
+  "threadStatusWorking": {
+    "message": "Yana aiki"
+  },
+  "threadStatusAwaiting": {
+    "message": "Yana jira"
+  },
+  "threadStatusError": {
+    "message": "Kuskure"
+  },
+  "threadStatusUnread": {
+    "message": "Ba a karanta ba"
+  },
+  "threadStatusOpen": {
+    "message": "A buɗe"
+  },
+  "setSecSidebar": {
+    "message": "Gefen shafi"
+  },
+  "setThreadSidebar": {
+    "message": "Jerin zare"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Komai yana farawa a adane. Hira tana zama kati da zarar an sami sabon motsi, har sai ka adana ta."
+  },
+  "threadNavLabel": {
+    "message": "Ayyuka & kayan aiki"
+  },
+  "threadStatusPinned": {
+    "message": "An makala"
+  },
+  "threadStatusDone": {
+    "message": "An gama"
+  },
+  "threadWorkingFor": {
+    "message": "Yana aiki $1"
+  },
+  "threadWaitingFor": {
+    "message": "Yana jira $1"
+  },
+  "threadDoneAgo": {
+    "message": "An gama $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1d"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1s"
+  },
+  "threadAgoDays": {
+    "message": "$1k"
+  },
+  "threadAgoWeeks": {
+    "message": "$1mk"
+  },
+  "threadSearch": {
+    "message": "Bincika"
+  },
+  "threadNewChat": {
+    "message": "Sabuwar hira"
+  },
+  "threadSort": {
+    "message": "Jera zare"
+  },
+  "threadSortEdited": {
+    "message": "Sabon gyara"
+  },
+  "threadSortCreated": {
+    "message": "Sabon ƙirƙira"
+  },
+  "setThreadSort": {
+    "message": "Jeri"
+  },
+  "setThreadSortDesc": {
+    "message": "Sabon gyara yana matsar da zare sama idan ya canza ko Claude ya bada amsa."
+  },
+  "threadSettle": {
+    "message": "Adana"
+  }
+}

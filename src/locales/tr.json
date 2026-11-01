@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "İstem önbelleği süresi kullanılamıyor"
+  },
+  "cacheUnknown": {
+    "message": "önbellek bilinmiyor"
+  },
+  "cacheExpired": {
+    "message": "İstem önbelleği süresi doldu"
+  },
+  "cacheExpiresIn": {
+    "message": "İstem önbelleği $1 içinde doluyor"
+  },
+  "expiredShort": {
+    "message": "süresi doldu"
+  },
+  "cacheHasExpired": {
+    "message": "İstem önbelleğinin süresi doldu"
+  },
+  "cacheSavings": {
+    "message": "Önbellek token'ları girdi maliyetinde ~%90 tasarruf sağlar"
+  },
+  "ringSession": {
+    "message": "5 saatlik oturum"
+  },
+  "ringWeekly": {
+    "message": "Haftalık · tüm modeller"
+  },
+  "ringWeeklyFable": {
+    "message": "Haftalık · Fable"
+  },
+  "ringContext": {
+    "message": "Bağlam penceresi"
+  },
+  "weeklyScoped": {
+    "message": "Haftalık · $1"
+  },
+  "pacePctAtReset": {
+    "message": "sıfırlamada %$1"
+  },
+  "pacePastReset": {
+    "message": "sıfırlamayı +$1 aşıyor"
+  },
+  "lastsToReset": {
+    "message": "sıfırlamaya kadar yeter"
+  },
+  "paceActiveLeft": {
+    "message": "~$1 sa aktif kaldı"
+  },
+  "paceEmptyDate": {
+    "message": "bitiş: $1"
+  },
+  "paceEmptyIn": {
+    "message": "$1 içinde biter"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 msj kaldı"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 msj kaldı"
+  },
+  "ctxCalculating": {
+    "message": "Bağlam kullanımı hesaplanıyor..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude kullanımı $1"
+  },
+  "usage": {
+    "message": "Kullanım"
+  },
+  "planUsage": {
+    "message": "Plan kullanımı"
+  },
+  "openSettings": {
+    "message": "Uzantı ayarlarını aç"
+  },
+  "fiveHourLimit": {
+    "message": "5 saatlik limit"
+  },
+  "resetUnknown": {
+    "message": "sıfırlama bilinmiyor"
+  },
+  "weeklyLearningAria": {
+    "message": "Haftalık kullanım tahmini hâlâ öğreniyor"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar kullanım düzeninizi öğrenirken ilk hafta haftalık tahminler yanılabilir."
+  },
+  "ctxCalcLoading": {
+    "message": "Bağlam hesaplaması yükleniyor"
+  },
+  "ctxWindowFull": {
+    "message": "Bağlam penceresi %$1 dolu"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar'ı beğendiniz mi?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store'da puan verin ↗"
+  },
+  "otherHint": {
+    "message": "Bu mesajlar için model belirlenemedi. Claude Code ve Cowork kaynaklı olabilir."
+  },
+  "noMessages": {
+    "message": "Mesaj yok"
+  },
+  "errNoWorker": {
+    "message": "Uzantı arka plan işlemcisine ulaşılamıyor"
+  },
+  "errLoadUsage": {
+    "message": "Claude kullanımı yüklenemedi"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Beğendiniz mi?"
+  },
+  "fiveHour": {
+    "message": "5 saatlik"
+  },
+  "weekly": {
+    "message": "Haftalık"
+  },
+  "refreshAll": {
+    "message": "Tüm istatistikleri yenile"
+  },
+  "customizeOverlay": {
+    "message": "Arayüzü özelleştir"
+  },
+  "usageSummary": {
+    "message": "Kullanım özeti"
+  },
+  "total": {
+    "message": "Toplam"
+  },
+  "avgPerMo": {
+    "message": "Ort. / ay"
+  },
+  "avgPerDay": {
+    "message": "Ort. / gün"
+  },
+  "busiest": {
+    "message": "En yoğun"
+  },
+  "messagesSent": {
+    "message": "Gönderilen mesajlar"
+  },
+  "fourteenDays": {
+    "message": "14 Gün"
+  },
+  "monthly": {
+    "message": "Aylık"
+  },
+  "collecting": {
+    "message": "Kullanım toplanıyor — claude.ai'da sohbet ettikçe günlük grafiğiniz dolacaktır."
+  },
+  "allTime": {
+    "message": "Tüm zamanlar"
+  },
+  "dayStreak": {
+    "message": "$1 günlük seri"
+  },
+  "reset": {
+    "message": "Sıfırlama"
+  },
+  "segOther": {
+    "message": "Diğer"
+  },
+  "setSecGeneral": {
+    "message": "Genel"
+  },
+  "setSecWheel": {
+    "message": "Bağlam penceresi"
+  },
+  "setSecCacheTimer": {
+    "message": "Önbellek sayacı"
+  },
+  "setShowOverlay": {
+    "message": "Arayüzü göster"
+  },
+  "setShowOverlayDesc": {
+    "message": "Yazma alanındaki tüm göstergeleri açın veya kapatın."
+  },
+  "setTour": {
+    "message": "Özellik turu"
+  },
+  "setTourBtn": {
+    "message": "Turu Tekrarla"
+  },
+  "setPrivacy": {
+    "message": "Gizlilik politikası"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Haftalık tahmin"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Kalan kullanılabilir saat, limitin biteceği gün ve saat veya sıfırlamadaki durumunuz."
+  },
+  "setDeleteHistory": {
+    "message": "Geçmişi sil"
+  },
+  "setSamples": {
+    "message": "$1 örnek"
+  },
+  "setOptPctReset": {
+    "message": "Sıfırlamadaki yüzde"
+  },
+  "setOptTimePast": {
+    "message": "Sıfırlamayı aşan süre"
+  },
+  "setOptMsgsLeft": {
+    "message": "Kalan mesaj"
+  },
+  "setOptActiveHours": {
+    "message": "Aktif saat"
+  },
+  "setOptDaysTime": {
+    "message": "Gün / saat"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Bağlam penceresini kullananlar"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · %$3"
+  },
+  "ctxBreakdownUser": {
+    "message": "Mesajlarınız"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude'un yanıtları"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Kapsamlı düşünme"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Araç çağrıları"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Araç sonuçları"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Dosyalar ve ekler"
+  },
+  "ctxBreakdownProject": {
+    "message": "Proje bilgisi"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Sistem yükü"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Kalan"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 mesaj"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blok"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 çağrı"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 sonuç"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 dosya"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Bağlam penceresinde henüz bir şey yok."
+  },
+  "ctxBreakdownNote": {
+    "message": "Bu sohbetten yerel olarak tahmin edildi."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Yerel olarak tahmin edildi. Araç ve arama sonuçları nedeniyle yaklaşık bir değerdir."
+  },
+  "resetBannerSessionTitle": {
+    "message": "5 saatlik Claude limitiniz sıfırlandı"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Haftalık Claude limitiniz sıfırlandı"
+  },
+  "resetBannerAction": {
+    "message": "Claude'u aç"
+  },
+  "setSecResetAlerts": {
+    "message": "Sıfırlama uyarıları"
+  },
+  "setResetBannerScope": {
+    "message": "Uyarıları şurada göster"
+  },
+  "setResetScopeClaude": {
+    "message": "Yalnızca claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Tüm siteler"
+  },
+  "setResetBannerTestGo": {
+    "message": "Test gönder"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1 sn içinde"
+  },
+  "grantTitle": {
+    "message": "Sıfırlama uyarılarını tüm sitelerde göster"
+  },
+  "grantBody": {
+    "message": "Uzantının claude.ai dışında bildirim çubuğu gösterebilmesi için Chrome izninize ihtiyaç duyar. Bu izin yalnızca bildirimi göstermek için kullanılır — sayfa içeriği asla okunmaz veya bir yere gönderilmez."
+  },
+  "grantDenied": {
+    "message": "İzin verilmedi. Sıfırlama uyarıları yalnızca claude.ai'da kalacak."
+  },
+  "grantAllow": {
+    "message": "Devam et"
+  },
+  "grantCancel": {
+    "message": "İptal"
+  },
+  "setOptRing": {
+    "message": "Halka"
+  },
+  "setOptPercentText": {
+    "message": "Yüzde"
+  },
+  "setSecDisplay": {
+    "message": "Görünüm"
+  },
+  "setSecPacing": {
+    "message": "Kullanım hızı"
+  },
+  "setOptOff": {
+    "message": "Kapalı"
+  },
+  "setUsageBar": {
+    "message": "Kullanım çubuğu"
+  },
+  "setUsageBarDesc": {
+    "message": "Çubuğun hangi limiti takip edeceği."
+  },
+  "setShowPct": {
+    "message": "% göster"
+  },
+  "setContextDesc": {
+    "message": "Mevcut sohbetin ne kadar dolu olduğu."
+  },
+  "setCacheTimerDesc": {
+    "message": "İstem önbelleği aktifken sohbet başlığındaki geri sayım."
+  },
+  "setPacing": {
+    "message": "Hız tahminlerini göster"
+  },
+  "setPacingDesc": {
+    "message": "Tahminler yalnızca bu tarayıcıda saklanan sayısal kullanım örneklerinden öğrenir. Bunu kapatmak veri toplamayı durdurur."
+  },
+  "set5hrPace": {
+    "message": "5 saatlik hız"
+  },
+  "set5hrPaceDesc": {
+    "message": "5 saatlik yüzdenin yanında gösterilir."
+  },
+  "setLearnedData": {
+    "message": "Öğrenilen kullanım"
+  },
+  "setResetAlertsDesc": {
+    "message": "5 saatlik veya haftalık limitiniz sıfırlandığında bildirim gösterir. Tüm siteler için Chrome izni gerekir."
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store'da puan verin"
+  },
+  "threadsLabel": {
+    "message": "Sohbetler"
+  },
+  "threadSettled": {
+    "message": "Kaldırılanlar ($1)"
+  },
+  "threadKindChat": {
+    "message": "Sohbet"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Rutin"
+  },
+  "threadKindCode": {
+    "message": "Kod"
+  },
+  "threadKindProject": {
+    "message": "Proje"
+  },
+  "threadKindOther": {
+    "message": "Sohbet"
+  },
+  "threadStatusWorking": {
+    "message": "Çalışıyor"
+  },
+  "threadStatusAwaiting": {
+    "message": "Bekliyor"
+  },
+  "threadStatusError": {
+    "message": "Hata"
+  },
+  "threadStatusUnread": {
+    "message": "Okunmadı"
+  },
+  "threadStatusOpen": {
+    "message": "Açık"
+  },
+  "setSecSidebar": {
+    "message": "Kenar çubuğu"
+  },
+  "setThreadSidebar": {
+    "message": "Sohbet görünümü"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Her şey kaldırılmış olarak başlar. Bir sohbet yeni etkinlik olduğunda siz onu kaldırana kadar karta dönüşür."
+  },
+  "threadNavLabel": {
+    "message": "Projeler ve araçlar"
+  },
+  "threadStatusPinned": {
+    "message": "Sabitlendi"
+  },
+  "threadStatusDone": {
+    "message": "Tamamlandı"
+  },
+  "threadWorkingFor": {
+    "message": "$1 çalışıyor"
+  },
+  "threadWaitingFor": {
+    "message": "$1 bekliyor"
+  },
+  "threadDoneAgo": {
+    "message": "$1 tamamlandı"
+  },
+  "threadAgoSeconds": {
+    "message": "$1sn"
+  },
+  "threadAgoMinutes": {
+    "message": "$1dk"
+  },
+  "threadAgoHours": {
+    "message": "$1sa"
+  },
+  "threadAgoDays": {
+    "message": "$1g"
+  },
+  "threadAgoWeeks": {
+    "message": "$1hf"
+  },
+  "threadSearch": {
+    "message": "Ara"
+  },
+  "threadNewChat": {
+    "message": "Yeni sohbet"
+  },
+  "threadSort": {
+    "message": "Sohbetleri sırala"
+  },
+  "threadSortEdited": {
+    "message": "En son düzenlenen"
+  },
+  "threadSortCreated": {
+    "message": "En son oluşturulan"
+  },
+  "setThreadSort": {
+    "message": "Sıralama"
+  },
+  "setThreadSortDesc": {
+    "message": "En son düzenlenen seçeneği, bir sohbet değiştiğinde veya Claude yanıt verdiğinde onu yukarı taşır."
+  },
+  "threadSettle": {
+    "message": "Kaldır"
+  }
+}

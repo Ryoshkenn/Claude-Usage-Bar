@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "ப்ராம்ப்ட் தற்காலிக சேமிப்பு நேரம் கிடைக்கவில்லை"
+  },
+  "cacheUnknown": {
+    "message": "தற்காலிக சேமிப்பு தெரியவில்லை"
+  },
+  "cacheExpired": {
+    "message": "ப்ராம்ப்ட் தற்காலிக சேமிப்பு காலாவதியானது"
+  },
+  "cacheExpiresIn": {
+    "message": "ப்ராம்ப்ட் தற்காலிக சேமிப்பு $1-இல் காலாவதியாகும்"
+  },
+  "expiredShort": {
+    "message": "காலாவதியானது"
+  },
+  "cacheHasExpired": {
+    "message": "ப்ராம்ப்ட் தற்காலிக சேமிப்பு காலாவதியாகிவிட்டது"
+  },
+  "cacheSavings": {
+    "message": "சேமித்த டோக்கன்கள் உள்ளீட்டுச் செலவில் ~90% மிச்சப்படுத்துகின்றன"
+  },
+  "ringSession": {
+    "message": "5-மணிநேர அமர்வு"
+  },
+  "ringWeekly": {
+    "message": "வாராந்திரம் · அனைத்து மாடல்கள்"
+  },
+  "ringWeeklyFable": {
+    "message": "வாராந்திரம் · Fable"
+  },
+  "ringContext": {
+    "message": "சூழல் சாளரம்"
+  },
+  "weeklyScoped": {
+    "message": "வாராந்திரம் · $1"
+  },
+  "pacePctAtReset": {
+    "message": "மீட்டமைப்பில் $1%"
+  },
+  "pacePastReset": {
+    "message": "மீட்டமைப்புக்குப் பின் +$1"
+  },
+  "lastsToReset": {
+    "message": "மீட்டமைப்பு வரை நீடிக்கும்"
+  },
+  "paceActiveLeft": {
+    "message": "~$1ம செயலில் மீதமுள்ளது"
+  },
+  "paceEmptyDate": {
+    "message": "$1 அன்று காலியாகும்"
+  },
+  "paceEmptyIn": {
+    "message": "$1-இல் காலியாகும்"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 செய்தி மீதமுள்ளது"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 செய்திகள் மீதமுள்ளன"
+  },
+  "ctxCalculating": {
+    "message": "சூழல் பயன்பாட்டைக் கணக்கிடுகிறது..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude பயன்பாடு $1"
+  },
+  "usage": {
+    "message": "பயன்பாடு"
+  },
+  "planUsage": {
+    "message": "திட்டப் பயன்பாடு"
+  },
+  "openSettings": {
+    "message": "நீட்சி அமைப்புகளைத் திற"
+  },
+  "fiveHourLimit": {
+    "message": "5-மணிநேர வரம்பு"
+  },
+  "resetUnknown": {
+    "message": "மீட்டமைப்பு தெரியவில்லை"
+  },
+  "weeklyLearningAria": {
+    "message": "வாராந்திர பயன்பாட்டு மதிப்பீடு இன்னும் கற்றுக்கொள்கிறது"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar உங்கள் பயன்பாட்டு முறையைக் கற்றுக்கொள்ளும் முதல் வாரத்தில் வாராந்திர மதிப்பீடுகள் துல்லியமற்றதாக இருக்கலாம்."
+  },
+  "ctxCalcLoading": {
+    "message": "சூழல் கணக்கீடு ஏற்றப்படுகிறது"
+  },
+  "ctxWindowFull": {
+    "message": "சூழல் சாளரம் $1% நிரம்பியுள்ளது"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar பிடித்துள்ளதா?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store-இல் மதிப்பிடுக ↗"
+  },
+  "otherHint": {
+    "message": "இந்தச் செய்திகளுக்கான மாடலைக் கண்டறிய முடியவில்லை. இது Claude Code மற்றும் Cowork-இலிருந்து வந்திருக்கலாம்."
+  },
+  "noMessages": {
+    "message": "செய்திகள் இல்லை"
+  },
+  "errNoWorker": {
+    "message": "நீட்சியின் பின்னணி பணியாளரைத் தொடர்புகொள்ள முடியவில்லை"
+  },
+  "errLoadUsage": {
+    "message": "Claude பயன்பாட்டை ஏற்ற முடியவில்லை"
+  },
+  "reviewEnjoyingShort": {
+    "message": "பிடித்துள்ளதா?"
+  },
+  "fiveHour": {
+    "message": "5-மணிநேரம்"
+  },
+  "weekly": {
+    "message": "வாராந்திரம்"
+  },
+  "refreshAll": {
+    "message": "அனைத்து புள்ளிவிவரங்களையும் புதுப்பி"
+  },
+  "customizeOverlay": {
+    "message": "மேலடுக்கைத் தனிப்பயனாக்கு"
+  },
+  "usageSummary": {
+    "message": "பயன்பாட்டுச் சுருக்கம்"
+  },
+  "total": {
+    "message": "மொத்தம்"
+  },
+  "avgPerMo": {
+    "message": "சராசரி / மாதம்"
+  },
+  "avgPerDay": {
+    "message": "சராசரி / நாள்"
+  },
+  "busiest": {
+    "message": "அதிக பயன்பாடு"
+  },
+  "messagesSent": {
+    "message": "அனுப்பிய செய்திகள்"
+  },
+  "fourteenDays": {
+    "message": "14 நாட்கள்"
+  },
+  "monthly": {
+    "message": "மாதாந்திரம்"
+  },
+  "collecting": {
+    "message": "பயன்பாடு சேகரிக்கப்படுகிறது — நீங்கள் claude.ai-இல் உரையாடும்போது உங்கள் தினசரி விளக்கப்படம் நிரம்பும்."
+  },
+  "allTime": {
+    "message": "எல்லா நேரமும்"
+  },
+  "dayStreak": {
+    "message": "$1-நாள் தொடர்ச்சி"
+  },
+  "reset": {
+    "message": "மீட்டமை"
+  },
+  "segOther": {
+    "message": "பிற"
+  },
+  "setSecGeneral": {
+    "message": "பொது"
+  },
+  "setSecWheel": {
+    "message": "சூழல் சாளரம்"
+  },
+  "setSecCacheTimer": {
+    "message": "தற்காலிக சேமிப்பு நேரங்காட்டி"
+  },
+  "setShowOverlay": {
+    "message": "மேலடுக்கைக் காட்டு"
+  },
+  "setShowOverlayDesc": {
+    "message": "கம்போஸரில் உள்ள அனைத்தையும் இயக்கு அல்லது நிறுத்து."
+  },
+  "setTour": {
+    "message": "அம்ச உலா"
+  },
+  "setTourBtn": {
+    "message": "உலாவை மீண்டும் இயக்கு"
+  },
+  "setPrivacy": {
+    "message": "தனியுரிமைக் கொள்கை"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "வாராந்திர மதிப்பீடு"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "மீதமுள்ள பயன்பாட்டு மணிநேரம், வரம்பு முடியும் நாள் மற்றும் நேரம், அல்லது மீட்டமைப்பின் போது உங்கள் நிலை."
+  },
+  "setDeleteHistory": {
+    "message": "வரலாற்றை நீக்கு"
+  },
+  "setSamples": {
+    "message": "$1 மாதிரிகள்"
+  },
+  "setOptPctReset": {
+    "message": "மீட்டமைப்பில் சதவீதம்"
+  },
+  "setOptTimePast": {
+    "message": "மீட்டமைப்புக்குப் பிந்தைய நேரம்"
+  },
+  "setOptMsgsLeft": {
+    "message": "மீதமுள்ள செய்திகள்"
+  },
+  "setOptActiveHours": {
+    "message": "செயலில் உள்ள மணிநேரம்"
+  },
+  "setOptDaysTime": {
+    "message": "நாட்கள் / நேரம்"
+  },
+  "ctxBreakdownTitle": {
+    "message": "சூழல் சாளரத்தைப் பயன்படுத்துபவை"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2-இல் $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "உங்கள் செய்திகள்"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude-இன் பதில்கள்"
+  },
+  "ctxBreakdownThinking": {
+    "message": "விரிவான சிந்தனை"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "கருவி அழைப்புகள்"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "கருவி முடிவுகள்"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "கோப்புகள் & இணைப்புகள்"
+  },
+  "ctxBreakdownProject": {
+    "message": "திட்ட அறிவு"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "கணினி மேல்நிலை"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "மீதமுள்ளவை"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 செய்திகள்"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 தொகுதிகள்"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 அழைப்புகள்"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 முடிவுகள்"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 கோப்புகள்"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "சூழல் சாளரத்தில் இன்னும் எதுவும் இல்லை."
+  },
+  "ctxBreakdownNote": {
+    "message": "இந்த உரையாடலிலிருந்து உள்ளூரில் மதிப்பிடப்பட்டது."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "உள்ளூரில் மதிப்பிடப்பட்டது. கருவி மற்றும் தேடல் முடிவுகளால் இது தோராயமானது."
+  },
+  "resetBannerSessionTitle": {
+    "message": "உங்கள் 5-மணிநேர Claude வரம்பு மீட்டமைக்கப்பட்டது"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "உங்கள் வாராந்திர Claude வரம்பு மீட்டமைக்கப்பட்டது"
+  },
+  "resetBannerAction": {
+    "message": "Claude-ஐத் திற"
+  },
+  "setSecResetAlerts": {
+    "message": "மீட்டமைப்பு விழிப்பூட்டல்கள்"
+  },
+  "setResetBannerScope": {
+    "message": "விழிப்பூட்டல்களை இங்கு காட்டு"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai மட்டும்"
+  },
+  "setResetScopeEverywhere": {
+    "message": "எந்தத் தளத்திலும்"
+  },
+  "setResetBannerTestGo": {
+    "message": "சோதனையை அனுப்பு"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1வி-இல்"
+  },
+  "grantTitle": {
+    "message": "எந்தத் தளத்திலும் மீட்டமைப்பு விழிப்பூட்டல்களைக் காட்டு"
+  },
+  "grantBody": {
+    "message": "claude.ai-க்கு வெளியே பேனரைக் காட்ட நீட்சிக்கு Chrome-இல் உங்கள் அனுமதி தேவை. இது பேனரைக் காட்ட மட்டுமே பயன்படுகிறது — பக்கத்தின் உள்ளடக்கம் ஒருபோதும் படிக்கப்படாது அல்லது எங்கும் அனுப்பப்படாது."
+  },
+  "grantDenied": {
+    "message": "அனுமதி வழங்கப்படவில்லை. மீட்டமைப்பு விழிப்பூட்டல்கள் claude.ai-இல் மட்டுமே இருக்கும்."
+  },
+  "grantAllow": {
+    "message": "தொடர்க"
+  },
+  "grantCancel": {
+    "message": "ரத்துசெய்"
+  },
+  "setOptRing": {
+    "message": "வளையம்"
+  },
+  "setOptPercentText": {
+    "message": "சதவீதம்"
+  },
+  "setSecDisplay": {
+    "message": "காட்சி"
+  },
+  "setSecPacing": {
+    "message": "வேகக்கணிப்பு"
+  },
+  "setOptOff": {
+    "message": "ஆஃப்"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "பட்டை எந்த வரம்பைக் கண்காணிக்கிறது."
+  },
+  "setShowPct": {
+    "message": "% காட்டு"
+  },
+  "setContextDesc": {
+    "message": "தற்போதைய உரையாடல் எவ்வளவு நிரம்பியுள்ளது."
+  },
+  "setCacheTimerDesc": {
+    "message": "ப்ராம்ப்ட் தற்காலிக சேமிப்பு செயலில் இருக்கும்போது உரையாடல் தலைப்பில் இறங்குமுக நேரங்காட்டி."
+  },
+  "setPacing": {
+    "message": "வேக மதிப்பீடுகளைக் காட்டு"
+  },
+  "setPacingDesc": {
+    "message": "இந்த உலாவியில் மட்டுமே சேமிக்கப்பட்டுள்ள பயன்பாட்டு எண் மாதிரிகளிலிருந்து மதிப்பீடுகள் கற்றுக்கொள்கின்றன. இதை அணைத்தால் சேகரிப்பது நின்றுவிடும்."
+  },
+  "set5hrPace": {
+    "message": "5-மணிநேர வேகம்"
+  },
+  "set5hrPaceDesc": {
+    "message": "5-மணிநேர சதவீதத்திற்கு அடுத்து காட்டப்படும்."
+  },
+  "setLearnedData": {
+    "message": "கற்றறிந்த பயன்பாடு"
+  },
+  "setResetAlertsDesc": {
+    "message": "உங்கள் 5-மணிநேர அல்லது வாராந்திர வரம்பு மீட்டமைக்கப்படும்போது பேனர். எந்தத் தளத்திற்கும் Chrome அனுமதி தேவை."
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store-இல் மதிப்பிடுக"
+  },
+  "threadsLabel": {
+    "message": "உரையாடல் தொடர்கள்"
+  },
+  "threadSettled": {
+    "message": "ஒதுக்கப்பட்டவை ($1)"
+  },
+  "threadKindChat": {
+    "message": "உரையாடல்"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "வழக்கம்"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "திட்டம்"
+  },
+  "threadKindOther": {
+    "message": "தொடர்"
+  },
+  "threadStatusWorking": {
+    "message": "செயல்படுகிறது"
+  },
+  "threadStatusAwaiting": {
+    "message": "காத்திருக்கிறது"
+  },
+  "threadStatusError": {
+    "message": "பிழை"
+  },
+  "threadStatusUnread": {
+    "message": "படிக்காதது"
+  },
+  "threadStatusOpen": {
+    "message": "திறந்துள்ளது"
+  },
+  "setSecSidebar": {
+    "message": "பக்கப்பட்டி"
+  },
+  "setThreadSidebar": {
+    "message": "தொடர் காட்சி"
+  },
+  "setThreadSidebarDesc": {
+    "message": "அனைத்தும் ஒதுக்கப்பட்ட நிலையிலேயே தொடங்கும். புதிய செயல்பாடு வந்ததும் நீங்கள் ஒதுக்கும் வரை உரையாடல் ஒரு அட்டையாக மாறும்."
+  },
+  "threadNavLabel": {
+    "message": "திட்டங்கள் & கருவிகள்"
+  },
+  "threadStatusPinned": {
+    "message": "பின் செய்யப்பட்டது"
+  },
+  "threadStatusDone": {
+    "message": "முடிந்தது"
+  },
+  "threadWorkingFor": {
+    "message": "$1 ஆக செயல்படுகிறது"
+  },
+  "threadWaitingFor": {
+    "message": "$1 ஆக காத்திருக்கிறது"
+  },
+  "threadDoneAgo": {
+    "message": "$1 முன் முடிந்தது"
+  },
+  "threadAgoSeconds": {
+    "message": "$1வி"
+  },
+  "threadAgoMinutes": {
+    "message": "$1நி"
+  },
+  "threadAgoHours": {
+    "message": "$1ம"
+  },
+  "threadAgoDays": {
+    "message": "$1நா"
+  },
+  "threadAgoWeeks": {
+    "message": "$1வா"
+  },
+  "threadSearch": {
+    "message": "தேடு"
+  },
+  "threadNewChat": {
+    "message": "புதிய உரையாடல்"
+  },
+  "threadSort": {
+    "message": "தொடர்களை வரிசைப்படுத்து"
+  },
+  "threadSortEdited": {
+    "message": "புதிதாகத் திருத்தியவை"
+  },
+  "threadSortCreated": {
+    "message": "புதிதாக உருவாக்கியவை"
+  },
+  "setThreadSort": {
+    "message": "வரிசை"
+  },
+  "setThreadSortDesc": {
+    "message": "புதிதாகத் திருத்தியவை என்பது தொடர் மாறும்போதோ அல்லது Claude பதிலளிக்கும்போதோ அதை மேலே நகர்த்தும்."
+  },
+  "threadSettle": {
+    "message": "ஒதுக்கு"
+  }
+}

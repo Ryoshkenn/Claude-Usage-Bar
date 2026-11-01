@@ -2,7 +2,13 @@ import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
 import { getEffectiveModelWeight } from "../shared/modelUsage";
-import { appendUsageHistoryEntry, getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
+import {
+  appendUsageHistoryEntry,
+  getClaudeLanguage,
+  getStorage,
+  saveChatUsage,
+  saveRealUsageSnapshot,
+} from "../shared/storage";
 import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot, ThinkingLevel } from "../shared/types";
 import { setLanguage, t } from "../shared/i18n";
 import {
@@ -199,7 +205,7 @@ chrome.runtime.onStartup?.addListener(() => {
 
 async function rearmFromStoredSnapshot(): Promise<void> {
   const current = await getStorage();
-  setLanguage(current.settings.language);
+  setLanguage(await getClaudeLanguage());
   await scheduleResetAlarms(current.realUsageSnapshot);
 }
 
@@ -215,7 +221,7 @@ chrome.alarms?.onAlarm.addListener((alarm) => {
 
   void (async () => {
     const before = await getStorage();
-    setLanguage(before.settings.language);
+    setLanguage(await getClaudeLanguage());
     const previousResetAt =
       kind === "session"
         ? before.realUsageSnapshot?.sessionResetsAt
@@ -333,7 +339,7 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
     setTimeout(() => {
       void (async () => {
         const { settings } = await getStorage();
-        setLanguage(settings.language);
+        setLanguage(await getClaudeLanguage());
         await announceReset(kind, Date.now(), buildBannerCopy(kind, t), settings, { force: true });
       })();
     }, TEST_BANNER_DELAY_MS);
