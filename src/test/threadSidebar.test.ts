@@ -967,6 +967,47 @@ describe("shared state", () => {
     expect(Object.keys((local[STORAGE_KEYS.threadPlaces] as { settled: object }).settled)).toEqual(["chat:c4"]);
   });
 
+  it("keeps an unconfirmed settle when another tab's update arrives before the retry", async () => {
+    const since = Date.now() - 60 * 60_000;
+    local[STORAGE_KEYS.threadPlaces] = { since, open: { "chat:c4": since + 1_000 }, settled: {} };
+    mountSidebar(read(ten.slice(0, 6)));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    vi.spyOn(chrome.storage.local, "set").mockRejectedValueOnce(new Error("QUOTA_BYTES quota exceeded"));
+    rowEl("chat:c4").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    await settle();
+
+    // Another tab opens c5 and its write lands here before the retry.
+    const otherOpen = Date.now();
+    const update = { since, open: { "chat:c4": since + 1_000, "chat:c5": otherOpen }, settled: {} };
+    local[STORAGE_KEYS.threadPlaces] = update;
+    const onChanged = vi.mocked(chrome.storage.onChanged.addListener).mock.calls[0][0];
+    onChanged({ [STORAGE_KEYS.threadPlaces]: { newValue: structuredClone(update) } }, "local");
+    await settle();
+
+    expect(placementOf("chat:c4")).toBe("settled");
+    expect(placementOf("chat:c5")).toBe("open");
+    const stored = local[STORAGE_KEYS.threadPlaces] as { open: Record<string, number>; settled: Record<string, number> };
+    expect(Object.keys(stored.settled)).toEqual(["chat:c4"]);
+    expect(stored.open).toEqual({ "chat:c5": otherOpen });
+  });
+
+  it("lets a done mark expire in a tab that stays open", async () => {
+    const start = Date.now();
+    vi.useFakeTimers({ toFake: ["Date"], now: start });
+    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: start - 60_000 } };
+    mountSidebar(read([{ key: "chat:w" }]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
+
+    // Past the 12-hour lifetime of the working mark that implied it.
+    vi.setSystemTime(start + 13 * 60 * 60_000);
+    applyThreadSidebar();
+    expect(rowEl("chat:w").hasAttribute("data-cub-thread-status")).toBe(false);
+    vi.useRealTimers();
+  });
+
   it("places rows even when the stored places can't be read", async () => {
     vi.spyOn(chrome.storage.local, "get").mockRejectedValue(new Error("read failed"));
     mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 3)]));

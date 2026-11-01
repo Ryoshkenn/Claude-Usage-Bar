@@ -2,6 +2,7 @@ import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { t } from "../shared/i18n";
 import { updateSettings } from "../shared/storage";
 import {
+  mergePlaces,
   ROW_KEY_PATTERN,
   sanitizeActivity,
   sanitizePlaces,
@@ -541,7 +542,11 @@ const onStorageChanged = (changes: Record<string, chrome.storage.StorageChange>,
   } else if (area === "local" && changes[STORAGE_KEYS.threadPlaces] && placesLoaded) {
     // Gone means another tab turned the view off; this one is about to follow.
     const next = changes[STORAGE_KEYS.threadPlaces].newValue;
-    adoptPlaces(next === undefined ? { since: Date.now(), open: {}, settled: {} } : sanitizePlaces(next));
+    if (next === undefined) adoptPlaces({ since: Date.now(), open: {}, settled: {} });
+    // A change of ours the worker hasn't confirmed yet must survive the other
+    // tab's update, or the retry would resend that instead.
+    else if (placesSaved < placesVersion) adoptPlaces(mergePlaces(next, { since: viewSince, open: opened, settled }));
+    else adoptPlaces(sanitizePlaces(next));
     applyThreadSidebar();
   }
 };
@@ -1288,8 +1293,10 @@ export const applyThreadSidebar = (): void => {
   const infos = readRowInfos(pinnedRows, rows.slice(pinnedRows.length));
   const keys = rows.map((row) => row.getAttribute("data-row-key") ?? "");
 
-  // Live state, including our own "done".
+  // Live state, including our own "done". Marks past their lifetime go first:
+  // a tab left open sees no storage event to expire them.
   const now = Date.now();
+  activity = sanitizeActivity(activity, now);
   const visible = document.visibilityState === "visible";
   let activityChanged = false;
   let placesChanged = false;
