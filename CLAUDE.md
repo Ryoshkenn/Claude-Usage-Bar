@@ -42,6 +42,21 @@ Three contexts, message-passed via `MESSAGE_TYPES` (`src/shared/constants.ts`):
 - **Page probe** (`src/pageProbe/pageProbe.ts`) — injected into page context to observe usage
   metadata; hard-allowlists output keys and blocks anything prompt/auth-shaped.
 
+### Where the overlay attaches (`composerMount.ts`, `settingsPage.tsx`)
+Every composer goes through `mountHostInChin`: a body-level fixed overlay in the widest free gap of
+the composer's control row, or its own row (a spacer appended to the composer) when it doesn't fit.
+The row comes from one of three finders, tried in order:
+- `findChinSlot` — `[data-cds="ChatComposerChin"]` inside `[data-cds="ChatComposer"]` (chats, and
+  one of the two `/new` layouts).
+- `findToolbarSlot` — the other `/new` layout (Oct 2026): a `<fieldset>` card with no
+  ChatComposer markers whose toolbar row holds `chat-input-attach` and `model-selector-dropdown`.
+  Claude serves both `/new` layouts, apparently at random — check both after a DOM change.
+- `findDesignSlot` — Claude Design's home composer (`/design`): the chip row around the model picker.
+
+The settings nav item anchors on Claude's `li[data-testid]`s (labels get renamed — "General" became
+"Appearance" but kept `general-settings`) and sits after `usage-settings`. While our panel shows,
+`data-cub-panel-active` on the `<nav>` mutes Claude's still-`aria-current` item in `styles.css`.
+
 ### Reset banners (`src/background/resetNotifier.ts`)
 `chrome.alarms` fires at each `resetsAt`; MV3 kills the worker after ~30s idle, so `setTimeout`
 can never reach a reset hours out. On wake the worker **re-fetches and confirms the reset time
