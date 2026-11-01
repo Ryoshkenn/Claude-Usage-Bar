@@ -21,8 +21,10 @@ import {
   findChinDisclaimer,
   findChinSlot,
   findCoworkControlsAnchor,
+  findDesignSlot,
   findDisclaimerMount,
   findNewChatInsertionPoint,
+  findToolbarSlot,
   measureCardActionStrip,
   measureChinGap,
   type ChinSlot,
@@ -37,6 +39,7 @@ import "./pageOverrides.css";
 import { syncMessageRailTheme } from "./messageRail";
 import { initSettingsPage, openUsageBarSettings, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
+import { initThreadSidebar, syncThreadSidebar, syncThreadSidebarTheme } from "./threadSidebar";
 import { buildChatUsage, deriveDailyIncrement, rollDailyUsageForward } from "./usageEstimator";
 import { messageToSnapshot } from "./usageProbeBridge";
 
@@ -70,6 +73,7 @@ let lastConversationContextUrl = "";
 // caught and the bar repositioned immediately (see handleUrlChange).
 let lastNavUrl = "";
 let lastSyncedTheme: "light" | "dark" | null = null;
+let lastSyncedLanguage = "";
 // Sticky thinking on/off state. The effort-menu switch — the only on/off
 // authority — is readable solely while the menu is open, so we remember its last
 // value across DOM reads. undefined until the switch has ever been seen.
@@ -198,10 +202,27 @@ const syncTheme = () => {
   host?.classList.toggle("cub-theme-light", light);
   cacheTimerHost?.classList.toggle("cub-theme-light", light);
   syncMessageRailTheme(light);
+  syncThreadSidebarTheme(light);
   if (theme !== lastSyncedTheme && extensionAlive()) {
     lastSyncedTheme = theme;
     void chrome.storage.local.set({ [STORAGE_KEYS.detectedTheme]: light ? "light" : "dark" });
   }
+};
+
+// Our UI follows Claude's language (<html lang>, e.g. "fr-FR"). Mirrored to storage
+// for the popup, grant page and worker, which can't read the page. Returns whether
+// it changed, so the caller knows to re-render.
+const syncLanguage = (): boolean => {
+  const tag = document.documentElement.lang.trim();
+  if (!tag || tag === lastSyncedLanguage) {
+    return false;
+  }
+  lastSyncedLanguage = tag;
+  setLanguage(tag);
+  if (extensionAlive()) {
+    void chrome.storage.local.set({ [STORAGE_KEYS.claudeLanguage]: tag });
+  }
+  return true;
 };
 
 const applyFixedHostStyles = () => {
@@ -221,7 +242,6 @@ const ensureHost = () => {
   host.id = "claude-usage-bar-root";
   host.setAttribute(HOST_ATTR, myInstanceId);
   applyFixedHostStyles();
-  host.classList.toggle("cub-design", isDesignPage());
   // Apply theme class before first render so there is no flash
   syncTheme();
   root = createRoot(host);
@@ -409,10 +429,12 @@ const ensureTourHost = () => {
   tourRoot = createRoot(tourHost);
 };
 
+const isTourRunning = (): boolean => storageState?.settings.hasSeenTour === false && isNewChatPage();
+
 const renderTour = () => {
   if (!storageState || !isActiveInstance()) return;
   ensureTourHost();
-  const showTour = storageState.settings.hasSeenTour === false && isNewChatPage();
+  const showTour = isTourRunning();
   tourRoot?.render(
     <React.StrictMode>
       {showTour ? (
@@ -652,7 +674,7 @@ const mountHostOverDisclaimer = (): boolean => {
   }
 
   const disclaimerMount = findDisclaimerMount();
-  const chin = isDesignPage() ? null : findChinSlot();
+  const chin = isDesignPage() ? findDesignSlot() : (findChinSlot() ?? findToolbarSlot());
   // Cowork rows keep their own anchoring next to Skip/Approve.
   if (chin && !findCoworkControlsAnchor(disclaimerMount)) {
     return mountHostInChin(chin);
@@ -697,6 +719,8 @@ const render = () => {
   if (!storageState || !isActiveInstance()) {
     return;
   }
+  // Independent of showOverlay: the sidebar view is its own option.
+  syncThreadSidebar(storageState.settings);
   renderCacheTimer();
   if (!storageState.settings.showOverlay) {
     removeUsageBarHost();
@@ -716,7 +740,11 @@ const render = () => {
         showClipboard: false,
         ringTarget: "hidden" as const,
       }
-    : storageState.settings;
+    : isTourRunning()
+      ? // The bar is off by default, but the tour's first steps point at it and
+        // its details panel — show it until the tour is done or skipped.
+        { ...storageState.settings, showBar: true }
+      : storageState.settings;
   root?.render(
     <React.StrictMode>
       <ContentApp
@@ -752,7 +780,6 @@ const handleUrlChange = () => {
   if (!isActiveInstance()) {
     return;
   }
-  host?.classList.toggle("cub-design", isDesignPage());
   if (mountedDisclaimerMount && !document.body.contains(mountedDisclaimerMount)) {
     host?.style.setProperty("display", "none", "important");
   }
@@ -1079,8 +1106,9 @@ const init = async () => {
   // Don't paint the stored chatUsage: it's whichever chat any tab counted last.
   // refreshUsage fills in this page's own value moments later.
   storageState = { ...(await getStorage()), chatUsage: defaultChatUsage() };
-  setLanguage(storageState.settings.language);
+  syncLanguage();
   initSettingsPage();
+  initThreadSidebar(isActiveInstance);
   if (typeof ResizeObserver !== "undefined") {
     disclaimerResizeObserver = new ResizeObserver(repositionHost);
   }
@@ -1138,9 +1166,11 @@ const init = async () => {
       return;
     }
 
-    // Prompt clipboard manages its own storage; skip its changes to avoid flicker.
+    // Prompt clipboard and the thread view's open / settled lists manage their
+    // own storage; skip their changes to avoid flicker.
     const changeKeys = Object.keys(changes);
-    if (changeKeys.length === 1 && changeKeys[0] === STORAGE_KEYS.prompts) {
+    const selfManaged: string[] = [STORAGE_KEYS.prompts, STORAGE_KEYS.threadPlaces];
+    if (changeKeys.every((key) => selfManaged.includes(key))) {
       return;
     }
 
@@ -1160,9 +1190,15 @@ const init = async () => {
         (changes.weeklyUsageMetrics?.newValue as StorageShape["weeklyUsageMetrics"] | undefined) ??
         storageState.weeklyUsageMetrics,
     };
-    setLanguage(storageState.settings.language);
     render();
   });
+
+  // Claude can switch languages without a reload.
+  new MutationObserver(() => {
+    if (syncLanguage()) {
+      render();
+    }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
   // Watch Claude's theme attributes and style changes wherever the live switch applies them.
   const themeObserver = new MutationObserver(syncTheme);

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "重置时间未知"
   },
+  "resetsInM": {
+    "message": "$1分钟后重置"
+  },
+  "resetsInHM": {
+    "message": "$1小时$2分钟后重置"
+  },
+  "resetsInH": {
+    "message": "$1小时后重置"
+  },
+  "resetsInDH": {
+    "message": "$1天$2小时后重置"
+  },
+  "resetsInD": {
+    "message": "$1天后重置"
+  },
   "weeklyLearningAria": {
     "message": "每周用量预估仍在学习中"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "开启或关闭输入框中的所有内容。"
-  },
-  "setLanguage": {
-    "message": "语言"
   },
   "setTour": {
     "message": "功能导览"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "当 5 小时或每周限额重置时显示横幅。“任意网站”需要 Chrome 权限。"
   },
-  "setLanguageShortDesc": {
-    "message": "翻译可能不准确。"
-  },
   "setReviewLink": {
     "message": "在 Chrome 应用商店评分"
+  },
+  "threadsLabel": {
+    "message": "对话"
+  },
+  "threadSettled": {
+    "message": "已完成 ($1)"
+  },
+  "threadKindChat": {
+    "message": "聊天"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "例行任务"
+  },
+  "threadKindCode": {
+    "message": "代码"
+  },
+  "threadKindProject": {
+    "message": "项目"
+  },
+  "threadKindOther": {
+    "message": "对话"
+  },
+  "threadStatusWorking": {
+    "message": "进行中"
+  },
+  "threadStatusAwaiting": {
+    "message": "等待中"
+  },
+  "threadStatusError": {
+    "message": "错误"
+  },
+  "threadStatusUnread": {
+    "message": "未读"
+  },
+  "threadStatusOpen": {
+    "message": "已打开"
+  },
+  "setSecSidebar": {
+    "message": "侧边栏"
+  },
+  "setThreadSidebar": {
+    "message": "对话视图"
+  },
+  "setThreadSidebarDesc": {
+    "message": "一开始全部为已完成。对话有新动态后会显示为卡片，直到你将其标为完成。"
+  },
+  "threadNavLabel": {
+    "message": "项目和工具"
+  },
+  "threadStatusPinned": {
+    "message": "已置顶"
+  },
+  "threadStatusDone": {
+    "message": "已完成"
+  },
+  "threadWorkingFor": {
+    "message": "进行中 $1"
+  },
+  "threadWaitingFor": {
+    "message": "等待中 $1"
+  },
+  "threadDoneAgo": {
+    "message": "已完成 $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1秒"
+  },
+  "threadAgoMinutes": {
+    "message": "$1分钟"
+  },
+  "threadAgoHours": {
+    "message": "$1小时"
+  },
+  "threadAgoDays": {
+    "message": "$1天"
+  },
+  "threadAgoWeeks": {
+    "message": "$1周"
+  },
+  "threadSearch": {
+    "message": "搜索"
+  },
+  "threadNewChat": {
+    "message": "新对话"
+  },
+  "threadSort": {
+    "message": "排序对话"
+  },
+  "threadSortEdited": {
+    "message": "最近编辑"
+  },
+  "threadSortCreated": {
+    "message": "最近创建"
+  },
+  "setThreadSort": {
+    "message": "顺序"
+  },
+  "setThreadSortDesc": {
+    "message": "选择“最近编辑”时，有变化或 Claude 回复的对话会移到上方。"
+  },
+  "threadSettle": {
+    "message": "标为完成"
+  },
+  "clipRetiringTitle": {
+    "message": "提示词剪贴板即将停用"
+  },
+  "clipRetiringBody": {
+    "message": "它将在未来的更新中移除。"
+  },
+  "clipRetiringPs": {
+    "message": "附注：技能（Skills）可以实现相同甚至更多功能。"
+  },
+  "clipConvertToSkills": {
+    "message": "将我的提示词转换为技能"
   }
 }

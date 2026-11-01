@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "रीसेट अज्ञात"
   },
+  "resetsInM": {
+    "message": "$1 मि॰ में रीसेट"
+  },
+  "resetsInHM": {
+    "message": "$1 घं॰ $2 मि॰ में रीसेट"
+  },
+  "resetsInH": {
+    "message": "$1 घं॰ में रीसेट"
+  },
+  "resetsInDH": {
+    "message": "$1 दि॰ $2 घं॰ में रीसेट"
+  },
+  "resetsInD": {
+    "message": "$1 दि॰ में रीसेट"
+  },
   "weeklyLearningAria": {
     "message": "साप्ताहिक उपयोग अनुमान अभी सीख रहा है"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "कंपोज़र में सब कुछ चालू या बंद करें।"
-  },
-  "setLanguage": {
-    "message": "भाषा"
   },
   "setTour": {
     "message": "फ़ीचर टूर"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "जब आपकी 5-घंटे या साप्ताहिक सीमा रीसेट हो तो बैनर। \"कोई भी साइट\" के लिए Chrome अनुमति चाहिए।"
   },
-  "setLanguageShortDesc": {
-    "message": "अनुवाद गलत हो सकते हैं।"
-  },
   "setReviewLink": {
     "message": "Chrome वेब स्टोर पर रेटिंग दें"
+  },
+  "threadsLabel": {
+    "message": "थ्रेड"
+  },
+  "threadSettled": {
+    "message": "निपटाए गए ($1)"
+  },
+  "threadKindChat": {
+    "message": "चैट"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "रूटीन"
+  },
+  "threadKindCode": {
+    "message": "कोड"
+  },
+  "threadKindProject": {
+    "message": "प्रोजेक्ट"
+  },
+  "threadKindOther": {
+    "message": "थ्रेड"
+  },
+  "threadStatusWorking": {
+    "message": "चल रहा है"
+  },
+  "threadStatusAwaiting": {
+    "message": "प्रतीक्षा में"
+  },
+  "threadStatusError": {
+    "message": "त्रुटि"
+  },
+  "threadStatusUnread": {
+    "message": "अपठित"
+  },
+  "threadStatusOpen": {
+    "message": "खुला"
+  },
+  "setSecSidebar": {
+    "message": "साइडबार"
+  },
+  "setThreadSidebar": {
+    "message": "थ्रेड व्यू"
+  },
+  "setThreadSidebarDesc": {
+    "message": "शुरुआत में सब कुछ निपटाया हुआ रहता है। किसी चैट में नई गतिविधि होते ही वह कार्ड बन जाती है, जब तक आप उसे निपटा न दें।"
+  },
+  "threadNavLabel": {
+    "message": "प्रोजेक्ट और टूल"
+  },
+  "threadStatusPinned": {
+    "message": "पिन किया गया"
+  },
+  "threadStatusDone": {
+    "message": "पूरा"
+  },
+  "threadWorkingFor": {
+    "message": "चल रहा है $1"
+  },
+  "threadWaitingFor": {
+    "message": "प्रतीक्षा में $1"
+  },
+  "threadDoneAgo": {
+    "message": "पूरा $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1w"
+  },
+  "threadSearch": {
+    "message": "खोजें"
+  },
+  "threadNewChat": {
+    "message": "नई चैट"
+  },
+  "threadSort": {
+    "message": "थ्रेड क्रमबद्ध करें"
+  },
+  "threadSortEdited": {
+    "message": "हाल में संपादित"
+  },
+  "threadSortCreated": {
+    "message": "हाल में बनाए गए"
+  },
+  "setThreadSort": {
+    "message": "क्रम"
+  },
+  "setThreadSortDesc": {
+    "message": "“हाल में संपादित” में बदलाव होने या Claude के जवाब देने पर थ्रेड ऊपर आ जाता है।"
+  },
+  "threadSettle": {
+    "message": "निपटाएँ"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard बंद किया जा रहा है"
+  },
+  "clipRetiringBody": {
+    "message": "इसे भविष्य के अपडेट में हटा दिया जाएगा।"
+  },
+  "clipRetiringPs": {
+    "message": "विशेष: स्किल्स (Skills) यही काम और इससे भी अधिक कर सकते हैं।"
+  },
+  "clipConvertToSkills": {
+    "message": "मेरे प्रॉम्प्ट्स को स्किल्स में बदलें"
   }
 }

@@ -1,0 +1,503 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Không có thời gian bộ nhớ đệm prompt"
+  },
+  "cacheUnknown": {
+    "message": "không rõ bộ nhớ đệm"
+  },
+  "cacheExpired": {
+    "message": "Bộ nhớ đệm prompt đã hết hạn"
+  },
+  "cacheExpiresIn": {
+    "message": "Bộ nhớ đệm prompt hết hạn sau $1"
+  },
+  "expiredShort": {
+    "message": "đã hết hạn"
+  },
+  "cacheHasExpired": {
+    "message": "Bộ nhớ đệm prompt đã hết hạn"
+  },
+  "cacheSavings": {
+    "message": "Token trong bộ nhớ đệm tiết kiệm ~90% chi phí đầu vào"
+  },
+  "ringSession": {
+    "message": "Phiên 5 giờ"
+  },
+  "ringWeekly": {
+    "message": "Hàng tuần · mọi mô hình"
+  },
+  "ringWeeklyFable": {
+    "message": "Hàng tuần · Fable"
+  },
+  "ringContext": {
+    "message": "Cửa sổ ngữ cảnh"
+  },
+  "weeklyScoped": {
+    "message": "Hàng tuần · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% khi đặt lại"
+  },
+  "pacePastReset": {
+    "message": "+$1 sau khi đặt lại"
+  },
+  "lastsToReset": {
+    "message": "đủ dùng đến khi đặt lại"
+  },
+  "paceActiveLeft": {
+    "message": "còn ~$1g hoạt động"
+  },
+  "paceEmptyDate": {
+    "message": "cạn vào $1"
+  },
+  "paceEmptyIn": {
+    "message": "cạn sau $1"
+  },
+  "paceMsgLeft": {
+    "message": "còn ~$1 tin"
+  },
+  "paceMsgsLeft": {
+    "message": "còn ~$1 tin"
+  },
+  "ctxCalculating": {
+    "message": "Đang tính mức dùng ngữ cảnh..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Mức dùng Claude $1"
+  },
+  "usage": {
+    "message": "Mức dùng"
+  },
+  "planUsage": {
+    "message": "Mức dùng gói"
+  },
+  "openSettings": {
+    "message": "Mở cài đặt tiện ích"
+  },
+  "fiveHourLimit": {
+    "message": "Giới hạn 5 giờ"
+  },
+  "resetUnknown": {
+    "message": "không rõ lúc đặt lại"
+  },
+  "resetsInM": {
+    "message": "đặt lại sau $1p"
+  },
+  "resetsInHM": {
+    "message": "đặt lại sau $1g $2p"
+  },
+  "resetsInH": {
+    "message": "đặt lại sau $1g"
+  },
+  "resetsInDH": {
+    "message": "đặt lại sau $1n $2g"
+  },
+  "resetsInD": {
+    "message": "đặt lại sau $1n"
+  },
+  "weeklyLearningAria": {
+    "message": "Ước tính mức dùng hàng tuần vẫn đang học"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Ước tính hàng tuần có thể chưa chính xác trong tuần đầu khi Usage Bar đang học thói quen của bạn."
+  },
+  "ctxCalcLoading": {
+    "message": "Đang tải tính toán ngữ cảnh"
+  },
+  "ctxWindowFull": {
+    "message": "Cửa sổ ngữ cảnh đầy $1%"
+  },
+  "reviewEnjoying": {
+    "message": "Bạn thích Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Đánh giá trên Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Không xác định được mô hình cho các tin nhắn này. Có thể từ Claude Code và Cowork."
+  },
+  "noMessages": {
+    "message": "Không có tin nhắn"
+  },
+  "errNoWorker": {
+    "message": "Không thể kết nối tiến trình nền của tiện ích"
+  },
+  "errLoadUsage": {
+    "message": "Không thể tải mức dùng Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Bạn thích tiện ích này?"
+  },
+  "fiveHour": {
+    "message": "5 giờ"
+  },
+  "weekly": {
+    "message": "Hàng tuần"
+  },
+  "refreshAll": {
+    "message": "Làm mới mọi thống kê"
+  },
+  "customizeOverlay": {
+    "message": "Tùy chỉnh lớp phủ"
+  },
+  "usageSummary": {
+    "message": "Tổng quan mức dùng"
+  },
+  "total": {
+    "message": "Tổng"
+  },
+  "avgPerMo": {
+    "message": "TB / tháng"
+  },
+  "avgPerDay": {
+    "message": "TB / ngày"
+  },
+  "busiest": {
+    "message": "Cao điểm"
+  },
+  "messagesSent": {
+    "message": "Tin nhắn đã gửi"
+  },
+  "fourteenDays": {
+    "message": "14 ngày"
+  },
+  "monthly": {
+    "message": "Hàng tháng"
+  },
+  "collecting": {
+    "message": "Đang thu thập mức dùng — biểu đồ hàng ngày sẽ hiển thị khi bạn trò chuyện trên claude.ai."
+  },
+  "allTime": {
+    "message": "Mọi lúc"
+  },
+  "dayStreak": {
+    "message": "Chuỗi $1 ngày"
+  },
+  "reset": {
+    "message": "Đặt lại"
+  },
+  "segOther": {
+    "message": "Khác"
+  },
+  "setSecGeneral": {
+    "message": "Chung"
+  },
+  "setSecWheel": {
+    "message": "Cửa sổ ngữ cảnh"
+  },
+  "setSecCacheTimer": {
+    "message": "Bộ đếm bộ nhớ đệm"
+  },
+  "setShowOverlay": {
+    "message": "Hiện lớp phủ"
+  },
+  "setShowOverlayDesc": {
+    "message": "Bật hoặc tắt mọi thứ trong khung soạn thảo."
+  },
+  "setTour": {
+    "message": "Hướng dẫn tính năng"
+  },
+  "setTourBtn": {
+    "message": "Xem lại hướng dẫn"
+  },
+  "setPrivacy": {
+    "message": "Chính sách quyền riêng tư"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Ước tính hàng tuần"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Số giờ dùng còn lại, ngày giờ chạm giới hạn hoặc mức dùng khi đặt lại."
+  },
+  "setDeleteHistory": {
+    "message": "Xóa lịch sử"
+  },
+  "setSamples": {
+    "message": "$1 mẫu"
+  },
+  "setOptPctReset": {
+    "message": "Phần trăm khi đặt lại"
+  },
+  "setOptTimePast": {
+    "message": "Thời gian sau khi đặt lại"
+  },
+  "setOptMsgsLeft": {
+    "message": "Tin nhắn còn lại"
+  },
+  "setOptActiveHours": {
+    "message": "Giờ hoạt động"
+  },
+  "setOptDaysTime": {
+    "message": "Ngày / giờ"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Thành phần dùng cửa sổ ngữ cảnh"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Tin nhắn của bạn"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Phản hồi của Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Suy nghĩ mở rộng"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Lệnh gọi công cụ"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Kết quả công cụ"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Tệp & đính kèm"
+  },
+  "ctxBreakdownProject": {
+    "message": "Kiến thức dự án"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Hệ thống"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Còn lại"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 tin nhắn"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 khối"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 lệnh gọi"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 kết quả"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 tệp"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Chưa có gì trong cửa sổ ngữ cảnh."
+  },
+  "ctxBreakdownNote": {
+    "message": "Ước tính cục bộ từ cuộc trò chuyện này."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Ước tính cục bộ. Kết quả công cụ và tìm kiếm khiến con số này chỉ mang tính tương đối."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Giới hạn Claude 5 giờ đã đặt lại"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Giới hạn Claude hàng tuần đã đặt lại"
+  },
+  "resetBannerAction": {
+    "message": "Mở Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Thông báo đặt lại"
+  },
+  "setResetBannerScope": {
+    "message": "Hiện thông báo trên"
+  },
+  "setResetScopeClaude": {
+    "message": "chỉ claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Mọi trang web"
+  },
+  "setResetBannerTestGo": {
+    "message": "Gửi thử"
+  },
+  "setResetBannerTestCounting": {
+    "message": "sau $1 giây"
+  },
+  "grantTitle": {
+    "message": "Hiện thông báo đặt lại trên mọi trang web"
+  },
+  "grantBody": {
+    "message": "Chrome cần bạn cấp quyền trước khi tiện ích có thể hiển thị biểu ngữ ngoài claude.ai. Quyền này chỉ dùng để hiện biểu ngữ — không đọc hay gửi nội dung trang đi bất kỳ đâu."
+  },
+  "grantDenied": {
+    "message": "Chưa cấp quyền. Thông báo đặt lại sẽ chỉ hiện trên claude.ai."
+  },
+  "grantAllow": {
+    "message": "Tiếp tục"
+  },
+  "grantCancel": {
+    "message": "Hủy"
+  },
+  "setOptRing": {
+    "message": "Vòng tròn"
+  },
+  "setOptPercentText": {
+    "message": "Phần trăm"
+  },
+  "setSecDisplay": {
+    "message": "Hiển thị"
+  },
+  "setSecPacing": {
+    "message": "Tốc độ dùng"
+  },
+  "setOptOff": {
+    "message": "Tắt"
+  },
+  "setUsageBar": {
+    "message": "Thanh mức dùng"
+  },
+  "setUsageBarDesc": {
+    "message": "Giới hạn mà thanh theo dõi."
+  },
+  "setShowPct": {
+    "message": "Hiện %"
+  },
+  "setContextDesc": {
+    "message": "Mức độ đầy của cuộc trò chuyện hiện tại."
+  },
+  "setCacheTimerDesc": {
+    "message": "Đồng hồ đếm ngược ở đầu khung chat khi bộ nhớ đệm prompt còn hiệu lực."
+  },
+  "setPacing": {
+    "message": "Hiện ước tính tốc độ"
+  },
+  "setPacingDesc": {
+    "message": "Ước tính học từ các mẫu số liệu mức dùng chỉ lưu trên trình duyệt này. Tắt tùy chọn này sẽ ngừng thu thập."
+  },
+  "set5hrPace": {
+    "message": "Tốc độ 5 giờ"
+  },
+  "set5hrPaceDesc": {
+    "message": "Hiển thị cạnh phần trăm 5 giờ."
+  },
+  "setLearnedData": {
+    "message": "Dữ liệu mức dùng đã học"
+  },
+  "setResetAlertsDesc": {
+    "message": "Hiện biểu ngữ khi giới hạn 5 giờ hoặc hàng tuần đặt lại. Mọi trang web cần quyền của Chrome."
+  },
+  "setReviewLink": {
+    "message": "Đánh giá trên Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Luồng chat"
+  },
+  "threadSettled": {
+    "message": "Đã xếp gọn ($1)"
+  },
+  "threadKindChat": {
+    "message": "Trò chuyện"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Tác vụ định kỳ"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Dự án"
+  },
+  "threadKindOther": {
+    "message": "Luồng"
+  },
+  "threadStatusWorking": {
+    "message": "Đang xử lý"
+  },
+  "threadStatusAwaiting": {
+    "message": "Đang chờ"
+  },
+  "threadStatusError": {
+    "message": "Lỗi"
+  },
+  "threadStatusUnread": {
+    "message": "Chưa đọc"
+  },
+  "threadStatusOpen": {
+    "message": "Đang mở"
+  },
+  "setSecSidebar": {
+    "message": "Thanh bên"
+  },
+  "setThreadSidebar": {
+    "message": "Chế độ xem luồng"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Mọi thứ bắt đầu ở mục đã xếp gọn. Cuộc trò chuyện sẽ thành thẻ khi có hoạt động mới cho đến khi bạn xếp gọn."
+  },
+  "threadNavLabel": {
+    "message": "Dự án & công cụ"
+  },
+  "threadStatusPinned": {
+    "message": "Đã ghim"
+  },
+  "threadStatusDone": {
+    "message": "Xong"
+  },
+  "threadWorkingFor": {
+    "message": "Đang xử lý $1"
+  },
+  "threadWaitingFor": {
+    "message": "Đang chờ $1"
+  },
+  "threadDoneAgo": {
+    "message": "Xong $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1p"
+  },
+  "threadAgoHours": {
+    "message": "$1g"
+  },
+  "threadAgoDays": {
+    "message": "$1n"
+  },
+  "threadAgoWeeks": {
+    "message": "$1t"
+  },
+  "threadSearch": {
+    "message": "Tìm kiếm"
+  },
+  "threadNewChat": {
+    "message": "Trò chuyện mới"
+  },
+  "threadSort": {
+    "message": "Sắp xếp luồng"
+  },
+  "threadSortEdited": {
+    "message": "Mới chỉnh sửa"
+  },
+  "threadSortCreated": {
+    "message": "Mới tạo"
+  },
+  "setThreadSort": {
+    "message": "Thứ tự"
+  },
+  "setThreadSortDesc": {
+    "message": "Mới chỉnh sửa sẽ đưa luồng lên đầu khi có thay đổi hoặc khi Claude phản hồi."
+  },
+  "threadSettle": {
+    "message": "Xếp gọn"
+  },
+  "clipRetiringTitle": {
+    "message": "Bảng nhớ tạm câu lệnh sắp ngừng hoạt động"
+  },
+  "clipRetiringBody": {
+    "message": "Tính năng này sẽ bị xóa trong bản cập nhật tới."
+  },
+  "clipRetiringPs": {
+    "message": "T.B. Kỹ năng (Skills) có thể làm điều tương tự và hơn thế nữa."
+  },
+  "clipConvertToSkills": {
+    "message": "Chuyển đổi câu lệnh của tôi thành kỹ năng"
+  }
+}

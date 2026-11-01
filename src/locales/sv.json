@@ -1,0 +1,503 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Prompt-cachens tid är inte tillgänglig"
+  },
+  "cacheUnknown": {
+    "message": "cache okänd"
+  },
+  "cacheExpired": {
+    "message": "Prompt-cachen har gått ut"
+  },
+  "cacheExpiresIn": {
+    "message": "Prompt-cachen går ut om $1"
+  },
+  "expiredShort": {
+    "message": "utgått"
+  },
+  "cacheHasExpired": {
+    "message": "Prompt-cachen har gått ut"
+  },
+  "cacheSavings": {
+    "message": "Cachade token sparar ~90% i indatakostnad"
+  },
+  "ringSession": {
+    "message": "5-timmarssession"
+  },
+  "ringWeekly": {
+    "message": "Veckovis · alla modeller"
+  },
+  "ringWeeklyFable": {
+    "message": "Veckovis · Fable"
+  },
+  "ringContext": {
+    "message": "Kontextfönster"
+  },
+  "weeklyScoped": {
+    "message": "Veckovis · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% vid nollställning"
+  },
+  "pacePastReset": {
+    "message": "+$1 förbi nollställning"
+  },
+  "lastsToReset": {
+    "message": "räcker till nollställning"
+  },
+  "paceActiveLeft": {
+    "message": "~$1h aktiv tid kvar"
+  },
+  "paceEmptyDate": {
+    "message": "slut $1"
+  },
+  "paceEmptyIn": {
+    "message": "slut om $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 medd. kvar"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 medd. kvar"
+  },
+  "ctxCalculating": {
+    "message": "Beräknar kontextanvändning..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude-användning $1"
+  },
+  "usage": {
+    "message": "Användning"
+  },
+  "planUsage": {
+    "message": "Plananvändning"
+  },
+  "openSettings": {
+    "message": "Öppna tilläggsinställningar"
+  },
+  "fiveHourLimit": {
+    "message": "5-timmarsgräns"
+  },
+  "resetUnknown": {
+    "message": "nollställning okänd"
+  },
+  "resetsInM": {
+    "message": "nollställs om $1 min"
+  },
+  "resetsInHM": {
+    "message": "nollställs om $1 tim $2 min"
+  },
+  "resetsInH": {
+    "message": "nollställs om $1 tim"
+  },
+  "resetsInDH": {
+    "message": "nollställs om $1 d $2 tim"
+  },
+  "resetsInD": {
+    "message": "nollställs om $1 d"
+  },
+  "weeklyLearningAria": {
+    "message": "Veckoprognosen lär sig fortfarande"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Veckoprognoser kan vara oprecisa under den första veckan medan Usage Bar lär sig ditt mönster."
+  },
+  "ctxCalcLoading": {
+    "message": "Kontextberäkning laddar"
+  },
+  "ctxWindowFull": {
+    "message": "Kontextfönster $1% fullt"
+  },
+  "reviewEnjoying": {
+    "message": "Gillar du Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Betygsätt i Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Modellen kunde inte fastställas för dessa meddelanden. Detta kan komma från Claude Code och Cowork."
+  },
+  "noMessages": {
+    "message": "Inga meddelanden"
+  },
+  "errNoWorker": {
+    "message": "Det gick inte att kontakta tilläggets bakgrundsprocess"
+  },
+  "errLoadUsage": {
+    "message": "Det gick inte att läsa in Claude-användning"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Gillar du det?"
+  },
+  "fiveHour": {
+    "message": "5-timmars"
+  },
+  "weekly": {
+    "message": "Veckovis"
+  },
+  "refreshAll": {
+    "message": "Uppdatera all statistik"
+  },
+  "customizeOverlay": {
+    "message": "Anpassa överlägg"
+  },
+  "usageSummary": {
+    "message": "Användningsöversikt"
+  },
+  "total": {
+    "message": "Totalt"
+  },
+  "avgPerMo": {
+    "message": "Snitt / mån"
+  },
+  "avgPerDay": {
+    "message": "Snitt / dag"
+  },
+  "busiest": {
+    "message": "Mest aktiv"
+  },
+  "messagesSent": {
+    "message": "Skickade meddelanden"
+  },
+  "fourteenDays": {
+    "message": "14 dagar"
+  },
+  "monthly": {
+    "message": "Månadsvis"
+  },
+  "collecting": {
+    "message": "Samlar in användning — ditt dagliga diagram fylls på när du chattar på claude.ai."
+  },
+  "allTime": {
+    "message": "Totalt"
+  },
+  "dayStreak": {
+    "message": "$1 dagar i rad"
+  },
+  "reset": {
+    "message": "Nollställs"
+  },
+  "segOther": {
+    "message": "Övrigt"
+  },
+  "setSecGeneral": {
+    "message": "Allmänt"
+  },
+  "setSecWheel": {
+    "message": "Kontextfönster"
+  },
+  "setSecCacheTimer": {
+    "message": "Cache-timer"
+  },
+  "setShowOverlay": {
+    "message": "Visa överlägg"
+  },
+  "setShowOverlayDesc": {
+    "message": "Slå på eller av allt i chattfältet."
+  },
+  "setTour": {
+    "message": "Rundtur bland funktioner"
+  },
+  "setTourBtn": {
+    "message": "Visa rundtur igen"
+  },
+  "setPrivacy": {
+    "message": "Integritetspolicy"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Veckoprognos"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Aktiva timmar kvar, dag och tid då det tar slut, eller var du ligger vid nollställning."
+  },
+  "setDeleteHistory": {
+    "message": "Radera historik"
+  },
+  "setSamples": {
+    "message": "$1 mätpunkter"
+  },
+  "setOptPctReset": {
+    "message": "Procent vid nollställning"
+  },
+  "setOptTimePast": {
+    "message": "Tid förbi nollställning"
+  },
+  "setOptMsgsLeft": {
+    "message": "Meddelanden kvar"
+  },
+  "setOptActiveHours": {
+    "message": "Aktiva timmar"
+  },
+  "setOptDaysTime": {
+    "message": "Dagar / tid"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Vad som använder kontextfönstret"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 av $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Dina meddelanden"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claudes svar"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Utökat tänkande"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Verktygsanrop"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Verktygsresultat"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Filer & bilagor"
+  },
+  "ctxBreakdownProject": {
+    "message": "Projektkunskap"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Systemutrymme"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Återstående"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 meddelanden"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 block"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 anrop"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 resultat"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 filer"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Inget i kontextfönstret ännu."
+  },
+  "ctxBreakdownNote": {
+    "message": "Uppskattat lokalt utifrån den här konversationen."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Uppskattat lokalt. Verktygs- och sökresultat gör detta ungefärligt."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Din 5-timmarsgräns för Claude har nollställts"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Din veckogräns för Claude har nollställts"
+  },
+  "resetBannerAction": {
+    "message": "Öppna Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Nollställningsnotiser"
+  },
+  "setResetBannerScope": {
+    "message": "Visa notiser på"
+  },
+  "setResetScopeClaude": {
+    "message": "Endast claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Alla webbplatser"
+  },
+  "setResetBannerTestGo": {
+    "message": "Skicka test"
+  },
+  "setResetBannerTestCounting": {
+    "message": "om $1s"
+  },
+  "grantTitle": {
+    "message": "Visa nollställningsnotiser på alla webbplatser"
+  },
+  "grantBody": {
+    "message": "Chrome behöver din tillåtelse innan tillägget kan visa en banner utanför claude.ai. Den används bara för att visa bannern — inget sidinnehåll läses eller skickas någonsin någonstans."
+  },
+  "grantDenied": {
+    "message": "Tillåtelse gavs inte. Nollställningsnotiser visas endast på claude.ai."
+  },
+  "grantAllow": {
+    "message": "Fortsätt"
+  },
+  "grantCancel": {
+    "message": "Avbryt"
+  },
+  "setOptRing": {
+    "message": "Ring"
+  },
+  "setOptPercentText": {
+    "message": "Procent"
+  },
+  "setSecDisplay": {
+    "message": "Visning"
+  },
+  "setSecPacing": {
+    "message": "Takt"
+  },
+  "setOptOff": {
+    "message": "Av"
+  },
+  "setUsageBar": {
+    "message": "Användningsmätare"
+  },
+  "setUsageBarDesc": {
+    "message": "Vilken gräns mätaren följer."
+  },
+  "setShowPct": {
+    "message": "Visa %"
+  },
+  "setContextDesc": {
+    "message": "Hur full den aktuella chatten är."
+  },
+  "setCacheTimerDesc": {
+    "message": "Nedräkning i chatthuvudet medan prompt-cachen är aktiv."
+  },
+  "setPacing": {
+    "message": "Visa taktprognoser"
+  },
+  "setPacingDesc": {
+    "message": "Prognoser lär sig av numeriska mätpunkter som bara lagras i den här webbläsaren. Om du stänger av detta slutar de samlas in."
+  },
+  "set5hrPace": {
+    "message": "5-timmarstakt"
+  },
+  "set5hrPaceDesc": {
+    "message": "Visas bredvid procentsatsen för 5 timmar."
+  },
+  "setLearnedData": {
+    "message": "Inlärd användning"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner när din 5-timmars- eller veckogräns nollställs. Alla webbplatser kräver tillåtelse i Chrome."
+  },
+  "setReviewLink": {
+    "message": "Betygsätt i Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Trådar"
+  },
+  "threadSettled": {
+    "message": "Undanlagda ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chatt"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Rutin"
+  },
+  "threadKindCode": {
+    "message": "Kod"
+  },
+  "threadKindProject": {
+    "message": "Projekt"
+  },
+  "threadKindOther": {
+    "message": "Tråd"
+  },
+  "threadStatusWorking": {
+    "message": "Arbetar"
+  },
+  "threadStatusAwaiting": {
+    "message": "Väntar"
+  },
+  "threadStatusError": {
+    "message": "Fel"
+  },
+  "threadStatusUnread": {
+    "message": "Oläst"
+  },
+  "threadStatusOpen": {
+    "message": "Öppen"
+  },
+  "setSecSidebar": {
+    "message": "Sidopanel"
+  },
+  "setThreadSidebar": {
+    "message": "Trådvy"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Allt börjar som undanlagt. En chatt blir ett kort när den har ny aktivitet, tills du lägger undan den."
+  },
+  "threadNavLabel": {
+    "message": "Projekt & verktyg"
+  },
+  "threadStatusPinned": {
+    "message": "Fäst"
+  },
+  "threadStatusDone": {
+    "message": "Klar"
+  },
+  "threadWorkingFor": {
+    "message": "Arbetar $1"
+  },
+  "threadWaitingFor": {
+    "message": "Väntar $1"
+  },
+  "threadDoneAgo": {
+    "message": "Klar $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1v"
+  },
+  "threadSearch": {
+    "message": "Sök"
+  },
+  "threadNewChat": {
+    "message": "Ny chatt"
+  },
+  "threadSort": {
+    "message": "Sortera trådar"
+  },
+  "threadSortEdited": {
+    "message": "Senast ändrad"
+  },
+  "threadSortCreated": {
+    "message": "Senast skapad"
+  },
+  "setThreadSort": {
+    "message": "Ordning"
+  },
+  "setThreadSortDesc": {
+    "message": "Senast ändrad flyttar upp en tråd när den ändras eller Claude svarar."
+  },
+  "threadSettle": {
+    "message": "Lägg undan"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt-urklipp fasas ut"
+  },
+  "clipRetiringBody": {
+    "message": "Den tas bort i en framtida uppdatering."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills kan göra samma sak och mer."
+  },
+  "clipConvertToSkills": {
+    "message": "Konvertera mina prompts till skills"
+  }
+}

@@ -47,14 +47,19 @@ export interface Settings {
   weeklyManualStartHour: number;
   hasSeenTour: boolean;
   showClipboard: boolean;
-  // Overlay/popup UI language. Default "en"; user-selectable in settings. See SUPPORTED_LANGUAGES.
-  language: string;
   // Show a banner when a usage window rolls over. "off" disables it entirely,
   // "claude" only banners claude.ai tabs (no extra permission), "everywhere"
   // banners any normal site and requires the optional all-sites host permission.
   // Covers both the 5-hour and weekly windows.
   resetBannerScope: ResetBannerScope;
+  // T3-style thread list in Claude's sidebar: threads with activity as cards,
+  // the rest folded under "Settled". Off by default — purely additive.
+  threadSidebar: boolean;
+  // Thread order: by last activity (a reply moves a thread up) or by creation.
+  threadSidebarSort: ThreadSort;
 }
+
+export type ThreadSort = "edited" | "created";
 
 export type ResetBannerScope = "off" | "claude" | "everywhere";
 

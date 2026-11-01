@@ -1,7 +1,8 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { clearWeeklyUsageMetrics, DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
-import { SUPPORTED_LANGUAGES, setLanguage, t } from "../shared/i18n";
+import { getLanguage, onLanguageChange, t } from "../shared/i18n";
 import { MESSAGE_TYPES } from "../shared/constants";
 import type {
   ContextDisplay,
@@ -9,6 +10,7 @@ import type {
   PaceSurplusFormat,
   ResetBannerScope,
   Settings,
+  ThreadSort,
   WeeklyEstimateDisplay,
   WeeklyUsageMetrics,
 } from "../shared/types";
@@ -56,8 +58,18 @@ const findNavButtonByLabel = (label: string): HTMLButtonElement | null => {
   return null;
 };
 
-const findSettingsNav = (): HTMLUListElement | null =>
-  findNavButtonByLabel("General")?.closest("ul") ?? null;
+// Our item goes right after Claude's own "Usage" (Account / Billing / Usage
+// group, Oct 2026 layout). The li testids are stable where labels get renamed
+// ("General" became "Appearance" but kept general-settings); the label lookups
+// cover layouts without testids, oldest last.
+const findNavAnchorLi = (): HTMLLIElement | null =>
+  document.querySelector<HTMLLIElement>('li[data-testid="usage-settings"]') ??
+  findNavButtonByLabel("Usage")?.closest("li") ??
+  document.querySelector<HTMLLIElement>('li[data-testid="general-settings"]') ??
+  findNavButtonByLabel("General")?.closest("li") ??
+  null;
+
+const findSettingsNav = (): HTMLUListElement | null => findNavAnchorLi()?.closest("ul") ?? null;
 
 // The new settings overlay's scrollable content region styles its sections via
 // [data-settings-section] arbitrary variants (e.g. "[&_[data-settings-section]]:gap-4").
@@ -122,6 +134,8 @@ export const closeSettingsOverlay = (): void => {
 
 // ── Nav injection ────────────────────────────────────────────────────────────
 
+const PANEL_ID = "cub-settings-panel";
+
 let navLi: HTMLLIElement | null = null;
 
 // Whether our settings panel is the active section inside the overlay. Driven
@@ -133,14 +147,14 @@ let panelActive = false;
 // Claude's nav-button class strings, copied exactly from the DOM. The base set
 // is shared by every item; the active/inactive sets toggle per current route.
 const NAV_BTN_BASE =
-  "flex h-control w-full cursor-pointer items-center gap-sm rounded px-sm text-left text-body transition-colors";
-const NAV_BTN_INACTIVE = "text-secondary hover:bg-fill-ghost-hover hover:text-primary";
-const NAV_BTN_ACTIVE = "bg-alpha-2 font-medium text-primary";
+  "hit-row hit-row-main flex h-list-row w-full items-center gap-sm rounded px-sm text-start text-body focus-visible:shadow-focus focus-visible:outline-hidden";
+const NAV_BTN_INACTIVE = "text-secondary-control hover:bg-fill-ghost-hover hover:text-primary";
+const NAV_BTN_ACTIVE = "bg-fill-ghost-selected font-medium text-primary";
 
 const buildNavIcon = (): HTMLSpanElement => {
   const icon = document.createElement("span");
   icon.setAttribute("data-cds", "Icon");
-  icon.className = "shrink-0 text-secondary";
+  icon.className = "shrink-0 text-secondary-control";
   icon.setAttribute("aria-hidden", "true");
   // Match the 1em / 20px box Claude's Anthropicons glyphs occupy so our row
   // aligns with the others; render a small bar-meter SVG inside it.
@@ -180,10 +194,9 @@ const injectNavItem = () => {
 
   li.appendChild(btn);
 
-  // Insert directly after General (2nd position, above Account)
-  const generalLi = findNavButtonByLabel("General")?.closest("li");
-  if (generalLi?.nextSibling) {
-    ul.insertBefore(li, generalLi.nextSibling);
+  const anchorLi = findNavAnchorLi();
+  if (anchorLi?.parentElement === ul && anchorLi.nextSibling) {
+    ul.insertBefore(li, anchorLi.nextSibling);
   } else {
     ul.appendChild(li);
   }
@@ -195,6 +208,8 @@ const updateNavActiveState = () => {
   const btn = navLi?.querySelector<HTMLElement>("[data-cub-nav]");
   if (!btn) return;
   const isActive = panelActive;
+  // Lets styles.css mute Claude's own (now stale) current item.
+  btn.closest("nav")?.toggleAttribute("data-cub-panel-active", isActive);
   if (isActive) {
     btn.classList.remove(...NAV_BTN_INACTIVE.split(" "));
     btn.classList.add(...NAV_BTN_ACTIVE.split(" "));
@@ -228,7 +243,7 @@ const mountPanel = () => {
   }
 
   panelEl = document.createElement("div");
-  panelEl.id = "cub-settings-panel";
+  panelEl.id = PANEL_ID;
   // Claude scopes its component design tokens (--cds-switch-track/-knob/-h, etc.)
   // to the `.cds-root` class, not :root. Our panel mounts outside that subtree,
   // so without this class those vars are empty and the Switch knob/track render
@@ -334,19 +349,24 @@ const syncSettingsPanel = () => {
 // existing work-day-button pattern. Track: accent (on) / translucent grey (off);
 // knob: always white. `--cds-switch-track` is kept as the off-track value so it
 // themes when in scope, with a grey fallback when it isn't.
+// Named either by a wrapping <label htmlFor={id}>, or by its row's label
+// (`labelledBy`), in which case it takes `${labelledBy}-switch` as its own id.
 const Switch = ({
   checked,
   onChange,
   id,
+  labelledBy,
 }: {
   checked: boolean;
   onChange: (v: boolean) => void;
-  id: string;
+  id?: string;
+  labelledBy?: string;
 }) => (
   <button
     type="button"
     tabIndex={0}
-    id={id}
+    id={id ?? (labelledBy ? `${labelledBy}-switch` : undefined)}
+    aria-labelledby={labelledBy}
     role="switch"
     aria-checked={checked}
     data-cds="Switch"
@@ -371,57 +391,234 @@ const Switch = ({
   </button>
 );
 
-// Combobox: Claude's dropdown visual with a transparent native <select> overlaid for interaction
-const CdsSelect = ({
-  id,
+const scrollParentOf = (el: HTMLElement): HTMLElement | null => {
+  for (let node = el.parentElement; node; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (overflowY === "auto" || overflowY === "scroll") return node;
+  }
+  return null;
+};
+
+const OPTION_HEIGHT_PX = 32;
+const MENU_MAX_HEIGHT_PX = 300;
+
+// Dropdown: Claude's combobox look on the trigger, with a menu of our own. A
+// native <select> laid over the trigger depended on Claude's utility classes to
+// stay invisible and opened the OS menu wherever the browser chose. The menu is
+// portalled into the panel root because the nested option groups clip their
+// content (overflow: hidden, for the expand animation); it opens below the
+// trigger, or above when the settings scroller has no room below. Focus stays
+// on the trigger (aria-activedescendant), and Escape closes the menu without
+// closing Claude's settings dialog.
+// `labelId` is the id of the row label that names it; the trigger itself gets
+// `${labelId}-select`, so the two never share an id.
+export const CdsSelect = ({
+  labelId,
   value,
   onChange,
   options,
 }: {
-  id: string;
+  labelId: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) => {
-  const currentLabel = options.find((o) => o.value === value)?.label ?? value;
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const [placement, setPlacement] = useState<{ host: HTMLElement; style: React.CSSProperties } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = `${labelId}-menu`;
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === value),
+  );
+  const currentLabel = options.find((option) => option.value === value)?.label ?? value;
+
+  const place = useCallback(() => {
+    const trigger = triggerRef.current;
+    const host = trigger?.closest<HTMLElement>(`#${PANEL_ID}`);
+    if (!trigger || !host) return;
+    const triggerRect = trigger.getBoundingClientRect();
+    const hostRect = host.getBoundingClientRect();
+    const bounds = scrollParentOf(trigger)?.getBoundingClientRect() ?? { top: 0, bottom: window.innerHeight };
+    const menuHeight = Math.min(options.length * OPTION_HEIGHT_PX + 10, MENU_MAX_HEIGHT_PX);
+    const below = bounds.bottom - triggerRect.bottom;
+    const above = triggerRect.top - bounds.top;
+    const up = below < menuHeight + 8 && above > below;
+    setPlacement({
+      host,
+      style: {
+        right: hostRect.right - triggerRect.right,
+        minWidth: Math.max(triggerRect.width, 168),
+        ...(up ? { bottom: hostRect.bottom - triggerRect.top + 4 } : { top: triggerRect.bottom - hostRect.top + 4 }),
+      },
+    });
+  }, [options.length]);
+
+  const openMenu = () => {
+    setActive(selectedIndex);
+    place();
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const choose = (index: number) => {
+    const option = options[index];
+    if (option && option.value !== value) onChange(option.value);
+    close();
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (target && (triggerRef.current?.contains(target) || menuRef.current?.contains(target))) return;
+      setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    window.addEventListener("resize", place);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      window.removeEventListener("resize", place);
+    };
+  }, [open, place]);
+
+  useEffect(() => {
+    if (!open) return;
+    menuRef.current?.querySelector(`[data-index="${active}"]`)?.scrollIntoView?.({ block: "nearest" });
+  }, [open, active]);
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (!open) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+        event.preventDefault();
+        openMenu();
+      }
+      return;
+    }
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        setActive((index) => (index + 1) % options.length);
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        setActive((index) => (index - 1 + options.length) % options.length);
+        break;
+      case "Home":
+        event.preventDefault();
+        setActive(0);
+        break;
+      case "End":
+        event.preventDefault();
+        setActive(options.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        choose(active);
+        break;
+      case "Escape":
+        // Ours to handle: don't let Claude's dialog see it and close itself.
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+        break;
+      case "Tab":
+        setOpen(false);
+        break;
+    }
+  };
+
   return (
-    <div className={CDS_COMBOBOX_WRAP}>
+    <>
       <button
+        ref={triggerRef}
+        id={`${labelId}-select`}
         type="button"
-        tabIndex={-1}
-        aria-hidden="true"
-        className={CDS_COMBOBOX_BTN}
+        className={`${CDS_COMBOBOX_WRAP} cub-select-trigger`}
+        // A combobox (ARIA 1.2 select-only pattern): unlike a plain button, it
+        // supports aria-activedescendant, so screen readers follow the highlight.
+        role="combobox"
+        aria-labelledby={labelId}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        aria-activedescendant={open ? `${menuId}-${active}` : undefined}
+        onClick={() => (open ? close() : openMenu())}
+        onKeyDown={onKeyDown}
       >
-        <span className="min-w-0 flex-1 truncate">{currentLabel}</span>
-        <svg
-          className={CDS_COMBOBOX_ICON}
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+        <span className={CDS_COMBOBOX_BTN}>
+          <span className="min-w-0 flex-1 truncate">{currentLabel}</span>
+          <svg
+            className={`${CDS_COMBOBOX_ICON} cub-select-caret`}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </span>
       </button>
-      <select
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.currentTarget.value)}
-        className="absolute inset-0 w-full opacity-0 cursor-pointer"
-        aria-label={currentLabel}
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </div>
+      {open &&
+        placement &&
+        createPortal(
+          <div
+            ref={menuRef}
+            id={menuId}
+            role="listbox"
+            aria-labelledby={labelId}
+            className="cub-select-menu text-body"
+            style={placement.style}
+          >
+            {options.map((option, index) => (
+              <div
+                key={option.value}
+                id={`${menuId}-${index}`}
+                data-index={index}
+                role="option"
+                aria-selected={option.value === value}
+                data-active={index === active ? "true" : undefined}
+                className="cub-select-option"
+                onPointerEnter={() => setActive(index)}
+                // Keep focus on the trigger so keyboard handling stays in one place.
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => choose(index)}
+              >
+                <span className="cub-select-option-label">{option.label}</span>
+                {option.value === value && (
+                  <svg
+                    className="cub-select-check"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="5 12.5 10 17 19 7.5" />
+                  </svg>
+                )}
+              </div>
+            ))}
+          </div>,
+          placement.host,
+        )}
+    </>
   );
 };
 
@@ -550,6 +747,11 @@ const paceSurplusOptions = (): { value: PaceSurplusFormat; label: string }[] => 
   { value: "messages", label: t("setOptMsgsLeft", "Messages left") },
 ];
 
+const threadSortOptions = (): { value: ThreadSort; label: string }[] => [
+  { value: "edited", label: t("threadSortEdited", "Newest edited") },
+  { value: "created", label: t("threadSortCreated", "Newest created") },
+];
+
 const weeklyDisplayOptions = (): { value: WeeklyEstimateDisplay; label: string }[] => [
   { value: "active_hours", label: t("setOptActiveHours", "Active hours") },
   { value: "calendar_time", label: t("setOptDaysTime", "Days / time") },
@@ -607,10 +809,11 @@ const SettingsPage = () => {
   const [weeklyMetrics, setWeeklyMetrics] = useState<WeeklyUsageMetrics | null>(null);
   const [testCountdown, setTestCountdown] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  // The content script follows Claude's language; re-render when it switches.
+  useSyncExternalStore(onLanguageChange, getLanguage);
 
   useEffect(() => {
     void getStorage().then((s) => {
-      setLanguage(s.settings.language);
       setSettings(s.settings);
       setWeeklyMetrics(s.weeklyUsageMetrics);
       setLoaded(true);
@@ -618,9 +821,7 @@ const SettingsPage = () => {
 
     const handler = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
       if (area === "local" && changes.settings?.newValue) {
-        const next = changes.settings.newValue as Settings;
-        setLanguage(next.language);
-        setSettings(next);
+        setSettings(changes.settings.newValue as Settings);
       }
       if (area === "local" && changes.weeklyUsageMetrics?.newValue) {
         setWeeklyMetrics(changes.weeklyUsageMetrics.newValue as WeeklyUsageMetrics);
@@ -692,7 +893,7 @@ const SettingsPage = () => {
       <Section id="cub-section-display" title={t("setSecDisplay", "Display")}>
         <Row labelId={id("show-overlay")} label={t("setShowOverlay", "Show overlay")} description={t("setShowOverlayDesc", "Turn everything in the composer on or off.")}>
           <Switch
-            id={id("show-overlay")}
+            labelledBy={id("show-overlay")}
             checked={settings.showOverlay}
             onChange={(v) => update({ showOverlay: v })}
           />
@@ -710,7 +911,7 @@ const SettingsPage = () => {
               </label>
             )}
             <CdsSelect
-              id={id("bar")}
+              labelId={id("bar")}
               value={barChoice}
               options={barOptions()}
               onChange={(v) =>
@@ -721,7 +922,7 @@ const SettingsPage = () => {
         </Row>
         <Row labelId={id("context")} label={t("setSecWheel", "Context window")} description={t("setContextDesc", "How full the current chat is.")}>
           <CdsSelect
-            id={id("context")}
+            labelId={id("context")}
             value={contextChoice}
             options={contextOptions()}
             onChange={(v) =>
@@ -735,11 +936,46 @@ const SettingsPage = () => {
           description={t("setCacheTimerDesc", "Countdown in the chat header while the prompt cache is warm.")}
         >
           <Switch
-            id={id("show-cache-timer")}
+            labelledBy={id("show-cache-timer")}
             checked={settings.showCacheTimer !== false}
             onChange={(v) => update({ showCacheTimer: v })}
           />
         </Row>
+      </Section>
+
+      <Section id="cub-section-sidebar" title={t("setSecSidebar", "Sidebar")}>
+        <MetricGroup>
+          <Row
+            labelId={id("thread-sidebar")}
+            label={t("setThreadSidebar", "Thread view")}
+            description={t(
+              "setThreadSidebarDesc",
+              "Everything starts settled. A chat becomes a card once it has new activity, until you settle it.",
+            )}
+          >
+            <Switch
+              labelledBy={id("thread-sidebar")}
+              checked={settings.threadSidebar === true}
+              onChange={(v) => update({ threadSidebar: v })}
+            />
+          </Row>
+          <NestGroup open={settings.threadSidebar === true}>
+            <NestItem>
+              <Row
+                labelId={id("thread-sort")}
+                label={t("setThreadSort", "Order")}
+                description={t("setThreadSortDesc", "Newest edited moves a thread up when it changes or Claude replies.")}
+              >
+                <CdsSelect
+                  labelId={id("thread-sort")}
+                  value={settings.threadSidebarSort ?? "edited"}
+                  options={threadSortOptions()}
+                  onChange={(v) => update({ threadSidebarSort: v as ThreadSort })}
+                />
+              </Row>
+            </NestItem>
+          </NestGroup>
+        </MetricGroup>
       </Section>
 
       <Section id="cub-section-pacing" title={t("setSecPacing", "Pacing")}>
@@ -749,13 +985,13 @@ const SettingsPage = () => {
             label={t("setPacing", "Show pace estimates")}
             description={t("setPacingDesc", "Estimates learn from numeric usage samples stored only in this browser. Turning this off stops collecting them.")}
           >
-            <Switch id={id("pacing")} checked={pacingOn} onChange={setPacing} />
+            <Switch labelledBy={id("pacing")} checked={pacingOn} onChange={setPacing} />
           </Row>
           <NestGroup open={pacingOn}>
             <NestItem>
               <Row labelId={id("pace-surplus")} label={t("set5hrPace", "5-hour pace")} description={t("set5hrPaceDesc", "Shown next to the 5-hour percentage.")}>
                 <CdsSelect
-                  id={id("pace-surplus")}
+                  labelId={id("pace-surplus")}
                   value={settings.paceSurplusFormat}
                   options={paceSurplusOptions()}
                   onChange={(v) => update({ paceSurplusFormat: v as PaceSurplusFormat })}
@@ -765,7 +1001,7 @@ const SettingsPage = () => {
             <NestItem>
               <Row labelId={id("weekly-display")} label={t("setWeeklyEstimate", "Weekly estimate")} description={t("setWeeklyEstimateDesc", "Usable hours left, the day and time you'll run out, or where you'll be at reset.")}>
                 <CdsSelect
-                  id={id("weekly-display")}
+                  labelId={id("weekly-display")}
                   value={settings.weeklyEstimateDisplay ?? "active_hours"}
                   options={weeklyDisplayOptions()}
                   onChange={(v) => update({ weeklyEstimateDisplay: v as WeeklyEstimateDisplay })}
@@ -803,7 +1039,7 @@ const SettingsPage = () => {
               </CdsButton>
             )}
             <CdsSelect
-              id={id("reset-banner-scope")}
+              labelId={id("reset-banner-scope")}
               value={settings.resetBannerScope}
               options={resetScopeOptions()}
               onChange={(v) => void changeResetScope(v as ResetBannerScope)}
@@ -813,18 +1049,6 @@ const SettingsPage = () => {
       </Section>
 
       <Section id="cub-section-general" title={t("setSecGeneral", "General")}>
-        <Row
-          labelId={id("language")}
-          label={t("setLanguage", "Language")}
-          description={t("setLanguageShortDesc", "Translations may be inaccurate.")}
-        >
-          <CdsSelect
-            id={id("language")}
-            value={settings.language ?? "en"}
-            onChange={(v) => update({ language: v })}
-            options={SUPPORTED_LANGUAGES}
-          />
-        </Row>
         <Row labelId={id("replay-tour")} label={t("setTour", "Feature tour")}>
           <CdsButton
             onClick={() => {

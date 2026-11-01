@@ -2,9 +2,16 @@ import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { buildChatUsageFromConversationPayload } from "../shared/claudeConversationContext";
 import { extractOrganizationId, normalizeUsagePayload } from "../shared/claudeUsageApi";
 import { getEffectiveModelWeight } from "../shared/modelUsage";
-import { appendUsageHistoryEntry, getStorage, saveChatUsage, saveRealUsageSnapshot } from "../shared/storage";
+import {
+  appendUsageHistoryEntry,
+  getClaudeLanguage,
+  getStorage,
+  saveChatUsage,
+  saveRealUsageSnapshot,
+} from "../shared/storage";
 import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot, ThinkingLevel } from "../shared/types";
 import { setLanguage, t } from "../shared/i18n";
+import { createThreadStoreWriter, handleThreadStoreMessage } from "../shared/threadStore";
 import {
   SESSION_ALARM,
   WEEKLY_ALARM,
@@ -25,6 +32,23 @@ interface UsageRefreshSample {
 const CLAUDE_API_ORIGIN = "https://claude.ai";
 const FETCH_COOLDOWN_MS = 60_000;
 export const TEST_BANNER_DELAY_MS = 5_000;
+
+// The thread view keeps its per-thread working / done marks in session storage
+// so every claude.ai tab shares them; content scripts can only reach that area
+// once it's opened up. Runs on every worker start (cheap, idempotent).
+void chrome.storage.session
+  ?.setAccessLevel?.({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
+  .catch(() => undefined);
+
+// The only writer of the thread view's shared state; tabs send it their changes.
+const threadStore = createThreadStoreWriter({
+  session: chrome.storage.session,
+  local: chrome.storage.local,
+  viewEnabled: async () => {
+    const data = await chrome.storage.local.get(STORAGE_KEYS.settings);
+    return (data[STORAGE_KEYS.settings] as { threadSidebar?: boolean } | undefined)?.threadSidebar === true;
+  },
+});
 
 let inFlightUsageRequest: Promise<ApiUsageResponse> | null = null;
 const inFlightConversationRequests = new Map<string, Promise<ConversationContextResponse>>();
@@ -192,7 +216,7 @@ chrome.runtime.onStartup?.addListener(() => {
 
 async function rearmFromStoredSnapshot(): Promise<void> {
   const current = await getStorage();
-  setLanguage(current.settings.language);
+  setLanguage(await getClaudeLanguage());
   await scheduleResetAlarms(current.realUsageSnapshot);
 }
 
@@ -208,7 +232,7 @@ chrome.alarms?.onAlarm.addListener((alarm) => {
 
   void (async () => {
     const before = await getStorage();
-    setLanguage(before.settings.language);
+    setLanguage(await getClaudeLanguage());
     const previousResetAt =
       kind === "session"
         ? before.realUsageSnapshot?.sessionResetsAt
@@ -269,6 +293,12 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
     return false;
   }
 
+  const threadStoreResult = handleThreadStoreMessage(threadStore, data);
+  if (threadStoreResult) {
+    void threadStoreResult.then(sendResponse);
+    return true;
+  }
+
   if (data.type === MESSAGE_TYPES.fetchApiUsage) {
     const sample: UsageRefreshSample = {
       modelLabel: typeof data.modelLabel === "string" ? data.modelLabel : undefined,
@@ -326,7 +356,7 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
     setTimeout(() => {
       void (async () => {
         const { settings } = await getStorage();
-        setLanguage(settings.language);
+        setLanguage(await getClaudeLanguage());
         await announceReset(kind, Date.now(), buildBannerCopy(kind, t), settings, { force: true });
       })();
     }, TEST_BANNER_DELAY_MS);

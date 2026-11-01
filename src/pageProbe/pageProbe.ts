@@ -244,6 +244,85 @@ const sameOrigin = (input: RequestInfo | URL): boolean => {
   }
 };
 
+// Thread times for the thread sidebar: the ids in the lists Claude's sidebar
+// loads, with their created / updated timestamps, so rows can be sorted and
+// aged. Only ids and numbers leave this script — never names, titles or any
+// other field — and only list endpoints are read: a single thread's response
+// carries its whole transcript. Mirrored in public/pageProbe.js, which ships.
+interface ThreadTime {
+  id: string;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+const threadIdPattern =
+  /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[a-z]{2,12}_[A-Za-z0-9]{8,64})$/;
+const threadListSegmentPattern = /(conversation|session|recent|sidebar|thread|task|trigger|routine)/i;
+const skipThreadKeyPattern = /(message|content|text|prompt|attachment|file|block|summary|name|title)/i;
+const maxThreadTimes = 500;
+
+const toThreadTime = (value: unknown): number | undefined => {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    if (value > 1e12) return value;
+    return value > 1e9 ? value * 1000 : undefined;
+  }
+  if (typeof value === "string" && value.length <= 40) {
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+};
+
+const collectThreadTimes = (value: unknown, out: ThreadTime[], depth: number): void => {
+  if (!value || typeof value !== "object" || depth > 3 || out.length >= maxThreadTimes) {
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value.slice(0, maxThreadTimes)) {
+      collectThreadTimes(item, out, depth + 1);
+    }
+    return;
+  }
+  const object = value as JsonObject;
+  const id = typeof object.uuid === "string" ? object.uuid : typeof object.id === "string" ? object.id : undefined;
+  if (id && threadIdPattern.test(id)) {
+    const createdAt = toThreadTime(object.created_at ?? object.createdAt);
+    const updatedAt = toThreadTime(
+      object.updated_at ?? object.updatedAt ?? object.last_activity_at ?? object.lastActivityAt ?? object.last_message_at,
+    );
+    if (createdAt !== undefined || updatedAt !== undefined) {
+      out.push({ id, createdAt, updatedAt });
+    }
+  }
+  for (const [key, nested] of Object.entries(object)) {
+    if (nested && typeof nested === "object" && !skipThreadKeyPattern.test(key)) {
+      collectThreadTimes(nested, out, depth + 1);
+    }
+  }
+};
+
+const inspectThreadTimes = (value: unknown) => {
+  const items: ThreadTime[] = [];
+  collectThreadTimes(value, items, 0);
+  if (items.length > 0) {
+    window.postMessage({ type: MESSAGE_TYPES.threadTimes, items }, window.location.origin);
+  }
+};
+
+const isThreadListEndpoint = (input: RequestInfo | URL): boolean => {
+  try {
+    const url = typeof input === "string" || input instanceof URL ? new URL(input, location.href) : new URL(input.url);
+    if (!/^\/(api|v1)\//.test(url.pathname)) {
+      return false;
+    }
+    const segments = url.pathname.split("/").filter(Boolean);
+    const last = segments[segments.length - 1] ?? "";
+    return threadListSegmentPattern.test(last) && !threadIdPattern.test(last);
+  } catch {
+    return false;
+  }
+};
+
 const originalFetch = window.fetch.bind(window);
 window.fetch = async (...args) => {
   const response = await originalFetch(...args);
@@ -251,7 +330,7 @@ window.fetch = async (...args) => {
     response
       .clone()
       .json()
-      .then(inspectJson)
+      .then(isThreadListEndpoint(args[0]) ? inspectThreadTimes : inspectJson)
       .catch(() => undefined);
   }
   return response;
@@ -276,7 +355,12 @@ window.XMLHttpRequest = class ClaudeUsageXMLHttpRequest extends OriginalXMLHttpR
         return;
       }
       try {
-        inspectJson(JSON.parse(this.responseText));
+        const parsed: unknown = JSON.parse(this.responseText);
+        if (isThreadListEndpoint(this.requestUrl)) {
+          inspectThreadTimes(parsed);
+        } else {
+          inspectJson(parsed);
+        }
       } catch {
         // Ignore non-JSON responses.
       }

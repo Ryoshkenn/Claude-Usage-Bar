@@ -83,12 +83,13 @@ export const DEFAULT_SETTINGS: Settings = {
   weeklyManualWorkDays: [1, 2, 3, 4, 5],
   weeklyManualActiveHoursPerDay: 5,
   weeklyManualStartHour: 9,
-  language: "en",
   hasSeenTour: false,
   showClipboard: true,
   // Banners default to claude.ai only: useful out of the box, and it needs no
   // permission beyond the one the extension already has.
   resetBannerScope: "claude",
+  threadSidebar: false,
+  threadSidebarSort: "edited",
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The
@@ -103,10 +104,24 @@ interface RemovedSettings {
   // Per-window reset banner toggles — the banner now covers both windows.
   resetBannerSession?: boolean;
   resetBannerWeekly?: boolean;
+  // Thread view task-alert banners, and its "recent cards" count (threads now
+  // open on activity, uncapped) — both dropped before release.
+  threadDoneAlerts?: unknown;
+  threadSidebarRecentCount?: unknown;
+  // UI language picker — the UI now follows Claude's own language.
+  language?: unknown;
 }
 
 const migrateSettings = (stored: Settings & RemovedSettings): Settings => {
-  const { weeklyPaceMode: _paceMode, resetBannerSession, resetBannerWeekly, ...settings } = stored;
+  const {
+    weeklyPaceMode: _paceMode,
+    threadDoneAlerts: _threadDoneAlerts,
+    threadSidebarRecentCount: _threadRecentCount,
+    language: _language,
+    resetBannerSession,
+    resetBannerWeekly,
+    ...settings
+  } = stored;
   // Someone who had muted both windows had effectively turned banners off.
   const resetBannerScope =
     resetBannerSession === false && resetBannerWeekly === false ? "off" : settings.resetBannerScope;
@@ -229,6 +244,16 @@ export const updateSettings = async (
   const settings: Settings = { ...current.settings, ...partial };
   await safeStorageSet(adapter, { [STORAGE_KEYS.settings]: settings });
   return settings;
+};
+
+// Claude's UI language tag as last mirrored by a claude.ai tab; undefined until one
+// has loaded, which setLanguage() treats as English.
+export const getClaudeLanguage = async (
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<string | undefined> => {
+  const data = await safeStorageGet(adapter, STORAGE_KEYS.claudeLanguage);
+  const tag = data[STORAGE_KEYS.claudeLanguage];
+  return typeof tag === "string" ? tag : undefined;
 };
 
 export const saveDailyUsage = async (

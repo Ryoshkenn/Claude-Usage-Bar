@@ -1,0 +1,503 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "የፕሮምፕት መሸጎጫ ጊዜ አይገኝም"
+  },
+  "cacheUnknown": {
+    "message": "መሸጎጫ አይታወቅም"
+  },
+  "cacheExpired": {
+    "message": "የፕሮምፕት መሸጎጫ ጊዜው አልፏል"
+  },
+  "cacheExpiresIn": {
+    "message": "የፕሮምፕት መሸጎጫ በ$1 ውስጥ ያበቃል"
+  },
+  "expiredShort": {
+    "message": "ጊዜው አልፏል"
+  },
+  "cacheHasExpired": {
+    "message": "የፕሮምፕት መሸጎጫው ጊዜው አልፏል"
+  },
+  "cacheSavings": {
+    "message": "የተሸጎጡ ቶከኖች ~90% የግብዓት ወጪ ይቆጥባሉ"
+  },
+  "ringSession": {
+    "message": "የ5-ሰዓት ክፍለ-ጊዜ"
+  },
+  "ringWeekly": {
+    "message": "ሳምንታዊ · ሁሉም ሞዴሎች"
+  },
+  "ringWeeklyFable": {
+    "message": "ሳምንታዊ · Fable"
+  },
+  "ringContext": {
+    "message": "የዐውደ-ጽሑፍ መስኮት"
+  },
+  "weeklyScoped": {
+    "message": "ሳምንታዊ · $1"
+  },
+  "pacePctAtReset": {
+    "message": "በዳግም ማስጀመሪያ $1%"
+  },
+  "pacePastReset": {
+    "message": "ከዳግም ማስጀመሪያ +$1"
+  },
+  "lastsToReset": {
+    "message": "እስከ ዳግም ማስጀመሪያ ይቆያል"
+  },
+  "paceActiveLeft": {
+    "message": "~$1ሰ ንቁ ጊዜ ቀርቷል"
+  },
+  "paceEmptyDate": {
+    "message": "በ$1 ያልቃል"
+  },
+  "paceEmptyIn": {
+    "message": "በ$1 ውስጥ ያልቃል"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 መልዕክት ቀርቷል"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 መልዕክቶች ቀርተዋል"
+  },
+  "ctxCalculating": {
+    "message": "የዐውደ-ጽሑፍ አጠቃቀም በመስላት ላይ..."
+  },
+  "ariaClaudeUsage": {
+    "message": "የClaude አጠቃቀም $1"
+  },
+  "usage": {
+    "message": "አጠቃቀም"
+  },
+  "planUsage": {
+    "message": "የዕቅድ አጠቃቀም"
+  },
+  "openSettings": {
+    "message": "የቅጥያ ቅንብሮችን ክፈት"
+  },
+  "fiveHourLimit": {
+    "message": "የ5-ሰዓት ገደብ"
+  },
+  "resetUnknown": {
+    "message": "ዳግም ማስጀመሪያ አይታወቅም"
+  },
+  "resetsInM": {
+    "message": "በ$1 ደቂቃ ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInHM": {
+    "message": "በ$1 ሰዓት $2 ደቂቃ ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInH": {
+    "message": "በ$1 ሰዓት ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInDH": {
+    "message": "በ$1 ቀን $2 ሰዓት ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInD": {
+    "message": "በ$1 ቀን ውስጥ ዳግም ይጀምራል"
+  },
+  "weeklyLearningAria": {
+    "message": "ሳምንታዊ የአጠቃቀም ግምት ገና በመማር ላይ ነው"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar የእርስዎን የአጠቃቀም ልምድ እስኪማር ድረስ በመጀመሪያው ሳምንት ሳምንታዊ ግምቶች ትክክል ላይሆኑ ይችላሉ።"
+  },
+  "ctxCalcLoading": {
+    "message": "የዐውደ-ጽሑፍ ስሌት በመጫን ላይ"
+  },
+  "ctxWindowFull": {
+    "message": "የዐውደ-ጽሑፍ መስኮት $1% ሞልቷል"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar ተመችቶዎታል?"
+  },
+  "reviewRate": {
+    "message": "በChrome Store ላይ ደረጃ ይስጡ ↗"
+  },
+  "otherHint": {
+    "message": "ለእነዚህ መልዕክቶች ሞዴሉን መለየት አልተቻለም። ይህ ከClaude Code እና ከCowork ሊመጣ ይችላል።"
+  },
+  "noMessages": {
+    "message": "ምንም መልዕክቶች የሉም"
+  },
+  "errNoWorker": {
+    "message": "የቅጥያውን የጀርባ አገልግሎት ማግኘት አልተቻለም"
+  },
+  "errLoadUsage": {
+    "message": "የClaude አጠቃቀምን መጫን አልተቻለም"
+  },
+  "reviewEnjoyingShort": {
+    "message": "ተመችቶዎታል?"
+  },
+  "fiveHour": {
+    "message": "5-ሰዓት"
+  },
+  "weekly": {
+    "message": "ሳምንታዊ"
+  },
+  "refreshAll": {
+    "message": "ሁሉንም አኃዞች አድስ"
+  },
+  "customizeOverlay": {
+    "message": "ተደራቢውን አብጅ"
+  },
+  "usageSummary": {
+    "message": "የአጠቃቀም ማጠቃለያ"
+  },
+  "total": {
+    "message": "ጠቅላላ"
+  },
+  "avgPerMo": {
+    "message": "አማካይ / ወር"
+  },
+  "avgPerDay": {
+    "message": "አማካይ / ቀን"
+  },
+  "busiest": {
+    "message": "ከፍተኛ አጠቃቀም"
+  },
+  "messagesSent": {
+    "message": "የተላኩ መልዕክቶች"
+  },
+  "fourteenDays": {
+    "message": "14 ቀናት"
+  },
+  "monthly": {
+    "message": "ወርሃዊ"
+  },
+  "collecting": {
+    "message": "አጠቃቀም በመሰብሰብ ላይ — በclaude.ai ላይ ሲወያዩ የዕለታዊ ቻርትዎ ይሞላል።"
+  },
+  "allTime": {
+    "message": "የሁልጊዜ"
+  },
+  "dayStreak": {
+    "message": "የ$1-ቀን ተከታታይነት"
+  },
+  "reset": {
+    "message": "ዳግም አስጀምር"
+  },
+  "segOther": {
+    "message": "ሌላ"
+  },
+  "setSecGeneral": {
+    "message": "አጠቃላይ"
+  },
+  "setSecWheel": {
+    "message": "የዐውደ-ጽሑፍ መስኮት"
+  },
+  "setSecCacheTimer": {
+    "message": "የመሸጎጫ ሰዓት ቆጣሪ"
+  },
+  "setShowOverlay": {
+    "message": "ተደራቢ አሳይ"
+  },
+  "setShowOverlayDesc": {
+    "message": "በመጻፊያው ውስጥ ያለውን ሁሉ ያብሩ ወይም ያጥፉ።"
+  },
+  "setTour": {
+    "message": "የባህሪያት ጉብኝት"
+  },
+  "setTourBtn": {
+    "message": "ጉብኝቱን ድገም"
+  },
+  "setPrivacy": {
+    "message": "የግላዊነት ፖሊሲ"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "ሳምንታዊ ግምት"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "የቀሩት የአገልግሎት ሰዓታት፣ የሚያልቅበት ቀንና ሰዓት፣ ወይም በዳግም ማስጀመሪያ ጊዜ የሚደርሱበት መጠን።"
+  },
+  "setDeleteHistory": {
+    "message": "ታሪክ ሰርዝ"
+  },
+  "setSamples": {
+    "message": "$1 ናሙናዎች"
+  },
+  "setOptPctReset": {
+    "message": "በዳግም ማስጀመሪያ ላይ ያለ መቶኛ"
+  },
+  "setOptTimePast": {
+    "message": "ከዳግም ማስጀመሪያ ያለፈ ጊዜ"
+  },
+  "setOptMsgsLeft": {
+    "message": "የቀሩ መልዕክቶች"
+  },
+  "setOptActiveHours": {
+    "message": "ንቁ ሰዓታት"
+  },
+  "setOptDaysTime": {
+    "message": "ቀናት / ሰዓት"
+  },
+  "ctxBreakdownTitle": {
+    "message": "የዐውደ-ጽሑፍ መስኮቱን ምን እየተጠቀመበት ነው"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 ከ $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "የእርስዎ መልዕክቶች"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "የClaude ምላሾች"
+  },
+  "ctxBreakdownThinking": {
+    "message": "የተራዘመ ማሰብ"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "የመሣሪያ ጥሪዎች"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "የመሣሪያ ውጤቶች"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ፋይሎች እና አባሪዎች"
+  },
+  "ctxBreakdownProject": {
+    "message": "የፕሮጀክት ዕውቀት"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "የሲስተም ፍጆታ"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "የቀረ"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 መልዕክቶች"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 ብሎኮች"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 ጥሪዎች"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 ውጤቶች"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 ፋይሎች"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "በዐውደ-ጽሑፍ መስኮቱ ውስጥ ገና ምንም የለም።"
+  },
+  "ctxBreakdownNote": {
+    "message": "ከዚህ ውይይት በአካባቢው የተገመተ።"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "በአካባቢው የተገመተ። የመሣሪያ እና የፍለጋ ውጤቶች ይህንን ግምታዊ ያደርጉታል።"
+  },
+  "resetBannerSessionTitle": {
+    "message": "የ5-ሰዓት የClaude ገደብዎ ዳግም ተጀምሯል"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "ሳምንታዊ የClaude ገደብዎ ዳግም ተጀምሯል"
+  },
+  "resetBannerAction": {
+    "message": "Claudeን ክፈት"
+  },
+  "setSecResetAlerts": {
+    "message": "የዳግም ማስጀመሪያ ማንቂያዎች"
+  },
+  "setResetBannerScope": {
+    "message": "ማንቂያዎችን አሳይ በ"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai ብቻ"
+  },
+  "setResetScopeEverywhere": {
+    "message": "ማንኛውም ድረ-ገጽ"
+  },
+  "setResetBannerTestGo": {
+    "message": "ሙከራ ላክ"
+  },
+  "setResetBannerTestCounting": {
+    "message": "በ$1ሰ ውስጥ"
+  },
+  "grantTitle": {
+    "message": "በማንኛውም ድረ-ገጽ ላይ የዳግም ማስጀመሪያ ማንቂያዎችን አሳይ"
+  },
+  "grantBody": {
+    "message": "ቅጥያው ከclaude.ai ውጭ ባነር ለማሳየት የChrome ፈቃድዎን ይሻል። ይህ ባነሩን ለማሳየት ብቻ ይውላል — የትኛውም የገጽ ይዘት አይነበብም ወይም ወደ የትም አይላክም።"
+  },
+  "grantDenied": {
+    "message": "ፈቃድ አልተሰጠም። የዳግም ማስጀመሪያ ማንቂያዎች በclaude.ai ላይ ብቻ ይቆያሉ።"
+  },
+  "grantAllow": {
+    "message": "ቀጥል"
+  },
+  "grantCancel": {
+    "message": "ሰርዝ"
+  },
+  "setOptRing": {
+    "message": "ቀለበት"
+  },
+  "setOptPercentText": {
+    "message": "መቶኛ"
+  },
+  "setSecDisplay": {
+    "message": "ማሳያ"
+  },
+  "setSecPacing": {
+    "message": "የአጠቃቀም ፍጥነት"
+  },
+  "setOptOff": {
+    "message": "ጠፍቷል"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "አሞሌው የትኛውን ገደብ እንደሚከታተል።"
+  },
+  "setShowPct": {
+    "message": "% አሳይ"
+  },
+  "setContextDesc": {
+    "message": "የአሁኑ ውይይት ምን ያህል እንደሞላ።"
+  },
+  "setCacheTimerDesc": {
+    "message": "የፕሮምፕት መሸጎጫው ንቁ ሆኖ ሳለ በውይይቱ ራስጌ ላይ የሚታይ የጊዜ ቆጣሪ።"
+  },
+  "setPacing": {
+    "message": "የፍጥነት ግምቶችን አሳይ"
+  },
+  "setPacingDesc": {
+    "message": "ግምቶች በዚህ አሳሽ ውስጥ ብቻ ከተቀመጡ የአጠቃቀም ናሙናዎች ይማራሉ። ይህን ማጥፋት መሰብሰባቸውን ያቆማል።"
+  },
+  "set5hrPace": {
+    "message": "የ5-ሰዓት ፍጥነት"
+  },
+  "set5hrPaceDesc": {
+    "message": "ከ5-ሰዓት መቶኛው አጠገብ ይታያል።"
+  },
+  "setLearnedData": {
+    "message": "የተማረው አጠቃቀም"
+  },
+  "setResetAlertsDesc": {
+    "message": "የ5-ሰዓት ወይም ሳምንታዊ ገደብዎ ዳግም ሲጀምር የሚታይ ባነር። ለማንኛውም ድረ-ገጽ የChrome ፈቃድ ያስፈልጋል።"
+  },
+  "setReviewLink": {
+    "message": "በChrome Web Store ላይ ደረጃ ይስጡ"
+  },
+  "threadsLabel": {
+    "message": "ውይይቶች"
+  },
+  "threadSettled": {
+    "message": "የተረጋጉ ($1)"
+  },
+  "threadKindChat": {
+    "message": "ውይይት"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "መደበኛ"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "ፕሮጀክት"
+  },
+  "threadKindOther": {
+    "message": "ውይይት"
+  },
+  "threadStatusWorking": {
+    "message": "በመሥራት ላይ"
+  },
+  "threadStatusAwaiting": {
+    "message": "በመጠበቅ ላይ"
+  },
+  "threadStatusError": {
+    "message": "ስህተት"
+  },
+  "threadStatusUnread": {
+    "message": "ያልተነበበ"
+  },
+  "threadStatusOpen": {
+    "message": "ክፍት"
+  },
+  "setSecSidebar": {
+    "message": "የጎን አሞሌ"
+  },
+  "setThreadSidebar": {
+    "message": "የውይይት እይታ"
+  },
+  "setThreadSidebarDesc": {
+    "message": "ሁሉም ነገር ተረጋግቶ ይጀምራል። አንድ ውይይት አዲስ እንቅስቃሴ ሲኖረው እስክታረጋጋው ድረስ ካርድ ይሆናል።"
+  },
+  "threadNavLabel": {
+    "message": "ፕሮጀክቶች እና መሣሪያዎች"
+  },
+  "threadStatusPinned": {
+    "message": "የተሰካ"
+  },
+  "threadStatusDone": {
+    "message": "ተጠናቋል"
+  },
+  "threadWorkingFor": {
+    "message": "በመሥራት ላይ $1"
+  },
+  "threadWaitingFor": {
+    "message": "በመጠበቅ ላይ $1"
+  },
+  "threadDoneAgo": {
+    "message": "ተጠናቋል $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1ሰ"
+  },
+  "threadAgoMinutes": {
+    "message": "$1ደ"
+  },
+  "threadAgoHours": {
+    "message": "$1ሰዓ"
+  },
+  "threadAgoDays": {
+    "message": "$1ቀ"
+  },
+  "threadAgoWeeks": {
+    "message": "$1ሳ"
+  },
+  "threadSearch": {
+    "message": "ፈልግ"
+  },
+  "threadNewChat": {
+    "message": "አዲስ ውይይት"
+  },
+  "threadSort": {
+    "message": "ውይይቶችን ደርድር"
+  },
+  "threadSortEdited": {
+    "message": "በቅርብ የተስተካከለ"
+  },
+  "threadSortCreated": {
+    "message": "በቅርብ የተፈጠረ"
+  },
+  "setThreadSort": {
+    "message": "ቅደም ተከተል"
+  },
+  "setThreadSortDesc": {
+    "message": "በቅርብ የተስተካከለ የሚለው ውይይቱ ሲቀየር ወይም Claude ምላሽ ሲሰጥ ወደ ላይ ያመጣዋል።"
+  },
+  "threadSettle": {
+    "message": "አረጋጋ"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard ሊቋረጥ ነው"
+  },
+  "clipRetiringBody": {
+    "message": "ወደፊት በሚመጣ ማሻሻያ ውስጥ ይወገዳል።"
+  },
+  "clipRetiringPs": {
+    "message": "ማስታወሻ፦ ክህሎቶች (Skills) ተመሳሳይ እና ተጨማሪ ነገሮችን ማድረግ ይችላሉ።"
+  },
+  "clipConvertToSkills": {
+    "message": "የእኔን መጠየቂያዎች ወደ ክህሎቶች ቀይር"
+  }
+}

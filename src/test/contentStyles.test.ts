@@ -90,6 +90,14 @@ describe("content styles", () => {
     expect(contentScript).toContain("[STORAGE_KEYS.detectedTheme]: light ? \"light\" : \"dark\"");
   });
 
+  it("follows Claude's <html lang>, watches it, and mirrors it for other contexts", () => {
+    expect(contentScript).toContain("const tag = document.documentElement.lang.trim();");
+    expect(contentScript).toContain("setLanguage(tag);");
+    expect(contentScript).toContain("[STORAGE_KEYS.claudeLanguage]: tag");
+    expect(contentScript).toContain('attributeFilter: ["lang"]');
+    expect(contentScript).not.toContain("settings.language");
+  });
+
   it("keeps the message rail in light mode when the rail is created after theme sync", () => {
     expect(messageRailScript).toContain("let currentThemeIsLight = false;");
     expect(messageRailScript).toContain("currentThemeIsLight = isLight;");
@@ -129,7 +137,7 @@ describe("content styles", () => {
 
   it("only auto-shows the onboarding tour on Claude's new-chat route", () => {
     expect(contentScript).toContain("const isNewChatPage = (): boolean => location.pathname === \"/new\" || location.pathname === \"/new/\";");
-    expect(contentScript).toContain("storageState.settings.hasSeenTour === false && isNewChatPage()");
+    expect(contentScript).toContain("storageState?.settings.hasSeenTour === false && isNewChatPage()");
   });
 
   it("uses 5-hour session estimates on Claude design routes", () => {

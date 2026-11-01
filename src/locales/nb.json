@@ -1,0 +1,503 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Tidsberegning for hurtigbuffer utilgjengelig"
+  },
+  "cacheUnknown": {
+    "message": "hurtigbuffer ukjent"
+  },
+  "cacheExpired": {
+    "message": "Hurtigbuffer utløpt"
+  },
+  "cacheExpiresIn": {
+    "message": "Hurtigbuffer utløper om $1"
+  },
+  "expiredShort": {
+    "message": "utløpt"
+  },
+  "cacheHasExpired": {
+    "message": "Hurtigbufferen har utløpt"
+  },
+  "cacheSavings": {
+    "message": "Bufrede tokens sparer ~90% inndatakostnad"
+  },
+  "ringSession": {
+    "message": "5-timers økt"
+  },
+  "ringWeekly": {
+    "message": "Ukentlig · alle modeller"
+  },
+  "ringWeeklyFable": {
+    "message": "Ukentlig · Fable"
+  },
+  "ringContext": {
+    "message": "Kontekstvindu"
+  },
+  "weeklyScoped": {
+    "message": "Ukentlig · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% ved nullstilling"
+  },
+  "pacePastReset": {
+    "message": "+$1 over nullstilling"
+  },
+  "lastsToReset": {
+    "message": "varer til nullstilling"
+  },
+  "paceActiveLeft": {
+    "message": "~$1t aktiv tid igjen"
+  },
+  "paceEmptyDate": {
+    "message": "tom $1"
+  },
+  "paceEmptyIn": {
+    "message": "tom om $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 mld. igjen"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 mld. igjen"
+  },
+  "ctxCalculating": {
+    "message": "Beregner kontekstbruk..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude-bruk $1"
+  },
+  "usage": {
+    "message": "Forbruk"
+  },
+  "planUsage": {
+    "message": "Planforbruk"
+  },
+  "openSettings": {
+    "message": "Åpne utvidelsesinnstillinger"
+  },
+  "fiveHourLimit": {
+    "message": "5-timers grense"
+  },
+  "resetUnknown": {
+    "message": "nullstilling ukjent"
+  },
+  "resetsInM": {
+    "message": "nullstilles om $1 min"
+  },
+  "resetsInHM": {
+    "message": "nullstilles om $1 t $2 min"
+  },
+  "resetsInH": {
+    "message": "nullstilles om $1 t"
+  },
+  "resetsInDH": {
+    "message": "nullstilles om $1 d $2 t"
+  },
+  "resetsInD": {
+    "message": "nullstilles om $1 d"
+  },
+  "weeklyLearningAria": {
+    "message": "Estimat for ukentlig bruk lærer fortsatt"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Ukentlige estimater kan være unøyaktige den første uken mens Usage Bar lærer seg bruksmønsteret ditt."
+  },
+  "ctxCalcLoading": {
+    "message": "Laster kontekstberegning"
+  },
+  "ctxWindowFull": {
+    "message": "Kontekstvindu $1% fullt"
+  },
+  "reviewEnjoying": {
+    "message": "Fornøyd med Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Vurder i Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Modellen kunne ikke fastslås for disse meldingene. Dette kan komme fra Claude Code og cowork."
+  },
+  "noMessages": {
+    "message": "Ingen meldinger"
+  },
+  "errNoWorker": {
+    "message": "Kunne ikke kontakte utvidelsens bakgrunnsprosess"
+  },
+  "errLoadUsage": {
+    "message": "Kunne ikke laste inn Claude-bruk"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Fornøyd?"
+  },
+  "fiveHour": {
+    "message": "5-timers"
+  },
+  "weekly": {
+    "message": "Ukentlig"
+  },
+  "refreshAll": {
+    "message": "Oppdater all statistikk"
+  },
+  "customizeOverlay": {
+    "message": "Tilpass overlegg"
+  },
+  "usageSummary": {
+    "message": "Forbruksoversikt"
+  },
+  "total": {
+    "message": "Totalt"
+  },
+  "avgPerMo": {
+    "message": "Snitt / mnd."
+  },
+  "avgPerDay": {
+    "message": "Snitt / dag"
+  },
+  "busiest": {
+    "message": "Mest aktiv"
+  },
+  "messagesSent": {
+    "message": "Meldinger sendt"
+  },
+  "fourteenDays": {
+    "message": "14 dager"
+  },
+  "monthly": {
+    "message": "Månedlig"
+  },
+  "collecting": {
+    "message": "Samler inn bruksdata — det daglige diagrammet fylles ut etter hvert som du chatter på claude.ai."
+  },
+  "allTime": {
+    "message": "Totalt"
+  },
+  "dayStreak": {
+    "message": "$1-dagers rekke"
+  },
+  "reset": {
+    "message": "Nullstilles"
+  },
+  "segOther": {
+    "message": "Annet"
+  },
+  "setSecGeneral": {
+    "message": "Generelt"
+  },
+  "setSecWheel": {
+    "message": "Kontekstvindu"
+  },
+  "setSecCacheTimer": {
+    "message": "Hurtigbuffernedtelling"
+  },
+  "setShowOverlay": {
+    "message": "Vis overlegg"
+  },
+  "setShowOverlayDesc": {
+    "message": "Slå alt i skrivefeltet på eller av."
+  },
+  "setTour": {
+    "message": "Omvisning"
+  },
+  "setTourBtn": {
+    "message": "Spill av omvisning på nytt"
+  },
+  "setPrivacy": {
+    "message": "Personvernerklæring"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Ukentlig estimat"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Antall brukstimer igjen, dag og klokkeslett du går tom, eller hvor du ligger ved nullstilling."
+  },
+  "setDeleteHistory": {
+    "message": "Slett historikk"
+  },
+  "setSamples": {
+    "message": "$1 målinger"
+  },
+  "setOptPctReset": {
+    "message": "Prosent ved nullstilling"
+  },
+  "setOptTimePast": {
+    "message": "Tid over nullstilling"
+  },
+  "setOptMsgsLeft": {
+    "message": "Meldinger igjen"
+  },
+  "setOptActiveHours": {
+    "message": "Aktive timer"
+  },
+  "setOptDaysTime": {
+    "message": "Dager / tid"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Hva som bruker kontekstvinduet"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 av $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Dine meldinger"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claudes svar"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Utvidet tenkning"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Verktøykall"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Verktøyresultater"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Filer og vedlegg"
+  },
+  "ctxBreakdownProject": {
+    "message": "Prosjektkunnskap"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Systembruk"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Gjenstående"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 meldinger"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blokker"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 kall"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 resultater"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 filer"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Ingenting i kontekstvinduet ennå."
+  },
+  "ctxBreakdownNote": {
+    "message": "Estimert lokalt ut fra denne samtalen."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Estimert lokalt. Verktøy- og søkeresultater gjør dette omtrentlig."
+  },
+  "resetBannerSessionTitle": {
+    "message": "5-timersgrensen din i Claude er nullstilt"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Den ukentlige grensen din i Claude er nullstilt"
+  },
+  "resetBannerAction": {
+    "message": "Åpne Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Nullstillingsvarsler"
+  },
+  "setResetBannerScope": {
+    "message": "Vis varsler på"
+  },
+  "setResetScopeClaude": {
+    "message": "Kun claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Alle nettsteder"
+  },
+  "setResetBannerTestGo": {
+    "message": "Send test"
+  },
+  "setResetBannerTestCounting": {
+    "message": "om $1s"
+  },
+  "grantTitle": {
+    "message": "Vis nullstillingsvarsler på alle nettsteder"
+  },
+  "grantBody": {
+    "message": "Chrome trenger tillatelse før utvidelsen kan vise et banner utenfor claude.ai. Den brukes kun til å vise banneret — sideinnhold leses eller sendes aldri noe sted."
+  },
+  "grantDenied": {
+    "message": "Tillatelse ble ikke gitt. Nullstillingsvarsler vises kun på claude.ai."
+  },
+  "grantAllow": {
+    "message": "Fortsett"
+  },
+  "grantCancel": {
+    "message": "Avbryt"
+  },
+  "setOptRing": {
+    "message": "Ring"
+  },
+  "setOptPercentText": {
+    "message": "Prosent"
+  },
+  "setSecDisplay": {
+    "message": "Visning"
+  },
+  "setSecPacing": {
+    "message": "Forbrukstakt"
+  },
+  "setOptOff": {
+    "message": "Av"
+  },
+  "setUsageBar": {
+    "message": "Forbruksindikator"
+  },
+  "setUsageBarDesc": {
+    "message": "Hvilken grense indikatoren følger."
+  },
+  "setShowPct": {
+    "message": "Vis %"
+  },
+  "setContextDesc": {
+    "message": "Hvor full den nåværende samtalen er."
+  },
+  "setCacheTimerDesc": {
+    "message": "Nedtelling i samtaleoverskriften mens hurtigbufferen er varm."
+  },
+  "setPacing": {
+    "message": "Vis taktestimater"
+  },
+  "setPacingDesc": {
+    "message": "Estimater lærer fra numeriske forbruksmålinger som kun lagres i denne nettleseren. Hvis du slår dette av, avsluttes innsamlingen."
+  },
+  "set5hrPace": {
+    "message": "5-timerstakt"
+  },
+  "set5hrPaceDesc": {
+    "message": "Vises ved siden av 5-timersprosenten."
+  },
+  "setLearnedData": {
+    "message": "Tillært forbruk"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner når 5-timers- eller ukesgrensen nullstilles. Alle nettsteder krever tillatelse i Chrome."
+  },
+  "setReviewLink": {
+    "message": "Vurder i Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Tråder"
+  },
+  "threadSettled": {
+    "message": "Lagret ($1)"
+  },
+  "threadKindChat": {
+    "message": "Samtale"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Rutine"
+  },
+  "threadKindCode": {
+    "message": "Kode"
+  },
+  "threadKindProject": {
+    "message": "Prosjekt"
+  },
+  "threadKindOther": {
+    "message": "Tråd"
+  },
+  "threadStatusWorking": {
+    "message": "Jobber"
+  },
+  "threadStatusAwaiting": {
+    "message": "Venter"
+  },
+  "threadStatusError": {
+    "message": "Feil"
+  },
+  "threadStatusUnread": {
+    "message": "Ulest"
+  },
+  "threadStatusOpen": {
+    "message": "Åpen"
+  },
+  "setSecSidebar": {
+    "message": "Sidefelt"
+  },
+  "setThreadSidebar": {
+    "message": "Trådvisning"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Alt starter som lagret. En samtale blir et kort når den har ny aktivitet, helt til du legger den bort."
+  },
+  "threadNavLabel": {
+    "message": "Prosjekter og verktøy"
+  },
+  "threadStatusPinned": {
+    "message": "Festet"
+  },
+  "threadStatusDone": {
+    "message": "Ferdig"
+  },
+  "threadWorkingFor": {
+    "message": "Jobber $1"
+  },
+  "threadWaitingFor": {
+    "message": "Venter $1"
+  },
+  "threadDoneAgo": {
+    "message": "Ferdig $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1t"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1u"
+  },
+  "threadSearch": {
+    "message": "Søk"
+  },
+  "threadNewChat": {
+    "message": "Ny samtale"
+  },
+  "threadSort": {
+    "message": "Sorter tråder"
+  },
+  "threadSortEdited": {
+    "message": "Sist endret"
+  },
+  "threadSortCreated": {
+    "message": "Sist opprettet"
+  },
+  "setThreadSort": {
+    "message": "Rekkefølge"
+  },
+  "setThreadSortDesc": {
+    "message": "Sist endret flytter en tråd opp når den endres eller Claude svarer."
+  },
+  "threadSettle": {
+    "message": "Legg bort"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt-utklippstavlen fases ut"
+  },
+  "clipRetiringBody": {
+    "message": "Den vil bli fjernet i en fremtidig oppdatering."
+  },
+  "clipRetiringPs": {
+    "message": "PS: Skills kan gjøre det samme og mer."
+  },
+  "clipConvertToSkills": {
+    "message": "Konverter mine prompts til skills"
+  }
+}

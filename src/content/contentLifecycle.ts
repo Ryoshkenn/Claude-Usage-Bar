@@ -5,6 +5,12 @@ const EXTENSION_NODE_SELECTOR = [
   "#claude-cache-timer-host",
   "#claude-user-message-rail",
   "#cub-settings-panel",
+  "#cub-thread-settled-toggle",
+  "#cub-thread-nav-toggle",
+  "#cub-thread-top",
+  "#cub-thread-top-actions",
+  ".cub-thread-meta",
+  ".cub-thread-settle",
 ].join(",");
 
 const elementForNode = (node: Node): Element | null => {

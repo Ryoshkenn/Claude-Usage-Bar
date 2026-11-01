@@ -24,6 +24,9 @@ Core live display state persists locally regardless so the overlay works.
 
 ⚠️ A stale `dist/` is the #1 footgun: if logs/behavior don't match your edits, confirm the
 bundle was rebuilt (check file timestamps/hashes in `dist/assets/`) and the extension reloaded.
+Restarting the browser is not enough for the background worker: Chrome keeps running its cached
+copy of the worker script until the extension itself is reloaded, so worker changes silently don't
+apply while pages and the popup do. Check which `background.ts-<hash>.js` the worker actually parsed.
 
 For Chrome Web Store releases, verify the public privacy policy URL returns `HTTP 200` before
 packaging/resubmission.
@@ -41,6 +44,21 @@ Three contexts, message-passed via `MESSAGE_TYPES` (`src/shared/constants.ts`):
   render/lifecycle/theme syncing.
 - **Page probe** (`src/pageProbe/pageProbe.ts`) — injected into page context to observe usage
   metadata; hard-allowlists output keys and blocks anything prompt/auth-shaped.
+
+### Where the overlay attaches (`composerMount.ts`, `settingsPage.tsx`)
+Every composer goes through `mountHostInChin`: a body-level fixed overlay in the widest free gap of
+the composer's control row, or its own row (a spacer appended to the composer) when it doesn't fit.
+The row comes from one of three finders, tried in order:
+- `findChinSlot` — `[data-cds="ChatComposerChin"]` inside `[data-cds="ChatComposer"]` (chats, and
+  one of the two `/new` layouts).
+- `findToolbarSlot` — the other `/new` layout (Oct 2026): a `<fieldset>` card with no
+  ChatComposer markers whose toolbar row holds `chat-input-attach` and `model-selector-dropdown`.
+  Claude serves both `/new` layouts, apparently at random — check both after a DOM change.
+- `findDesignSlot` — Claude Design's home composer (`/design`): the chip row around the model picker.
+
+The settings nav item anchors on Claude's `li[data-testid]`s (labels get renamed — "General" became
+"Appearance" but kept `general-settings`) and sits after `usage-settings`. While our panel shows,
+`data-cub-panel-active` on the `<nav>` mutes Claude's still-`aria-current` item in `styles.css`.
 
 ### Reset banners (`src/background/resetNotifier.ts`)
 `chrome.alarms` fires at each `resetsAt`; MV3 kills the worker after ~30s idle, so `setTimeout`
@@ -85,6 +103,55 @@ Verify `dist/src/grant/grant.html` still emits after touching the build config.
 ⚠️ `optional_host_permissions` is spread in with a cast in `manifest.ts` — `@crxjs/vite-plugin`'s
 types predate it. Verify it survives into `dist/manifest.json` after touching that file.
 
+### Thread sidebar (`src/content/threadSidebar.ts`)
+Optional T3-style sidebar (`settings.threadSidebar`, off by default, under **Sidebar** in the
+settings panel). Everything starts settled under a "Settled (N)" bar; a thread becomes a card once it
+has activity after that — seen working or done in any tab, or an `updated_at` past the baseline
+(which also catches chats made on another device) — and stays one, uncapped, until its hover Settle
+button files it back (until its next activity). Pinned threads and live ones (working / waiting /
+done / unread) are always cards. The Settled bar is `position: sticky` at the bottom of the scroll
+column (pushed there with `margin-top: auto` when the cards are few) and also at the top while
+open; it paints the sidebar's own computed background so rows can pass under it, and opening it
+over a long list scrolls its rows into view. Pinned projects are hidden (they stay under Projects), Claude's nav rows fold into
+one "Projects & tools" row, and a T3-style Search / sort / new-chat row sits at the top — in place of
+Claude's top search bar when the layout shows one (only a *visible*, bar-wide match is replaced),
+else of the New row. Search and New always drive Claude's own controls. Claude's sidebar is React we don't own, so the module never moves, clones or
+re-parents its nodes — it sets `data-cub-thread*` attributes and an inline `order` per row, and
+`threadSidebar.css` sections the rows inside the sidebar's scroll column (wrappers in between are
+flattened with `display: contents`). Its own nodes are the two toggles, the top row, and a
+`.cub-thread-meta` line and `.cub-thread-settle` button on each card. Turning it off strips everything, and tests assert the DOM
+is byte-identical afterwards — keep it that way. Text uses Claude's CDS tokens; the only per-theme
+values are the surface tints keyed off `data-cub-threads-theme` (set from `syncTheme`).
+
+Live state is read from Claude's own markers: `.status-dot[data-kind=running|clay|awaiting|error|ready|unread]`,
+`[data-unread-mark]`, and rows under the `label:unread-unread` group. Don't put a `::before` on
+`[data-row-main-button]`: Claude uses it for the row's hit area. Claude Code sessions are only in the
+DOM while the sidebar is in Code mode; nothing merges them into the chat list.
+
+"Done" is ours: a row this tab saw working that stops while you weren't looking at it. The marks
+live in `chrome.storage.session` (`threadActivity`, row keys + timestamps only, shared by every
+claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). Placement lives
+in `chrome.storage.local` (`threadPlaces`: `since` — when the view was turned on, the baseline every
+thread counts as settled at — plus `open` and hand-`settled` maps of row key → time). Turning the view
+off removes it, so turning it on again starts from everything settled. Nothing opens until it has
+loaded, or a page load would judge activity against a made-up baseline; likewise nothing is tracked
+until the activity marks have loaded.
+
+Tabs never write either store themselves. chrome.storage has no transactions, so two tabs each
+reading, merging and writing lost each other's changes. Each tab only writes when its own sidebar's
+state changes, and sends the worker per-key patches (`MESSAGE_TYPES.threadActivityPatch` /
+`threadPlacesPatch` / `threadPlacesForget`); `src/shared/threadStore.ts` applies them through one
+queue (activity per key, places newest-time-per-key), and drops a places patch once the view is off.
+A patch that fails stays pending in the tab and is retried. Apart from Claude's language tag
+(`claudeLanguage`, e.g. "fr-FR") and the user's own clipboard prompts, those row keys are the only
+non-numeric thing the extension stores. There is deliberately no "task finished" banner — it was
+tried and removed.
+
+Sorting ("newest edited" / "newest created") uses timestamps the page probe lifts from Claude's own
+**list** responses (`MESSAGE_TYPES.threadTimes`): ids and created/updated times only — never names
+or titles — and single-thread endpoints are skipped because they carry the transcript. The shipped
+probe is `public/pageProbe.js`; `src/pageProbe/pageProbe.ts` mirrors it, so change both.
+
 Shared logic in `src/shared/`: `storage.ts` (`DEFAULT_SETTINGS`, typed `chrome.storage.local`
 wrappers), `types.ts` (all interfaces — `Settings`, `RealUsageSnapshot`, etc.), `claudeUsageApi.ts`
 (payload parsers), `usageProjection.ts` (weekly pacing/learning), `claudeTokenizer.ts` (context
@@ -92,7 +159,10 @@ token estimation).
 
 ## Conventions
 - Match surrounding CDS class strings exactly when extending the settings panel — they're copied
-  verbatim from Claude's DOM (`settingsPage.tsx`).
+  verbatim from Claude's DOM (`settingsPage.tsx`). Dropdowns use `CdsSelect`, our own menu: don't
+  go back to a native `<select>` overlaid on the CDS trigger — it relied on Claude's utility classes
+  to stay invisible and opened the OS menu wherever the browser put it. The menu portals into
+  `#cub-settings-panel` because the nested option groups clip (`overflow: hidden`).
 - New `Settings` fields: add to `types.ts` **and** `DEFAULT_SETTINGS`, and update the settings
   fixtures in `storage.test.ts` and `ContentApp.test.tsx` (they assert the full object).
 - Removing a `Settings` field: strip it in `migrateSettings` (`storage.ts`) so the next write drops
@@ -101,8 +171,16 @@ token estimation).
 - Two themes: every overlay style needs a `.cub-theme-light` counterpart in `styles.css`.
 - i18n: wrap user-facing strings with `t("key", "English fallback", subs?)` from `src/shared/i18n.ts`
   (positional `$1`..`$9` placeholders). Catalogs are `src/locales/<lang>.json` (Chrome message format,
-  bundled at build — not chrome.i18n). Add the key to **every** catalog; resolution is active language →
-  English catalog → inline fallback, so partial coverage is safe. The active language is the `language`
-  setting (default `"en"`, user-picked under General), applied via `setLanguage()` when storage loads in
-  `content.tsx` and `popup.tsx` — NOT the browser locale. New languages: add a `src/locales/<lang>.json`
-  and an entry in `SUPPORTED_LANGUAGES`. Brand names (Claude, Opus/Sonnet/Haiku, Usage Bar) stay untranslated.
+  bundled at build — not chrome.i18n). Resolution is active language → English catalog → inline fallback,
+  but `i18n.test.ts` requires every catalog to carry exactly en.json's keys and `$n` placeholders, so add a
+  new key to **every** catalog. There is no language setting (the old `language` field is stripped in
+  `migrateSettings`): the UI follows Claude's own language, NOT the browser locale. The content script reads
+  `<html lang>` on claude.ai (and watches the attribute — Claude switches without a reload), calls
+  `setLanguage(tag)`, and mirrors the tag to `STORAGE_KEYS.claudeLanguage`; the popup, grant page and worker
+  can't see the page, so they read it back with `getClaudeLanguage()`. React UI that outlives a switch
+  re-renders via `useSyncExternalStore(onLanguageChange, getLanguage)`. `catalogForTag()` maps the BCP-47 tag
+  to a catalog (explicit `TAG_TO_CATALOG` → exact catalog name → base language → `en`). Every language in
+  Claude's language picker has a catalog (es-419 and es-ES share `es`); if Claude adds one, add
+  `src/locales/<lang>.json`, import it into `CATALOGS`, and map the tag if it isn't a catalog name or base
+  language. Brand names (Claude, Claude Code, Cowork, Opus/Sonnet/Haiku/Fable, Usage Bar, Chrome, GitHub) stay
+  untranslated.

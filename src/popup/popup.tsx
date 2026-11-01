@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { createRoot } from "react-dom/client";
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
-import { getStorage, resetUsage } from "../shared/storage";
+import { getClaudeLanguage, getStorage, resetUsage } from "../shared/storage";
 import {
   activeDayStreak,
   allTimeTotal,
@@ -13,7 +13,8 @@ import {
   type ChartBar,
 } from "../shared/usageChart";
 import type { ApiUsageResponse, StorageShape } from "../shared/types";
-import { setLanguage, t } from "../shared/i18n";
+import { getLanguage, onLanguageChange, setLanguage, t } from "../shared/i18n";
+import { formatResetsIn } from "../shared/resetText";
 import "./popup.css";
 
 const STORE_URL =
@@ -117,6 +118,8 @@ const UsageChart = ({ bars, view }: { bars: ChartBar[]; view: ChartView }) => {
 };
 
 export const Popup = () => {
+  // Re-render when Claude's language arrives or changes.
+  useSyncExternalStore(onLanguageChange, getLanguage);
   const [state, setState] = useState<StorageShape | null>(null);
   const [apiStatus, setApiStatus] = useState<"idle" | "loading" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
@@ -181,7 +184,7 @@ export const Popup = () => {
 
   useEffect(() => {
     void getStorage().then(async (storage) => {
-      setLanguage(storage.settings.language);
+      setLanguage(await getClaudeLanguage());
       setState(storage);
       const reviewData = await chrome.storage.local.get([
         STORAGE_KEYS.reviewBannerDismissedAt,
@@ -206,6 +209,11 @@ export const Popup = () => {
     const handleStorageChange = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
       if (area !== "local") {
         return;
+      }
+
+      // Claude switched language in a tab while this popup is open.
+      if (changes[STORAGE_KEYS.claudeLanguage]) {
+        setLanguage(changes[STORAGE_KEYS.claudeLanguage].newValue as string | undefined);
       }
 
       setState((current) =>
@@ -267,12 +275,14 @@ export const Popup = () => {
             <div className="cub-lim">
               <span className="cub-k">{t("fiveHour", "5-hour")}</span>
               <span className="cub-v">{formatPercentage(snapshot?.percentageUsed)}</span>
-              <span className="cub-r">{snapshot?.resetText ?? "—"}</span>
+              <span className="cub-r">{formatResetsIn(snapshot?.sessionResetsAt, snapshot?.resetText) ?? "—"}</span>
             </div>
             <div className="cub-lim">
               <span className="cub-k">{t("weekly", "Weekly")}</span>
               <span className="cub-v">{formatPercentage(snapshot?.weeklyAllModelsPercentageUsed)}</span>
-              <span className="cub-r">{snapshot?.weeklyAllModelsResetText ?? "—"}</span>
+              <span className="cub-r">
+                {formatResetsIn(snapshot?.weeklyAllModelsResetsAt, snapshot?.weeklyAllModelsResetText) ?? "—"}
+              </span>
             </div>
           </div>
           <div className="cub-icons">

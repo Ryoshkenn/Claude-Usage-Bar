@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "reset unknown"
   },
+  "resetsInM": {
+    "message": "resets in $1m"
+  },
+  "resetsInHM": {
+    "message": "resets in $1h $2m"
+  },
+  "resetsInH": {
+    "message": "resets in $1h"
+  },
+  "resetsInDH": {
+    "message": "resets in $1d $2h"
+  },
+  "resetsInD": {
+    "message": "resets in $1d"
+  },
   "weeklyLearningAria": {
     "message": "Weekly usage estimate is still learning"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "Turn everything in the composer on or off."
-  },
-  "setLanguage": {
-    "message": "Language"
   },
   "setTour": {
     "message": "Feature tour"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "Banner when your 5-hour or weekly limit resets. Any site needs Chrome permission."
   },
-  "setLanguageShortDesc": {
-    "message": "Translations may be inaccurate."
-  },
   "setReviewLink": {
     "message": "Rate on Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Threads"
+  },
+  "threadSettled": {
+    "message": "Settled ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Project"
+  },
+  "threadKindOther": {
+    "message": "Thread"
+  },
+  "threadStatusWorking": {
+    "message": "Working"
+  },
+  "threadStatusAwaiting": {
+    "message": "Waiting"
+  },
+  "threadStatusError": {
+    "message": "Error"
+  },
+  "threadStatusUnread": {
+    "message": "Unread"
+  },
+  "threadStatusOpen": {
+    "message": "Open"
+  },
+  "setSecSidebar": {
+    "message": "Sidebar"
+  },
+  "setThreadSidebar": {
+    "message": "Thread view"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Everything starts settled. A chat becomes a card once it has new activity, until you settle it."
+  },
+  "threadNavLabel": {
+    "message": "Projects & tools"
+  },
+  "threadStatusPinned": {
+    "message": "Pinned"
+  },
+  "threadStatusDone": {
+    "message": "Done"
+  },
+  "threadWorkingFor": {
+    "message": "Working $1"
+  },
+  "threadWaitingFor": {
+    "message": "Waiting $1"
+  },
+  "threadDoneAgo": {
+    "message": "Done $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1w"
+  },
+  "threadSearch": {
+    "message": "Search"
+  },
+  "threadNewChat": {
+    "message": "New chat"
+  },
+  "threadSort": {
+    "message": "Sort threads"
+  },
+  "threadSortEdited": {
+    "message": "Newest edited"
+  },
+  "threadSortCreated": {
+    "message": "Newest created"
+  },
+  "setThreadSort": {
+    "message": "Order"
+  },
+  "setThreadSortDesc": {
+    "message": "Newest edited moves a thread up when it changes or Claude replies."
+  },
+  "threadSettle": {
+    "message": "Settle"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard is being retired"
+  },
+  "clipRetiringBody": {
+    "message": "It will be removed in a future update."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills can do the same and more."
+  },
+  "clipConvertToSkills": {
+    "message": "Convert my prompts to skills"
   }
 }

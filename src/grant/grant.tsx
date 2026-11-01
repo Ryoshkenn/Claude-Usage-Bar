@@ -5,11 +5,11 @@
 // panel in claude.ai asks the background worker to open this window; the user
 // clicks once, Chrome shows its own prompt, and the window closes itself.
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createRoot } from "react-dom/client";
-import { MESSAGE_TYPES } from "../shared/constants";
-import { getStorage, updateSettings } from "../shared/storage";
-import { setLanguage, t } from "../shared/i18n";
+import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
+import { getClaudeLanguage, updateSettings } from "../shared/storage";
+import { getLanguage, onLanguageChange, setLanguage, t } from "../shared/i18n";
 import "./grant.css";
 
 const ALL_SITES = { origins: ["*://*/*"] };
@@ -18,8 +18,19 @@ const Grant = () => {
   const [denied, setDenied] = useState(false);
   const [busy, setBusy] = useState(false);
 
+  // Claude's language, as mirrored by the claude.ai tab that opened this window.
+  // The first paint is English, so re-render once it loads.
+  useSyncExternalStore(onLanguageChange, getLanguage);
   useEffect(() => {
-    void getStorage().then(({ settings }) => setLanguage(settings.language));
+    void getClaudeLanguage().then(setLanguage);
+    // And follow it if Claude switches language while this window is open.
+    const onChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
+      if (area === "local" && changes[STORAGE_KEYS.claudeLanguage]) {
+        setLanguage(changes[STORAGE_KEYS.claudeLanguage].newValue as string | undefined);
+      }
+    };
+    chrome.storage.onChanged.addListener(onChanged);
+    return () => chrome.storage.onChanged.removeListener(onChanged);
   }, []);
 
   const allow = async () => {

@@ -2,6 +2,24 @@
 
 All notable changes since the 1.0.0 Chrome Web Store release are documented here.
 
+## [1.6.0] - 2026-10-31
+
+### Added
+- Added an optional thread view for Claude's sidebar (Settings → Usage Bar → Sidebar). Threads with new activity become cards, and the rest fold under "Settled". Search, sort, and new chat sit at the top. It's off by default.
+- Usage Bar now follows Claude's own language and supports all 35 of Claude's languages. Twenty-four of them are new, and their translations were machine-generated. The separate language picker is gone.
+
+### Changed
+- Prompt Clipboard is being retired. Its panel now says so and suggests skills instead. A "Convert my prompts to skills" button opens a new chat with your saved prompts and a request for Claude to turn them into skills and explain how to add and use them. The message isn't sent until you send it.
+
+### Fixed
+- Fixed the usage bar not appearing on the new-chat page with Claude's updated composer.
+- Fixed "Usage Bar" missing from Claude's redesigned settings. It now sits right after Claude's own Usage, and only one item looks selected while it's open.
+- Fixed the onboarding tour pointing at nothing on its usage bar steps, and removed the step about the message navigator, which is currently turned off.
+- Fixed the usage bar missing on Claude Design.
+- Fixed Insert in the prompt clipboard adding the prompt twice.
+- Fixed the cache timer overlapping the header's buttons in a narrow window.
+- Reset times ("resets in 3h 12m") are now translated.
+
 ## [1.5.0] - 2026-10-06
 
 ### Added

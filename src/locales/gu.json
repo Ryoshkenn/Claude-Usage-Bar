@@ -1,0 +1,503 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "પ્રોમ્પ્ટ કૅશ સમય ઉપલબ્ધ નથી"
+  },
+  "cacheUnknown": {
+    "message": "કૅશ અજ્ઞાત"
+  },
+  "cacheExpired": {
+    "message": "પ્રોમ્પ્ટ કૅશની સમયમર્યાદા સમાપ્ત"
+  },
+  "cacheExpiresIn": {
+    "message": "પ્રોમ્પ્ટ કૅશ $1માં સમાપ્ત થશે"
+  },
+  "expiredShort": {
+    "message": "સમાપ્ત"
+  },
+  "cacheHasExpired": {
+    "message": "પ્રોમ્પ્ટ કૅશની સમયમર્યાદા સમાપ્ત થઈ ગઈ છે"
+  },
+  "cacheSavings": {
+    "message": "કૅશ કરેલા ટોકન્સ ~90% ઇનપુટ ખર્ચ બચાવે છે"
+  },
+  "ringSession": {
+    "message": "5-કલાકનું સત્ર"
+  },
+  "ringWeekly": {
+    "message": "સાપ્તાહિક · બધા મોડલ્સ"
+  },
+  "ringWeeklyFable": {
+    "message": "સાપ્તાહિક · Fable"
+  },
+  "ringContext": {
+    "message": "સંદર્ભ વિન્ડો"
+  },
+  "weeklyScoped": {
+    "message": "સાપ્તાહિક · $1"
+  },
+  "pacePctAtReset": {
+    "message": "રીસેટ સમયે $1%"
+  },
+  "pacePastReset": {
+    "message": "રીસેટ પછી +$1"
+  },
+  "lastsToReset": {
+    "message": "રીસેટ સુધી ચાલશે"
+  },
+  "paceActiveLeft": {
+    "message": "~$1ક સક્રિય બાકી"
+  },
+  "paceEmptyDate": {
+    "message": "$1ના રોજ ખાલી"
+  },
+  "paceEmptyIn": {
+    "message": "$1માં ખાલી"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 સંદેશ બાકી"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 સંદેશા બાકી"
+  },
+  "ctxCalculating": {
+    "message": "સંદર્ભ વપરાશની ગણતરી થઈ રહી છે..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude વપરાશ $1"
+  },
+  "usage": {
+    "message": "વપરાશ"
+  },
+  "planUsage": {
+    "message": "પ્લાન વપરાશ"
+  },
+  "openSettings": {
+    "message": "એક્સટેન્શન સેટિંગ્સ ખોલો"
+  },
+  "fiveHourLimit": {
+    "message": "5-કલાકની મર્યાદા"
+  },
+  "resetUnknown": {
+    "message": "રીસેટ અજ્ઞાત"
+  },
+  "resetsInM": {
+    "message": "$1 મિનિટમાં રીસેટ"
+  },
+  "resetsInHM": {
+    "message": "$1 કલાક $2 મિનિટમાં રીસેટ"
+  },
+  "resetsInH": {
+    "message": "$1 કલાકમાં રીસેટ"
+  },
+  "resetsInDH": {
+    "message": "$1 દિવસ $2 કલાકમાં રીસેટ"
+  },
+  "resetsInD": {
+    "message": "$1 દિવસમાં રીસેટ"
+  },
+  "weeklyLearningAria": {
+    "message": "સાપ્તાહિક વપરાશનો અંદાજ હજુ શીખી રહ્યો છે"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar તમારી પેટર્ન શીખે ત્યાં સુધી પ્રથમ અઠવાડિયા દરમિયાન સાપ્તાહિક અંદાજો અચોક્કસ હોઈ શકે છે."
+  },
+  "ctxCalcLoading": {
+    "message": "સંદર્ભ ગણતરી લોડ થઈ રહી છે"
+  },
+  "ctxWindowFull": {
+    "message": "સંદર્ભ વિન્ડો $1% ભરેલી છે"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar ગમે છે?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store પર રેટ કરો ↗"
+  },
+  "otherHint": {
+    "message": "આ સંદેશાઓ માટે મોડલ નક્કી કરી શકાયું નથી. આ Claude Code અને Cowork માંથી આવી શકે છે."
+  },
+  "noMessages": {
+    "message": "કોઈ સંદેશા નથી"
+  },
+  "errNoWorker": {
+    "message": "એક્સટેન્શન બેકગ્રાઉન્ડ વર્કરનો સંપર્ક કરવામાં અસમર્થ"
+  },
+  "errLoadUsage": {
+    "message": "Claude વપરાશ લોડ કરવામાં અસમર્થ"
+  },
+  "reviewEnjoyingShort": {
+    "message": "ગમે છે?"
+  },
+  "fiveHour": {
+    "message": "5-કલાક"
+  },
+  "weekly": {
+    "message": "સાપ્તાહિક"
+  },
+  "refreshAll": {
+    "message": "બધા આંકડા રિફ્રેશ કરો"
+  },
+  "customizeOverlay": {
+    "message": "ઓવરલે કસ્ટમાઇઝ કરો"
+  },
+  "usageSummary": {
+    "message": "વપરાશ સારાંશ"
+  },
+  "total": {
+    "message": "કુલ"
+  },
+  "avgPerMo": {
+    "message": "સરેરાશ / મહિનો"
+  },
+  "avgPerDay": {
+    "message": "સરેરાશ / દિવસ"
+  },
+  "busiest": {
+    "message": "સૌથી વ્યસ્ત"
+  },
+  "messagesSent": {
+    "message": "મોકલેલા સંદેશા"
+  },
+  "fourteenDays": {
+    "message": "14 દિવસ"
+  },
+  "monthly": {
+    "message": "માસિક"
+  },
+  "collecting": {
+    "message": "વપરાશ એકત્રિત થઈ રહ્યો છે — જેમ તમે claude.ai પર ચેટ કરશો તેમ તમારો દૈનિક ચાર્ટ ભરાશે."
+  },
+  "allTime": {
+    "message": "સર્વકાલીન"
+  },
+  "dayStreak": {
+    "message": "$1-દિવસની સળંગતા"
+  },
+  "reset": {
+    "message": "રીસેટ"
+  },
+  "segOther": {
+    "message": "અન્ય"
+  },
+  "setSecGeneral": {
+    "message": "સામાન્ય"
+  },
+  "setSecWheel": {
+    "message": "સંદર્ભ વિન્ડો"
+  },
+  "setSecCacheTimer": {
+    "message": "કૅશ ટાઇમર"
+  },
+  "setShowOverlay": {
+    "message": "ઓવરલે બતાવો"
+  },
+  "setShowOverlayDesc": {
+    "message": "કમ્પોઝરમાં બધું ચાલુ અથવા બંધ કરો."
+  },
+  "setTour": {
+    "message": "સુવિધા ટૂર"
+  },
+  "setTourBtn": {
+    "message": "ટૂર ફરી ચલાવો"
+  },
+  "setPrivacy": {
+    "message": "ગોપનીયતા નીતિ"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "સાપ્તાહિક અંદાજ"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "બાકી રહેલા વપરાશયોગ્ય કલાકો, મર્યાદા પૂરી થવાનો દિવસ અને સમય, અથવા રીસેટ સમયે તમે ક્યાં હશો."
+  },
+  "setDeleteHistory": {
+    "message": "ઇતિહાસ કાઢી નાખો"
+  },
+  "setSamples": {
+    "message": "$1 નમૂનાઓ"
+  },
+  "setOptPctReset": {
+    "message": "રીસેટ સમયે ટકાવારી"
+  },
+  "setOptTimePast": {
+    "message": "રીસેટ પછીનો સમય"
+  },
+  "setOptMsgsLeft": {
+    "message": "બાકી સંદેશા"
+  },
+  "setOptActiveHours": {
+    "message": "સક્રિય કલાકો"
+  },
+  "setOptDaysTime": {
+    "message": "દિવસો / સમય"
+  },
+  "ctxBreakdownTitle": {
+    "message": "સંદર્ભ વિન્ડોનો ઉપયોગ શું કરી રહ્યું છે"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2 માંથી $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "તમારા સંદેશા"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude ના જવાબો"
+  },
+  "ctxBreakdownThinking": {
+    "message": "વિસ્તૃત વિચારસરણી"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "ટૂલ કોલ્સ"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "ટૂલ પરિણામો"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ફાઇલો અને જોડાણો"
+  },
+  "ctxBreakdownProject": {
+    "message": "પ્રોજેક્ટ નોલેજ"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "સિસ્ટમ ઓવરહેડ"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "બાકી"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 સંદેશા"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 બ્લોક્સ"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 કોલ્સ"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 પરિણામો"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 ફાઇલો"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "સંદર્ભ વિન્ડોમાં હજુ કંઈ નથી."
+  },
+  "ctxBreakdownNote": {
+    "message": "આ વાતચીત પરથી સ્થાનિક રીતે અંદાજિત."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "સ્થાનિક રીતે અંદાજિત. ટૂલ અને શોધ પરિણામો આને અંદાજિત બનાવે છે."
+  },
+  "resetBannerSessionTitle": {
+    "message": "તમારી 5-કલાકની Claude મર્યાદા રીસેટ થઈ ગઈ છે"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "તમારી સાપ્તાહિક Claude મર્યાદા રીસેટ થઈ ગઈ છે"
+  },
+  "resetBannerAction": {
+    "message": "Claude ખોલો"
+  },
+  "setSecResetAlerts": {
+    "message": "રીસેટ અલર્ટ્સ"
+  },
+  "setResetBannerScope": {
+    "message": "અલર્ટ્સ અહીં બતાવો"
+  },
+  "setResetScopeClaude": {
+    "message": "ફક્ત claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "કોઈપણ સાઇટ"
+  },
+  "setResetBannerTestGo": {
+    "message": "ટેસ્ટ મોકલો"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1સે માં"
+  },
+  "grantTitle": {
+    "message": "કોઈપણ સાઇટ પર રીસેટ અલર્ટ્સ બતાવો"
+  },
+  "grantBody": {
+    "message": "claude.ai ની બહાર બેનર બતાવવા માટે એક્સટેન્શનને Chrome ની પરવાનગીની જરૂર છે. તેનો ઉપયોગ ફક્ત બેનર બતાવવા માટે જ થાય છે — કોઈપણ પેજની સામગ્રી ક્યારેય વાંચવામાં કે ક્યાંય મોકલવામાં આવતી નથી."
+  },
+  "grantDenied": {
+    "message": "પરવાનગી આપવામાં આવી ન હતી. રીસેટ અલર્ટ્સ ફક્ત claude.ai પર જ રહેશે."
+  },
+  "grantAllow": {
+    "message": "ચાલુ રાખો"
+  },
+  "grantCancel": {
+    "message": "રદ કરો"
+  },
+  "setOptRing": {
+    "message": "રિંગ"
+  },
+  "setOptPercentText": {
+    "message": "ટકાવારી"
+  },
+  "setSecDisplay": {
+    "message": "ડિસ્પ્લે"
+  },
+  "setSecPacing": {
+    "message": "ગતિ (પેસિંગ)"
+  },
+  "setOptOff": {
+    "message": "બંધ"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "બાર કઈ મર્યાદાને ટ્રેક કરે છે."
+  },
+  "setShowPct": {
+    "message": "% બતાવો"
+  },
+  "setContextDesc": {
+    "message": "હાલની ચેટ કેટલી ભરેલી છે."
+  },
+  "setCacheTimerDesc": {
+    "message": "જ્યારે પ્રોમ્પ્ટ કૅશ સક્રિય હોય ત્યારે ચેટ હેડરમાં કાઉન્ટડાઉન."
+  },
+  "setPacing": {
+    "message": "ગતિના અંદાજો બતાવો"
+  },
+  "setPacingDesc": {
+    "message": "અંદાજો ફક્ત આ બ્રાઉઝરમાં સંગ્રહિત આંકડાકીય વપરાશના નમૂનાઓ પરથી શીખે છે. આને બંધ કરવાથી તેનું એકત્રીકરણ અટકી જાય છે."
+  },
+  "set5hrPace": {
+    "message": "5-કલાકની ગતિ"
+  },
+  "set5hrPaceDesc": {
+    "message": "5-કલાકની ટકાવારીની બાજુમાં બતાવવામાં આવે છે."
+  },
+  "setLearnedData": {
+    "message": "શીખેલો વપરાશ"
+  },
+  "setResetAlertsDesc": {
+    "message": "જ્યારે તમારી 5-કલાકની અથવા સાપ્તાહિક મર્યાદા રીસેટ થાય ત્યારે બેનર. કોઈપણ સાઇટ માટે Chrome પરવાનગી જરૂરી છે."
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store પર રેટ કરો"
+  },
+  "threadsLabel": {
+    "message": "થ્રેડ્સ"
+  },
+  "threadSettled": {
+    "message": "થાળે પડેલા ($1)"
+  },
+  "threadKindChat": {
+    "message": "ચેટ"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "રૂટિન"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "પ્રોજેક્ટ"
+  },
+  "threadKindOther": {
+    "message": "થ્રેડ"
+  },
+  "threadStatusWorking": {
+    "message": "કાર્યરત"
+  },
+  "threadStatusAwaiting": {
+    "message": "રાહ જોઈ રહ્યું છે"
+  },
+  "threadStatusError": {
+    "message": "ભૂલ"
+  },
+  "threadStatusUnread": {
+    "message": "ન વાંચેલ"
+  },
+  "threadStatusOpen": {
+    "message": "ખુલ્લું"
+  },
+  "setSecSidebar": {
+    "message": "સાઇડબાર"
+  },
+  "setThreadSidebar": {
+    "message": "થ્રેડ વ્યૂ"
+  },
+  "setThreadSidebarDesc": {
+    "message": "બધું થાળે પડેલી સ્થિતિથી શરૂ થાય છે. નવી પ્રવૃત્તિ થતાં જ ચેટ એક કાર્ડ બની જાય છે, જ્યાં સુધી તમે તેને થાળે ન પાડો."
+  },
+  "threadNavLabel": {
+    "message": "પ્રોજેક્ટ્સ અને ટૂલ્સ"
+  },
+  "threadStatusPinned": {
+    "message": "પિન કરેલ"
+  },
+  "threadStatusDone": {
+    "message": "પૂર્ણ"
+  },
+  "threadWorkingFor": {
+    "message": "$1થી કાર્યરત"
+  },
+  "threadWaitingFor": {
+    "message": "$1થી રાહ જોઈ રહ્યું છે"
+  },
+  "threadDoneAgo": {
+    "message": "$1 પહેલાં પૂર્ણ"
+  },
+  "threadAgoSeconds": {
+    "message": "$1સે"
+  },
+  "threadAgoMinutes": {
+    "message": "$1મિ"
+  },
+  "threadAgoHours": {
+    "message": "$1ક"
+  },
+  "threadAgoDays": {
+    "message": "$1દિ"
+  },
+  "threadAgoWeeks": {
+    "message": "$1અઠ"
+  },
+  "threadSearch": {
+    "message": "શોધો"
+  },
+  "threadNewChat": {
+    "message": "નવી ચેટ"
+  },
+  "threadSort": {
+    "message": "થ્રેડ્સ ગોઠવો"
+  },
+  "threadSortEdited": {
+    "message": "સૌથી નવા સંપાદિત"
+  },
+  "threadSortCreated": {
+    "message": "સૌથી નવા બનાવેલા"
+  },
+  "setThreadSort": {
+    "message": "ક્રમ"
+  },
+  "setThreadSortDesc": {
+    "message": "જ્યારે થ્રેડ બદલાય અથવા Claude જવાબ આપે ત્યારે 'સૌથી નવા સંપાદિત' તેને ઉપર લાવે છે."
+  },
+  "threadSettle": {
+    "message": "થાળે પાડો"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard બંધ કરવામાં આવી રહ્યું છે"
+  },
+  "clipRetiringBody": {
+    "message": "ભવિષ્યના અપડેટમાં તેને દૂર કરવામાં આવશે."
+  },
+  "clipRetiringPs": {
+    "message": "તા.ક.: સ્કિલ્સ (Skills) આ જ કામ અને તેનાથી વધુ કરી શકે છે."
+  },
+  "clipConvertToSkills": {
+    "message": "મારા પ્રોમ્પ્ટ્સને સ્કિલ્સમાં રૂપાંતરિત કરો"
+  }
+}

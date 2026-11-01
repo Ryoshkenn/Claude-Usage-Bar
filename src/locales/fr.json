@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "réinitialisation inconnue"
   },
+  "resetsInM": {
+    "message": "réinitialisation dans $1 min"
+  },
+  "resetsInHM": {
+    "message": "réinitialisation dans $1 h $2 min"
+  },
+  "resetsInH": {
+    "message": "réinitialisation dans $1 h"
+  },
+  "resetsInDH": {
+    "message": "réinitialisation dans $1 j $2 h"
+  },
+  "resetsInD": {
+    "message": "réinitialisation dans $1 j"
+  },
   "weeklyLearningAria": {
     "message": "L'estimation d'utilisation hebdomadaire est en cours d'apprentissage"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "Activer ou désactiver tout dans la zone de saisie."
-  },
-  "setLanguage": {
-    "message": "Langue"
   },
   "setTour": {
     "message": "Visite des fonctionnalités"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "Bannière lorsque votre limite sur 5 heures ou hebdomadaire est réinitialisée. « N'importe quel site » nécessite une autorisation Chrome."
   },
-  "setLanguageShortDesc": {
-    "message": "Les traductions peuvent être inexactes."
-  },
   "setReviewLink": {
     "message": "Noter sur le Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Conversations"
+  },
+  "threadSettled": {
+    "message": "Terminées ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Projet"
+  },
+  "threadKindOther": {
+    "message": "Conversation"
+  },
+  "threadStatusWorking": {
+    "message": "En cours"
+  },
+  "threadStatusAwaiting": {
+    "message": "En attente"
+  },
+  "threadStatusError": {
+    "message": "Erreur"
+  },
+  "threadStatusUnread": {
+    "message": "Non lue"
+  },
+  "threadStatusOpen": {
+    "message": "Ouverte"
+  },
+  "setSecSidebar": {
+    "message": "Barre latérale"
+  },
+  "setThreadSidebar": {
+    "message": "Vue des conversations"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Au départ, tout est terminé. Une conversation devient une carte dès qu'il s'y passe quelque chose, jusqu'à ce que vous la terminiez."
+  },
+  "threadNavLabel": {
+    "message": "Projets et outils"
+  },
+  "threadStatusPinned": {
+    "message": "Épinglée"
+  },
+  "threadStatusDone": {
+    "message": "Terminée"
+  },
+  "threadWorkingFor": {
+    "message": "En cours $1"
+  },
+  "threadWaitingFor": {
+    "message": "En attente $1"
+  },
+  "threadDoneAgo": {
+    "message": "Terminée $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1min"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1j"
+  },
+  "threadAgoWeeks": {
+    "message": "$1sem"
+  },
+  "threadSearch": {
+    "message": "Rechercher"
+  },
+  "threadNewChat": {
+    "message": "Nouveau chat"
+  },
+  "threadSort": {
+    "message": "Trier les conversations"
+  },
+  "threadSortEdited": {
+    "message": "Modifiées récemment"
+  },
+  "threadSortCreated": {
+    "message": "Créées récemment"
+  },
+  "setThreadSort": {
+    "message": "Ordre"
+  },
+  "setThreadSortDesc": {
+    "message": "Avec « Modifiées récemment », une conversation remonte quand elle change ou que Claude répond."
+  },
+  "threadSettle": {
+    "message": "Terminer"
+  },
+  "clipRetiringTitle": {
+    "message": "Le Presse-papiers de prompts va être retiré"
+  },
+  "clipRetiringBody": {
+    "message": "Il sera supprimé dans une prochaine mise à jour."
+  },
+  "clipRetiringPs": {
+    "message": "P.-S. : Les compétences (Skills) font la même chose et bien plus."
+  },
+  "clipConvertToSkills": {
+    "message": "Convertir mes prompts en compétences"
   }
 }

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "ripristino sconosciuto"
   },
+  "resetsInM": {
+    "message": "ripristino tra $1 min"
+  },
+  "resetsInHM": {
+    "message": "ripristino tra $1 h $2 min"
+  },
+  "resetsInH": {
+    "message": "ripristino tra $1 h"
+  },
+  "resetsInDH": {
+    "message": "ripristino tra $1 g $2 h"
+  },
+  "resetsInD": {
+    "message": "ripristino tra $1 g"
+  },
   "weeklyLearningAria": {
     "message": "La stima d'uso settimanale sta ancora imparando"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "Attiva o disattiva tutto nel compositore."
-  },
-  "setLanguage": {
-    "message": "Lingua"
   },
   "setTour": {
     "message": "Tour delle funzioni"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "Banner quando il limite di 5 ore o settimanale si azzera. «Qualsiasi sito» richiede l'autorizzazione di Chrome."
   },
-  "setLanguageShortDesc": {
-    "message": "Le traduzioni potrebbero essere imprecise."
-  },
   "setReviewLink": {
     "message": "Valuta sul Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Conversazioni"
+  },
+  "threadSettled": {
+    "message": "Concluse ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Codice"
+  },
+  "threadKindProject": {
+    "message": "Progetto"
+  },
+  "threadKindOther": {
+    "message": "Conversazione"
+  },
+  "threadStatusWorking": {
+    "message": "In corso"
+  },
+  "threadStatusAwaiting": {
+    "message": "In attesa"
+  },
+  "threadStatusError": {
+    "message": "Errore"
+  },
+  "threadStatusUnread": {
+    "message": "Non letta"
+  },
+  "threadStatusOpen": {
+    "message": "Aperta"
+  },
+  "setSecSidebar": {
+    "message": "Barra laterale"
+  },
+  "setThreadSidebar": {
+    "message": "Vista conversazioni"
+  },
+  "setThreadSidebarDesc": {
+    "message": "All'inizio è tutto concluso. Una chat diventa una scheda appena ha nuova attività, finché non la concludi."
+  },
+  "threadNavLabel": {
+    "message": "Progetti e strumenti"
+  },
+  "threadStatusPinned": {
+    "message": "Fissata"
+  },
+  "threadStatusDone": {
+    "message": "Completata"
+  },
+  "threadWorkingFor": {
+    "message": "In corso $1"
+  },
+  "threadWaitingFor": {
+    "message": "In attesa $1"
+  },
+  "threadDoneAgo": {
+    "message": "Completata $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1h"
+  },
+  "threadAgoDays": {
+    "message": "$1g"
+  },
+  "threadAgoWeeks": {
+    "message": "$1sett"
+  },
+  "threadSearch": {
+    "message": "Cerca"
+  },
+  "threadNewChat": {
+    "message": "Nuova chat"
+  },
+  "threadSort": {
+    "message": "Ordina conversazioni"
+  },
+  "threadSortEdited": {
+    "message": "Modificate di recente"
+  },
+  "threadSortCreated": {
+    "message": "Create di recente"
+  },
+  "setThreadSort": {
+    "message": "Ordine"
+  },
+  "setThreadSortDesc": {
+    "message": "Con «Modificate di recente» una conversazione sale quando cambia o Claude risponde."
+  },
+  "threadSettle": {
+    "message": "Concludi"
+  },
+  "clipRetiringTitle": {
+    "message": "Gli Appunti dei prompt verranno ritirati"
+  },
+  "clipRetiringBody": {
+    "message": "Verranno rimossi in un futuro aggiornamento."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Le competenze (Skills) fanno lo stesso e molto di più."
+  },
+  "clipConvertToSkills": {
+    "message": "Converti i miei prompt in competenze"
   }
 }

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "リセット時刻不明"
   },
+  "resetsInM": {
+    "message": "$1分後にリセット"
+  },
+  "resetsInHM": {
+    "message": "$1時間$2分後にリセット"
+  },
+  "resetsInH": {
+    "message": "$1時間後にリセット"
+  },
+  "resetsInDH": {
+    "message": "$1日$2時間後にリセット"
+  },
+  "resetsInD": {
+    "message": "$1日後にリセット"
+  },
   "weeklyLearningAria": {
     "message": "週間使用量の推定を学習中です"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "入力欄の表示をすべてオン/オフします。"
-  },
-  "setLanguage": {
-    "message": "言語"
   },
   "setTour": {
     "message": "機能ツアー"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "5時間または週間の上限がリセットされたときにバナーを表示します。「すべてのサイト」には Chrome の権限が必要です。"
   },
-  "setLanguageShortDesc": {
-    "message": "翻訳は不正確な場合があります。"
-  },
   "setReviewLink": {
     "message": "Chrome ウェブストアで評価"
+  },
+  "threadsLabel": {
+    "message": "スレッド"
+  },
+  "threadSettled": {
+    "message": "完了済み ($1)"
+  },
+  "threadKindChat": {
+    "message": "チャット"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "ルーティン"
+  },
+  "threadKindCode": {
+    "message": "コード"
+  },
+  "threadKindProject": {
+    "message": "プロジェクト"
+  },
+  "threadKindOther": {
+    "message": "スレッド"
+  },
+  "threadStatusWorking": {
+    "message": "作業中"
+  },
+  "threadStatusAwaiting": {
+    "message": "待機中"
+  },
+  "threadStatusError": {
+    "message": "エラー"
+  },
+  "threadStatusUnread": {
+    "message": "未読"
+  },
+  "threadStatusOpen": {
+    "message": "表示中"
+  },
+  "setSecSidebar": {
+    "message": "サイドバー"
+  },
+  "setThreadSidebar": {
+    "message": "スレッド表示"
+  },
+  "setThreadSidebarDesc": {
+    "message": "最初はすべて完了済みです。新しい動きがあったチャットは、完了にするまでカードとして表示されます。"
+  },
+  "threadNavLabel": {
+    "message": "プロジェクトとツール"
+  },
+  "threadStatusPinned": {
+    "message": "ピン留め"
+  },
+  "threadStatusDone": {
+    "message": "完了"
+  },
+  "threadWorkingFor": {
+    "message": "作業中 $1"
+  },
+  "threadWaitingFor": {
+    "message": "待機中 $1"
+  },
+  "threadDoneAgo": {
+    "message": "完了 $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1秒"
+  },
+  "threadAgoMinutes": {
+    "message": "$1分"
+  },
+  "threadAgoHours": {
+    "message": "$1時間"
+  },
+  "threadAgoDays": {
+    "message": "$1日"
+  },
+  "threadAgoWeeks": {
+    "message": "$1週"
+  },
+  "threadSearch": {
+    "message": "検索"
+  },
+  "threadNewChat": {
+    "message": "新しいチャット"
+  },
+  "threadSort": {
+    "message": "スレッドを並べ替え"
+  },
+  "threadSortEdited": {
+    "message": "編集が新しい順"
+  },
+  "threadSortCreated": {
+    "message": "作成が新しい順"
+  },
+  "setThreadSort": {
+    "message": "並び順"
+  },
+  "setThreadSortDesc": {
+    "message": "「編集が新しい順」では、変更や Claude の返信があったスレッドが上に移動します。"
+  },
+  "threadSettle": {
+    "message": "完了にする"
+  },
+  "clipRetiringTitle": {
+    "message": "プロンプトクリップボードは提供終了となります"
+  },
+  "clipRetiringBody": {
+    "message": "今後のアップデートで削除されます。"
+  },
+  "clipRetiringPs": {
+    "message": "追伸：スキル（Skills）を使えば、同じこと以上に多くのことができます。"
+  },
+  "clipConvertToSkills": {
+    "message": "プロンプトをスキルに変換"
   }
 }

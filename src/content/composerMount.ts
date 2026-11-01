@@ -89,6 +89,37 @@ export const findChinSlot = (): ChinSlot | null => {
   return { composer, row };
 };
 
+// Claude's newer composer (claude.ai/new since Oct 2026) has no ChatComposer /
+// Chin markers. The card is a <fieldset> whose toolbar row holds + on the left
+// and the model picker / dictation / send on the right, with a flex-grow spacer
+// between them — the same empty middle the chin has, so it's treated as one:
+//   fieldset > div.flex-col > … > card
+//     ├─ [data-testid="chat-input"] (the editor)
+//     └─ row: [data-testid="chat-input-attach"] … [data-testid="model-selector-dropdown"]
+// The row is the nearest ancestor of + that also holds the model picker. The
+// fieldset is the "composer": a spacer appended to it lands under the whole card.
+const NEW_COMPOSER_EDITOR_SELECTOR = '[data-testid="chat-input"]';
+const NEW_COMPOSER_ATTACH_SELECTOR = '[data-testid="chat-input-attach"]';
+const NEW_COMPOSER_MODEL_SELECTOR = '[data-testid="model-selector-dropdown"]';
+
+export const findToolbarSlot = (): ChinSlot | null => {
+  const composer =
+    document.querySelector<HTMLElement>(NEW_COMPOSER_EDITOR_SELECTOR)?.closest<HTMLElement>("fieldset") ?? null;
+  const attach = composer?.querySelector<HTMLElement>(NEW_COMPOSER_ATTACH_SELECTOR) ?? null;
+  const model = composer?.querySelector<HTMLElement>(NEW_COMPOSER_MODEL_SELECTOR) ?? null;
+  if (!composer || !attach || !model) {
+    return null;
+  }
+  let row: HTMLElement | null = attach.parentElement;
+  while (row && row !== composer && !row.contains(model)) {
+    row = row.parentElement;
+  }
+  if (!row || row === composer) {
+    return null;
+  }
+  return { composer, row };
+};
+
 // The chin's own disclaimer (not the band copy above the composer).
 export const findChinDisclaimer = (row: HTMLElement): HTMLElement | null =>
   row.querySelector<HTMLElement>('[data-disclaimer="true"]')?.parentElement ?? null;
@@ -241,6 +272,33 @@ export const findNewChatInsertionPoint = (): NewChatInsertionPoint | null => {
     return null;
   }
   return { parent, anchor: card.nextElementSibling };
+};
+
+// Claude Design's home composer (claude.ai/design): a chip row with + /
+// Design system / code on the left and the model picker on the right, the send
+// button absolutely placed beside it. The row is the model picker's nearest
+// ancestor holding other controls too; the card is the one holding the editor.
+const DESIGN_EDITOR_SELECTOR = '[data-testid="home-composer-input"]';
+const DESIGN_MODEL_SELECTOR = '[data-cds="ModelSelector"]';
+
+export const findDesignSlot = (): ChinSlot | null => {
+  const editor = document.querySelector<HTMLElement>(DESIGN_EDITOR_SELECTOR);
+  const model = document.querySelector<HTMLElement>(DESIGN_MODEL_SELECTOR);
+  if (!editor || !model) {
+    return null;
+  }
+  let row: HTMLElement | null = model.parentElement;
+  while (row && row.querySelectorAll("button").length < 2) {
+    row = row.parentElement;
+  }
+  let composer: HTMLElement | null = row?.parentElement ?? null;
+  while (composer && !composer.contains(editor)) {
+    composer = composer.parentElement;
+  }
+  if (!row || !composer || row.contains(editor) || composer === document.body) {
+    return null;
+  }
+  return { composer, row };
 };
 
 const ADD_FILES_BUTTON_SELECTOR = 'button[aria-label="Add files, connectors, and more"]';const COMPOSER_INPUT_SELECTOR =

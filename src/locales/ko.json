@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "초기화 시간 알 수 없음"
   },
+  "resetsInM": {
+    "message": "$1분 후 초기화"
+  },
+  "resetsInHM": {
+    "message": "$1시간 $2분 후 초기화"
+  },
+  "resetsInH": {
+    "message": "$1시간 후 초기화"
+  },
+  "resetsInDH": {
+    "message": "$1일 $2시간 후 초기화"
+  },
+  "resetsInD": {
+    "message": "$1일 후 초기화"
+  },
   "weeklyLearningAria": {
     "message": "주간 사용량 추정치를 학습 중입니다"
   },
@@ -178,9 +193,6 @@
   },
   "setShowOverlayDesc": {
     "message": "입력창의 모든 표시를 켜거나 끕니다."
-  },
-  "setLanguage": {
-    "message": "언어"
   },
   "setTour": {
     "message": "기능 둘러보기"
@@ -368,10 +380,124 @@
   "setResetAlertsDesc": {
     "message": "5시간 또는 주간 한도가 초기화되면 배너를 표시합니다. '모든 사이트'는 Chrome 권한이 필요합니다."
   },
-  "setLanguageShortDesc": {
-    "message": "번역이 정확하지 않을 수 있습니다."
-  },
   "setReviewLink": {
     "message": "Chrome 웹 스토어에서 평가하기"
+  },
+  "threadsLabel": {
+    "message": "스레드"
+  },
+  "threadSettled": {
+    "message": "완료됨 ($1)"
+  },
+  "threadKindChat": {
+    "message": "채팅"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "루틴"
+  },
+  "threadKindCode": {
+    "message": "코드"
+  },
+  "threadKindProject": {
+    "message": "프로젝트"
+  },
+  "threadKindOther": {
+    "message": "스레드"
+  },
+  "threadStatusWorking": {
+    "message": "작업 중"
+  },
+  "threadStatusAwaiting": {
+    "message": "대기 중"
+  },
+  "threadStatusError": {
+    "message": "오류"
+  },
+  "threadStatusUnread": {
+    "message": "읽지 않음"
+  },
+  "threadStatusOpen": {
+    "message": "열림"
+  },
+  "setSecSidebar": {
+    "message": "사이드바"
+  },
+  "setThreadSidebar": {
+    "message": "스레드 보기"
+  },
+  "setThreadSidebarDesc": {
+    "message": "처음에는 모두 완료됨 상태입니다. 새 활동이 생긴 채팅은 완료 처리할 때까지 카드로 표시됩니다."
+  },
+  "threadNavLabel": {
+    "message": "프로젝트 및 도구"
+  },
+  "threadStatusPinned": {
+    "message": "고정됨"
+  },
+  "threadStatusDone": {
+    "message": "완료"
+  },
+  "threadWorkingFor": {
+    "message": "작업 중 $1"
+  },
+  "threadWaitingFor": {
+    "message": "대기 중 $1"
+  },
+  "threadDoneAgo": {
+    "message": "완료 $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1초"
+  },
+  "threadAgoMinutes": {
+    "message": "$1분"
+  },
+  "threadAgoHours": {
+    "message": "$1시간"
+  },
+  "threadAgoDays": {
+    "message": "$1일"
+  },
+  "threadAgoWeeks": {
+    "message": "$1주"
+  },
+  "threadSearch": {
+    "message": "검색"
+  },
+  "threadNewChat": {
+    "message": "새 채팅"
+  },
+  "threadSort": {
+    "message": "스레드 정렬"
+  },
+  "threadSortEdited": {
+    "message": "최근 수정순"
+  },
+  "threadSortCreated": {
+    "message": "최근 생성순"
+  },
+  "setThreadSort": {
+    "message": "정렬"
+  },
+  "setThreadSortDesc": {
+    "message": "‘최근 수정순’에서는 변경되거나 Claude가 답한 스레드가 위로 올라갑니다."
+  },
+  "threadSettle": {
+    "message": "완료"
+  },
+  "clipRetiringTitle": {
+    "message": "프롬프트 클립보드 지원이 종료됩니다"
+  },
+  "clipRetiringBody": {
+    "message": "향후 업데이트에서 제거될 예정입니다."
+  },
+  "clipRetiringPs": {
+    "message": "추신: 스킬(Skills)로 동일한 작업은 물론 더 많은 것을 할 수 있습니다."
+  },
+  "clipConvertToSkills": {
+    "message": "내 프롬프트를 스킬로 변환"
   }
 }

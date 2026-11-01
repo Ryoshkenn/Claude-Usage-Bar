@@ -1,0 +1,503 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "പ്രോംപ്റ്റ് ക്യാഷ് സമയം ലഭ്യമല്ല"
+  },
+  "cacheUnknown": {
+    "message": "ക്യാഷ് അജ്ഞാതം"
+  },
+  "cacheExpired": {
+    "message": "പ്രോംപ്റ്റ് ക്യാഷ് കാലഹരണപ്പെട്ടു"
+  },
+  "cacheExpiresIn": {
+    "message": "പ്രോംപ്റ്റ് ക്യാഷ് $1-ൽ കാലഹരണപ്പെടും"
+  },
+  "expiredShort": {
+    "message": "കാലഹരണപ്പെട്ടു"
+  },
+  "cacheHasExpired": {
+    "message": "പ്രോംപ്റ്റ് ക്യാഷ് കാലഹരണപ്പെട്ടു"
+  },
+  "cacheSavings": {
+    "message": "ക്യാഷ് ചെയ്ത ടോക്കണുകൾ ~90% ഇൻപുട്ട് ചെലവ് ലാഭിക്കുന്നു"
+  },
+  "ringSession": {
+    "message": "5-മണിക്കൂർ സെഷൻ"
+  },
+  "ringWeekly": {
+    "message": "പ്രതിവാരം · എല്ലാ മോഡലുകളും"
+  },
+  "ringWeeklyFable": {
+    "message": "പ്രതിവാരം · Fable"
+  },
+  "ringContext": {
+    "message": "കോൺടെക്സ്റ്റ് വിൻഡോ"
+  },
+  "weeklyScoped": {
+    "message": "പ്രതിവാരം · $1"
+  },
+  "pacePctAtReset": {
+    "message": "റീസെറ്റിൽ $1%"
+  },
+  "pacePastReset": {
+    "message": "റീസെറ്റിന് ശേഷം +$1"
+  },
+  "lastsToReset": {
+    "message": "റീസെറ്റ് വരെ നീണ്ടുനിൽക്കും"
+  },
+  "paceActiveLeft": {
+    "message": "~$1h സജീവ സമയം ബാക്കി"
+  },
+  "paceEmptyDate": {
+    "message": "$1-ൽ തീരും"
+  },
+  "paceEmptyIn": {
+    "message": "$1-ൽ തീരും"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 സന്ദേശം ബാക്കി"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 സന്ദേശങ്ങൾ ബാക്കി"
+  },
+  "ctxCalculating": {
+    "message": "കോൺടെക്സ്റ്റ് ഉപയോഗം കണക്കാക്കുന്നു..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude ഉപയോഗം $1"
+  },
+  "usage": {
+    "message": "ഉപയോഗം"
+  },
+  "planUsage": {
+    "message": "പ്ലാൻ ഉപയോഗം"
+  },
+  "openSettings": {
+    "message": "എക്സ്റ്റൻഷൻ ക്രമീകരണങ്ങൾ തുറക്കുക"
+  },
+  "fiveHourLimit": {
+    "message": "5-മണിക്കൂർ പരിധി"
+  },
+  "resetUnknown": {
+    "message": "റീസെറ്റ് അജ്ഞാതം"
+  },
+  "resetsInM": {
+    "message": "$1 മി. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInHM": {
+    "message": "$1 മ. $2 മി. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInH": {
+    "message": "$1 മ. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInDH": {
+    "message": "$1 ദി. $2 മ. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInD": {
+    "message": "$1 ദി. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "weeklyLearningAria": {
+    "message": "പ്രതിവാര ഉപയോഗ കണക്ക് ഇപ്പോഴും പഠിച്ചുകൊണ്ടിരിക്കുകയാണ്"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar നിങ്ങളുടെ രീതി പഠിക്കുന്നതിനാൽ ആദ്യ ആഴ്ചയിൽ പ്രതിവാര കണക്കുകൾ കൃത്യമാകണമെന്നില്ല."
+  },
+  "ctxCalcLoading": {
+    "message": "കോൺടെക്സ്റ്റ് കണക്കുകൂട്ടൽ ലോഡ് ചെയ്യുന്നു"
+  },
+  "ctxWindowFull": {
+    "message": "കോൺടെക്സ്റ്റ് വിൻഡോ $1% നിറഞ്ഞു"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar ഇഷ്ടപ്പെട്ടോ?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store-ൽ റേറ്റ് ചെയ്യുക ↗"
+  },
+  "otherHint": {
+    "message": "ഈ സന്ദേശങ്ങളുടെ മോഡൽ കണ്ടെത്താനായില്ല. ഇത് Claude Code-ൽ നിന്നും Cowork-ൽ നിന്നും വരാം."
+  },
+  "noMessages": {
+    "message": "സന്ദേശങ്ങളില്ല"
+  },
+  "errNoWorker": {
+    "message": "എക്സ്റ്റൻഷൻ ബാക്ക്ഗ്രൗണ്ട് വർക്കറുമായി ബന്ധപ്പെടാനായില്ല"
+  },
+  "errLoadUsage": {
+    "message": "Claude ഉപയോഗം ലോഡ് ചെയ്യാനായില്ല"
+  },
+  "reviewEnjoyingShort": {
+    "message": "ഇഷ്ടപ്പെട്ടോ?"
+  },
+  "fiveHour": {
+    "message": "5-മണിക്കൂർ"
+  },
+  "weekly": {
+    "message": "പ്രതിവാരം"
+  },
+  "refreshAll": {
+    "message": "എല്ലാ കണക്കുകളും പുതുക്കുക"
+  },
+  "customizeOverlay": {
+    "message": "ഓവർലേ കസ്റ്റമൈസ് ചെയ്യുക"
+  },
+  "usageSummary": {
+    "message": "ഉപയോഗ സംഗ്രഹം"
+  },
+  "total": {
+    "message": "ആകെ"
+  },
+  "avgPerMo": {
+    "message": "ശരാശരി / മാസം"
+  },
+  "avgPerDay": {
+    "message": "ശരാശരി / ദിവസം"
+  },
+  "busiest": {
+    "message": "ഏറ്റവും തിരക്കേറിയത്"
+  },
+  "messagesSent": {
+    "message": "അയച്ച സന്ദേശങ്ങൾ"
+  },
+  "fourteenDays": {
+    "message": "14 ദിവസങ്ങൾ"
+  },
+  "monthly": {
+    "message": "പ്രതിമാസം"
+  },
+  "collecting": {
+    "message": "ഉപയോഗ വിവരങ്ങൾ ശേഖരിക്കുന്നു — നിങ്ങൾ claude.ai-ൽ ചാറ്റ് ചെയ്യുമ്പോൾ പ്രതിദിന ചാർട്ട് നിറയും."
+  },
+  "allTime": {
+    "message": "എക്കാലത്തെയും"
+  },
+  "dayStreak": {
+    "message": "$1-ദിവസത്തെ തുടർച്ച"
+  },
+  "reset": {
+    "message": "റീസെറ്റ്"
+  },
+  "segOther": {
+    "message": "മറ്റുള്ളവ"
+  },
+  "setSecGeneral": {
+    "message": "പൊതുവായത്"
+  },
+  "setSecWheel": {
+    "message": "കോൺടെക്സ്റ്റ് വിൻഡോ"
+  },
+  "setSecCacheTimer": {
+    "message": "ക്യാഷ് ടൈമർ"
+  },
+  "setShowOverlay": {
+    "message": "ഓവർലേ കാണിക്കുക"
+  },
+  "setShowOverlayDesc": {
+    "message": "കംപോസറിലെ എല്ലാം ഓൺ അല്ലെങ്കിൽ ഓഫ് ചെയ്യുക."
+  },
+  "setTour": {
+    "message": "ഫീച്ചർ ടൂർ"
+  },
+  "setTourBtn": {
+    "message": "ടൂർ വീണ്ടും കാണുക"
+  },
+  "setPrivacy": {
+    "message": "സ്വകാര്യതാ നയം"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "പ്രതിവാര ഏകദേശ കണക്ക്"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "ബാക്കിയുള്ള മണിക്കൂറുകൾ, പരിധി തീരുന്ന ദിവസവും സമയവും, അല്ലെങ്കിൽ റീസെറ്റ് സമയത്തെ നില."
+  },
+  "setDeleteHistory": {
+    "message": "ചരിത്രം ഇല്ലാതാക്കുക"
+  },
+  "setSamples": {
+    "message": "$1 സാമ്പിളുകൾ"
+  },
+  "setOptPctReset": {
+    "message": "റീസെറ്റിലെ ശതമാനം"
+  },
+  "setOptTimePast": {
+    "message": "റീസെറ്റിന് ശേഷമുള്ള സമയം"
+  },
+  "setOptMsgsLeft": {
+    "message": "ബാക്കിയുള്ള സന്ദേശങ്ങൾ"
+  },
+  "setOptActiveHours": {
+    "message": "സജീവ മണിക്കൂറുകൾ"
+  },
+  "setOptDaysTime": {
+    "message": "ദിവസങ്ങൾ / സമയം"
+  },
+  "ctxBreakdownTitle": {
+    "message": "കോൺടെക്സ്റ്റ് വിൻഡോ ഉപയോഗിക്കുന്നത് എന്തെല്ലാം"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2-ൽ $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "നിങ്ങളുടെ സന്ദേശങ്ങൾ"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude-ന്റെ മറുപടികൾ"
+  },
+  "ctxBreakdownThinking": {
+    "message": "വിപുലമായ ചിന്ത"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "ടൂൾ കോളുകൾ"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "ടൂൾ ഫലങ്ങൾ"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ഫയലുകളും അറ്റാച്ച്‌മെന്റുകളും"
+  },
+  "ctxBreakdownProject": {
+    "message": "പ്രോജക്റ്റ് അറിവ്"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "സിസ്റ്റം ഓവർഹെഡ്"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "ബാക്കിയുള്ളത്"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 സന്ദേശങ്ങൾ"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 ബ്ലോക്കുകൾ"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 കോളുകൾ"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 ഫലങ്ങൾ"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 ഫയലുകൾ"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "കോൺടെക്സ്റ്റ് വിൻഡോയിൽ ഇതുവരെ ഒന്നുമില്ല."
+  },
+  "ctxBreakdownNote": {
+    "message": "ഈ സംഭാഷണത്തിൽ നിന്ന് പ്രാദേശികമായി കണക്കാക്കിയത്."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "പ്രാദേശികമായി കണക്കാക്കിയത്. ടൂൾ, തിരയൽ ഫലങ്ങൾ കാരണം ഇത് ഏകദേശ കണക്കാണ്."
+  },
+  "resetBannerSessionTitle": {
+    "message": "നിങ്ങളുടെ 5-മണിക്കൂർ Claude പരിധി റീസെറ്റ് ചെയ്തു"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "നിങ്ങളുടെ പ്രതിവാര Claude പരിധി റീസെറ്റ് ചെയ്തു"
+  },
+  "resetBannerAction": {
+    "message": "Claude തുറക്കുക"
+  },
+  "setSecResetAlerts": {
+    "message": "റീസെറ്റ് അലേർട്ടുകൾ"
+  },
+  "setResetBannerScope": {
+    "message": "അലേർട്ടുകൾ കാണിക്കേണ്ടത്"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai-ൽ മാത്രം"
+  },
+  "setResetScopeEverywhere": {
+    "message": "ഏത് സൈറ്റിലും"
+  },
+  "setResetBannerTestGo": {
+    "message": "ടെസ്റ്റ് അയയ്ക്കുക"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1 സെക്കൻഡിൽ"
+  },
+  "grantTitle": {
+    "message": "ഏത് സൈറ്റിലും റീസെറ്റ് അലേർട്ടുകൾ കാണിക്കുക"
+  },
+  "grantBody": {
+    "message": "claude.ai-ക്ക് പുറത്ത് ബാനർ കാണിക്കാൻ എക്സ്റ്റൻഷന് നിങ്ങളുടെ Chrome അനുമതി ആവശ്യമാണ്. ബാനർ കാണിക്കാൻ മാത്രമാണ് ഇത് ഉപയോഗിക്കുന്നത് — പേജിലെ വിവരങ്ങളൊന്നും വായിക്കുകയോ എവിടേക്കും അയയ്ക്കുകയോ ചെയ്യുന്നില്ല."
+  },
+  "grantDenied": {
+    "message": "അനുമതി നൽകിയിട്ടില്ല. റീസെറ്റ് അലേർട്ടുകൾ claude.ai-ൽ മാത്രമായി തുടരും."
+  },
+  "grantAllow": {
+    "message": "തുടരുക"
+  },
+  "grantCancel": {
+    "message": "റദ്ദാക്കുക"
+  },
+  "setOptRing": {
+    "message": "റിംഗ്"
+  },
+  "setOptPercentText": {
+    "message": "ശതമാനം"
+  },
+  "setSecDisplay": {
+    "message": "ഡിസ്പ്ലേ"
+  },
+  "setSecPacing": {
+    "message": "വേഗത"
+  },
+  "setOptOff": {
+    "message": "ഓഫ്"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "ബാർ ഏത് പരിധിയാണ് ട്രാക്ക് ചെയ്യുന്നത്."
+  },
+  "setShowPct": {
+    "message": "% കാണിക്കുക"
+  },
+  "setContextDesc": {
+    "message": "നിലവിലെ ചാറ്റ് എത്രത്തോളം നിറഞ്ഞിരിക്കുന്നു."
+  },
+  "setCacheTimerDesc": {
+    "message": "പ്രോംപ്റ്റ് ക്യാഷ് സജീവമായിരിക്കുമ്പോൾ ചാറ്റ് ഹെഡറിലെ കൗണ്ട്ഡൗൺ."
+  },
+  "setPacing": {
+    "message": "വേഗതാ കണക്കുകൾ കാണിക്കുക"
+  },
+  "setPacingDesc": {
+    "message": "ഈ ബ്രൗസറിൽ മാത്രം സൂക്ഷിച്ചിട്ടുള്ള ഉപയോഗ സാമ്പിളുകളിൽ നിന്നാണ് കണക്കുകൾ പഠിക്കുന്നത്. ഇത് ഓഫ് ചെയ്യുന്നത് അവ ശേഖരിക്കുന്നത് നിർത്തും."
+  },
+  "set5hrPace": {
+    "message": "5-മണിക്കൂർ വേഗത"
+  },
+  "set5hrPaceDesc": {
+    "message": "5-മണിക്കൂർ ശതമാനത്തിന് അടുത്തായി കാണിക്കുന്നു."
+  },
+  "setLearnedData": {
+    "message": "പഠിച്ച ഉപയോഗം"
+  },
+  "setResetAlertsDesc": {
+    "message": "നിങ്ങളുടെ 5-മണിക്കൂർ അല്ലെങ്കിൽ പ്രതിവാര പരിധി റീസെറ്റ് ചെയ്യുമ്പോൾ ബാനർ കാണിക്കുന്നു. മറ്റ് സൈറ്റുകൾക്ക് Chrome അനുമതി ആവശ്യമാണ്."
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store-ൽ റേറ്റ് ചെയ്യുക"
+  },
+  "threadsLabel": {
+    "message": "ത്രെഡുകൾ"
+  },
+  "threadSettled": {
+    "message": "ഒതുക്കിയവ ($1)"
+  },
+  "threadKindChat": {
+    "message": "ചാറ്റ്"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "റൊട്ടീൻ"
+  },
+  "threadKindCode": {
+    "message": "കോഡ്"
+  },
+  "threadKindProject": {
+    "message": "പ്രോജക്റ്റ്"
+  },
+  "threadKindOther": {
+    "message": "ത്രെഡ്"
+  },
+  "threadStatusWorking": {
+    "message": "പ്രവർത്തിക്കുന്നു"
+  },
+  "threadStatusAwaiting": {
+    "message": "കാത്തിരിക്കുന്നു"
+  },
+  "threadStatusError": {
+    "message": "പിശക്"
+  },
+  "threadStatusUnread": {
+    "message": "വായിക്കാത്തവ"
+  },
+  "threadStatusOpen": {
+    "message": "തുറന്നവ"
+  },
+  "setSecSidebar": {
+    "message": "സൈഡ്‌ബാർ"
+  },
+  "setThreadSidebar": {
+    "message": "ത്രെഡ് വ്യൂ"
+  },
+  "setThreadSidebarDesc": {
+    "message": "എല്ലാം ഒതുക്കിയ നിലയിൽ തുടങ്ങുന്നു. പുതിയ ആക്റ്റിവിറ്റി ഉണ്ടാകുമ്പോൾ ചാറ്റ് ഒരു കാർഡായി മാറുന്നു, നിങ്ങൾ അത് ഒതുക്കുന്നതുവരെ."
+  },
+  "threadNavLabel": {
+    "message": "പ്രോജക്റ്റുകളും ടൂളുകളും"
+  },
+  "threadStatusPinned": {
+    "message": "പിൻ ചെയ്തവ"
+  },
+  "threadStatusDone": {
+    "message": "പൂർത്തിയായി"
+  },
+  "threadWorkingFor": {
+    "message": "$1 ആയി പ്രവർത്തിക്കുന്നു"
+  },
+  "threadWaitingFor": {
+    "message": "$1 ആയി കാത്തിരിക്കുന്നു"
+  },
+  "threadDoneAgo": {
+    "message": "$1 മുമ്പ് പൂർത്തിയായി"
+  },
+  "threadAgoSeconds": {
+    "message": "$1സെ"
+  },
+  "threadAgoMinutes": {
+    "message": "$1മി"
+  },
+  "threadAgoHours": {
+    "message": "$1മ"
+  },
+  "threadAgoDays": {
+    "message": "$1ദി"
+  },
+  "threadAgoWeeks": {
+    "message": "$1ആ"
+  },
+  "threadSearch": {
+    "message": "തിരയുക"
+  },
+  "threadNewChat": {
+    "message": "പുതിയ ചാറ്റ്"
+  },
+  "threadSort": {
+    "message": "ത്രെഡുകൾ ക്രമീകരിക്കുക"
+  },
+  "threadSortEdited": {
+    "message": "പുതുതായി തിരുത്തിയവ"
+  },
+  "threadSortCreated": {
+    "message": "പുതുതായി നിർമ്മിച്ചവ"
+  },
+  "setThreadSort": {
+    "message": "ക്രമം"
+  },
+  "setThreadSortDesc": {
+    "message": "പുതുതായി തിരുത്തിയവ തിരഞ്ഞെടുക്കുമ്പോൾ, മാറ്റം വരുമ്പോഴോ Claude മറുപടി നൽകുമ്പോഴോ ത്രെഡ് മുകളിലേക്ക് വരുന്നു."
+  },
+  "threadSettle": {
+    "message": "ഒതുക്കുക"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard നിർത്തലാക്കുന്നു"
+  },
+  "clipRetiringBody": {
+    "message": "ഭാവിയിലെ അപ്ഡേറ്റിൽ ഇത് നീക്കം ചെയ്യുന്നതാണ്."
+  },
+  "clipRetiringPs": {
+    "message": "കുറിപ്പ്: സ്കിൽസിന് (Skills) ഇതും ഇതിലധികവും ചെയ്യാൻ കഴിയും."
+  },
+  "clipConvertToSkills": {
+    "message": "എന്റെ പ്രോംപ്റ്റുകൾ സ്കിൽസ് ആക്കി മാറ്റുക"
+  }
+}

@@ -5,7 +5,9 @@ import {
   findComposerInsertionPoint,
   findCoworkControlsAnchor,
   findChinSlot,
+  findDesignSlot,
   findLargestGap,
+  findToolbarSlot,
   measureCardActionStrip,
   findDisclaimerMount,
   findNewChatActions,
@@ -52,6 +54,68 @@ describe("composer mounting", () => {
     it("returns null without a chin inside a composer", () => {
       document.body.innerHTML = `<div data-cds="ChatComposerChin"><button>+</button></div>`;
       expect(findChinSlot()).toBeNull();
+    });
+
+    it("treats the newer /new composer's toolbar row as the chin", () => {
+      // Oct 2026 /new: a fieldset card with no ChatComposer / Chin markers; +
+      // and the model picker share one toolbar row under the editor.
+      document.body.innerHTML = `
+        <fieldset data-testid="composer">
+          <div>
+            <div><div data-cds="Editor" data-testid="chat-input" role="textbox" contenteditable="true"></div></div>
+            <div data-testid="row">
+              <div><div><button data-testid="chat-input-attach">+</button></div></div>
+              <div>
+                <div class="grow"></div>
+                <div><button data-cds="ModelSelector" data-testid="model-selector-dropdown">Opus 5.5</button></div>
+                <button data-testid="chat-input-send">Send</button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      `;
+
+      expect(findChinSlot()).toBeNull();
+      expect(findToolbarSlot()).toEqual({
+        composer: document.querySelector('[data-testid="composer"]'),
+        row: document.querySelector('[data-testid="row"]'),
+      });
+    });
+
+    it("finds no toolbar slot without both + and the model picker", () => {
+      document.body.innerHTML = `
+        <fieldset>
+          <div data-testid="chat-input" role="textbox"></div>
+          <div><button data-testid="chat-input-attach">+</button></div>
+        </fieldset>
+      `;
+      expect(findToolbarSlot()).toBeNull();
+    });
+
+    it("uses Claude Design's chip row as the slot on /design", () => {
+      document.body.innerHTML = `
+        <div data-testid="card">
+          <div><div data-testid="home-composer-input" role="textbox"></div></div>
+          <div class="om-chip-row">
+            <div data-testid="row">
+              <div><button>+</button></div>
+              <div><button>Design system</button></div>
+              <div><div class="contents"><button data-cds="ModelSelector">Opus 5.5</button></div></div>
+            </div>
+          </div>
+          <button data-testid="home-composer-send">Send</button>
+        </div>
+      `;
+
+      expect(findDesignSlot()).toEqual({
+        composer: document.querySelector('[data-testid="card"]'),
+        row: document.querySelector('[data-testid="row"]'),
+      });
+    });
+
+    it("finds no design slot outside Claude Design's composer", () => {
+      document.body.innerHTML = `<div><button data-cds="ModelSelector">Opus 5.5</button><button>+</button></div>`;
+      expect(findDesignSlot()).toBeNull();
     });
 
     it("finds the widest free stretch between controls", () => {
