@@ -8,6 +8,7 @@ All notable changes since the 1.0.0 Chrome Web Store release are documented here
 - The onboarding tour now covers the usage bar, the message navigator, the cache timer, the thread view and pace estimates. For the cache timer and the thread view it shows a preview in the card and asks whether to turn them on; the thread view preview plays a thread being started, working, finishing and being settled, beside Claude's own sidebar.
 - The message navigator is back, with a switch under Display.
 - The thread view now works in Claude's Code tab too, on the Code session list.
+- People who already use Usage Bar see a one-time card announcing the thread view, with the same preview as the tour and a choice to turn it on. It shows once and never again, in any tab.
 
 ### Changed
 - The usage bar is on by default, and stays on after the tour.

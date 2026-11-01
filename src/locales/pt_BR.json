@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "ainda não usado"
+  },
+  "introNew": {
+    "message": "Novo no Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "A visão de conversas chegou"
+  },
+  "introThreadBody": {
+    "message": "Sua barra lateral em cartões: as conversas que precisam de você vêm primeiro, depois as tarefas concluídas, as que ainda estão em andamento e o restante fica recolhido em Concluídas. Funciona no Code também, e você pode ativar ou desativar quando quiser nas Configurações, em Usage Bar."
   }
 }

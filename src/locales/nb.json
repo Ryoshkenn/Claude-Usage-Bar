@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "ikke brukt ennå"
+  },
+  "introNew": {
+    "message": "Nytt i Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Trådvisningen er her"
+  },
+  "introThreadBody": {
+    "message": "Sidefeltet ditt som kort: tråder som venter på deg kommer først, deretter ferdig arbeid, så arbeid som fortsatt kjører, og resten samles under Lagret. Det fungerer også i Code, og du kan slå det av eller på når som helst i innstillingene under Usage Bar."
   }
 }

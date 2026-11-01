@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "未使用"
+  },
+  "introNew": {
+    "message": "Usage Bar の新機能"
+  },
+  "introThreadTitle": {
+    "message": "スレッド表示が登場"
+  },
+  "introThreadBody": {
+    "message": "サイドバーをカード形式で表示します。対応が必要なスレッドを最優先に、完了分、作業中と続き、残りは「完了済み」に折りたたまれます。Code でも使え、設定の Usage Bar からいつでもオン・オフを切り替えられます。"
   }
 }

@@ -17,6 +17,7 @@ import type { ConversationContextResponse, RealUsageSnapshot, StorageShape, Thin
 import { readClaudeDomSnapshot, readThinkingEnabled, resolveEffectiveThinkingLevel } from "./claudeDom";
 import { CacheTimer, ContentApp } from "./ContentApp";
 import { OnboardingTour } from "./OnboardingTour";
+import { threadIntroAction, ThreadViewIntro } from "./ThreadViewIntro";
 import {
   findChinDisclaimer,
   findChinSlot,
@@ -439,20 +440,40 @@ const ensureTourHost = () => {
 
 const isTourRunning = (): boolean => storageState?.settings.hasSeenTour === false && isNewChatPage();
 
+// The one-time thread view card, for people who had Usage Bar before it. It's
+// recorded as seen the moment it shows, so it never comes back — not after a
+// reload, not in another tab — and stays up here until it's answered.
+let threadIntroOpen = false;
+
+const closeThreadIntro = (useIt?: boolean) => {
+  threadIntroOpen = false;
+  if (useIt !== undefined) void updateSettings({ threadSidebar: useIt }).catch(() => undefined);
+  renderTour();
+};
+
 const renderTour = () => {
   if (!storageState || !isActiveInstance()) return;
   ensureTourHost();
   const showTour = isTourRunning();
+  const introAction = showTour ? "none" : threadIntroAction(storageState.settings, document.visibilityState === "visible");
+  if (introAction !== "none" && !threadIntroOpen) {
+    threadIntroOpen = introAction === "show";
+    storageState = { ...storageState, settings: { ...storageState.settings, seenThreadViewIntro: true } };
+    void updateSettings({ seenThreadViewIntro: true }).catch(() => undefined);
+  }
   tourRoot?.render(
     <React.StrictMode>
       {showTour ? (
         <OnboardingTour
           onComplete={() => {
             // The tour shows the bar off as the heart of the extension; it stays
-            // on afterwards (it can be turned off under Display).
-            void updateSettings({ hasSeenTour: true, showBar: true });
+            // on afterwards (it can be turned off under Display). It covers the
+            // thread view too, so the card announcing it isn't needed.
+            void updateSettings({ hasSeenTour: true, showBar: true, seenThreadViewIntro: true });
           }}
         />
+      ) : threadIntroOpen ? (
+        <ThreadViewIntro onClose={closeThreadIntro} />
       ) : null}
     </React.StrictMode>,
   );
@@ -1229,6 +1250,8 @@ const init = async () => {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
       maybeRefreshUsage();
+      // A tab opened in the background shows the thread view card once looked at.
+      renderTour();
     }
   });
 

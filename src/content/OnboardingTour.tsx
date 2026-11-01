@@ -260,6 +260,30 @@ const isLightTheme = (): boolean => {
   return !window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
+// Follows Claude's theme while the tour (or another card drawn in its layer)
+// is up.
+export const useLightTheme = (): boolean => {
+  const [light, setLight] = useState(isLightTheme);
+  useEffect(() => {
+    const syncLight = () => setLight(isLightTheme());
+    const obs = new MutationObserver(syncLight);
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-mode", "data-theme", "data-color-scheme", "style"],
+    });
+    obs.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
+    });
+    const interval = window.setInterval(() => setLight(isLightTheme()), THEME_SYNC_INTERVAL_MS);
+    return () => {
+      obs.disconnect();
+      window.clearInterval(interval);
+    };
+  }, []);
+  return light;
+};
+
 // Get the offset of our tour host from the viewport top-left.
 // Non-zero when a parent has a CSS transform, which changes the containing block for fixed children.
 function getHostOffset(): { top: number; left: number } {
@@ -277,7 +301,7 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
   const [step, setStep] = useState(0);
   const [targetRect, setTargetRect] = useState<TargetRect | null>(null);
   const [fading, setFading] = useState(false);
-  const [light, setLight] = useState(isLightTheme);
+  const light = useLightTheme();
   const [hostOffset, setHostOffset] = useState({ top: 0, left: 0 });
   const [demoRailDots, setDemoRailDots] = useState(0);
   const [demoRailActive, setDemoRailActive] = useState(0);
@@ -403,25 +427,6 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
       cancelRef.current = true;
     };
   }, [step, syncHostOffset]);
-
-  // Theme observer
-  useEffect(() => {
-    const syncLight = () => setLight(isLightTheme());
-    const obs = new MutationObserver(syncLight);
-    obs.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "data-mode", "data-theme", "data-color-scheme", "style"],
-    });
-    obs.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
-    });
-    const interval = window.setInterval(() => setLight(isLightTheme()), THEME_SYNC_INTERVAL_MS);
-    return () => {
-      obs.disconnect();
-      window.clearInterval(interval);
-    };
-  }, []);
 
   // Demo message rail: the markers come in one by one, then the bright one
   // moves down them the way it follows you through a chat.

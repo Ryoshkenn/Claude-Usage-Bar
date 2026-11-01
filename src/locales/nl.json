@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "nog niet gebruikt"
+  },
+  "introNew": {
+    "message": "Nieuw in Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "De gespreksweergave is er"
+  },
+  "introThreadBody": {
+    "message": "Je zijbalk als kaarten: gesprekken die op je wachten staan bovenaan, gevolgd door afgerond werk en werk dat nog bezig is, en de rest wordt ingeklapt onder Afgehandeld. Het werkt ook in Code, en je kunt het altijd aan- of uitzetten in de instellingen onder Usage Bar."
   }
 }

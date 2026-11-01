@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "inte använd än"
+  },
+  "introNew": {
+    "message": "Nytt i Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Trådvyn är här"
+  },
+  "introThreadBody": {
+    "message": "Ditt sidofält som kort: trådar som behöver dig kommer först, sedan klart arbete, därefter arbete som fortfarande pågår, och resten fälls in under Undanlagda. Den fungerar även i Code, och du kan slå på eller av den när som helst i Inställningar under Usage Bar."
   }
 }

@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "ba a yi amfani da shi tukuna ba"
+  },
+  "introNew": {
+    "message": "Sabo a Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Ga jerin zare nan"
+  },
+  "introThreadBody": {
+    "message": "Gefen shafinka a matsayin katuna: zare da ke jiranka su ke gaba, sai aikin da aka gama, sai aikin da ke gudana, sauran kuma a ninke su a ƙarƙashin An adana. Yana aiki a Code ma, kuma za ka iya kunnawa ko kashewa a kowane lokaci a Saituna ƙarƙashin Usage Bar."
   }
 }

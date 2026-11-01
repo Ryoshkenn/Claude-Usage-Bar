@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "ei vielä käytetty"
+  },
+  "introNew": {
+    "message": "Uutta Usage Barissa"
+  },
+  "introThreadTitle": {
+    "message": "Ketjunäkymä on täällä"
+  },
+  "introThreadBody": {
+    "message": "Sivupalkkisi kortteina: huomiotasi vaativat ketjut näkyvät ensin, sitten valmiit, sitten käynnissä olevat ja loput taittuvat Kuitatut-ryhmään. Se toimii myös Codessa, ja voit ottaa sen käyttöön tai poistaa käytöstä milloin tahansa asetuksista kohdasta Usage Bar."
   }
 }

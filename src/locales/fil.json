@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "hindi pa nagagamit"
+  },
+  "introNew": {
+    "message": "Bago sa Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Narito na ang view ng thread"
+  },
+  "introThreadBody": {
+    "message": "Ang sidebar mo bilang mga card: mauuna ang mga thread na kailangan ka, sunod ang tapos nang gawa, tapos ang gumagawa pa, at nakatiklop ang iba sa ilalim ng Naitabi. Gumagana rin ito sa Code, at puwede mo itong i-on o i-off anumang oras sa Settings sa ilalim ng Usage Bar."
   }
 }

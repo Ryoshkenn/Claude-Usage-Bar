@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "尚未使用"
+  },
+  "introNew": {
+    "message": "Usage Bar 新功能"
+  },
+  "introThreadTitle": {
+    "message": "推出對話串檢視"
+  },
+  "introThreadBody": {
+    "message": "將側邊欄改為卡片樣式：待您處理的對話串會排在最前面，接著是已完成與執行中的工作，其餘則收合在「已完成」下方。這項功能也支援 Code，您可以隨時在「設定」的 Usage Bar 中開啟或關閉。"
   }
 }

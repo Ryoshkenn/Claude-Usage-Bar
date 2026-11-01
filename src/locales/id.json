@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "belum dipakai"
+  },
+  "introNew": {
+    "message": "Baru di Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Tampilan utas kini hadir"
+  },
+  "introThreadBody": {
+    "message": "Bilah sisi Anda kini tampil sebagai kartu: utas yang memerlukan respons Anda berada di urutan pertama, diikuti tugas yang selesai, lalu tugas yang masih berjalan, dan sisanya dilipat di bawah Tersimpan. Fitur ini juga berfungsi di Code, dan Anda dapat mengaktifkan atau menonaktifkannya kapan saja di Pengaturan pada bagian Usage Bar."
   }
 }

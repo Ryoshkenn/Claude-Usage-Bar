@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "아직 사용 안 함"
+  },
+  "introNew": {
+    "message": "Usage Bar의 새로운 기능"
+  },
+  "introThreadTitle": {
+    "message": "스레드 보기가 추가되었습니다"
+  },
+  "introThreadBody": {
+    "message": "사이드바가 카드 형태로 표시됩니다. 확인이 필요한 스레드가 맨 먼저 오고, 완료된 작업과 작업 중인 항목이 이어지며, 나머지는 완료됨 아래로 접힙니다. Code에서도 작동하며, 설정의 Usage Bar에서 언제든 켜거나 끌 수 있습니다."
   }
 }

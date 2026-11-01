@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "noch nicht genutzt"
+  },
+  "introNew": {
+    "message": "Neu in Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Die Unterhaltungsansicht ist da"
+  },
+  "introThreadBody": {
+    "message": "Deine Seitenleiste als Karten: Unterhaltungen, die auf dich warten, stehen ganz oben, dann fertige Aufgaben, dann noch laufende, und der Rest wird unter Erledigt eingeklappt. Sie funktioniert auch in Code und lässt sich jederzeit in den Einstellungen unter Usage Bar ein- oder ausschalten."
   }
 }

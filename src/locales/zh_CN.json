@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "尚未使用"
+  },
+  "introNew": {
+    "message": "Usage Bar 新功能"
+  },
+  "introThreadTitle": {
+    "message": "对话视图现已上线"
+  },
+  "introThreadBody": {
+    "message": "侧边栏现以卡片形式呈现：需要你处理的对话排在最前，其次是已完成和进行中的任务，其余对话则收起在“已完成”下。该功能同样支持 Code，你可以随时在“设置”的 Usage Bar 中开启或关闭。"
   }
 }

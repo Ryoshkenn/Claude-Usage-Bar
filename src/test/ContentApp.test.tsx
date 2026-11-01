@@ -23,6 +23,7 @@ const settings: Settings = {
   weeklyManualActiveHoursPerDay: 10,
   weeklyManualStartHour: 9,
   hasSeenTour: true,
+  seenThreadViewIntro: true,
   showClipboard: true,
   resetBannerScope: "claude",
   threadSidebar: false,

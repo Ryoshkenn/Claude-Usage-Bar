@@ -67,6 +67,12 @@ sets `showBar: true` as well. The tour layer is z 2147483647; while it holds the
 (`body.cub-tour-bar-open`) the bar host sits at 2147483646, one below, so the spotlight ring around
 the settings arrow draws over the panel rather than under it.
 
+People who had finished the tour before the thread view existed get a one-time card instead
+(`ThreadViewIntro.tsx`, rendered in the tour's layer by `renderTour`): `threadIntroAction` decides,
+and `seenThreadViewIntro` is written the moment the card shows (not when it's answered), so a reload
+or another tab never brings it back. A tab in the background waits until it's looked at; someone who
+already turned the view on is just marked seen. Finishing or skipping the tour sets it too.
+
 ### Reset banners (`src/background/resetNotifier.ts`)
 `chrome.alarms` fires at each `resetsAt`; MV3 kills the worker after ~30s idle, so `setTimeout`
 can never reach a reset hours out. On wake the worker **re-fetches and confirms the reset time

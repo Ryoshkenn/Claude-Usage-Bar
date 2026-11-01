@@ -85,6 +85,7 @@ export const DEFAULT_SETTINGS: Settings = {
   weeklyManualActiveHoursPerDay: 5,
   weeklyManualStartHour: 9,
   hasSeenTour: false,
+  seenThreadViewIntro: false,
   showClipboard: true,
   // Banners default to claude.ai only: useful out of the box, and it needs no
   // permission beyond the one the extension already has.

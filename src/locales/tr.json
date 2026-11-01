@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "henüz kullanılmadı"
+  },
+  "introNew": {
+    "message": "Usage Bar'da yeni"
+  },
+  "introThreadTitle": {
+    "message": "Sohbet görünümü burada"
+  },
+  "introThreadBody": {
+    "message": "Kenar çubuğunuz kartlar halinde: önce sizi bekleyen sohbetler, ardından tamamlanan işler, sonra hâlâ çalışanlar gelir; geri kalanlar ise Kaldırılanlar altında toplanır. Code'da da çalışır ve Ayarlar'daki Usage Bar bölümünden istediğiniz zaman açıp kapatabilirsiniz."
   }
 }

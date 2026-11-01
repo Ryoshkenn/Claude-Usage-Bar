@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "haijatumika bado"
+  },
+  "introNew": {
+    "message": "Mpya kwenye Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Mwonekano wa mijadala upo sasa"
+  },
+  "introThreadBody": {
+    "message": "Upau wako wa pembeni kama kadi: mijadala inayokuhitaji huja kwanza, kisha kazi iliyokamilika, kisha kazi inayoendelea, na iliyobaki hukunjwa chini ya Iliyotulia. Inafanya kazi kwenye Code pia, na unaweza kuiwasha au kuizima wakati wowote kwenye Mipangilio chini ya Usage Bar."
   }
 }

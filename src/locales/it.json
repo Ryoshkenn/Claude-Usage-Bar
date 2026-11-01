@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "non ancora utilizzato"
+  },
+  "introNew": {
+    "message": "Novità in Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "È arrivata la vista conversazioni"
+  },
+  "introThreadBody": {
+    "message": "La barra laterale in schede: prima le conversazioni che richiedono la tua attenzione, poi quelle completate, quelle in corso e il resto raccolto in Concluse. Funziona anche in Code e puoi attivarla o disattivarla in qualsiasi momento nelle Impostazioni sotto Usage Bar."
   }
 }

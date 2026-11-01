@@ -1172,6 +1172,20 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   background: rgb(216 138 108);
 }
 
+/* A card on its own, centred: the thread view announcement (ThreadViewIntro). */
+.cub-tour-card--centered {
+  top: 50%;
+  left: 50%;
+  width: min(540px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  transform: translate(-50%, -50%);
+}
+
+.cub-tour-buttons--end {
+  justify-content: flex-end;
+}
+
 /* "No thanks" on a step that offers its feature */
 .cub-tour-btn-decline {
   height: 32px;

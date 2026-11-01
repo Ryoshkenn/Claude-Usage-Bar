@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "pas encore utilisé"
+  },
+  "introNew": {
+    "message": "Nouveau dans Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "La vue des conversations est là"
+  },
+  "introThreadBody": {
+    "message": "Votre barre latérale sous forme de cartes : les conversations qui vous attendent apparaissent en premier, suivies de celles terminées, puis de celles en cours, et le reste est regroupé sous Terminées. Elle fonctionne aussi dans Code, et vous pouvez l'activer ou la désactiver à tout moment dans Paramètres, sous Usage Bar."
   }
 }

@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "chưa sử dụng"
+  },
+  "introNew": {
+    "message": "Mới trong Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Đã có chế độ xem luồng"
+  },
+  "introThreadBody": {
+    "message": "Thanh bên dưới dạng thẻ: các luồng cần bạn phản hồi đứng đầu, tiếp đến là việc đã xong, việc đang xử lý, và phần còn lại thu gọn vào mục Đã xếp gọn. Tính năng này cũng hoạt động trong Code, và bạn có thể bật hoặc tắt bất cứ lúc nào trong Cài đặt tại mục Usage Bar."
   }
 }

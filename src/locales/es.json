@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "aún sin usar"
+  },
+  "introNew": {
+    "message": "Nuevo en Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Ya está aquí la vista de conversaciones"
+  },
+  "introThreadBody": {
+    "message": "Tu barra lateral en tarjetas: primero aparecen las conversaciones que te necesitan, luego las terminadas, después las que siguen en curso y el resto se pliega en Resueltas. También funciona en Code, y puedes activarla o desactivarla cuando quieras en Configuración, en Usage Bar."
   }
 }

@@ -104,6 +104,11 @@ describe("content styles", () => {
     expect(messageRailScript).toContain('railEl.classList.toggle("cub-message-rail--light", currentThemeIsLight);');
   });
 
+  it("records the thread view card as seen the moment it shows, and after the tour", () => {
+    expect(contentScript).toContain("void updateSettings({ seenThreadViewIntro: true })");
+    expect(contentScript).toContain("void updateSettings({ hasSeenTour: true, showBar: true, seenThreadViewIntro: true });");
+  });
+
   it("re-syncs theme after delayed overlay elements are mounted or refreshed", () => {
     expect(contentScript).toContain("tickSettingsPage();\n    syncMessageRail();\n    syncTheme();");
     expect(contentScript).toContain("render();\n  syncTheme();");

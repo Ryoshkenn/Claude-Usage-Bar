@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "ikke brugt endnu"
+  },
+  "introNew": {
+    "message": "Nyt i Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Trådvisningen er her"
+  },
+  "introThreadBody": {
+    "message": "Dit sidepanel som kort: tråde, der har brug for dig, kommer først, derefter færdigt arbejde, så arbejde, der stadig kører, og resten samles under Henlagte. Det virker også i Code, og du kan til enhver tid slå det til eller fra i Indstillinger under Usage Bar."
   }
 }

@@ -619,5 +619,14 @@
   },
   "sessionNotUsedYet": {
     "message": "not used yet"
+  },
+  "introNew": {
+    "message": "New in Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "The thread view is here"
+  },
+  "introThreadBody": {
+    "message": "Your sidebar as cards: threads that need you come first, then finished work, then work still running, and the rest fold under Settled. It works in Code too, and you can turn it on or off any time in Settings under Usage Bar."
   }
 }
