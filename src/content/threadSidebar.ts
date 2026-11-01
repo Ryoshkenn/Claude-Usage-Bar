@@ -1,6 +1,13 @@
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { t } from "../shared/i18n";
 import { updateSettings } from "../shared/storage";
+import {
+  ROW_KEY_PATTERN,
+  sanitizeActivity,
+  sanitizePlaces,
+  type ThreadActivity,
+  type ThreadPlaces,
+} from "../shared/threadStore";
 import type { ThreadSort } from "../shared/types";
 import "./threadSidebar.css";
 
@@ -91,14 +98,7 @@ const WATCHED_ATTRIBUTES = [
 
 // Relative times ("12m") are refreshed this often while the view is on.
 const CLOCK_TICK_MS = 30_000;
-// Done marks that were never opened, and working marks never seen to finish
-// (the tab closed mid-task), stop counting after this long.
-const DONE_TTL_MS = 24 * 60 * 60_000;
-const WORKING_TTL_MS = 12 * 60 * 60_000;
 const MAX_THREAD_TIMES = 2_000;
-// Open and hand-settled threads kept in storage, newest first. Only bounds the
-// store; the list itself has no cap.
-const MAX_PLACES = 1_000;
 // Claude bumps updated_at when a thread is merely opened; only a change this
 // long after settling counts as new activity.
 const SETTLE_GRACE_MS = 5_000;
@@ -143,12 +143,6 @@ export interface ThreadSidebarOptions {
 interface ThreadTimes {
   createdAt?: number;
   updatedAt?: number;
-}
-
-interface ThreadActivity {
-  workingSince?: number;
-  awaitingSince?: number;
-  doneAt?: number;
 }
 
 // Claude's row status dots (.status-dot[data-kind]) mapped onto our states.
@@ -380,35 +374,33 @@ const sessionArea = (): chrome.storage.StorageArea | null =>
 const localArea = (): chrome.storage.StorageArea | null =>
   extensionAlive() && chrome.storage?.local ? chrome.storage.local : null;
 
-const ROW_KEY_PATTERN = /^[a-z-]+:[\w-]{1,80}$/;
-
-const sanitizeActivity = (value: unknown, now = Date.now()): Record<string, ThreadActivity> => {
-  const out: Record<string, ThreadActivity> = {};
-  if (!value || typeof value !== "object") return out;
-  for (const [key, raw] of Object.entries(value as Record<string, unknown>)) {
-    if (!ROW_KEY_PATTERN.test(key) || !raw || typeof raw !== "object") continue;
-    const { workingSince, awaitingSince, doneAt } = raw as ThreadActivity;
-    const entry: ThreadActivity = {};
-    if (typeof workingSince === "number" && now - workingSince < WORKING_TTL_MS) {
-      entry.workingSince = workingSince;
-      if (typeof awaitingSince === "number" && awaitingSince >= workingSince) entry.awaitingSince = awaitingSince;
-    }
-    if (typeof doneAt === "number" && now - doneAt < DONE_TTL_MS) entry.doneAt = doneAt;
-    if (entry.workingSince || entry.doneAt) out[key] = entry;
-  }
-  return out;
-};
-
 // This tab's changes not yet confirmed in session storage: row key → entry, or
-// null for a removal. A write merges just these keys into what's stored, so a
-// tab that hasn't caught up with another's write can't drop that tab's marks,
-// and a write that fails stays pending and is retried on the next pass.
+// null for a removal. They go to the worker as a patch (it's the only writer, so
+// writes from several tabs can't overwrite each other); one that fails stays
+// pending and is retried on the next pass.
 const pendingActivity = new Map<string, ThreadActivity | null>();
 let activityWriting = false;
 // Activity isn't tracked until the shared marks have loaded: a row already
 // working at page load would otherwise get a fresh workingSince that, as this
 // tab's change, wins over the stored one and restarts its "Working" time.
 let activityLoaded = false;
+
+// Resolves whether the worker applied the message.
+const sendToWorker = (message: Record<string, unknown>): Promise<boolean> =>
+  new Promise((resolve) => {
+    if (!extensionAlive()) {
+      resolve(false);
+      return;
+    }
+    try {
+      chrome.runtime.sendMessage(message, (response?: { ok?: boolean }) => {
+        void chrome.runtime.lastError;
+        resolve(response?.ok === true);
+      });
+    } catch {
+      resolve(false);
+    }
+  });
 
 const setActivity = (key: string, entry: ThreadActivity | undefined): void => {
   if (entry) activity[key] = entry;
@@ -426,27 +418,18 @@ const withPendingActivity = (stored: Record<string, ThreadActivity>): Record<str
 };
 
 const saveActivity = (): void => {
-  const area = sessionArea();
-  if (!area || activityWriting || pendingActivity.size === 0) return;
+  if (activityWriting || pendingActivity.size === 0 || !extensionAlive()) return;
   activityWriting = true;
   const writing = new Map(pendingActivity);
-  void area
-    .get(STORAGE_KEYS.threadActivity)
-    .then((data) => {
-      activity = withPendingActivity(sanitizeActivity(data[STORAGE_KEYS.threadActivity]));
-      return area.set({ [STORAGE_KEYS.threadActivity]: activity });
-    })
-    .then(() => {
-      writing.forEach((entry, key) => {
-        if (pendingActivity.get(key) === entry) pendingActivity.delete(key);
-      });
-      activityWriting = false;
-      // Changes made while this write was in flight go out now.
-      saveActivity();
-    })
-    .catch(() => {
-      activityWriting = false;
+  void sendToWorker({ type: MESSAGE_TYPES.threadActivityPatch, patch: Object.fromEntries(writing) }).then((ok) => {
+    activityWriting = false;
+    if (!ok) return;
+    writing.forEach((entry, key) => {
+      if (pendingActivity.get(key) === entry) pendingActivity.delete(key);
     });
+    // Changes made while this write was in flight go out now.
+    saveActivity();
+  });
 };
 
 const loadActivity = (): void => {
@@ -468,74 +451,14 @@ const loadActivity = (): void => {
     });
 };
 
-interface ThreadPlaces {
-  since?: number;
-  open: Record<string, number>;
-  settled: Record<string, number>;
-}
-
-const sanitizeKeyTimes = (value: unknown): [string, number][] =>
-  value && typeof value === "object"
-    ? Object.entries(value as Record<string, unknown>).filter(
-        (entry): entry is [string, number] =>
-          ROW_KEY_PATTERN.test(entry[0]) && typeof entry[1] === "number" && Number.isFinite(entry[1]),
-      )
-    : [];
-
-// A key in both maps keeps whichever happened last; a hand-settle from before
-// the view started is already covered by its baseline.
-const sanitizePlaces = (value: unknown): ThreadPlaces => {
-  const raw = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
-  const since = typeof raw.since === "number" && Number.isFinite(raw.since) ? raw.since : undefined;
-  const open = sanitizeKeyTimes(raw.open);
-  const settledEntries = sanitizeKeyTimes(raw.settled).filter(([, at]) => since === undefined || at > since);
-  const openAt = new Map(open);
-  const settledAt = new Map(settledEntries);
-  const keep = (entries: [string, number][], other: Map<string, number>) =>
-    Object.fromEntries(
-      entries
-        .filter(([key, at]) => (other.get(key) ?? Number.NEGATIVE_INFINITY) < at)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, MAX_PLACES),
-    );
-  return { since, open: keep(open, settledAt), settled: keep(settledEntries, openAt) };
-};
-
-// Newest time per key across two key → time maps.
-const latestTimes = (a: Record<string, number>, b: Record<string, number>): Record<string, number> => {
-  const out = { ...a };
-  for (const [key, at] of Object.entries(b)) {
-    if (!((out[key] ?? Number.NEGATIVE_INFINITY) >= at)) out[key] = at;
-  }
-  return out;
-};
-
-// Writes this tab's places merged into what's stored, newest time per key —
-// sanitizePlaces then settles a key found in both maps the same way — so a tab
-// that hasn't yet adopted another tab's settle or open can't write over it.
+// The worker merges these into what's stored (newest time per key), one tab at
+// a time, so a settle or open from another tab this one hasn't adopted yet
+// survives. Its storage event brings the merged result back here.
 const savePlaces = (): void => {
   const places = sanitizePlaces({ since: viewSince, open: opened, settled });
   opened = places.open;
   settled = places.settled;
-  const area = localArea();
-  if (!area) return;
-  const load = placesLoad;
-  void area
-    .get(STORAGE_KEYS.threadPlaces)
-    .then((data) => {
-      // Turned off (or restarted) meanwhile: don't bring the old places back.
-      if (load !== placesLoad || !placesLoaded) return;
-      const stored = sanitizePlaces(data[STORAGE_KEYS.threadPlaces]);
-      const merged = sanitizePlaces({
-        since: viewSince,
-        open: latestTimes(stored.open, opened),
-        settled: latestTimes(stored.settled, settled),
-      });
-      opened = merged.open;
-      settled = merged.settled;
-      return area.set({ [STORAGE_KEYS.threadPlaces]: merged });
-    })
-    .catch(() => undefined);
+  void sendToWorker({ type: MESSAGE_TYPES.threadPlacesPatch, places });
 };
 
 const adoptPlaces = (places: ThreadPlaces): void => {
@@ -577,9 +500,10 @@ const forgetPlaces = (): void => {
   viewSince = undefined;
   opened = {};
   settled = {};
-  void localArea()
-    ?.remove(STORAGE_KEYS.threadPlaces)
-    .catch(() => undefined);
+  // Through the worker's queue, after any patch already sent; without one, here.
+  void sendToWorker({ type: MESSAGE_TYPES.threadPlacesForget }).then((ok) => {
+    if (!ok) void localArea()?.remove(STORAGE_KEYS.threadPlaces).catch(() => undefined);
+  });
 };
 
 // Both shared stores: done marks from other claude.ai tabs (session), and

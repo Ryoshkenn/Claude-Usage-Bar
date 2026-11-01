@@ -42,6 +42,11 @@ export const MESSAGE_TYPES = {
   // Page probe → content script: thread ids with created / updated times seen in
   // Claude's own API responses. Hardcoded again in public/pageProbe.js.
   threadTimes: "CLAUDE_USAGE_BAR_THREAD_TIMES",
+  // Content script → worker: the thread view's shared state, which only the
+  // worker writes (see src/shared/threadStore.ts).
+  threadActivityPatch: "CLAUDE_USAGE_BAR_THREAD_ACTIVITY_PATCH",
+  threadPlacesPatch: "CLAUDE_USAGE_BAR_THREAD_PLACES_PATCH",
+  threadPlacesForget: "CLAUDE_USAGE_BAR_THREAD_PLACES_FORGET",
 } as const;
 
 export const CLAUDE_ORIGIN = "https://claude.ai";

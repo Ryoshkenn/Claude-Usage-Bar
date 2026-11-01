@@ -11,6 +11,7 @@ import {
 } from "../shared/storage";
 import type { ApiUsageResponse, ConversationContextResponse, RealUsageSnapshot, ThinkingLevel } from "../shared/types";
 import { setLanguage, t } from "../shared/i18n";
+import { createThreadStoreWriter, handleThreadStoreMessage } from "../shared/threadStore";
 import {
   SESSION_ALARM,
   WEEKLY_ALARM,
@@ -38,6 +39,16 @@ export const TEST_BANNER_DELAY_MS = 5_000;
 void chrome.storage.session
   ?.setAccessLevel?.({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
   .catch(() => undefined);
+
+// The only writer of the thread view's shared state; tabs send it their changes.
+const threadStore = createThreadStoreWriter({
+  session: chrome.storage.session,
+  local: chrome.storage.local,
+  viewEnabled: async () => {
+    const data = await chrome.storage.local.get(STORAGE_KEYS.settings);
+    return (data[STORAGE_KEYS.settings] as { threadSidebar?: boolean } | undefined)?.threadSidebar === true;
+  },
+});
 
 let inFlightUsageRequest: Promise<ApiUsageResponse> | null = null;
 const inFlightConversationRequests = new Map<string, Promise<ConversationContextResponse>>();
@@ -280,6 +291,12 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
 
   if (!data) {
     return false;
+  }
+
+  const threadStoreResult = handleThreadStoreMessage(threadStore, data);
+  if (threadStoreResult) {
+    void threadStoreResult.then(sendResponse);
+    return true;
   }
 
   if (data.type === MESSAGE_TYPES.fetchApiUsage) {

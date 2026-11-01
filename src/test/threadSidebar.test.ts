@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
+import { createThreadStoreWriter, handleThreadStoreMessage } from "../shared/threadStore";
 import {
   applyThreadSidebar,
   formatThreadAgo,
@@ -760,14 +761,21 @@ describe("shared state", () => {
 
   beforeEach(() => {
     for (const store of [session, local]) for (const key of Object.keys(store)) delete store[key];
-    vi.stubGlobal("chrome", {
-      runtime: { id: "test", sendMessage: vi.fn(), lastError: undefined },
-      storage: {
-        session: area(session),
-        local: area(local),
-        onChanged: { addListener: vi.fn(), removeListener: vi.fn() },
-      },
+    const storage = {
+      session: area(session),
+      local: area(local),
+      onChanged: { addListener: vi.fn(), removeListener: vi.fn() },
+    };
+    // The worker: the one writer of the shared state, as background.ts sets it up.
+    const writer = createThreadStoreWriter({
+      session: storage.session as unknown as chrome.storage.StorageArea,
+      local: storage.local as unknown as chrome.storage.StorageArea,
+      viewEnabled: async () => true,
     });
+    const sendMessage = vi.fn((message: unknown, respond?: (response: unknown) => void) => {
+      void handleThreadStoreMessage(writer, message)?.then((response) => respond?.(response));
+    });
+    vi.stubGlobal("chrome", { runtime: { id: "test", sendMessage, lastError: undefined }, storage });
   });
 
   it("shares the done mark across tabs through session storage", async () => {

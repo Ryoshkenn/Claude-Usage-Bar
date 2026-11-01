@@ -24,6 +24,9 @@ Core live display state persists locally regardless so the overlay works.
 
 ⚠️ A stale `dist/` is the #1 footgun: if logs/behavior don't match your edits, confirm the
 bundle was rebuilt (check file timestamps/hashes in `dist/assets/`) and the extension reloaded.
+Restarting the browser is not enough for the background worker: Chrome keeps running its cached
+copy of the worker script until the extension itself is reloaded, so worker changes silently don't
+apply while pages and the popup do. Check which `background.ts-<hash>.js` the worker actually parsed.
 
 For Chrome Web Store releases, verify the public privacy policy URL returns `HTTP 200` before
 packaging/resubmission.
@@ -131,7 +134,15 @@ claude.ai tab; the worker opens that area to content scripts with `setAccessLeve
 in `chrome.storage.local` (`threadPlaces`: `since` — when the view was turned on, the baseline every
 thread counts as settled at — plus `open` and hand-`settled` maps of row key → time). Turning the view
 off removes it, so turning it on again starts from everything settled. Nothing opens until it has
-loaded, or a page load would judge activity against a made-up baseline. Apart from Claude's language tag
+loaded, or a page load would judge activity against a made-up baseline; likewise nothing is tracked
+until the activity marks have loaded.
+
+Tabs never write either store themselves. chrome.storage has no transactions, so two tabs each
+reading, merging and writing lost each other's changes. Each tab only writes when its own sidebar's
+state changes, and sends the worker per-key patches (`MESSAGE_TYPES.threadActivityPatch` /
+`threadPlacesPatch` / `threadPlacesForget`); `src/shared/threadStore.ts` applies them through one
+queue (activity per key, places newest-time-per-key), and drops a places patch once the view is off.
+A patch that fails stays pending in the tab and is retried. Apart from Claude's language tag
 (`claudeLanguage`, e.g. "fr-FR") and the user's own clipboard prompts, those row keys are the only
 non-numeric thing the extension stores. There is deliberately no "task finished" banner — it was
 tried and removed.
