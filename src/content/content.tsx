@@ -21,6 +21,7 @@ import {
   findChinDisclaimer,
   findChinSlot,
   findCoworkControlsAnchor,
+  findDesignSlot,
   findDisclaimerMount,
   findNewChatInsertionPoint,
   findToolbarSlot,
@@ -224,7 +225,6 @@ const ensureHost = () => {
   host.id = "claude-usage-bar-root";
   host.setAttribute(HOST_ATTR, myInstanceId);
   applyFixedHostStyles();
-  host.classList.toggle("cub-design", isDesignPage());
   // Apply theme class before first render so there is no flash
   syncTheme();
   root = createRoot(host);
@@ -657,7 +657,7 @@ const mountHostOverDisclaimer = (): boolean => {
   }
 
   const disclaimerMount = findDisclaimerMount();
-  const chin = isDesignPage() ? null : (findChinSlot() ?? findToolbarSlot());
+  const chin = isDesignPage() ? findDesignSlot() : (findChinSlot() ?? findToolbarSlot());
   // Cowork rows keep their own anchoring next to Skip/Approve.
   if (chin && !findCoworkControlsAnchor(disclaimerMount)) {
     return mountHostInChin(chin);
@@ -763,7 +763,6 @@ const handleUrlChange = () => {
   if (!isActiveInstance()) {
     return;
   }
-  host?.classList.toggle("cub-design", isDesignPage());
   if (mountedDisclaimerMount && !document.body.contains(mountedDisclaimerMount)) {
     host?.style.setProperty("display", "none", "important");
   }

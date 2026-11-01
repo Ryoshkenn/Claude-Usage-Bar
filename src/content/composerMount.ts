@@ -274,6 +274,33 @@ export const findNewChatInsertionPoint = (): NewChatInsertionPoint | null => {
   return { parent, anchor: card.nextElementSibling };
 };
 
+// Claude Design's home composer (claude.ai/design): a chip row with + /
+// Design system / code on the left and the model picker on the right, the send
+// button absolutely placed beside it. The row is the model picker's nearest
+// ancestor holding other controls too; the card is the one holding the editor.
+const DESIGN_EDITOR_SELECTOR = '[data-testid="home-composer-input"]';
+const DESIGN_MODEL_SELECTOR = '[data-cds="ModelSelector"]';
+
+export const findDesignSlot = (): ChinSlot | null => {
+  const editor = document.querySelector<HTMLElement>(DESIGN_EDITOR_SELECTOR);
+  const model = document.querySelector<HTMLElement>(DESIGN_MODEL_SELECTOR);
+  if (!editor || !model) {
+    return null;
+  }
+  let row: HTMLElement | null = model.parentElement;
+  while (row && row.querySelectorAll("button").length < 2) {
+    row = row.parentElement;
+  }
+  let composer: HTMLElement | null = row?.parentElement ?? null;
+  while (composer && !composer.contains(editor)) {
+    composer = composer.parentElement;
+  }
+  if (!row || !composer || row.contains(editor) || composer === document.body) {
+    return null;
+  }
+  return { composer, row };
+};
+
 const ADD_FILES_BUTTON_SELECTOR = 'button[aria-label="Add files, connectors, and more"]';const COMPOSER_INPUT_SELECTOR =
   'form textarea:not(#conversation-preferences), form [contenteditable="true"][role="textbox"], form [role="textbox"]';
 const SEND_BUTTON_SELECTOR = 'button[type="submit"], button[aria-label*="Send" i]';

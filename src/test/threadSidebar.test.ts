@@ -35,6 +35,9 @@ interface SidebarSpec {
   pinnedCollapsed?: boolean;
   scheduledDot?: boolean;
   claudeSearchBar?: boolean;
+  // Oct 2026 markup: the New link itself is .shrink-0 and Search is a row
+  // beside it (Ctrl+K) rather than a bar.
+  searchRow?: boolean;
 }
 
 const idOf = (key: string): string => key.slice(key.indexOf(":") + 1);
@@ -94,7 +97,11 @@ const mountSidebar = (spec: SidebarSpec) => {
             ? '<div id="search-host"><button type="button" aria-keyshortcuts="Control+Shift+k"><span>Search</span></button></div>'
             : ""
         }
-        <div class="shrink-0" id="new-host"><div class="contents"><a href="/new" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div></div>
+        ${
+          spec.searchRow
+            ? '<div class="shrink-0" id="new-host"><div class="contents"><a href="/new" class="w-full shrink-0" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div><button type="button" id="search-row" class="w-full shrink-0" data-row="" data-row-main-button="" data-row-nav="" aria-keyshortcuts="Control+k">Search</button></div>'
+            : '<div class="shrink-0" id="new-host"><div class="contents"><a href="/new" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div></div>'
+        }
         <div class="dframe-nav-scroll" id="nav-scroll">
           <div data-testid="nav-pin-rows">
             <div data-row=""><a href="/cowork/projects" data-row-main-button="" data-nav-item="projects">Projects</a></div>
@@ -490,6 +497,27 @@ describe("thread sidebar DOM", () => {
 
     syncThreadSidebarTheme(true);
     expect(aside.getAttribute("data-cub-threads-theme")).toBe("light");
+  });
+
+  it("sits beside Claude's New row, not inside it, and drives its Search row", () => {
+    const { newLink } = mountSidebar({ ...read(ten.slice(0, 3)), searchRow: true });
+    const before = document.body.innerHTML;
+    syncThreadSidebar({ threadSidebar: true });
+
+    const top = document.getElementById(TOP_ROW_ID)!;
+    expect(top.parentElement!.id).toBe("new-host");
+    expect(newLink.contains(top)).toBe(false);
+    expect(newLink.hasAttribute("data-cub-thread-hidden")).toBe(true);
+    const searchRow = document.getElementById("search-row")!;
+    expect(searchRow.hasAttribute("data-cub-thread-hidden")).toBe(true);
+
+    const searchClicks = vi.fn();
+    searchRow.addEventListener("click", searchClicks);
+    top.querySelector<HTMLButtonElement>(".cub-thread-search")!.click();
+    expect(searchClicks).toHaveBeenCalledTimes(1);
+
+    syncThreadSidebar({ threadSidebar: false });
+    expect(document.body.innerHTML).toBe(before);
   });
 
   it("takes the place of Claude's own search bar when the layout has one", () => {
