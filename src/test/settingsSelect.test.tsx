@@ -13,8 +13,9 @@ const Harness = ({ onChange }: { onChange?: (value: string) => void }) => {
   const [value, setValue] = useState("ring");
   return (
     <div id="cub-settings-panel">
+      <span id="context">Context window</span>
       <CdsSelect
-        id="context"
+        labelId="context"
         value={value}
         options={OPTIONS}
         onChange={(next) => {
@@ -26,7 +27,7 @@ const Harness = ({ onChange }: { onChange?: (value: string) => void }) => {
   );
 };
 
-const trigger = () => screen.getByRole("button", { name: /Ring|Off|Percentage/ });
+const trigger = () => screen.getByRole("combobox", { name: "Context window" });
 
 afterEach(() => {
   document.body.innerHTML = "";

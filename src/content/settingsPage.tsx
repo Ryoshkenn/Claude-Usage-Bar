@@ -349,19 +349,24 @@ const syncSettingsPanel = () => {
 // existing work-day-button pattern. Track: accent (on) / translucent grey (off);
 // knob: always white. `--cds-switch-track` is kept as the off-track value so it
 // themes when in scope, with a grey fallback when it isn't.
+// Named either by a wrapping <label htmlFor={id}>, or by its row's label
+// (`labelledBy`), in which case it takes `${labelledBy}-switch` as its own id.
 const Switch = ({
   checked,
   onChange,
   id,
+  labelledBy,
 }: {
   checked: boolean;
   onChange: (v: boolean) => void;
-  id: string;
+  id?: string;
+  labelledBy?: string;
 }) => (
   <button
     type="button"
     tabIndex={0}
-    id={id}
+    id={id ?? (labelledBy ? `${labelledBy}-switch` : undefined)}
+    aria-labelledby={labelledBy}
     role="switch"
     aria-checked={checked}
     data-cds="Switch"
@@ -405,13 +410,15 @@ const MENU_MAX_HEIGHT_PX = 300;
 // trigger, or above when the settings scroller has no room below. Focus stays
 // on the trigger (aria-activedescendant), and Escape closes the menu without
 // closing Claude's settings dialog.
+// `labelId` is the id of the row label that names it; the trigger itself gets
+// `${labelId}-select`, so the two never share an id.
 export const CdsSelect = ({
-  id,
+  labelId,
   value,
   onChange,
   options,
 }: {
-  id: string;
+  labelId: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
@@ -421,7 +428,7 @@ export const CdsSelect = ({
   const [placement, setPlacement] = useState<{ host: HTMLElement; style: React.CSSProperties } | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const menuId = `${id}-menu`;
+  const menuId = `${labelId}-menu`;
   const selectedIndex = Math.max(
     0,
     options.findIndex((option) => option.value === value),
@@ -532,9 +539,13 @@ export const CdsSelect = ({
     <>
       <button
         ref={triggerRef}
-        id={id}
+        id={`${labelId}-select`}
         type="button"
         className={`${CDS_COMBOBOX_WRAP} cub-select-trigger`}
+        // A combobox (ARIA 1.2 select-only pattern): unlike a plain button, it
+        // supports aria-activedescendant, so screen readers follow the highlight.
+        role="combobox"
+        aria-labelledby={labelId}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
@@ -567,7 +578,7 @@ export const CdsSelect = ({
             ref={menuRef}
             id={menuId}
             role="listbox"
-            aria-labelledby={id}
+            aria-labelledby={labelId}
             className="cub-select-menu text-body"
             style={placement.style}
           >
@@ -882,7 +893,7 @@ const SettingsPage = () => {
       <Section id="cub-section-display" title={t("setSecDisplay", "Display")}>
         <Row labelId={id("show-overlay")} label={t("setShowOverlay", "Show overlay")} description={t("setShowOverlayDesc", "Turn everything in the composer on or off.")}>
           <Switch
-            id={id("show-overlay")}
+            labelledBy={id("show-overlay")}
             checked={settings.showOverlay}
             onChange={(v) => update({ showOverlay: v })}
           />
@@ -900,7 +911,7 @@ const SettingsPage = () => {
               </label>
             )}
             <CdsSelect
-              id={id("bar")}
+              labelId={id("bar")}
               value={barChoice}
               options={barOptions()}
               onChange={(v) =>
@@ -911,7 +922,7 @@ const SettingsPage = () => {
         </Row>
         <Row labelId={id("context")} label={t("setSecWheel", "Context window")} description={t("setContextDesc", "How full the current chat is.")}>
           <CdsSelect
-            id={id("context")}
+            labelId={id("context")}
             value={contextChoice}
             options={contextOptions()}
             onChange={(v) =>
@@ -925,7 +936,7 @@ const SettingsPage = () => {
           description={t("setCacheTimerDesc", "Countdown in the chat header while the prompt cache is warm.")}
         >
           <Switch
-            id={id("show-cache-timer")}
+            labelledBy={id("show-cache-timer")}
             checked={settings.showCacheTimer !== false}
             onChange={(v) => update({ showCacheTimer: v })}
           />
@@ -943,7 +954,7 @@ const SettingsPage = () => {
             )}
           >
             <Switch
-              id={id("thread-sidebar")}
+              labelledBy={id("thread-sidebar")}
               checked={settings.threadSidebar === true}
               onChange={(v) => update({ threadSidebar: v })}
             />
@@ -956,7 +967,7 @@ const SettingsPage = () => {
                 description={t("setThreadSortDesc", "Newest edited moves a thread up when it changes or Claude replies.")}
               >
                 <CdsSelect
-                  id={id("thread-sort")}
+                  labelId={id("thread-sort")}
                   value={settings.threadSidebarSort ?? "edited"}
                   options={threadSortOptions()}
                   onChange={(v) => update({ threadSidebarSort: v as ThreadSort })}
@@ -974,13 +985,13 @@ const SettingsPage = () => {
             label={t("setPacing", "Show pace estimates")}
             description={t("setPacingDesc", "Estimates learn from numeric usage samples stored only in this browser. Turning this off stops collecting them.")}
           >
-            <Switch id={id("pacing")} checked={pacingOn} onChange={setPacing} />
+            <Switch labelledBy={id("pacing")} checked={pacingOn} onChange={setPacing} />
           </Row>
           <NestGroup open={pacingOn}>
             <NestItem>
               <Row labelId={id("pace-surplus")} label={t("set5hrPace", "5-hour pace")} description={t("set5hrPaceDesc", "Shown next to the 5-hour percentage.")}>
                 <CdsSelect
-                  id={id("pace-surplus")}
+                  labelId={id("pace-surplus")}
                   value={settings.paceSurplusFormat}
                   options={paceSurplusOptions()}
                   onChange={(v) => update({ paceSurplusFormat: v as PaceSurplusFormat })}
@@ -990,7 +1001,7 @@ const SettingsPage = () => {
             <NestItem>
               <Row labelId={id("weekly-display")} label={t("setWeeklyEstimate", "Weekly estimate")} description={t("setWeeklyEstimateDesc", "Usable hours left, the day and time you'll run out, or where you'll be at reset.")}>
                 <CdsSelect
-                  id={id("weekly-display")}
+                  labelId={id("weekly-display")}
                   value={settings.weeklyEstimateDisplay ?? "active_hours"}
                   options={weeklyDisplayOptions()}
                   onChange={(v) => update({ weeklyEstimateDisplay: v as WeeklyEstimateDisplay })}
@@ -1028,7 +1039,7 @@ const SettingsPage = () => {
               </CdsButton>
             )}
             <CdsSelect
-              id={id("reset-banner-scope")}
+              labelId={id("reset-banner-scope")}
               value={settings.resetBannerScope}
               options={resetScopeOptions()}
               onChange={(v) => void changeResetScope(v as ResetBannerScope)}
