@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Concluir"
+  },
+  "clipRetiringTitle": {
+    "message": "A Área de Transferência de Prompts será descontinuada"
+  },
+  "clipRetiringBody": {
+    "message": "Ela será removida em uma atualização futura."
+  },
+  "clipRetiringPs": {
+    "message": "P.S.: As habilidades (Skills) fazem o mesmo e muito mais."
+  },
+  "clipConvertToSkills": {
+    "message": "Converter meus prompts em habilidades"
   }
 }

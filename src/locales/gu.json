@@ -210,7 +210,7 @@
     "message": "સાપ્તાહિક અંદાજ"
   },
   "setWeeklyEstimateDesc": {
-    "message": "બાકી રહેલા વપરાશयोग्य કલાકો, મર્યાદા પૂરી થવાનો દિવસ અને સમય, અથવા રીસેટ સમયે તમે ક્યાં હશો."
+    "message": "બાકી રહેલા વપરાશયોગ્ય કલાકો, મર્યાદા પૂરી થવાનો દિવસ અને સમય, અથવા રીસેટ સમયે તમે ક્યાં હશો."
   },
   "setDeleteHistory": {
     "message": "ઇતિહાસ કાઢી નાખો"
@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "થાળે પાડો"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard બંધ કરવામાં આવી રહ્યું છે"
+  },
+  "clipRetiringBody": {
+    "message": "ભવિષ્યના અપડેટમાં તેને દૂર કરવામાં આવશે."
+  },
+  "clipRetiringPs": {
+    "message": "તા.ક.: સ્કિલ્સ (Skills) આ જ કામ અને તેનાથી વધુ કરી શકે છે."
+  },
+  "clipConvertToSkills": {
+    "message": "મારા પ્રોમ્પ્ટ્સને સ્કિલ્સમાં રૂપાંતરિત કરો"
   }
 }

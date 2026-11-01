@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { PromptEntry } from "../shared/types";
 import { getPrompts, savePrompts } from "../shared/storage";
+import { t } from "../shared/i18n";
 import { findDisclaimerMount } from "./composerMount";
+import { buildSkillsConversionPrompt } from "./skillsConversion";
 
 const CheckIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -45,6 +47,31 @@ const insertIntoComposer = (text: string) => {
     return true;
   }
   return false;
+};
+
+// The skills draft goes into a fresh chat so it isn't mixed into the one you're
+// in. Claude's own New link keeps that an in-app route change, which this content
+// script (and the pending insert) survive; with no link it goes in this composer.
+const NEW_CHAT_LINK_SELECTOR = 'a[href="/new"][data-row-main-button], a[href="/new"]';
+const COMPOSER_SELECTOR = '[contenteditable="true"][role="textbox"]';
+const NEW_CHAT_WAIT_MS = 4000;
+
+const isNewChatPath = (): boolean => location.pathname === "/new" || location.pathname === "/new/";
+
+const draftInNewChat = async (text: string): Promise<void> => {
+  const link = isNewChatPath() ? null : document.querySelector<HTMLElement>(NEW_CHAT_LINK_SELECTOR);
+  if (link) {
+    const previous = document.querySelector(COMPOSER_SELECTOR);
+    link.click();
+    for (let waited = 0; waited < NEW_CHAT_WAIT_MS; waited += 100) {
+      const editor = document.querySelector(COMPOSER_SELECTOR);
+      if (isNewChatPath() && editor && editor !== previous) break;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    // Let the new editor finish mounting before typing into it.
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  }
+  insertIntoComposer(text);
 };
 
 type ClipboardView = "list" | "new" | "edit";
@@ -181,6 +208,12 @@ export const PromptClipboard = () => {
     setOpen(false);
   };
 
+  const convertToSkills = () => {
+    const draft = buildSkillsConversionPrompt(prompts, document.documentElement.lang);
+    handleClose();
+    void draftInNewChat(draft);
+  };
+
   const startEdit = (e: React.MouseEvent, entry: PromptEntry) => {
     e.stopPropagation();
     setEditId(entry.id);
@@ -282,6 +315,21 @@ export const PromptClipboard = () => {
                 <div className="cub-prompt-head">
                   <span className="cub-prompt-title">Prompt Clipboard</span>
                   <button className="cub-prompt-new" type="button" onClick={openNew}>+ New</button>
+                </div>
+
+                <div className="cub-prompt-sunset" role="note">
+                  <span className="cub-prompt-sunset-title">
+                    {t("clipRetiringTitle", "Prompt Clipboard is being retired")}
+                  </span>
+                  <span>{t("clipRetiringBody", "It will be removed in a future update.")}</span>
+                  <span className="cub-prompt-sunset-ps">
+                    {t("clipRetiringPs", "P.S. Skills can do the same and more.")}
+                  </span>
+                  {prompts.length > 0 && (
+                    <button type="button" className="cub-prompt-sunset-convert" onClick={convertToSkills}>
+                      {t("clipConvertToSkills", "Convert my prompts to skills")}
+                    </button>
+                  )}
                 </div>
 
                 <input

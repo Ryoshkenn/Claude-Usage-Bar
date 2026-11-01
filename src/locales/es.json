@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Resolver"
+  },
+  "clipRetiringTitle": {
+    "message": "El Portapapeles de prompts se va a retirar"
+  },
+  "clipRetiringBody": {
+    "message": "Se eliminará en una futura actualización."
+  },
+  "clipRetiringPs": {
+    "message": "P. D.: Las habilidades (Skills) hacen lo mismo y más."
+  },
+  "clipConvertToSkills": {
+    "message": "Convertir mis prompts en habilidades"
   }
 }

@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Terminer"
+  },
+  "clipRetiringTitle": {
+    "message": "Le Presse-papiers de prompts va être retiré"
+  },
+  "clipRetiringBody": {
+    "message": "Il sera supprimé dans une prochaine mise à jour."
+  },
+  "clipRetiringPs": {
+    "message": "P.-S. : Les compétences (Skills) font la même chose et bien plus."
+  },
+  "clipConvertToSkills": {
+    "message": "Convertir mes prompts en compétences"
   }
 }

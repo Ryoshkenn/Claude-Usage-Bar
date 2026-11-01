@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Legg bort"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt-utklippstavlen fases ut"
+  },
+  "clipRetiringBody": {
+    "message": "Den vil bli fjernet i en fremtidig oppdatering."
+  },
+  "clipRetiringPs": {
+    "message": "PS: Skills kan gjøre det samme og mer."
+  },
+  "clipConvertToSkills": {
+    "message": "Konverter mine prompts til skills"
   }
 }

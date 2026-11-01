@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "निपटवा"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard बंद केले जात आहे"
+  },
+  "clipRetiringBody": {
+    "message": "पुढील अपडेटमध्ये ते काढून टाकले जाईल."
+  },
+  "clipRetiringPs": {
+    "message": "ता.क. स्किल्स (Skills) हेच काम आणि याहून अधिक करू शकतात."
+  },
+  "clipConvertToSkills": {
+    "message": "माझे प्रॉम्प्ट्स स्किल्समध्ये रूपांतरित करा"
   }
 }

@@ -1340,6 +1340,45 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   padding: 0;
 }
 
+/* Retirement notice at the top of the clipboard list. */
+.cub-prompt-sunset {
+  display: grid;
+  gap: 3px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  border: 1px solid rgb(204 124 94 / 28%);
+  background: rgb(204 124 94 / 10%);
+  color: rgb(205 204 196);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.cub-prompt-sunset-title {
+  color: rgb(235 235 229);
+  font-weight: 600;
+}
+
+.cub-prompt-sunset-ps {
+  color: rgb(165 164 156);
+}
+
+.cub-prompt-sunset-convert {
+  justify-self: start;
+  height: 26px;
+  margin-top: 5px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 7px;
+  background: rgb(204 124 94);
+  color: white;
+  font: 600 12px/1 "Anthropic Sans", system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.cub-prompt-sunset-convert:hover {
+  background: rgb(216 138 108);
+}
+
 .cub-prompt-search,
 .cub-field,
 .cub-textarea {
@@ -1898,6 +1937,24 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-title {
   color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-sunset {
+  border-color: rgb(204 124 94 / 35%);
+  background: rgb(204 124 94 / 8%);
+  color: rgb(80 78 72);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-sunset-title {
+  color: rgb(40 40 38);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-sunset-ps {
+  color: rgb(115 113 106);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-prompt-sunset-convert:hover {
+  background: rgb(190 102 72);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-prompt-search,

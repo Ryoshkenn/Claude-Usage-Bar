@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "완료"
+  },
+  "clipRetiringTitle": {
+    "message": "프롬프트 클립보드 지원이 종료됩니다"
+  },
+  "clipRetiringBody": {
+    "message": "향후 업데이트에서 제거될 예정입니다."
+  },
+  "clipRetiringPs": {
+    "message": "추신: 스킬(Skills)로 동일한 작업은 물론 더 많은 것을 할 수 있습니다."
+  },
+  "clipConvertToSkills": {
+    "message": "내 프롬프트를 스킬로 변환"
   }
 }

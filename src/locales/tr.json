@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Kaldır"
+  },
+  "clipRetiringTitle": {
+    "message": "İstem Panosu kullanımdan kaldırılıyor"
+  },
+  "clipRetiringBody": {
+    "message": "Gelecekteki bir güncellemede kaldırılacaktır."
+  },
+  "clipRetiringPs": {
+    "message": "Not: Beceriler (Skills) aynı işi ve daha fazlasını yapabilir."
+  },
+  "clipConvertToSkills": {
+    "message": "İstemlerimi becerilere dönüştür"
   }
 }

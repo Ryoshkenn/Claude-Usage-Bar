@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Lägg undan"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt-urklipp fasas ut"
+  },
+  "clipRetiringBody": {
+    "message": "Den tas bort i en framtida uppdatering."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills kan göra samma sak och mer."
+  },
+  "clipConvertToSkills": {
+    "message": "Konvertera mina prompts till skills"
   }
 }

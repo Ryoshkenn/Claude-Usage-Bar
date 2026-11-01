@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Xếp gọn"
+  },
+  "clipRetiringTitle": {
+    "message": "Bảng nhớ tạm câu lệnh sắp ngừng hoạt động"
+  },
+  "clipRetiringBody": {
+    "message": "Tính năng này sẽ bị xóa trong bản cập nhật tới."
+  },
+  "clipRetiringPs": {
+    "message": "T.B. Kỹ năng (Skills) có thể làm điều tương tự và hơn thế nữa."
+  },
+  "clipConvertToSkills": {
+    "message": "Chuyển đổi câu lệnh của tôi thành kỹ năng"
   }
 }

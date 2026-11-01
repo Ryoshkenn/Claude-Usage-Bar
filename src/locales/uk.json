@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Відкласти"
+  },
+  "clipRetiringTitle": {
+    "message": "Буфер обміну промптів виводиться з обігу"
+  },
+  "clipRetiringBody": {
+    "message": "Його буде видалено в майбутньому оновленні."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Навички (Skills) вміють те саме й навіть більше."
+  },
+  "clipConvertToSkills": {
+    "message": "Перетворити мої промпти на навички"
   }
 }

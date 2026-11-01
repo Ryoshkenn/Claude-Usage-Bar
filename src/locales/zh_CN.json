@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "标为完成"
+  },
+  "clipRetiringTitle": {
+    "message": "提示词剪贴板即将停用"
+  },
+  "clipRetiringBody": {
+    "message": "它将在未来的更新中移除。"
+  },
+  "clipRetiringPs": {
+    "message": "附注：技能（Skills）可以实现相同甚至更多功能。"
+  },
+  "clipConvertToSkills": {
+    "message": "将我的提示词转换为技能"
   }
 }

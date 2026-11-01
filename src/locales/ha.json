@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Adana"
+  },
+  "clipRetiringTitle": {
+    "message": "Za a daina amfani da Prompt Clipboard"
+  },
+  "clipRetiringBody": {
+    "message": "Za a cire shi a sabuntawa na gaba."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills na iya yin hakan da ma fiye da haka."
+  },
+  "clipConvertToSkills": {
+    "message": "Maida tambayoyina zuwa skills"
   }
 }

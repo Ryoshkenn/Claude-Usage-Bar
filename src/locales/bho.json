@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "निपटाईं"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard अब बंद हो रहल बा"
+  },
+  "clipRetiringBody": {
+    "message": "आवे वाला अपडेट में इ हटा दिहल जाई।"
+  },
+  "clipRetiringPs": {
+    "message": "ध्यान दीं: स्किल्स (Skills) से इहे अउर एकरा से ढेर काम हो सकेला।"
+  },
+  "clipConvertToSkills": {
+    "message": "हमरा प्रॉम्प्ट के स्किल्स में बदलीं"
   }
 }

@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Concludi"
+  },
+  "clipRetiringTitle": {
+    "message": "Gli Appunti dei prompt verranno ritirati"
+  },
+  "clipRetiringBody": {
+    "message": "Verranno rimossi in un futuro aggiornamento."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Le competenze (Skills) fanno lo stesso e molto di più."
+  },
+  "clipConvertToSkills": {
+    "message": "Converti i miei prompt in competenze"
   }
 }

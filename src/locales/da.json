@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Henlæg"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard udfases"
+  },
+  "clipRetiringBody": {
+    "message": "Den fjernes i en fremtidig opdatering."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills kan det samme og mere til."
+  },
+  "clipConvertToSkills": {
+    "message": "Konvertér mine prompts til skills"
   }
 }

@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "ಇತ್ಯರ್ಥಗೊಳಿಸಿ"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard ಅನ್ನು ಸ್ಥಗಿತಗೊಳಿಸಲಾಗುತ್ತಿದೆ"
+  },
+  "clipRetiringBody": {
+    "message": "ಮುಂದಿನ ಅಪ್‌ಡೇಟ್‌ನಲ್ಲಿ ಇದನ್ನು ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ."
+  },
+  "clipRetiringPs": {
+    "message": "ವಿ.ಸೂ: ಸ್ಕಿಲ್ಸ್ (Skills) ಇದೇ ಕೆಲಸವನ್ನು ಮತ್ತು ಇನ್ನಷ್ಟನ್ನು ಮಾಡಬಲ್ಲವು."
+  },
+  "clipConvertToSkills": {
+    "message": "ನನ್ನ ಪ್ರಾಂಪ್ಟ್‌ಗಳನ್ನು ಸ್ಕಿಲ್ಸ್ ಆಗಿ ಪರಿವರ್ತಿಸಿ"
   }
 }

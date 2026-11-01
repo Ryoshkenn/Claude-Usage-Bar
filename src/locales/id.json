@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Simpan"
+  },
+  "clipRetiringTitle": {
+    "message": "Papan Klip Prompt akan dihentikan"
+  },
+  "clipRetiringBody": {
+    "message": "Fitur ini akan dihapus pada pembaruan mendatang."
+  },
+  "clipRetiringPs": {
+    "message": "NB: Skills bisa melakukan hal yang sama dan lebih banyak lagi."
+  },
+  "clipConvertToSkills": {
+    "message": "Ubah prompt saya menjadi skills"
   }
 }

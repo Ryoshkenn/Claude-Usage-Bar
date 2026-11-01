@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Отложить"
+  },
+  "clipRetiringTitle": {
+    "message": "Буфер обмена промптов закрывается"
+  },
+  "clipRetiringBody": {
+    "message": "Он будет удалён в одном из будущих обновлений."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Навыки (Skills) умеют то же самое и даже больше."
+  },
+  "clipConvertToSkills": {
+    "message": "Преобразовать мои промпты в навыки"
   }
 }

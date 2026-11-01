@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "ஒதுக்கு"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard நிறுத்தப்படுகிறது"
+  },
+  "clipRetiringBody": {
+    "message": "இது எதிர்கால புதுப்பிப்பில் அகற்றப்படும்."
+  },
+  "clipRetiringPs": {
+    "message": "பி.கு: ஸ்கில்ஸ் (Skills) இதையும் விட கூடுதலாகச் செய்யக்கூடியவை."
+  },
+  "clipConvertToSkills": {
+    "message": "எனது ப்ராம்ப்ட்களை ஸ்கில்ஸாக மாற்று"
   }
 }

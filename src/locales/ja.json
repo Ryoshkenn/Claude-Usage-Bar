@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "完了にする"
+  },
+  "clipRetiringTitle": {
+    "message": "プロンプトクリップボードは提供終了となります"
+  },
+  "clipRetiringBody": {
+    "message": "今後のアップデートで削除されます。"
+  },
+  "clipRetiringPs": {
+    "message": "追伸：スキル（Skills）を使えば、同じこと以上に多くのことができます。"
+  },
+  "clipConvertToSkills": {
+    "message": "プロンプトをスキルに変換"
   }
 }

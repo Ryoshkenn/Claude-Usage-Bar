@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "ഒതുക്കുക"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard നിർത്തലാക്കുന്നു"
+  },
+  "clipRetiringBody": {
+    "message": "ഭാവിയിലെ അപ്ഡേറ്റിൽ ഇത് നീക്കം ചെയ്യുന്നതാണ്."
+  },
+  "clipRetiringPs": {
+    "message": "കുറിപ്പ്: സ്കിൽസിന് (Skills) ഇതും ഇതിലധികവും ചെയ്യാൻ കഴിയും."
+  },
+  "clipConvertToSkills": {
+    "message": "എന്റെ പ്രോംപ്റ്റുകൾ സ്കിൽസ് ആക്കി മാറ്റുക"
   }
 }

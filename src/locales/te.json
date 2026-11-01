@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "సర్దుబాటు చేయి"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard నిలిపివేయబడుతోంది"
+  },
+  "clipRetiringBody": {
+    "message": "భవిష్యత్తు అప్‌డేట్‌లో ఇది తొలగించబడుతుంది."
+  },
+  "clipRetiringPs": {
+    "message": "గమనిక: స్కిల్స్ (Skills) ఇదే పనిని మరియు మరెన్నో చేయగలవు."
+  },
+  "clipConvertToSkills": {
+    "message": "నా ప్రాంప్ట్‌లను స్కిల్స్‌గా మార్చు"
   }
 }

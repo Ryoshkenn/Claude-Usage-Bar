@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "歸檔"
+  },
+  "clipRetiringTitle": {
+    "message": "提示詞剪貼簿即將停用"
+  },
+  "clipRetiringBody": {
+    "message": "它將在未來的更新中移除。"
+  },
+  "clipRetiringPs": {
+    "message": "附註：技能（Skills）能做到相同的事，甚至更多。"
+  },
+  "clipConvertToSkills": {
+    "message": "將我的提示詞轉換為技能"
   }
 }

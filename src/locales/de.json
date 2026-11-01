@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Erledigen"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard wird eingestellt"
+  },
+  "clipRetiringBody": {
+    "message": "Es wird in einem zukünftigen Update entfernt."
+  },
+  "clipRetiringPs": {
+    "message": "PS: Skills können dasselbe und noch mehr."
+  },
+  "clipConvertToSkills": {
+    "message": "Meine Prompts in Skills umwandeln"
   }
 }

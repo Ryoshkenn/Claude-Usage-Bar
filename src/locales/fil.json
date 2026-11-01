@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Itabi"
+  },
+  "clipRetiringTitle": {
+    "message": "Ireretiro na ang Prompt Clipboard"
+  },
+  "clipRetiringBody": {
+    "message": "Aalisin ito sa susunod na update."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Kayang gawin ng Skills ang parehong bagay at higit pa."
+  },
+  "clipConvertToSkills": {
+    "message": "I-convert ang mga prompt ko sa skills"
   }
 }

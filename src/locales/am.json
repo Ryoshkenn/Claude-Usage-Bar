@@ -387,7 +387,7 @@
     "message": "ውይይቶች"
   },
   "threadSettled": {
-    "message": "የተเก็บ ($1)"
+    "message": "የተረጋጉ ($1)"
   },
   "threadKindChat": {
     "message": "ውይይት"
@@ -429,7 +429,7 @@
     "message": "የውይይት እይታ"
   },
   "setThreadSidebarDesc": {
-    "message": "ሁሉም ነገር ተเก็บቶ ይጀምራል። አንድ ውይይት አዲስ እንቅስቃሴ ሲኖረው እስኪያเก็บት ድረስ እንደ ካርድ ይታያል።"
+    "message": "ሁሉም ነገር ተረጋግቶ ይጀምራል። አንድ ውይይት አዲስ እንቅስቃሴ ሲኖረው እስክታረጋጋው ድረስ ካርድ ይሆናል።"
   },
   "threadNavLabel": {
     "message": "ፕሮጀክቶች እና መሣሪያዎች"
@@ -486,6 +486,18 @@
     "message": "በቅርብ የተስተካከለ የሚለው ውይይቱ ሲቀየር ወይም Claude ምላሽ ሲሰጥ ወደ ላይ ያመጣዋል።"
   },
   "threadSettle": {
-    "message": "አเก็บ"
+    "message": "አረጋጋ"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard ሊቋረጥ ነው"
+  },
+  "clipRetiringBody": {
+    "message": "ወደፊት በሚመጣ ማሻሻያ ውስጥ ይወገዳል።"
+  },
+  "clipRetiringPs": {
+    "message": "ማስታወሻ፦ ክህሎቶች (Skills) ተመሳሳይ እና ተጨማሪ ነገሮችን ማድረግ ይችላሉ።"
+  },
+  "clipConvertToSkills": {
+    "message": "የእኔን መጠየቂያዎች ወደ ክህሎቶች ቀይር"
   }
 }

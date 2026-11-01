@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "เก็บพัก"
+  },
+  "clipRetiringTitle": {
+    "message": "กำลังจะยกเลิกการใช้งานคลิปบอร์ดคำสั่ง (Prompt Clipboard)"
+  },
+  "clipRetiringBody": {
+    "message": "ฟีเจอร์นี้จะถูกนำออกในการอัปเดตในอนาคต"
+  },
+  "clipRetiringPs": {
+    "message": "ป.ล. สกิล (Skills) ทำแบบเดียวกันได้และทำได้มากกว่าเดิม"
+  },
+  "clipConvertToSkills": {
+    "message": "แปลงคำสั่งของฉันเป็นสกิล"
   }
 }

@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Afhandelen"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt-klembord wordt stopgezet"
+  },
+  "clipRetiringBody": {
+    "message": "Het wordt in een toekomstige update verwijderd."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills kunnen hetzelfde en meer."
+  },
+  "clipConvertToSkills": {
+    "message": "Mijn prompts omzetten naar skills"
   }
 }

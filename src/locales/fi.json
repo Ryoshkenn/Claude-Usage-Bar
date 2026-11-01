@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Kuittaa"
+  },
+  "clipRetiringTitle": {
+    "message": "Kehoteleikepöytä poistuu käytöstä"
+  },
+  "clipRetiringBody": {
+    "message": "Se poistetaan tulevassa päivityksessä."
+  },
+  "clipRetiringPs": {
+    "message": "PS. Taidot (Skills) pystyvät samaan ja vielä enempään."
+  },
+  "clipConvertToSkills": {
+    "message": "Muunna kehotteeni taidoiksi"
   }
 }

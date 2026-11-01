@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Settle"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard is being retired"
+  },
+  "clipRetiringBody": {
+    "message": "It will be removed in a future update."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills can do the same and more."
+  },
+  "clipConvertToSkills": {
+    "message": "Convert my prompts to skills"
   }
 }

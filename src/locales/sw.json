@@ -487,5 +487,17 @@
   },
   "threadSettle": {
     "message": "Tuliza"
+  },
+  "clipRetiringTitle": {
+    "message": "Prompt Clipboard inaondolewa"
+  },
+  "clipRetiringBody": {
+    "message": "Itaondolewa katika sasisho lijalo."
+  },
+  "clipRetiringPs": {
+    "message": "P.S. Skills inaweza kufanya vivyo hivyo na zaidi."
+  },
+  "clipConvertToSkills": {
+    "message": "Badilisha vidokezo vyangu kuwa skills"
   }
 }
