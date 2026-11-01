@@ -36,6 +36,8 @@ export interface Settings {
   contextDisplay: ContextDisplay;
   showPace: boolean;
   showCacheTimer: boolean;
+  // Marks on the right edge of a chat, one per message you sent, to jump between them.
+  showMessageRail: boolean;
   paceSurplusFormat: PaceSurplusFormat;
   weeklyMetricsEnabled: boolean;
   weeklyEstimateDisplay: WeeklyEstimateDisplay;

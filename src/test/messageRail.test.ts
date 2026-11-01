@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { tickMessageRail } from "../content/messageRail";
+import { removeMessageRail, tickMessageRail } from "../content/messageRail";
 
 // jsdom lacks IntersectionObserver / rAF; the rail only needs them to exist.
 class NoopIO {
@@ -95,5 +95,35 @@ describe("message rail", () => {
 
     // Old conversation's markers must be gone, not carried over.
     expect(markerCount()).toBe(2);
+  });
+
+  it("doesn't take the previous chat's messages, still on the page after the URL changes, for the new chat's", () => {
+    const old = [addUserMessage("a"), addUserMessage("b")];
+    tickMessageRail();
+    expect(markerCount()).toBe(2);
+
+    // The URL changes first; the old transcript is swapped out a moment later.
+    newConversation();
+    tickMessageRail();
+    expect(document.querySelector(RAIL)).toBeNull();
+    old.forEach((el) => el.remove());
+    addUserMessage("x");
+    addUserMessage("y");
+    addUserMessage("z");
+    tickMessageRail();
+    expect(markerCount()).toBe(3);
+    expect([...document.querySelectorAll<HTMLElement>(`${RAIL} .cub-message-rail-marker`)].map((m) => m.title)).toEqual([
+      "x",
+      "y",
+      "z",
+    ]);
+  });
+
+  it("goes away when switched off", () => {
+    addUserMessage("a");
+    addUserMessage("b");
+    tickMessageRail();
+    removeMessageRail();
+    expect(document.querySelector(RAIL)).toBeNull();
   });
 });

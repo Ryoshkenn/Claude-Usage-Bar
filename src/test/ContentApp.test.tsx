@@ -15,6 +15,7 @@ const settings: Settings = {
   contextDisplay: "text",
   showPace: true,
   showCacheTimer: true,
+  showMessageRail: true,
   paceSurplusFormat: "percent",
   weeklyMetricsEnabled: true,
   weeklyEstimateDisplay: "active_hours",

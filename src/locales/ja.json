@@ -429,7 +429,7 @@
     "message": "スレッド表示"
   },
   "setThreadSidebarDesc": {
-    "message": "最初はすべて完了済みです。新しい動きがあったチャットは、完了にするまでカードとして表示されます。"
+    "message": "最近のチャットはカードとして表示され、それ以外は完了済みにまとまります。スレッドに新しい動きがあると、完了にするまでカードとして表示されます。Code でも利用できます。"
   },
   "threadNavLabel": {
     "message": "プロジェクトとツール"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "プロンプトをスキルに変換"
+  },
+  "tourWelcomeTitle": {
+    "message": "Claude Usage Bar へようこそ！"
+  },
+  "tourWelcomeBody": {
+    "message": "Claude に追加される便利な機能を簡単にご紹介します。1分ほどで終わります。"
+  },
+  "tourBarTitle": {
+    "message": "使用量バー"
+  },
+  "tourBarBody": {
+    "message": "5時間プランの使用量が入力欄に直接表示されます。Claude を使うにつれてバーが伸び、上限に近づくとオレンジ色に変わります。"
+  },
+  "tourDetailsTitle": {
+    "message": "使用量の詳細"
+  },
+  "tourDetailsBody": {
+    "message": "バーにカーソルを合わせると、ペース、週間の使用量、各上限のリセット日時などの詳細を確認できます。"
+  },
+  "tourRailTitle": {
+    "message": "メッセージナビゲーター"
+  },
+  "tourRailBody": {
+    "message": "チャットの右端にある目印は送信したメッセージを表し、明るく光っている箇所が現在位置です。目印をクリックするとその位置へ移動できます。"
+  },
+  "tourCacheTitle": {
+    "message": "キャッシュタイマー"
+  },
+  "tourCacheBody": {
+    "message": "Claude の返信後、数分間はプロンプトキャッシュが保持されるため、続けて返信すると使用量の消費を抑えられます。キャッシュタイマーはチャットヘッダーでその残り時間をカウントダウンします。"
+  },
+  "tourCacheAsk": {
+    "message": "キャッシュタイマーを表示しますか？"
+  },
+  "tourUseIt": {
+    "message": "使う"
+  },
+  "tourThreadTitle": {
+    "message": "スレッド表示"
+  },
+  "tourThreadBody": {
+    "message": "サイドバーをカード表示に切り替えます。確認が必要なスレッド、完了した作業、作業中の順に並びます。用が済んだカードは「完了にする」で整理できます。"
+  },
+  "tourThreadAsk": {
+    "message": "スレッド表示を使いますか？"
+  },
+  "tourUseThis": {
+    "message": "これを使う"
+  },
+  "tourSettingsTitle": {
+    "message": "設定"
+  },
+  "tourSettingsBody": {
+    "message": "この矢印から Usage Bar の設定を開き、すべての項目をいつでも変更できます。さっそく見てみましょう。"
+  },
+  "tourPacingTitle": {
+    "message": "ペース予測"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar は5時間および週間の利用パターンからペースを予測します。サンプルデータはこのブラウザ内にのみ保存され、プロンプトや回答、生データは一切保存されません。不要な場合はここでオフにできます。"
+  },
+  "tourDoneTitle": {
+    "message": "準備完了！"
+  },
+  "tourDoneBody": {
+    "message": "その他の項目はすべて Usage Bar の設定にあります。このツアーは「一般」からいつでも再表示できます。"
+  },
+  "tourAria": {
+    "message": "機能ツアー: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "スキップ"
+  },
+  "tourBack": {
+    "message": "前のステップ"
+  },
+  "tourNoThanks": {
+    "message": "使わない"
+  },
+  "tourDone": {
+    "message": "完了"
+  },
+  "tourNext": {
+    "message": "次へ →"
+  },
+  "tourMockThread2": {
+    "message": "週報の下書き"
+  },
+  "tourMockThread1": {
+    "message": "ログインのバグ修正"
+  },
+  "tourMockThread3": {
+    "message": "リスボン旅行の計画"
+  },
+  "tourMockThread4": {
+    "message": "レシピのアイデア"
+  },
+  "tourMockThread5": {
+    "message": "プレゼントの候補"
+  },
+  "tourThreadStepStart": {
+    "message": "開始"
+  },
+  "tourThreadClaude": {
+    "message": "Claude のサイドバー"
+  },
+  "tourThreadOurs": {
+    "message": "スレッド表示"
+  },
+  "setMessageRail": {
+    "message": "メッセージナビゲーター"
+  },
+  "setMessageRailDesc": {
+    "message": "チャットの右端に送信メッセージごとの目印を表示します。クリックするとそのメッセージへ移動できます。"
+  },
+  "sessionNotUsedYet": {
+    "message": "未使用"
   }
 }

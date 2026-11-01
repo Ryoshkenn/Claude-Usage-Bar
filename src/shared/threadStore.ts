@@ -1,9 +1,10 @@
 import { MESSAGE_TYPES, STORAGE_KEYS } from "./constants";
 
 // The thread view's shared state: per-thread working / done marks
-// (chrome.storage.session, STORAGE_KEYS.threadActivity) and where each thread
-// sits (chrome.storage.local, STORAGE_KEYS.threadPlaces). Every claude.ai tab
-// reads both, but only the background worker writes them. chrome.storage has no
+// (STORAGE_KEYS.threadActivity) and where each thread sits
+// (STORAGE_KEYS.threadPlaces), both in chrome.storage.local so they outlive a
+// reload, a browser restart and an extension update. Every claude.ai tab reads
+// both, but only the background worker writes them. chrome.storage has no
 // transactions, so two tabs each reading, merging and writing could both read the
 // same snapshot and the second write would drop the first tab's change. Tabs send
 // their changes to the worker instead (MESSAGE_TYPES.threadActivityPatch /
@@ -20,6 +21,9 @@ export interface ThreadPlaces {
   since?: number;
   open: Record<string, number>;
   settled: Record<string, number>;
+  // Lists ("chat", "code") whose latest threads were opened when the view first
+  // showed them. Absent in places stored before lists were seeded.
+  seeded?: string[];
 }
 
 // Row key → entry to store, or null to remove it.
@@ -33,6 +37,8 @@ export const WORKING_TTL_MS = 12 * 60 * 60_000;
 // Open and hand-settled threads kept in storage, newest first. Only bounds the
 // store; the list itself has no cap.
 export const MAX_PLACES = 1_000;
+const LIST_ID_PATTERN = /^[a-z]{2,12}$/;
+const MAX_LISTS = 8;
 
 export const sanitizeActivity = (value: unknown, now = Date.now()): Record<string, ThreadActivity> => {
   const out: Record<string, ThreadActivity> = {};
@@ -64,6 +70,11 @@ export const applyActivityPatch = (stored: unknown, patch: unknown, now = Date.n
   return sanitizeActivity(merged, now);
 };
 
+const sanitizeLists = (value: unknown): string[] | undefined =>
+  Array.isArray(value)
+    ? [...new Set(value.filter((id): id is string => typeof id === "string" && LIST_ID_PATTERN.test(id)))].slice(0, MAX_LISTS)
+    : undefined;
+
 const sanitizeKeyTimes = (value: unknown): [string, number][] =>
   value && typeof value === "object"
     ? Object.entries(value as Record<string, unknown>).filter(
@@ -88,7 +99,8 @@ export const sanitizePlaces = (value: unknown): ThreadPlaces => {
         .sort((a, b) => b[1] - a[1])
         .slice(0, MAX_PLACES),
     );
-  return { since, open: keep(open, settledAt), settled: keep(settledEntries, openAt) };
+  const seeded = sanitizeLists(raw.seeded);
+  return { since, open: keep(open, settledAt), settled: keep(settledEntries, openAt), ...(seeded ? { seeded } : {}) };
 };
 
 // Newest time per key across two key → time maps.
@@ -106,10 +118,12 @@ const latestTimes = (a: Record<string, number>, b: Record<string, number>): Reco
 export const mergePlaces = (stored: unknown, incoming: unknown): ThreadPlaces => {
   const current = sanitizePlaces(stored);
   const next = sanitizePlaces(incoming);
+  const seeded = current.seeded || next.seeded ? [...(current.seeded ?? []), ...(next.seeded ?? [])] : undefined;
   return sanitizePlaces({
     since: current.since ?? next.since,
     open: latestTimes(current.open, next.open),
     settled: latestTimes(current.settled, next.settled),
+    seeded,
   });
 };
 
@@ -120,14 +134,12 @@ export interface ThreadStoreWriter {
 }
 
 // One queue for every write, so each read-merge-write finishes before the next
-// starts. A places patch is dropped once the view is off, so a tab's late write
-// can't bring back places that turning the view off just removed.
+// starts. A patch is dropped once the view is off, so a tab's late write can't
+// bring back what turning the view off just removed.
 export const createThreadStoreWriter = ({
-  session,
   local,
   viewEnabled,
 }: {
-  session: chrome.storage.StorageArea | undefined;
   local: chrome.storage.StorageArea;
   viewEnabled: () => Promise<boolean>;
 }): ThreadStoreWriter => {
@@ -140,9 +152,9 @@ export const createThreadStoreWriter = ({
   return {
     patchActivity: (patch) =>
       enqueue(async () => {
-        if (!session) throw new Error("session storage unavailable");
-        const data = await session.get(STORAGE_KEYS.threadActivity);
-        await session.set({ [STORAGE_KEYS.threadActivity]: applyActivityPatch(data[STORAGE_KEYS.threadActivity], patch) });
+        if (!(await viewEnabled())) return;
+        const data = await local.get(STORAGE_KEYS.threadActivity);
+        await local.set({ [STORAGE_KEYS.threadActivity]: applyActivityPatch(data[STORAGE_KEYS.threadActivity], patch) });
       }),
     patchPlaces: (places) =>
       enqueue(async () => {
@@ -150,7 +162,8 @@ export const createThreadStoreWriter = ({
         const data = await local.get(STORAGE_KEYS.threadPlaces);
         await local.set({ [STORAGE_KEYS.threadPlaces]: mergePlaces(data[STORAGE_KEYS.threadPlaces], places) });
       }),
-    forgetPlaces: () => enqueue(() => local.remove(STORAGE_KEYS.threadPlaces)),
+    // Turning the view off forgets both: nothing tracks activity while it's off.
+    forgetPlaces: () => enqueue(() => local.remove([STORAGE_KEYS.threadPlaces, STORAGE_KEYS.threadActivity])),
   };
 };
 

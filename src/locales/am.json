@@ -429,7 +429,7 @@
     "message": "የውይይት እይታ"
   },
   "setThreadSidebarDesc": {
-    "message": "ሁሉም ነገር ተረጋግቶ ይጀምራል። አንድ ውይይት አዲስ እንቅስቃሴ ሲኖረው እስክታረጋጋው ድረስ ካርድ ይሆናል።"
+    "message": "የቅርብ ጊዜ ውይይቶችዎ እንደ ካርድ ሆነው ይጀምራሉ፣ የተቀሩት ደግሞ እንደተረጋጉ ይቆያሉ። አንድ ውይይት አዲስ እንቅስቃሴ ሲኖረው እስኪያረጋጉት ድረስ ካርድ ይሆናል። በCode ውስጥም ይሠራል።"
   },
   "threadNavLabel": {
     "message": "ፕሮጀክቶች እና መሣሪያዎች"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "የእኔን መጠየቂያዎች ወደ ክህሎቶች ቀይር"
+  },
+  "tourWelcomeTitle": {
+    "message": "ወደ Claude Usage Bar እንኳን ደህና መጡ!"
+  },
+  "tourWelcomeBody": {
+    "message": "ወደ Claude የሚጨምረውን ነገር በአጭሩ ይመልከቱ። አንድ ደቂቃ ብቻ ይወስዳል።"
+  },
+  "tourBarTitle": {
+    "message": "Usage bar"
+  },
+  "tourBarBody": {
+    "message": "የ5-ሰዓት የዕቅድ አጠቃቀምዎ፣ በቀጥታ በመጻፊያው ውስጥ። Claudeን በሚጠቀሙበት ጊዜ እየሞላ ይሄዳል እና ወደ ገደቡ ሲቃረብ ብርቱካናማ ይሆናል።"
+  },
+  "tourDetailsTitle": {
+    "message": "የአጠቃቀም ዝርዝሮች"
+  },
+  "tourDetailsBody": {
+    "message": "ዝርዝሮቹን ለማየት አሞሌው ላይ ያንዣብቡ፦ የአጠቃቀም ፍጥነትዎን፣ ሳምንታዊ አጠቃቀምዎን እና እያንዳንዱ ገደብ መቼ እንደሚታደስ ያሳያል።"
+  },
+  "tourRailTitle": {
+    "message": "የመልእክት መዳሰሻ"
+  },
+  "tourRailBody": {
+    "message": "በውይይት ውስጥ በቀኝ ጠርዝ ላይ ያሉት እነዚህ ምልክቶች መልእክቶችዎን ይወክላሉ፣ ደማቁ ደግሞ አሁን ያሉበትን ቦታ ያሳያል። ወደዚያ ለመዝለል ማንኛውንም ምልክት ጠቅ ያድርጉ።"
+  },
+  "tourCacheTitle": {
+    "message": "የመሸጎጫ ሰዓት ቆጣሪ"
+  },
+  "tourCacheBody": {
+    "message": "Claude መልስ ከሰጠ በኋላ የጥያቄ መሸጎጫዎ ለጥቂት ደቂቃዎች ንቁ ሆኖ ስለሚቆይ ተከታይ መልእክት ከገደብዎ የሚቀንሰው ትንሽ ነው። የመሸጎጫ ሰዓት ቆጣሪው ይህንን በውይይቱ ራስጌ ላይ ይቆጥራል።"
+  },
+  "tourCacheAsk": {
+    "message": "የመሸጎጫ ሰዓት ቆጣሪው ይታይ?"
+  },
+  "tourUseIt": {
+    "message": "ተጠቀምበት"
+  },
+  "tourThreadTitle": {
+    "message": "የውይይት እይታ"
+  },
+  "tourThreadBody": {
+    "message": "የጎን አሞሌዎን ወደ ካርዶች ይቀይረዋል። የእርስዎን ትኩረት የሚፈልጉ ውይይቶች መጀመሪያ ይመጣሉ፣ ከዚያ የተጠናቀቁ ሥራዎች፣ ከዚያ አሁንም በመሥራት ላይ ያሉ ሥራዎች ይከተላሉ። አንድ ካርድ ሲጨርሱ ያረጋጉት።"
+  },
+  "tourThreadAsk": {
+    "message": "የውይይት እይታን ይጠቀሙ?"
+  },
+  "tourUseThis": {
+    "message": "ይህን ተጠቀም"
+  },
+  "tourSettingsTitle": {
+    "message": "ቅንብሮች"
+  },
+  "tourSettingsBody": {
+    "message": "ይህ ቀስት የUsage Bar ቅንብሮችን ይከፍታል፣ እዚያም ከእነዚህ ውስጥ ማንኛውንም መቀየር ይችላሉ። አሁን ወደዚያ እንሂድ።"
+  },
+  "tourPacingTitle": {
+    "message": "የአጠቃቀም ፍጥነት ግምቶች"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar የአጠቃቀም ፍጥነትዎን ለመገመት የ5-ሰዓት እና ሳምንታዊ የአጠቃቀም ልማዶችዎን ይማራል። ናሙናዎች በዚህ አሳሽ ውስጥ ይቆያሉ፣ እና ምንም ጥያቄዎች፣ ምላሾች ወይም ጥሬ መረጃዎች አይቀመጡም። የማይፈልጉ ከሆነ የአጠቃቀም ፍጥነትን እዚህ ያጥፉ።"
+  },
+  "tourDoneTitle": {
+    "message": "ሁሉም ተዘጋጅቷል!"
+  },
+  "tourDoneBody": {
+    "message": "ሌላው ነገር ሁሉ በቅንብሮች ውስጥ በUsage Bar ሥር ይገኛል፣ እና ይህን ጉብኝት ከዚያ በአጠቃላይ ሥር በድጋሚ ማስጀመር ይችላሉ።"
+  },
+  "tourAria": {
+    "message": "የባህሪ ጉብኝት፦ $1"
+  },
+  "tourStepCount": {
+    "message": "$1 ከ $2"
+  },
+  "tourSkip": {
+    "message": "ዝለል"
+  },
+  "tourBack": {
+    "message": "ያለፈው ደረጃ"
+  },
+  "tourNoThanks": {
+    "message": "አይ፣ አመሰግናለሁ"
+  },
+  "tourDone": {
+    "message": "ተከናውኗል"
+  },
+  "tourNext": {
+    "message": "ቀጣይ →"
+  },
+  "tourMockThread2": {
+    "message": "የሳምንታዊ ሪፖርት ረቂቅ"
+  },
+  "tourMockThread1": {
+    "message": "የመግቢያ ስህተቱን ማስተካከል"
+  },
+  "tourMockThread3": {
+    "message": "ጉዞ ወደ ሊዝበን"
+  },
+  "tourMockThread4": {
+    "message": "የምግብ አዘገጃጀት ሐሳቦች"
+  },
+  "tourMockThread5": {
+    "message": "የስጦታ ሐሳቦች"
+  },
+  "tourThreadStepStart": {
+    "message": "ተጀምሯል"
+  },
+  "tourThreadClaude": {
+    "message": "የClaude የጎን አሞሌ"
+  },
+  "tourThreadOurs": {
+    "message": "የውይይት እይታ"
+  },
+  "setMessageRail": {
+    "message": "የመልእክት መዳሰሻ"
+  },
+  "setMessageRailDesc": {
+    "message": "በውይይቱ ቀኝ ጠርዝ ላይ ለላኩት እያንዳንዱ መልእክት አንድ ምልክት ያሳያል። ወደዚያ ለመዝለል አንዱን ጠቅ ያድርጉ።"
+  },
+  "sessionNotUsedYet": {
+    "message": "ገና አልተጠቀሙበትም"
   }
 }

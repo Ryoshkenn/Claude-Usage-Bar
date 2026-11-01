@@ -363,6 +363,9 @@ export const ContentApp = ({
 }: ContentAppProps) => {
   const [showReviewBanner, setShowReviewBanner] = useState(false);
   const [isBreakdownOpen, setIsBreakdownOpen] = useState(false);
+  // Set by the details panel's settings arrow: the panel stays shut (it would
+  // otherwise sit over the settings it just opened) until the pointer leaves.
+  const [detailsDismissed, setDetailsDismissed] = useState(false);
   // Hovering the percent opens the breakdown panel; the close is delayed so the
   // pointer can cross the gap between the label and the floating panel.
   const breakdownCloseTimer = useRef<number | null>(null);
@@ -570,11 +573,16 @@ export const ContentApp = ({
             <span className="cub-bar-label" aria-hidden="true">{barDisplay}</span>
           )}
           <div
-            className="cub-meter"
+            className={`cub-meter${detailsDismissed ? " cub-meter--dismissed" : ""}`}
             aria-label={`${ringMetricLabel(barMetric) ?? t("usage", "Usage")} ${barDisplay}`}
             role="button"
             tabIndex={0}
-            onMouseEnter={onHoverBar}
+            onMouseEnter={() => {
+              setDetailsDismissed(false);
+              onHoverBar?.();
+            }}
+            onMouseLeave={() => setDetailsDismissed(false)}
+            onFocus={() => setDetailsDismissed(false)}
           >
           <span className="cub-meter-hover" />
           <span className="cub-meter-fill" style={{ width: `${barWidth}%` }} />
@@ -598,7 +606,10 @@ export const ContentApp = ({
                 className="cub-usage-link"
                 type="button"
                 aria-label={t("openSettings", "Open extension settings")}
-                onClick={() => {
+                onClick={(event) => {
+                  setDetailsDismissed(true);
+                  // Focus inside the bar would keep the panel open.
+                  event.currentTarget.blur();
                   void openUsageBarSettings();
                 }}
               >

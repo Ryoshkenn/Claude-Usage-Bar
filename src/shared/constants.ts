@@ -20,14 +20,16 @@ export const STORAGE_KEYS = {
   // Reset timestamps the alarm has already fired for, so a rollover banners once
   // rather than on every wake-up until the next fetch moves the timestamp.
   announcedResets: "announcedResets",
-  // chrome.storage.session, shared by every claude.ai tab: per-thread working /
+  // chrome.storage.local, shared by every claude.ai tab: per-thread working /
   // done timestamps keyed by Claude's row key ("chat:<uuid>"). Ids and numbers
-  // only — never titles — and gone when the browser closes.
+  // only — never titles — expiring after a day, and removed when the thread
+  // view is turned off.
   threadActivity: "threadActivity",
   // chrome.storage.local: where the thread view has put each thread — when the
   // view was turned on (everything counts as settled as of then), plus row key
-  // → when it opened and row key → when it was settled by hand. Ids and times
-  // only, and removed when the view is turned off.
+  // → when it opened and row key → when it was settled by hand, and which lists
+  // ("chat", "code") have had their latest threads opened. Ids and times only,
+  // and removed when the view is turned off.
   threadPlaces: "threadPlaces",
 } as const;
 

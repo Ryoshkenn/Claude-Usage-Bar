@@ -68,15 +68,16 @@ export const DEFAULT_SETTINGS: Settings = {
   mode: "compact",
   barMetric: "session",
   ringTarget: "context",
-  showBar: false,
+  showBar: true,
   showBarLabel: false,
   showWheel: true,
   showWheelLabel: false,
   contextDisplay: "ring",
   showPace: true,
-  // Bar + cache timer default off; the user can turn either on and the choice
-  // sticks (reads honor the stored value).
+  // The cache timer defaults off (the tour offers it); the bar defaults on.
+  // Either choice sticks (reads honor the stored value).
   showCacheTimer: false,
+  showMessageRail: true,
   paceSurplusFormat: "percent",
   weeklyMetricsEnabled: true,
   weeklyEstimateDisplay: "active_hours",

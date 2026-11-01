@@ -429,7 +429,7 @@
     "message": "Tampilan utas"
   },
   "setThreadSidebarDesc": {
-    "message": "Semua dimulai dalam keadaan tersimpan. Chat menjadi kartu saat ada aktivitas baru, hingga Anda menyimpannya."
+    "message": "Obrolan terbaru ditampilkan sebagai kartu dan sisanya tersimpan. Utas menjadi kartu saat ada aktivitas baru hingga Anda menyimpannya. Berfungsi di Code juga."
   },
   "threadNavLabel": {
     "message": "Proyek & alat"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "Ubah prompt saya menjadi skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Selamat datang di Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Sekilas tentang fitur-fitur yang ditambahkan ke Claude. Hanya butuh semenit."
+  },
+  "tourBarTitle": {
+    "message": "Bilah pemakaian"
+  },
+  "tourBarBody": {
+    "message": "Pemakaian paket 5 jam Anda, langsung di kolom pesan. Bilah ini terisi saat Anda memakai Claude dan berubah oranye saat mendekati batas."
+  },
+  "tourDetailsTitle": {
+    "message": "Detail pemakaian"
+  },
+  "tourDetailsBody": {
+    "message": "Arahkan kursor ke bilah untuk melihat detailnya: laju pemakaian, pemakaian mingguan, dan waktu reset tiap batas."
+  },
+  "tourRailTitle": {
+    "message": "Navigator pesan"
+  },
+  "tourRailBody": {
+    "message": "Di dalam obrolan, penanda di tepi kanan ini mewakili pesan Anda, dan yang menyala terang menunjukkan posisi Anda saat ini. Klik penanda mana saja untuk melompat ke sana."
+  },
+  "tourCacheTitle": {
+    "message": "Timer cache"
+  },
+  "tourCacheBody": {
+    "message": "Setelah Claude membalas, cache prompt tetap aktif selama beberapa menit, sehingga pesan lanjutan memakai lebih sedikit kuota. Timer cache menghitung mundur waktunya di header obrolan."
+  },
+  "tourCacheAsk": {
+    "message": "Tampilkan timer cache?"
+  },
+  "tourUseIt": {
+    "message": "Gunakan"
+  },
+  "tourThreadTitle": {
+    "message": "Tampilan utas"
+  },
+  "tourThreadBody": {
+    "message": "Mengubah bilah samping menjadi kartu. Utas yang membutuhkan tindakan Anda berada di urutan pertama, diikuti yang sudah selesai, lalu yang sedang memproses. Simpan kartu setelah Anda selesai menggunakannya."
+  },
+  "tourThreadAsk": {
+    "message": "Gunakan tampilan utas?"
+  },
+  "tourUseThis": {
+    "message": "Gunakan ini"
+  },
+  "tourSettingsTitle": {
+    "message": "Pengaturan"
+  },
+  "tourSettingsBody": {
+    "message": "Panah ini membuka pengaturan Usage Bar, tempat Anda bisa mengubah semua opsi ini. Mari kita lihat sekarang."
+  },
+  "tourPacingTitle": {
+    "message": "Perkiraan laju pemakaian"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar mempelajari pola pemakaian 5 jam dan mingguan Anda untuk memperkirakan laju pemakaian. Sampel tetap tersimpan di browser ini, tanpa menyimpan prompt, respons, atau data mentah. Nonaktifkan laju pemakaian di sini jika tidak berkenan."
+  },
+  "tourDoneTitle": {
+    "message": "Semua siap!"
+  },
+  "tourDoneBody": {
+    "message": "Semua pengaturan lainnya ada di Pengaturan pada bagian Usage Bar, dan Anda bisa memutar ulang tur ini dari bagian Umum."
+  },
+  "tourAria": {
+    "message": "Tur fitur: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 dari $2"
+  },
+  "tourSkip": {
+    "message": "Lewati"
+  },
+  "tourBack": {
+    "message": "Langkah sebelumnya"
+  },
+  "tourNoThanks": {
+    "message": "Tidak, terima kasih"
+  },
+  "tourDone": {
+    "message": "Selesai"
+  },
+  "tourNext": {
+    "message": "Berikutnya →"
+  },
+  "tourMockThread2": {
+    "message": "Draf laporan mingguan"
+  },
+  "tourMockThread1": {
+    "message": "Perbaiki bug login"
+  },
+  "tourMockThread3": {
+    "message": "Perjalanan ke Lisabon"
+  },
+  "tourMockThread4": {
+    "message": "Ide resep masakan"
+  },
+  "tourMockThread5": {
+    "message": "Ide hadiah"
+  },
+  "tourThreadStepStart": {
+    "message": "Dimulai"
+  },
+  "tourThreadClaude": {
+    "message": "Bilah samping Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Tampilan utas"
+  },
+  "setMessageRail": {
+    "message": "Navigator pesan"
+  },
+  "setMessageRailDesc": {
+    "message": "Penanda di tepi kanan obrolan untuk setiap pesan yang Anda kirim. Klik untuk melompat ke pesan tersebut."
+  },
+  "sessionNotUsedYet": {
+    "message": "belum dipakai"
   }
 }

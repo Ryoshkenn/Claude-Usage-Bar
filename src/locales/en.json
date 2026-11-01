@@ -429,7 +429,7 @@
     "message": "Thread view"
   },
   "setThreadSidebarDesc": {
-    "message": "Everything starts settled. A chat becomes a card once it has new activity, until you settle it."
+    "message": "Your latest chats start as cards and the rest as settled. A thread becomes a card when it has new activity, until you settle it. Works in Code too."
   },
   "threadNavLabel": {
     "message": "Projects & tools"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "Convert my prompts to skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Welcome to Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "A quick look at what it adds to Claude. It only takes a minute."
+  },
+  "tourBarTitle": {
+    "message": "Usage bar"
+  },
+  "tourBarBody": {
+    "message": "Your 5-hour plan usage, right in the composer. It fills up as you use Claude and turns orange near the limit."
+  },
+  "tourDetailsTitle": {
+    "message": "Usage details"
+  },
+  "tourDetailsBody": {
+    "message": "Hover the bar for the details: your pace, weekly usage, and when each limit resets."
+  },
+  "tourRailTitle": {
+    "message": "Message navigator"
+  },
+  "tourRailBody": {
+    "message": "In a chat, these marks on the right edge stand for your messages, and the bright one is where you are. Click any mark to jump to it."
+  },
+  "tourCacheTitle": {
+    "message": "Cache timer"
+  },
+  "tourCacheBody": {
+    "message": "After Claude replies, your prompt cache stays warm for a few minutes, so a follow-up costs less of your limit. The cache timer counts that down in the chat header."
+  },
+  "tourCacheAsk": {
+    "message": "Show the cache timer?"
+  },
+  "tourUseIt": {
+    "message": "Use it"
+  },
+  "tourThreadTitle": {
+    "message": "Thread view"
+  },
+  "tourThreadBody": {
+    "message": "Turns your sidebar into cards. Threads that need you come first, then finished work, then work still running. Settle a card once you're done with it."
+  },
+  "tourThreadAsk": {
+    "message": "Use the thread view?"
+  },
+  "tourUseThis": {
+    "message": "Use this"
+  },
+  "tourSettingsTitle": {
+    "message": "Settings"
+  },
+  "tourSettingsBody": {
+    "message": "This arrow opens Usage Bar's settings, where you can change any of this. Let's go there now."
+  },
+  "tourPacingTitle": {
+    "message": "Pace estimates"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar learns your 5-hour and weekly usage patterns to estimate your pace. Samples stay in this browser, and no prompts, responses or raw data are stored. Turn pacing off here if you'd rather not."
+  },
+  "tourDoneTitle": {
+    "message": "All set!"
+  },
+  "tourDoneBody": {
+    "message": "Everything else is in Settings under Usage Bar, and you can replay this tour from there under General."
+  },
+  "tourAria": {
+    "message": "Feature tour: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 of $2"
+  },
+  "tourSkip": {
+    "message": "Skip"
+  },
+  "tourBack": {
+    "message": "Previous step"
+  },
+  "tourNoThanks": {
+    "message": "No thanks"
+  },
+  "tourDone": {
+    "message": "Done"
+  },
+  "tourNext": {
+    "message": "Next →"
+  },
+  "tourMockThread2": {
+    "message": "Weekly report draft"
+  },
+  "tourMockThread1": {
+    "message": "Fix the login bug"
+  },
+  "tourMockThread3": {
+    "message": "Trip to Lisbon"
+  },
+  "tourMockThread4": {
+    "message": "Recipe ideas"
+  },
+  "tourMockThread5": {
+    "message": "Gift ideas"
+  },
+  "tourThreadStepStart": {
+    "message": "Started"
+  },
+  "tourThreadClaude": {
+    "message": "Claude's sidebar"
+  },
+  "tourThreadOurs": {
+    "message": "Thread view"
+  },
+  "setMessageRail": {
+    "message": "Message navigator"
+  },
+  "setMessageRailDesc": {
+    "message": "Marks on the right edge of a chat, one for each message you sent. Click one to jump to it."
+  },
+  "sessionNotUsedYet": {
+    "message": "not used yet"
   }
 }

@@ -429,7 +429,7 @@
     "message": "스레드 보기"
   },
   "setThreadSidebarDesc": {
-    "message": "처음에는 모두 완료됨 상태입니다. 새 활동이 생긴 채팅은 완료 처리할 때까지 카드로 표시됩니다."
+    "message": "최근 대화는 카드로, 나머지는 완료됨 그룹으로 시작합니다. 스레드에 새 활동이 생기면 카드로 바뀌며, 완료로 처리할 때까지 유지됩니다. Code에서도 작동합니다."
   },
   "threadNavLabel": {
     "message": "프로젝트 및 도구"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "내 프롬프트를 스킬로 변환"
+  },
+  "tourWelcomeTitle": {
+    "message": "Claude Usage Bar에 오신 것을 환영합니다!"
+  },
+  "tourWelcomeBody": {
+    "message": "Claude에 어떤 기능이 추가되는지 간단히 살펴보세요. 1분이면 충분합니다."
+  },
+  "tourBarTitle": {
+    "message": "사용량 막대"
+  },
+  "tourBarBody": {
+    "message": "입력창에서 바로 5시간 한도 사용량을 확인하세요. Claude를 사용할수록 막대가 차오르며, 한도에 가까워지면 주황색으로 바뀝니다."
+  },
+  "tourDetailsTitle": {
+    "message": "사용량 세부 정보"
+  },
+  "tourDetailsBody": {
+    "message": "막대에 마우스를 올리면 사용 페이스, 주간 사용량, 각 한도의 초기화 시간 등 세부 정보를 볼 수 있습니다."
+  },
+  "tourRailTitle": {
+    "message": "메시지 탐색기"
+  },
+  "tourRailBody": {
+    "message": "대화 오른쪽 끝의 눈금은 내가 보낸 메시지를 나타내며, 밝은 눈금이 현재 위치입니다. 눈금을 클릭해 해당 메시지로 바로 이동하세요."
+  },
+  "tourCacheTitle": {
+    "message": "캐시 타이머"
+  },
+  "tourCacheBody": {
+    "message": "Claude가 답변한 뒤 몇 분 동안 프롬프트 캐시가 유지되어, 이어서 질문할 때 한도가 덜 소모됩니다. 캐시 타이머는 대화 상단에서 남은 시간을 보여줍니다."
+  },
+  "tourCacheAsk": {
+    "message": "캐시 타이머를 표시할까요?"
+  },
+  "tourUseIt": {
+    "message": "사용하기"
+  },
+  "tourThreadTitle": {
+    "message": "스레드 보기"
+  },
+  "tourThreadBody": {
+    "message": "사이드바를 카드 형태로 바꿉니다. 확인이 필요한 스레드가 맨 위에 오고, 완료된 작업, 작업 중인 스레드 순으로 정렬됩니다. 확인이 끝난 카드는 완료로 정리하세요."
+  },
+  "tourThreadAsk": {
+    "message": "스레드 보기를 사용할까요?"
+  },
+  "tourUseThis": {
+    "message": "이 보기 사용"
+  },
+  "tourSettingsTitle": {
+    "message": "설정"
+  },
+  "tourSettingsBody": {
+    "message": "이 화살표를 누르면 방금 본 모든 설정을 바꿀 수 있는 Usage Bar 설정이 열립니다. 지금 이동해 볼까요?"
+  },
+  "tourPacingTitle": {
+    "message": "페이스 추정"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar는 5시간 및 주간 사용 패턴을 학습하여 페이스를 추정합니다. 데이터는 이 브라우저에만 남으며 프롬프트, 답변, 원본 데이터는 저장되지 않습니다. 원하지 않으면 여기서 페이스를 끌 수 있습니다."
+  },
+  "tourDoneTitle": {
+    "message": "모두 완료되었습니다!"
+  },
+  "tourDoneBody": {
+    "message": "나머지 설정은 설정의 Usage Bar에 있으며, 일반에서 이 둘러보기를 다시 볼 수 있습니다."
+  },
+  "tourAria": {
+    "message": "기능 둘러보기: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "건너뛰기"
+  },
+  "tourBack": {
+    "message": "이전 단계"
+  },
+  "tourNoThanks": {
+    "message": "괜찮습니다"
+  },
+  "tourDone": {
+    "message": "완료"
+  },
+  "tourNext": {
+    "message": "다음 →"
+  },
+  "tourMockThread2": {
+    "message": "주간 보고서 초안"
+  },
+  "tourMockThread1": {
+    "message": "로그인 버그 수정"
+  },
+  "tourMockThread3": {
+    "message": "리스본 여행 계획"
+  },
+  "tourMockThread4": {
+    "message": "요리 레시피 추천"
+  },
+  "tourMockThread5": {
+    "message": "선물 아이디어"
+  },
+  "tourThreadStepStart": {
+    "message": "시작됨"
+  },
+  "tourThreadClaude": {
+    "message": "Claude 사이드바"
+  },
+  "tourThreadOurs": {
+    "message": "스레드 보기"
+  },
+  "setMessageRail": {
+    "message": "메시지 탐색기"
+  },
+  "setMessageRailDesc": {
+    "message": "보낸 메시지마다 대화 오른쪽 끝에 눈금을 표시합니다. 클릭하면 해당 메시지로 바로 이동합니다."
+  },
+  "sessionNotUsedYet": {
+    "message": "아직 사용 안 함"
   }
 }

@@ -105,9 +105,7 @@ describe("content styles", () => {
   });
 
   it("re-syncs theme after delayed overlay elements are mounted or refreshed", () => {
-    // TEMP: message rail disabled (no tickMessageRail in the refresh path).
-    expect(contentScript).toContain("tickSettingsPage();");
-    expect(contentScript).not.toContain("tickMessageRail();");
+    expect(contentScript).toContain("tickSettingsPage();\n    syncMessageRail();\n    syncTheme();");
     expect(contentScript).toContain("render();\n  syncTheme();");
   });
 

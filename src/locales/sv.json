@@ -429,7 +429,7 @@
     "message": "Trådvy"
   },
   "setThreadSidebarDesc": {
-    "message": "Allt börjar som undanlagt. En chatt blir ett kort när den har ny aktivitet, tills du lägger undan den."
+    "message": "Dina senaste chattar visas först som kort och resten som undanlagda. En tråd blir ett kort vid ny aktivitet, tills du lägger undan den. Fungerar även i Code."
   },
   "threadNavLabel": {
     "message": "Projekt & verktyg"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "Konvertera mina prompts till skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Välkommen till Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "En snabb titt på vad tillägget ger dig i Claude. Det tar bara en minut."
+  },
+  "tourBarTitle": {
+    "message": "Användningsmätare"
+  },
+  "tourBarBody": {
+    "message": "Din användning under 5-timmarsgränsen, direkt i skrivrutan. Mätaren fylls på när du använder Claude och blir orange nära gränsen."
+  },
+  "tourDetailsTitle": {
+    "message": "Användningsdetaljer"
+  },
+  "tourDetailsBody": {
+    "message": "Håll pekaren över mätaren för detaljer: din takt, veckoanvändning och när varje gräns nollställs."
+  },
+  "tourRailTitle": {
+    "message": "Meddelandenavigator"
+  },
+  "tourRailBody": {
+    "message": "I en chatt motsvarar markeringarna längs högerkanten dina meddelanden, och den ljusa visar var du är. Klicka på en markering för att hoppa dit."
+  },
+  "tourCacheTitle": {
+    "message": "Cache-timer"
+  },
+  "tourCacheBody": {
+    "message": "När Claude har svarat hålls din prompt-cache varm i några minuter, så att en följdfråga drar mindre av din gräns. Cache-timern räknar ner tiden i chatthuvudet."
+  },
+  "tourCacheAsk": {
+    "message": "Visa cache-timern?"
+  },
+  "tourUseIt": {
+    "message": "Använd den"
+  },
+  "tourThreadTitle": {
+    "message": "Trådvy"
+  },
+  "tourThreadBody": {
+    "message": "Gör om sidofältet till kort. Trådar som väntar på dig hamnar först, följt av klart arbete och arbete som fortfarande pågår. Lägg undan ett kort när du är klar med det."
+  },
+  "tourThreadAsk": {
+    "message": "Använd trådvyn?"
+  },
+  "tourUseThis": {
+    "message": "Använd detta"
+  },
+  "tourSettingsTitle": {
+    "message": "Inställningar"
+  },
+  "tourSettingsBody": {
+    "message": "Den här pilen öppnar inställningarna för Usage Bar, där du kan ändra allt detta. Vi går dit nu."
+  },
+  "tourPacingTitle": {
+    "message": "Taktberäkning"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar lär sig dina användningsmönster per 5 timmar och per vecka för att beräkna din takt. Mätvärdena stannar i den här webbläsaren – inga prompter, svar eller rådata sparas. Stäng av taktberäkning här om du föredrar det."
+  },
+  "tourDoneTitle": {
+    "message": "Allt klart!"
+  },
+  "tourDoneBody": {
+    "message": "Allt annat finns i inställningarna under Usage Bar, och du kan starta om den här rundturen där under Allmänt."
+  },
+  "tourAria": {
+    "message": "Rundtur bland funktioner: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 av $2"
+  },
+  "tourSkip": {
+    "message": "Hoppa över"
+  },
+  "tourBack": {
+    "message": "Föregående steg"
+  },
+  "tourNoThanks": {
+    "message": "Nej tack"
+  },
+  "tourDone": {
+    "message": "Klar"
+  },
+  "tourNext": {
+    "message": "Nästa →"
+  },
+  "tourMockThread2": {
+    "message": "Utkast till veckorapport"
+  },
+  "tourMockThread1": {
+    "message": "Åtgärda inloggningsbuggen"
+  },
+  "tourMockThread3": {
+    "message": "Resa till Lissabon"
+  },
+  "tourMockThread4": {
+    "message": "Receptidéer"
+  },
+  "tourMockThread5": {
+    "message": "Presenttips"
+  },
+  "tourThreadStepStart": {
+    "message": "Startad"
+  },
+  "tourThreadClaude": {
+    "message": "Claudes sidofält"
+  },
+  "tourThreadOurs": {
+    "message": "Trådvy"
+  },
+  "setMessageRail": {
+    "message": "Meddelandenavigator"
+  },
+  "setMessageRailDesc": {
+    "message": "Markeringar längs chattens högerkant, en för varje meddelande du har skickat. Klicka på en för att hoppa dit."
+  },
+  "sessionNotUsedYet": {
+    "message": "inte använd än"
   }
 }

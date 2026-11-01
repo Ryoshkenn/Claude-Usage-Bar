@@ -21,36 +21,34 @@ const fakeArea = () => {
       await tick();
       Object.assign(store, structuredClone(items));
     },
-    remove: async (key: string) => {
+    remove: async (keys: string | string[]) => {
       await tick();
-      delete store[key];
+      for (const key of [keys].flat()) delete store[key];
     },
   };
   return { store, area: area as unknown as chrome.storage.StorageArea };
 };
 
 const setup = (viewOn = true) => {
-  const session = fakeArea();
   const local = fakeArea();
   let enabled = viewOn;
   const writer = createThreadStoreWriter({
-    session: session.area,
     local: local.area,
     viewEnabled: async () => enabled,
   });
-  return { session, local, writer, setView: (on: boolean) => (enabled = on) };
+  return { local, writer, setView: (on: boolean) => (enabled = on) };
 };
 
 describe("thread store writer", () => {
   it("keeps both tabs' marks when they write at the same moment", async () => {
-    const { session, writer } = setup();
+    const { local, writer } = setup();
     const now = Date.now();
     // Two tabs, each recording a different thread, sent together.
     await Promise.all([
       writer.patchActivity({ "chat:a": { doneAt: now } }),
       writer.patchActivity({ "chat:b": { workingSince: now } }),
     ]);
-    expect(session.store[STORAGE_KEYS.threadActivity]).toEqual({
+    expect(local.store[STORAGE_KEYS.threadActivity]).toEqual({
       "chat:a": { doneAt: now },
       "chat:b": { workingSince: now },
     });
@@ -70,32 +68,35 @@ describe("thread store writer", () => {
     });
   });
 
-  it("doesn't bring back places once the view is off", async () => {
+  it("doesn't bring back places or marks once the view is off", async () => {
     const { local, writer, setView } = setup();
     const since = Date.now() - 60_000;
     await writer.patchPlaces({ since, open: { "chat:a": since + 1 }, settled: {} });
+    await writer.patchActivity({ "chat:a": { doneAt: since + 1 } });
     setView(false);
     const late = writer.patchPlaces({ since, open: { "chat:b": since + 2 }, settled: {} });
-    await Promise.all([writer.forgetPlaces(), late]);
+    const lateMark = writer.patchActivity({ "chat:b": { doneAt: since + 2 } });
+    await Promise.all([writer.forgetPlaces(), late, lateMark]);
     expect(local.store).not.toHaveProperty(STORAGE_KEYS.threadPlaces);
+    expect(local.store).not.toHaveProperty(STORAGE_KEYS.threadActivity);
   });
 
   it("answers its own messages and nothing else", async () => {
-    const { session, writer } = setup();
+    const { local, writer } = setup();
     const now = Date.now();
     await expect(
       handleThreadStoreMessage(writer, { type: MESSAGE_TYPES.threadActivityPatch, patch: { "chat:a": { doneAt: now } } }),
     ).resolves.toEqual({ ok: true });
-    expect(session.store[STORAGE_KEYS.threadActivity]).toEqual({ "chat:a": { doneAt: now } });
+    expect(local.store[STORAGE_KEYS.threadActivity]).toEqual({ "chat:a": { doneAt: now } });
     expect(handleThreadStoreMessage(writer, { type: MESSAGE_TYPES.fetchApiUsage })).toBeNull();
   });
 
   it("reports a failed write so the tab keeps it pending", async () => {
-    const writer = createThreadStoreWriter({
-      session: undefined,
-      local: fakeArea().area,
-      viewEnabled: async () => true,
-    });
+    const local = fakeArea();
+    local.area.set = async () => {
+      throw new Error("QUOTA_BYTES quota exceeded");
+    };
+    const writer = createThreadStoreWriter({ local: local.area, viewEnabled: async () => true });
     await expect(
       handleThreadStoreMessage(writer, { type: MESSAGE_TYPES.threadActivityPatch, patch: {} }),
     ).resolves.toEqual({ ok: false });
@@ -123,5 +124,13 @@ describe("merging", () => {
         { since: since + 999, open: { "chat:b": since + 20 }, settled: { "chat:a": since + 5 } },
       ),
     ).toEqual({ since, open: { "chat:a": since + 10, "chat:b": since + 20 }, settled: {} });
+  });
+
+  it("joins the lists each side has seeded, and leaves the field out when neither has", () => {
+    const since = 1_000_000;
+    expect(mergePlaces({ since, open: {}, settled: {}, seeded: ["chat"] }, { open: {}, settled: {}, seeded: ["code", "chat"] }))
+      .toEqual({ since, open: {}, settled: {}, seeded: ["chat", "code"] });
+    expect(mergePlaces({ since, open: {}, settled: {}, seeded: ["<b>", 3] }, {})).toEqual({ since, open: {}, settled: {}, seeded: [] });
+    expect(mergePlaces({ since, open: {}, settled: {} }, {})).not.toHaveProperty("seeded");
   });
 });

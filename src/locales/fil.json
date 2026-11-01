@@ -429,7 +429,7 @@
     "message": "View ng thread"
   },
   "setThreadSidebarDesc": {
-    "message": "Nagsisimula ang lahat bilang naitabi. Nagiging card ang chat kapag may bagong aktibidad, hanggang sa itabi mo ito."
+    "message": "Nagsisimula bilang mga card ang pinakabago mong mga chat at naitabi naman ang iba. Nagiging card ang isang thread kapag may bagong aktibidad, hanggang sa itabi mo ito. Gumagana rin sa Code."
   },
   "threadNavLabel": {
     "message": "Mga proyekto at tool"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "I-convert ang mga prompt ko sa skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Maligayang pagdating sa Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Isang mabilis na silip sa mga idinaragdag nito sa Claude. Isang minuto lang ito."
+  },
+  "tourBarTitle": {
+    "message": "Usage bar"
+  },
+  "tourBarBody": {
+    "message": "Ang 5-oras na paggamit ng plano mo, mismo sa composer. Napupuno ito habang ginagamit mo ang Claude at nagiging kahel kapag malapit na sa limitasyon."
+  },
+  "tourDetailsTitle": {
+    "message": "Mga detalye ng paggamit"
+  },
+  "tourDetailsBody": {
+    "message": "Itapat ang cursor sa bar para sa mga detalye: ang bilis ng paggamit mo, lingguhang paggamit, at kung kailan nagre-reset ang bawat limitasyon."
+  },
+  "tourRailTitle": {
+    "message": "Navigator ng mensahe"
+  },
+  "tourRailBody": {
+    "message": "Sa isang chat, kumakatawan sa mga mensahe mo ang mga markang ito sa kanang gilid, at ang maliwanag ay kung nasaan ka. I-click ang anumang marka para pumunta roon."
+  },
+  "tourCacheTitle": {
+    "message": "Timer ng cache"
+  },
+  "tourCacheBody": {
+    "message": "Pagkatapos sumagot ng Claude, nananatiling handa ang prompt cache mo nang ilang minuto, kaya mas kaunti ang bawas sa limitasyon mo kapag nag-follow up ka. Binibilang iyon pababa ng timer ng cache sa header ng chat."
+  },
+  "tourCacheAsk": {
+    "message": "Ipakita ang timer ng cache?"
+  },
+  "tourUseIt": {
+    "message": "Gamitin ito"
+  },
+  "tourThreadTitle": {
+    "message": "View ng thread"
+  },
+  "tourThreadBody": {
+    "message": "Ginagawang mga card ang sidebar mo. Nauuna ang mga thread na kailangan ang atensyon mo, sunod ang tapos na, at pagkatapos ay ang gumagawa pa. Itabi ang isang card kapag tapos ka na rito."
+  },
+  "tourThreadAsk": {
+    "message": "Gamitin ang view ng thread?"
+  },
+  "tourUseThis": {
+    "message": "Gamitin ito"
+  },
+  "tourSettingsTitle": {
+    "message": "Mga Setting"
+  },
+  "tourSettingsBody": {
+    "message": "Binubuksan ng arrow na ito ang mga setting ng Usage Bar, kung saan puwede mong baguhin ang alinman dito. Pumunta na tayo roon ngayon."
+  },
+  "tourPacingTitle": {
+    "message": "Mga pagtatantiya sa bilis ng paggamit"
+  },
+  "tourPacingBody": {
+    "message": "Pinag-aaralan ng Usage Bar ang 5-oras at lingguhang pattern ng paggamit mo para tantiyahin ang bilis ng paggamit mo. Nananatili sa browser na ito ang mga sample, at walang prompt, sagot, o raw data na ini-imbak. I-off ang bilis ng paggamit dito kung ayaw mo."
+  },
+  "tourDoneTitle": {
+    "message": "Handa na ang lahat!"
+  },
+  "tourDoneBody": {
+    "message": "Nasa Mga Setting sa ilalim ng Usage Bar ang lahat ng iba pa, at puwede mong ulitin ang tour na ito mula roon sa ilalim ng Pangkalahatan."
+  },
+  "tourAria": {
+    "message": "Tour ng feature: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 sa $2"
+  },
+  "tourSkip": {
+    "message": "Laktawan"
+  },
+  "tourBack": {
+    "message": "Nakaraang hakbang"
+  },
+  "tourNoThanks": {
+    "message": "Huwag na lang"
+  },
+  "tourDone": {
+    "message": "Tapos na"
+  },
+  "tourNext": {
+    "message": "Susunod →"
+  },
+  "tourMockThread2": {
+    "message": "Draft ng lingguhang ulat"
+  },
+  "tourMockThread1": {
+    "message": "Ayusin ang bug sa pag-login"
+  },
+  "tourMockThread3": {
+    "message": "Biyahe papuntang Lisbon"
+  },
+  "tourMockThread4": {
+    "message": "Mga ideya sa recipe"
+  },
+  "tourMockThread5": {
+    "message": "Mga ideya sa regalo"
+  },
+  "tourThreadStepStart": {
+    "message": "Nagsimula"
+  },
+  "tourThreadClaude": {
+    "message": "Sidebar ng Claude"
+  },
+  "tourThreadOurs": {
+    "message": "View ng thread"
+  },
+  "setMessageRail": {
+    "message": "Navigator ng mensahe"
+  },
+  "setMessageRailDesc": {
+    "message": "Mga marka sa kanang gilid ng chat, isa para sa bawat mensaheng ipinadala mo. I-click ang isa para pumunta roon."
+  },
+  "sessionNotUsedYet": {
+    "message": "hindi pa nagagamit"
   }
 }

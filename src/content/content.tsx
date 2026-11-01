@@ -36,7 +36,7 @@ import {
   mutationsContainPageChanges,
 } from "./contentLifecycle";
 import "./pageOverrides.css";
-import { syncMessageRailTheme } from "./messageRail";
+import { removeMessageRail, syncMessageRailTheme, tickMessageRail } from "./messageRail";
 import { initSettingsPage, openUsageBarSettings, tickSettingsPage } from "./settingsPage";
 import "./styles.css";
 import { initThreadSidebar, syncThreadSidebar, syncThreadSidebarTheme } from "./threadSidebar";
@@ -170,10 +170,11 @@ const readComputedLightMode = (): boolean | null => {
 // Checks Claude's explicit theme signal first, then actual UI colors, then OS preference.
 export const isLightMode = (): boolean => {
   const el = document.documentElement;
-  if (el.classList.contains("dark") || el.getAttribute("data-theme") === "dark" || el.getAttribute("data-color-scheme") === "dark") {
+  const mode = el.getAttribute("data-mode");
+  if (mode === "dark" || el.classList.contains("dark") || el.getAttribute("data-theme") === "dark" || el.getAttribute("data-color-scheme") === "dark") {
     return false;
   }
-  if (el.classList.contains("light") || el.getAttribute("data-theme") === "light" || el.getAttribute("data-color-scheme") === "light") {
+  if (mode === "light" || el.classList.contains("light") || el.getAttribute("data-theme") === "light" || el.getAttribute("data-color-scheme") === "light") {
     return true;
   }
   const computed = readComputedLightMode();
@@ -421,6 +422,13 @@ const renderCacheTimer = () => {
   );
 };
 
+// The message navigator follows its setting; it only shows in chats with a few
+// of your messages.
+const syncMessageRail = () => {
+  if (storageState?.settings.showMessageRail === false) removeMessageRail();
+  else tickMessageRail();
+};
+
 const ensureTourHost = () => {
   if (tourHost && document.body.contains(tourHost)) return;
   tourHost = document.createElement("div");
@@ -440,7 +448,9 @@ const renderTour = () => {
       {showTour ? (
         <OnboardingTour
           onComplete={() => {
-            void updateSettings({ hasSeenTour: true });
+            // The tour shows the bar off as the heart of the extension; it stays
+            // on afterwards (it can be turned off under Display).
+            void updateSettings({ hasSeenTour: true, showBar: true });
           }}
         />
       ) : null}
@@ -722,6 +732,7 @@ const render = () => {
   // Independent of showOverlay: the sidebar view is its own option.
   syncThreadSidebar(storageState.settings);
   renderCacheTimer();
+  syncMessageRail();
   if (!storageState.settings.showOverlay) {
     removeUsageBarHost();
     renderTour();
@@ -741,8 +752,8 @@ const render = () => {
         ringTarget: "hidden" as const,
       }
     : isTourRunning()
-      ? // The bar is off by default, but the tour's first steps point at it and
-        // its details panel — show it until the tour is done or skipped.
+      ? // The tour's first steps point at the bar and its details panel — show
+        // it even if it was turned off, until the tour is done or skipped.
         { ...storageState.settings, showBar: true }
       : storageState.settings;
   root?.render(
@@ -1066,7 +1077,7 @@ const scheduleRefresh = (records?: MutationRecord[]) => {
   updateTimer = window.setTimeout(() => {
     if (!isActiveInstance()) return;
     tickSettingsPage();
-    // TEMP: message rail disabled for now (see init). Don't re-add the rail tick here.
+    syncMessageRail();
     syncTheme();
     void refreshUsage();
   }, 350);
@@ -1114,8 +1125,7 @@ const init = async () => {
   }
   window.addEventListener("resize", repositionHost, { passive: true });
   window.addEventListener("scroll", repositionHost, { capture: true, passive: true });
-  // TEMP: message rail disabled for now — remove any rail left by a previous
-  // version and don't start a new one. Revert to the rail tick to re-enable.
+  // A rail left by the displaced instance; this one builds its own.
   document.querySelectorAll("#claude-user-message-rail").forEach((el) => el.remove());
   render();
   syncTheme();
@@ -1166,10 +1176,10 @@ const init = async () => {
       return;
     }
 
-    // Prompt clipboard and the thread view's open / settled lists manage their
-    // own storage; skip their changes to avoid flicker.
+    // Prompt clipboard and the thread view's marks and open / settled lists
+    // manage their own storage; skip their changes to avoid flicker.
     const changeKeys = Object.keys(changes);
-    const selfManaged: string[] = [STORAGE_KEYS.prompts, STORAGE_KEYS.threadPlaces];
+    const selfManaged: string[] = [STORAGE_KEYS.prompts, STORAGE_KEYS.threadPlaces, STORAGE_KEYS.threadActivity];
     if (changeKeys.every((key) => selfManaged.includes(key))) {
       return;
     }

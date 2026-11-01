@@ -429,7 +429,7 @@
     "message": "Trådvisning"
   },
   "setThreadSidebarDesc": {
-    "message": "Alt starter som henlagt. En chat bliver til et kort, når der er ny aktivitet, indtil du henlægger den."
+    "message": "Dine seneste chats starter som kort og resten som henlagte. En tråd bliver til et kort ved ny aktivitet, indtil du henlægger den. Virker også i Code."
   },
   "threadNavLabel": {
     "message": "Projekter og værktøjer"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "Konvertér mine prompts til skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Velkommen til Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Et hurtigt kig på, hvad den føjer til Claude. Det tager kun et minut."
+  },
+  "tourBarTitle": {
+    "message": "Usage bar"
+  },
+  "tourBarBody": {
+    "message": "Dit 5-timers forbrug, direkte i skrivefeltet. Den fyldes op, mens du bruger Claude, og bliver orange tæt på grænsen."
+  },
+  "tourDetailsTitle": {
+    "message": "Forbrugsdetaljer"
+  },
+  "tourDetailsBody": {
+    "message": "Hold musen over bjælken for detaljer: dit tempo, ugentligt forbrug og hvornår hver grænse nulstilles."
+  },
+  "tourRailTitle": {
+    "message": "Beskednavigator"
+  },
+  "tourRailBody": {
+    "message": "I en chat står disse mærker i højre kant for dine beskeder, og det lyse viser, hvor du er. Klik på et mærke for at hoppe til det."
+  },
+  "tourCacheTitle": {
+    "message": "Cache-timer"
+  },
+  "tourCacheBody": {
+    "message": "Når Claude svarer, holdes din prompt-cache varm i nogle få minutter, så en opfølgning bruger mindre af din grænse. Cache-timeren tæller ned øverst i chatten."
+  },
+  "tourCacheAsk": {
+    "message": "Vis cache-timeren?"
+  },
+  "tourUseIt": {
+    "message": "Brug den"
+  },
+  "tourThreadTitle": {
+    "message": "Trådvisning"
+  },
+  "tourThreadBody": {
+    "message": "Gør din sidebjælke til kort. Tråde, der venter på dig, kommer først, derefter færdigt arbejde og til sidst arbejde, der stadig kører. Henlæg et kort, når du er færdig med det."
+  },
+  "tourThreadAsk": {
+    "message": "Brug trådvisning?"
+  },
+  "tourUseThis": {
+    "message": "Brug denne"
+  },
+  "tourSettingsTitle": {
+    "message": "Indstillinger"
+  },
+  "tourSettingsBody": {
+    "message": "Denne pil åbner indstillingerne for Usage Bar, hvor du kan ændre alt dette. Lad os gå derhen nu."
+  },
+  "tourPacingTitle": {
+    "message": "Tempoestimater"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar lærer dine 5-timers og ugentlige forbrugsmønstre at kende for at estimere dit tempo. Målinger bliver i denne browser, og hverken prompts, svar eller rådata gemmes. Slå tempo fra her, hvis du helst er fri."
+  },
+  "tourDoneTitle": {
+    "message": "Alt er klart!"
+  },
+  "tourDoneBody": {
+    "message": "Alt andet findes i Indstillinger under Usage Bar, og du kan afspille denne rundvisning igen derfra under Generelt."
+  },
+  "tourAria": {
+    "message": "Rundvisning i funktioner: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 af $2"
+  },
+  "tourSkip": {
+    "message": "Spring over"
+  },
+  "tourBack": {
+    "message": "Forrige trin"
+  },
+  "tourNoThanks": {
+    "message": "Nej tak"
+  },
+  "tourDone": {
+    "message": "Færdig"
+  },
+  "tourNext": {
+    "message": "Næste →"
+  },
+  "tourMockThread2": {
+    "message": "Udkast til ugerapport"
+  },
+  "tourMockThread1": {
+    "message": "Ret login-fejlen"
+  },
+  "tourMockThread3": {
+    "message": "Rejse til Lissabon"
+  },
+  "tourMockThread4": {
+    "message": "Opskriftsidéer"
+  },
+  "tourMockThread5": {
+    "message": "Gaveidéer"
+  },
+  "tourThreadStepStart": {
+    "message": "Startet"
+  },
+  "tourThreadClaude": {
+    "message": "Claudes sidebjælke"
+  },
+  "tourThreadOurs": {
+    "message": "Trådvisning"
+  },
+  "setMessageRail": {
+    "message": "Beskednavigator"
+  },
+  "setMessageRailDesc": {
+    "message": "Mærker i højre kant af en chat, ét for hver besked du har sendt. Klik på et for at hoppe til det."
+  },
+  "sessionNotUsedYet": {
+    "message": "ikke brugt endnu"
   }
 }

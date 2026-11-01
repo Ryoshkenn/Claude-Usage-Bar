@@ -429,7 +429,7 @@
     "message": "对话视图"
   },
   "setThreadSidebarDesc": {
-    "message": "一开始全部为已完成。对话有新动态后会显示为卡片，直到你将其标为完成。"
+    "message": "最近的对话会以卡片形式展示，其余归入“已完成”。有新动态时对话会变为卡片，直到你将它标为完成。同样适用于 Code。"
   },
   "threadNavLabel": {
     "message": "项目和工具"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "将我的提示词转换为技能"
+  },
+  "tourWelcomeTitle": {
+    "message": "欢迎使用 Claude Usage Bar！"
+  },
+  "tourWelcomeBody": {
+    "message": "花一分钟快速了解它为 Claude 带来了哪些实用功能。"
+  },
+  "tourBarTitle": {
+    "message": "用量条"
+  },
+  "tourBarBody": {
+    "message": "在输入框直接查看 5 小时套餐用量。随着你使用 Claude 逐渐填满，接近上限时会变为橙色。"
+  },
+  "tourDetailsTitle": {
+    "message": "用量详情"
+  },
+  "tourDetailsBody": {
+    "message": "将鼠标悬停在用量条上即可查看详情：使用节奏、每周用量，以及各项额度的重置时间。"
+  },
+  "tourRailTitle": {
+    "message": "消息导航条"
+  },
+  "tourRailBody": {
+    "message": "在聊天中，右侧边缘的刻度代表你发送的消息，高亮刻度表示当前位置。点击任意刻度即可跳转。"
+  },
+  "tourCacheTitle": {
+    "message": "缓存计时器"
+  },
+  "tourCacheBody": {
+    "message": "Claude 回复后，提示词缓存会保持几分钟有效，期间追问消耗的额度更少。聊天顶部的缓存计时器会显示剩余时间。"
+  },
+  "tourCacheAsk": {
+    "message": "显示缓存计时器？"
+  },
+  "tourUseIt": {
+    "message": "启用"
+  },
+  "tourThreadTitle": {
+    "message": "对话视图"
+  },
+  "tourThreadBody": {
+    "message": "将侧边栏切换为卡片列表：需要你处理的对话排在最前，其次是已完成和进行中的任务。处理完毕后，可将卡片标为完成。"
+  },
+  "tourThreadAsk": {
+    "message": "启用对话视图？"
+  },
+  "tourUseThis": {
+    "message": "启用此视图"
+  },
+  "tourSettingsTitle": {
+    "message": "设置"
+  },
+  "tourSettingsBody": {
+    "message": "点击这个箭头可打开 Usage Bar 设置，随时调整以上所有选项。现在过去看看吧。"
+  },
+  "tourPacingTitle": {
+    "message": "节奏预估"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar 会根据你的 5 小时和每周用量规律来预估使用节奏。采样数据仅保存在当前浏览器中，不会存储任何提示词、回复或原始数据。如不需要，可在此关闭节奏预估。"
+  },
+  "tourDoneTitle": {
+    "message": "全部就绪！"
+  },
+  "tourDoneBody": {
+    "message": "其他选项均在设置中的 Usage Bar 下，你也可以随时在“通用”中重新查看本导览。"
+  },
+  "tourAria": {
+    "message": "功能导览：$1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "跳过"
+  },
+  "tourBack": {
+    "message": "上一步"
+  },
+  "tourNoThanks": {
+    "message": "暂不需要"
+  },
+  "tourDone": {
+    "message": "完成"
+  },
+  "tourNext": {
+    "message": "下一步 →"
+  },
+  "tourMockThread2": {
+    "message": "周报草稿"
+  },
+  "tourMockThread1": {
+    "message": "修复登录问题"
+  },
+  "tourMockThread3": {
+    "message": "里斯本旅行计划"
+  },
+  "tourMockThread4": {
+    "message": "菜谱灵感"
+  },
+  "tourMockThread5": {
+    "message": "礼物清单"
+  },
+  "tourThreadStepStart": {
+    "message": "已开始"
+  },
+  "tourThreadClaude": {
+    "message": "Claude 侧边栏"
+  },
+  "tourThreadOurs": {
+    "message": "对话视图"
+  },
+  "setMessageRail": {
+    "message": "消息导航条"
+  },
+  "setMessageRailDesc": {
+    "message": "聊天窗口右侧边缘的刻度对应你发送的每条消息，点击即可跳转。"
+  },
+  "sessionNotUsedYet": {
+    "message": "尚未使用"
   }
 }

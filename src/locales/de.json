@@ -429,7 +429,7 @@
     "message": "Unterhaltungsansicht"
   },
   "setThreadSidebarDesc": {
-    "message": "Anfangs ist alles erledigt. Ein Chat wird zur Karte, sobald sich darin etwas tut, bis du ihn erledigst."
+    "message": "Deine neuesten Chats beginnen als Karten, der Rest unter „Erledigt“. Bei neuer Aktivität wird eine Unterhaltung zur Karte, bis du sie erledigst. Funktioniert auch in Code."
   },
   "threadNavLabel": {
     "message": "Projekte & Tools"
@@ -499,5 +499,125 @@
   },
   "clipConvertToSkills": {
     "message": "Meine Prompts in Skills umwandeln"
+  },
+  "tourWelcomeTitle": {
+    "message": "Willkommen bei Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Ein kurzer Überblick über die neuen Funktionen für Claude. Dauert nur eine Minute."
+  },
+  "tourBarTitle": {
+    "message": "Nutzungsleiste"
+  },
+  "tourBarBody": {
+    "message": "Deine 5-Stunden-Nutzung direkt im Eingabefeld. Die Leiste füllt sich bei der Nutzung von Claude und wird nahe dem Limit orange."
+  },
+  "tourDetailsTitle": {
+    "message": "Nutzungsdetails"
+  },
+  "tourDetailsBody": {
+    "message": "Fahre mit der Maus über die Leiste für Details: dein Tempo, die wöchentliche Nutzung und wann jedes Limit zurückgesetzt wird."
+  },
+  "tourRailTitle": {
+    "message": "Nachrichten-Navigator"
+  },
+  "tourRailBody": {
+    "message": "In einem Chat stehen diese Markierungen am rechten Rand für deine Nachrichten, und die hervorgehobene zeigt deine aktuelle Position. Klicke auf eine Markierung, um dorthin zu springen."
+  },
+  "tourCacheTitle": {
+    "message": "Cache-Timer"
+  },
+  "tourCacheBody": {
+    "message": "Nach einer Antwort von Claude bleibt dein Prompt-Cache einige Minuten aktiv, sodass eine Anschlussfrage weniger vom Limit verbraucht. Der Cache-Timer zählt diese Zeit oben im Chat herunter."
+  },
+  "tourCacheAsk": {
+    "message": "Cache-Timer anzeigen?"
+  },
+  "tourUseIt": {
+    "message": "Aktivieren"
+  },
+  "tourThreadTitle": {
+    "message": "Unterhaltungsansicht"
+  },
+  "tourThreadBody": {
+    "message": "Verwandelt deine Seitenleiste in Karten. Unterhaltungen, die auf dich warten, stehen ganz oben, gefolgt von fertigen und laufenden Aufgaben. Erledige eine Karte, sobald du damit durch bist."
+  },
+  "tourThreadAsk": {
+    "message": "Unterhaltungsansicht nutzen?"
+  },
+  "tourUseThis": {
+    "message": "Ansicht nutzen"
+  },
+  "tourSettingsTitle": {
+    "message": "Einstellungen"
+  },
+  "tourSettingsBody": {
+    "message": "Dieser Pfeil öffnet die Einstellungen von Usage Bar, wo du all das anpassen kannst. Schauen wir kurz dort vorbei."
+  },
+  "tourPacingTitle": {
+    "message": "Tempo-Schätzungen"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar lernt dein 5-Stunden- und Wochen-Nutzungsverhalten, um dein Tempo einzuschätzen. Messwerte bleiben in diesem Browser; Prompts, Antworten oder Rohdaten werden nicht gespeichert. Du kannst das Tempo hier deaktivieren, wenn du das nicht möchtest."
+  },
+  "tourDoneTitle": {
+    "message": "Alles bereit!"
+  },
+  "tourDoneBody": {
+    "message": "Alles Weitere findest du in den Einstellungen unter „Usage Bar“. Dort kannst du diese Tour unter „Allgemein“ auch jederzeit neu starten."
+  },
+  "tourAria": {
+    "message": "Funktionstour: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 von $2"
+  },
+  "tourSkip": {
+    "message": "Überspringen"
+  },
+  "tourBack": {
+    "message": "Vorheriger Schritt"
+  },
+  "tourNoThanks": {
+    "message": "Nein danke"
+  },
+  "tourDone": {
+    "message": "Fertig"
+  },
+  "tourNext": {
+    "message": "Weiter →"
+  },
+  "tourMockThread2": {
+    "message": "Entwurf für Wochenbericht"
+  },
+  "tourMockThread1": {
+    "message": "Login-Fehler beheben"
+  },
+  "tourMockThread3": {
+    "message": "Reise nach Lissabon"
+  },
+  "tourMockThread4": {
+    "message": "Rezeptideen"
+  },
+  "tourMockThread5": {
+    "message": "Geschenkideen"
+  },
+  "tourThreadStepStart": {
+    "message": "Gestartet"
+  },
+  "tourThreadClaude": {
+    "message": "Claudes Seitenleiste"
+  },
+  "tourThreadOurs": {
+    "message": "Unterhaltungsansicht"
+  },
+  "setMessageRail": {
+    "message": "Nachrichten-Navigator"
+  },
+  "setMessageRailDesc": {
+    "message": "Markierungen am rechten Rand eines Chats, eine pro gesendeter Nachricht. Klicke auf eine, um dorthin zu springen."
+  },
+  "sessionNotUsedYet": {
+    "message": "noch nicht genutzt"
   }
 }
