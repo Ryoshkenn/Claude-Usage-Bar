@@ -779,10 +779,33 @@ describe("shared state", () => {
   });
 
   it("picks up a done mark another tab recorded", async () => {
-    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: Date.now() - 60_000 } };
+    const mark = { workingSince: Date.now() - 60_000 };
+    session[STORAGE_KEYS.threadActivity] = { "chat:w": mark };
     mountSidebar(read([{ key: "chat:w" }]));
     syncThreadSidebar({ threadSidebar: true });
     await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
+    // Shown here, but the shared mark stays the other tab's to finish.
+    expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
+  });
+
+  it("doesn't trade working and done marks with a tab whose sidebar disagrees", async () => {
+    // Tab A's sidebar shows the thread working; this one (tab B) shows it idle.
+    const mark = { workingSince: Date.now() - 60_000 };
+    session[STORAGE_KEYS.threadActivity] = { "chat:w": mark };
+    mountSidebar(read([{ key: "chat:w" }]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    const write = vi.spyOn(chrome.storage.session, "set");
+    const onChanged = vi.mocked(chrome.storage.onChanged.addListener).mock.calls[0][0];
+
+    // A re-publishes its mark (as it would after any write of B's); B must not answer.
+    for (let i = 0; i < 3; i++) {
+      onChanged({ [STORAGE_KEYS.threadActivity]: { newValue: { "chat:w": { ...mark } } } }, "session");
+    }
+    await settle();
+    expect(write).not.toHaveBeenCalled();
+    expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
     expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
   });
 
