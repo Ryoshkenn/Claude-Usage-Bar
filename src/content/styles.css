@@ -538,6 +538,10 @@ button.cub-ctx-percent[data-loading="true"] {
      window drag region in the desktop app; re-enable hover for the tooltip. */
   pointer-events: auto;
   -webkit-app-region: no-drag;
+  /* Claude's spacer shrinks to nothing in a narrow window; shrink with it
+     rather than spill over the header's buttons. */
+  min-width: 0;
+  max-width: 100%;
 }
 
 .cub-cache-timer {
@@ -553,6 +557,10 @@ button.cub-ctx-percent[data-loading="true"] {
   user-select: none;
   position: relative;
   transition: opacity 200ms ease, color 200ms ease;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .cub-cache-timer[data-expired="true"] {
@@ -578,6 +586,9 @@ button.cub-ctx-percent[data-loading="true"] {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  /* Clips the label, not the tooltip (a sibling, positioned off .cub-cache-timer). */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .cub-cache-timer-text {
