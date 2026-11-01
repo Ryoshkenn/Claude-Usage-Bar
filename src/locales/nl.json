@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Timing van promptcache niet beschikbaar"
+  },
+  "cacheUnknown": {
+    "message": "cache onbekend"
+  },
+  "cacheExpired": {
+    "message": "Promptcache verlopen"
+  },
+  "cacheExpiresIn": {
+    "message": "Promptcache verloopt over $1"
+  },
+  "expiredShort": {
+    "message": "verlopen"
+  },
+  "cacheHasExpired": {
+    "message": "Promptcache is verlopen"
+  },
+  "cacheSavings": {
+    "message": "Gecachete tokens besparen ~90% op invoerkosten"
+  },
+  "ringSession": {
+    "message": "5-uursessie"
+  },
+  "ringWeekly": {
+    "message": "Wekelijks · alle modellen"
+  },
+  "ringWeeklyFable": {
+    "message": "Wekelijks · Fable"
+  },
+  "ringContext": {
+    "message": "Contextvenster"
+  },
+  "weeklyScoped": {
+    "message": "Wekelijks · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% bij reset"
+  },
+  "pacePastReset": {
+    "message": "+$1 na reset"
+  },
+  "lastsToReset": {
+    "message": "genoeg tot reset"
+  },
+  "paceActiveLeft": {
+    "message": "~$1u actief over"
+  },
+  "paceEmptyDate": {
+    "message": "op $1"
+  },
+  "paceEmptyIn": {
+    "message": "op over $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 ber. over"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 ber. over"
+  },
+  "ctxCalculating": {
+    "message": "Contextgebruik berekenen..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude-gebruik $1"
+  },
+  "usage": {
+    "message": "Gebruik"
+  },
+  "planUsage": {
+    "message": "Abonnementsgebruik"
+  },
+  "openSettings": {
+    "message": "Extensie-instellingen openen"
+  },
+  "fiveHourLimit": {
+    "message": "5-uurlimiet"
+  },
+  "resetUnknown": {
+    "message": "reset onbekend"
+  },
+  "weeklyLearningAria": {
+    "message": "Schatting van wekelijks gebruik is nog aan het leren"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Wekelijkse schattingen kunnen de eerste week onnauwkeurig zijn terwijl Usage Bar je patroon leert kennen."
+  },
+  "ctxCalcLoading": {
+    "message": "Contextberekening laden"
+  },
+  "ctxWindowFull": {
+    "message": "Contextvenster $1% vol"
+  },
+  "reviewEnjoying": {
+    "message": "Blij met Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Beoordeel in Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Het model kon voor deze berichten niet worden bepaald. Dit kan afkomstig zijn van Claude Code en cowork."
+  },
+  "noMessages": {
+    "message": "Geen berichten"
+  },
+  "errNoWorker": {
+    "message": "Kan geen verbinding maken met achtergrondworker van extensie"
+  },
+  "errLoadUsage": {
+    "message": "Kan Claude-gebruik niet laden"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Tevreden?"
+  },
+  "fiveHour": {
+    "message": "5-uurs"
+  },
+  "weekly": {
+    "message": "Wekelijks"
+  },
+  "refreshAll": {
+    "message": "Alle statistieken vernieuwen"
+  },
+  "customizeOverlay": {
+    "message": "Overlay aanpassen"
+  },
+  "usageSummary": {
+    "message": "Gebruiksoverzicht"
+  },
+  "total": {
+    "message": "Totaal"
+  },
+  "avgPerMo": {
+    "message": "Gem. / mnd"
+  },
+  "avgPerDay": {
+    "message": "Gem. / dag"
+  },
+  "busiest": {
+    "message": "Drukste"
+  },
+  "messagesSent": {
+    "message": "Verzonden berichten"
+  },
+  "fourteenDays": {
+    "message": "14 dagen"
+  },
+  "monthly": {
+    "message": "Maandelijks"
+  },
+  "collecting": {
+    "message": "Gebruik wordt verzameld — je daggrafiek vult zich terwijl je chat op claude.ai."
+  },
+  "allTime": {
+    "message": "Altijd"
+  },
+  "dayStreak": {
+    "message": "Reeks van $1 dagen"
+  },
+  "reset": {
+    "message": "Reset"
+  },
+  "segOther": {
+    "message": "Overig"
+  },
+  "setSecGeneral": {
+    "message": "Algemeen"
+  },
+  "setSecWheel": {
+    "message": "Contextvenster"
+  },
+  "setSecCacheTimer": {
+    "message": "Cachetimer"
+  },
+  "setShowOverlay": {
+    "message": "Overlay tonen"
+  },
+  "setShowOverlayDesc": {
+    "message": "Zet alles in het invoerveld aan of uit."
+  },
+  "setTour": {
+    "message": "Rondleiding"
+  },
+  "setTourBtn": {
+    "message": "Rondleiding herhalen"
+  },
+  "setPrivacy": {
+    "message": "Privacybeleid"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Wekelijkse schatting"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Resterende bruikbare uren, de dag en tijd waarop je door je limiet heen bent, of waar je staat bij de reset."
+  },
+  "setDeleteHistory": {
+    "message": " Geschiedenis wissen"
+  },
+  "setSamples": {
+    "message": "$1 metingen"
+  },
+  "setOptPctReset": {
+    "message": "Percentage bij reset"
+  },
+  "setOptTimePast": {
+    "message": "Tijd na reset"
+  },
+  "setOptMsgsLeft": {
+    "message": "Resterende berichten"
+  },
+  "setOptActiveHours": {
+    "message": "Actieve uren"
+  },
+  "setOptDaysTime": {
+    "message": "Dagen / tijd"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Wat het contextvenster gebruikt"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 van $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Jouw berichten"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Antwoorden van Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Uitgebreid denken"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Tool-aanroepen"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Tool-resultaten"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Bestanden & bijlagen"
+  },
+  "ctxBreakdownProject": {
+    "message": "Projectkennis"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Systeemoverhead"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Resterend"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 berichten"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blokken"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 aanroepen"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 resultaten"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 bestanden"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Nog niets in het contextvenster."
+  },
+  "ctxBreakdownNote": {
+    "message": "Lokaal geschat op basis van dit gesprek."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Lokaal geschat. Door tool- en zoekresultaten is dit bij benadering."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Je 5-uurlimiet voor Claude is gereset"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Je wekelijkse limiet voor Claude is gereset"
+  },
+  "resetBannerAction": {
+    "message": "Claude openen"
+  },
+  "setSecResetAlerts": {
+    "message": "Resetmeldingen"
+  },
+  "setResetBannerScope": {
+    "message": "Meldingen tonen op"
+  },
+  "setResetScopeClaude": {
+    "message": "Alleen claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Elke site"
+  },
+  "setResetBannerTestGo": {
+    "message": "Test sturen"
+  },
+  "setResetBannerTestCounting": {
+    "message": "over $1s"
+  },
+  "grantTitle": {
+    "message": "Resetmeldingen op elke site tonen"
+  },
+  "grantBody": {
+    "message": "Chrome heeft je toestemming nodig voordat de extensie een banner buiten claude.ai kan tonen. Dit wordt alleen gebruikt om de banner te tonen — pagina-inhoud wordt nooit gelezen of verstuurd."
+  },
+  "grantDenied": {
+    "message": "Geen toestemming verleend. Resetmeldingen blijven alleen op claude.ai zichtbaar."
+  },
+  "grantAllow": {
+    "message": "Doorgaan"
+  },
+  "grantCancel": {
+    "message": "Annuleren"
+  },
+  "setOptRing": {
+    "message": "Ring"
+  },
+  "setOptPercentText": {
+    "message": "Percentage"
+  },
+  "setSecDisplay": {
+    "message": "Weergave"
+  },
+  "setSecPacing": {
+    "message": "Tempo"
+  },
+  "setOptOff": {
+    "message": "Uit"
+  },
+  "setUsageBar": {
+    "message": "Gebruiksbalk"
+  },
+  "setUsageBarDesc": {
+    "message": "Welke limiet de balk bijhoudt."
+  },
+  "setShowPct": {
+    "message": "% tonen"
+  },
+  "setContextDesc": {
+    "message": "Hoe vol het huidige gesprek is."
+  },
+  "setCacheTimerDesc": {
+    "message": "Aftelklok in de chatkoptekst zolang de promptcache warm is."
+  },
+  "setPacing": {
+    "message": "Temposchattingen tonen"
+  },
+  "setPacingDesc": {
+    "message": "Schattingen leren van numerieke gebruiksmetingen die alleen in deze browser worden bewaard. Als je dit uitzet, stopt het verzamelen."
+  },
+  "set5hrPace": {
+    "message": "5-uurstempo"
+  },
+  "set5hrPaceDesc": {
+    "message": "Wordt naast het 5-uurspercentage getoond."
+  },
+  "setLearnedData": {
+    "message": "Geleerd gebruik"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner wanneer je 5-uurs- of wekelijkse limiet wordt gereset. Voor elke site is toestemming van Chrome nodig."
+  },
+  "setReviewLink": {
+    "message": "Beoordeel in Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Gesprekken"
+  },
+  "threadSettled": {
+    "message": "Afgehandeld ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Project"
+  },
+  "threadKindOther": {
+    "message": "Gesprek"
+  },
+  "threadStatusWorking": {
+    "message": "Bezig"
+  },
+  "threadStatusAwaiting": {
+    "message": "Wachtend"
+  },
+  "threadStatusError": {
+    "message": "Fout"
+  },
+  "threadStatusUnread": {
+    "message": "Ongelezen"
+  },
+  "threadStatusOpen": {
+    "message": "Open"
+  },
+  "setSecSidebar": {
+    "message": "Zijbalk"
+  },
+  "setThreadSidebar": {
+    "message": "Gespreksweergave"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Alles begint als afgehandeld. Een chat wordt een kaart zodra er nieuwe activiteit is, totdat je hem afhandelt."
+  },
+  "threadNavLabel": {
+    "message": "Projecten & tools"
+  },
+  "threadStatusPinned": {
+    "message": "Vastgezet"
+  },
+  "threadStatusDone": {
+    "message": "Klaar"
+  },
+  "threadWorkingFor": {
+    "message": "$1 bezig"
+  },
+  "threadWaitingFor": {
+    "message": "$1 wachtend"
+  },
+  "threadDoneAgo": {
+    "message": "$1 klaar"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1u"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1w"
+  },
+  "threadSearch": {
+    "message": "Zoeken"
+  },
+  "threadNewChat": {
+    "message": "Nieuwe chat"
+  },
+  "threadSort": {
+    "message": "Gesprekken sorteren"
+  },
+  "threadSortEdited": {
+    "message": "Laatst bewerkt"
+  },
+  "threadSortCreated": {
+    "message": "Laatst aangemaakt"
+  },
+  "setThreadSort": {
+    "message": "Volgorde"
+  },
+  "setThreadSortDesc": {
+    "message": "Met 'Laatst bewerkt' gaat een gesprek omhoog zodra het verandert of Claude antwoordt."
+  },
+  "threadSettle": {
+    "message": "Afhandelen"
+  }
+}

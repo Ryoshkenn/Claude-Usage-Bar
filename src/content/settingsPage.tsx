@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { clearWeeklyUsageMetrics, DEFAULT_SETTINGS, getStorage, updateSettings } from "../shared/storage";
-import { SUPPORTED_LANGUAGES, setLanguage, t } from "../shared/i18n";
+import { getLanguage, onLanguageChange, t } from "../shared/i18n";
 import { MESSAGE_TYPES } from "../shared/constants";
 import type {
   ContextDisplay,
@@ -798,10 +798,11 @@ const SettingsPage = () => {
   const [weeklyMetrics, setWeeklyMetrics] = useState<WeeklyUsageMetrics | null>(null);
   const [testCountdown, setTestCountdown] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  // The content script follows Claude's language; re-render when it switches.
+  useSyncExternalStore(onLanguageChange, getLanguage);
 
   useEffect(() => {
     void getStorage().then((s) => {
-      setLanguage(s.settings.language);
       setSettings(s.settings);
       setWeeklyMetrics(s.weeklyUsageMetrics);
       setLoaded(true);
@@ -809,9 +810,7 @@ const SettingsPage = () => {
 
     const handler = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
       if (area === "local" && changes.settings?.newValue) {
-        const next = changes.settings.newValue as Settings;
-        setLanguage(next.language);
-        setSettings(next);
+        setSettings(changes.settings.newValue as Settings);
       }
       if (area === "local" && changes.weeklyUsageMetrics?.newValue) {
         setWeeklyMetrics(changes.weeklyUsageMetrics.newValue as WeeklyUsageMetrics);
@@ -1039,18 +1038,6 @@ const SettingsPage = () => {
       </Section>
 
       <Section id="cub-section-general" title={t("setSecGeneral", "General")}>
-        <Row
-          labelId={id("language")}
-          label={t("setLanguage", "Language")}
-          description={t("setLanguageShortDesc", "Translations may be inaccurate.")}
-        >
-          <CdsSelect
-            id={id("language")}
-            value={settings.language ?? "en"}
-            onChange={(v) => update({ language: v })}
-            options={SUPPORTED_LANGUAGES}
-          />
-        </Row>
         <Row labelId={id("replay-tour")} label={t("setTour", "Feature tour")}>
           <CdsButton
             onClick={() => {

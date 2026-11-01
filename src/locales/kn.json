@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "ಪ್ರಾಂಪ್ಟ್ ಕ್ಯಾಶ್ ಸಮಯ ಲಭ್ಯವಿಲ್ಲ"
+  },
+  "cacheUnknown": {
+    "message": "ಕ್ಯಾಶ್ ತಿಳಿದಿಲ್ಲ"
+  },
+  "cacheExpired": {
+    "message": "ಪ್ರಾಂಪ್ಟ್ ಕ್ಯಾಶ್ ಅವಧಿ ಮುಗಿದಿದೆ"
+  },
+  "cacheExpiresIn": {
+    "message": "ಪ್ರಾಂಪ್ಟ್ ಕ್ಯಾಶ್ $1 ರಲ್ಲಿ ಮುಗಿಯುತ್ತದೆ"
+  },
+  "expiredShort": {
+    "message": "ಅವಧಿ ಮುಗಿದಿದೆ"
+  },
+  "cacheHasExpired": {
+    "message": "ಪ್ರಾಂಪ್ಟ್ ಕ್ಯಾಶ್ ಅವಧಿ ಮುಗಿದಿದೆ"
+  },
+  "cacheSavings": {
+    "message": "ಕ್ಯಾಶ್ ಮಾಡಿದ ಟೋಕನ್‌ಗಳು ~90% ಇನ್‌ಪುಟ್ ವೆಚ್ಚವನ್ನು ಉಳಿಸುತ್ತವೆ"
+  },
+  "ringSession": {
+    "message": "5-ಗಂಟೆಗಳ ಸೆಷನ್"
+  },
+  "ringWeekly": {
+    "message": "ಸಾಪ್ತಾಹಿಕ · ಎಲ್ಲಾ ಮಾಡೆಲ್‌ಗಳು"
+  },
+  "ringWeeklyFable": {
+    "message": "ಸಾಪ್ತಾಹಿಕ · Fable"
+  },
+  "ringContext": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ವಿಂಡೋ"
+  },
+  "weeklyScoped": {
+    "message": "ಸಾಪ್ತಾಹಿಕ · $1"
+  },
+  "pacePctAtReset": {
+    "message": "ರೀಸೆಟ್ ಸಮಯಕ್ಕೆ $1%"
+  },
+  "pacePastReset": {
+    "message": "ರೀಸೆಟ್ ನಂತರ +$1"
+  },
+  "lastsToReset": {
+    "message": "ರೀಸೆಟ್‌ವರೆಗೆ ಬಾಳಿಕೆ ಬರುತ್ತದೆ"
+  },
+  "paceActiveLeft": {
+    "message": "~$1ಗಂ ಸಕ್ರಿಯ ಸಮಯ ಉಳಿದಿದೆ"
+  },
+  "paceEmptyDate": {
+    "message": "$1 ರಂದು ಖಾಲಿ"
+  },
+  "paceEmptyIn": {
+    "message": "$1 ರಲ್ಲಿ ಖಾಲಿ"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 ಸಂದೇಶ ಉಳಿದಿದೆ"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 ಸಂದೇಶಗಳು ಉಳಿದಿವೆ"
+  },
+  "ctxCalculating": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ಬಳಕೆಯನ್ನು ಲೆಕ್ಕಹಾಕಲಾಗುತ್ತಿದೆ..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude ಬಳಕೆ $1"
+  },
+  "usage": {
+    "message": "ಬಳಕೆ"
+  },
+  "planUsage": {
+    "message": "ಪ್ಲಾನ್ ಬಳಕೆ"
+  },
+  "openSettings": {
+    "message": "ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ತೆರೆಯಿರಿ"
+  },
+  "fiveHourLimit": {
+    "message": "5-ಗಂಟೆಗಳ ಮಿತಿ"
+  },
+  "resetUnknown": {
+    "message": "ರೀಸೆಟ್ ತಿಳಿದಿಲ್ಲ"
+  },
+  "weeklyLearningAria": {
+    "message": "ಸಾಪ್ತಾಹಿಕ ಬಳಕೆಯ ಅಂದಾಜು ಇನ್ನೂ ಕಲಿಯುತ್ತಿದೆ"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar ನಿಮ್ಮ ಬಳಕೆಯ ಮಾದರಿಯನ್ನು ಕಲಿಯುವವರೆಗೆ ಮೊದಲ ವಾರದಲ್ಲಿ ಸಾಪ್ತಾಹಿಕ ಅಂದಾಜುಗಳು ನಿಖರವಾಗಿಲ್ಲದಿರಬಹುದು."
+  },
+  "ctxCalcLoading": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ಲೆಕ್ಕಾಚಾರ ಲೋಡ್ ಆಗುತ್ತಿದೆ"
+  },
+  "ctxWindowFull": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ವಿಂಡೋ $1% ತುಂಬಿದೆ"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar ಇಷ್ಟವಾಯಿತೇ?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store ನಲ್ಲಿ ರೇಟ್ ಮಾಡಿ ↗"
+  },
+  "otherHint": {
+    "message": "ಈ ಸಂದೇಶಗಳಿಗೆ ಮಾಡೆಲ್ ಅನ್ನು ನಿರ್ಧರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಇದು Claude Code ಮತ್ತು Cowork ನಿಂದ ಬಂದಿರಬಹುದು."
+  },
+  "noMessages": {
+    "message": "ಯಾವುದೇ ಸಂದೇಶಗಳಿಲ್ಲ"
+  },
+  "errNoWorker": {
+    "message": "ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಬ್ಯಾಕ್‌ಗ್ರೌಂಡ್ ವರ್ಕರ್ ಅನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ"
+  },
+  "errLoadUsage": {
+    "message": "Claude ಬಳಕೆಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ"
+  },
+  "reviewEnjoyingShort": {
+    "message": "ಇಷ್ಟವಾಯಿತೇ?"
+  },
+  "fiveHour": {
+    "message": "5-ಗಂಟೆ"
+  },
+  "weekly": {
+    "message": "ಸಾಪ್ತಾಹಿಕ"
+  },
+  "refreshAll": {
+    "message": "ಎಲ್ಲಾ ಅಂಕಿಅಂಶಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ"
+  },
+  "customizeOverlay": {
+    "message": "ಓವರ್‌ಲೇ ಕಸ್ಟಮೈಸ್ ಮಾಡಿ"
+  },
+  "usageSummary": {
+    "message": "ಬಳಕೆಯ ಸಾರಾಂಶ"
+  },
+  "total": {
+    "message": "ಒಟ್ಟು"
+  },
+  "avgPerMo": {
+    "message": "ಸರಾಸರಿ / ತಿಂಗಳು"
+  },
+  "avgPerDay": {
+    "message": "ಸರಾಸರಿ / ದಿನ"
+  },
+  "busiest": {
+    "message": "ಅತಿ ಹೆಚ್ಚು ಬಳಕೆ"
+  },
+  "messagesSent": {
+    "message": "ಕಳುಹಿಸಿದ ಸಂದೇಶಗಳು"
+  },
+  "fourteenDays": {
+    "message": "14 ದಿನಗಳು"
+  },
+  "monthly": {
+    "message": "ಮಾಸಿಕ"
+  },
+  "collecting": {
+    "message": "ಬಳಕೆಯನ್ನು ಸಂಗ್ರಹಿಸಲಾಗುತ್ತಿದೆ — ನೀವು claude.ai ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿದಂತೆ ನಿಮ್ಮ ದೈನಂದಿನ ಚಾರ್ಟ್ ತುಂಬುತ್ತದೆ."
+  },
+  "allTime": {
+    "message": "ಎಲ್ಲಾ ಸಮಯದ"
+  },
+  "dayStreak": {
+    "message": "$1-ದಿನಗಳ ಸರಣಿ"
+  },
+  "reset": {
+    "message": "ರೀಸೆಟ್"
+  },
+  "segOther": {
+    "message": "ಇತರೆ"
+  },
+  "setSecGeneral": {
+    "message": "ಸಾಮಾನ್ಯ"
+  },
+  "setSecWheel": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ವಿಂಡೋ"
+  },
+  "setSecCacheTimer": {
+    "message": "ಕ್ಯಾಶ್ ಟೈಮರ್"
+  },
+  "setShowOverlay": {
+    "message": "ಓವರ್‌ಲೇ ತೋರಿಸಿ"
+  },
+  "setShowOverlayDesc": {
+    "message": "ಕಂಪೋಸರ್‌ನಲ್ಲಿ ಎಲ್ಲವನ್ನೂ ಆನ್ ಅಥವಾ ಆಫ್ ಮಾಡಿ."
+  },
+  "setTour": {
+    "message": "ಫೀಚರ್ ಟೂರ್"
+  },
+  "setTourBtn": {
+    "message": "ಟೂರ್ ಮರುಪ್ಲೇ ಮಾಡಿ"
+  },
+  "setPrivacy": {
+    "message": "ಗೌಪ್ಯತಾ ನೀತಿ"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "ಸಾಪ್ತಾಹಿಕ ಅಂದಾಜು"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "ಉಳಿದಿರುವ ಬಳಸಬಹುದಾದ ಗಂಟೆಗಳು, ಮಿತಿ ಮುಗಿಯುವ ದಿನ ಮತ್ತು ಸಮಯ, ಅಥವಾ ರೀಸೆಟ್ ಸಮಯದಲ್ಲಿ ನಿಮ್ಮ ಬಳಕೆಯ ಸ್ಥಿತಿ."
+  },
+  "setDeleteHistory": {
+    "message": "ಇತಿಹಾಸವನ್ನು ಅಳಿಸಿ"
+  },
+  "setSamples": {
+    "message": "$1 ಮಾದರಿಗಳು"
+  },
+  "setOptPctReset": {
+    "message": "ರೀಸೆಟ್ ಸಮಯಕ್ಕೆ ಶೇಕಡಾವಾರು"
+  },
+  "setOptTimePast": {
+    "message": "ರೀಸೆಟ್ ನಂತರದ ಸಮಯ"
+  },
+  "setOptMsgsLeft": {
+    "message": "ಉಳಿದಿರುವ ಸಂದೇಶಗಳು"
+  },
+  "setOptActiveHours": {
+    "message": "ಸಕ್ರಿಯ ಗಂಟೆಗಳು"
+  },
+  "setOptDaysTime": {
+    "message": "ದಿನಗಳು / ಸಮಯ"
+  },
+  "ctxBreakdownTitle": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ವಿಂಡೋವನ್ನು ಏನು ಬಳಸುತ್ತಿದೆ"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2 ರಲ್ಲಿ $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "ನಿಮ್ಮ ಸಂದೇಶಗಳು"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude ಪ್ರತಿಕ್ರಿಯೆಗಳು"
+  },
+  "ctxBreakdownThinking": {
+    "message": "ವಿಸ್ತೃತ ಚಿಂತನೆ"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "ಟೂಲ್ ಕರೆಗಳು"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "ಟೂಲ್ ಫಲಿತಾಂಶಗಳು"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ಫೈಲ್‌ಗಳು ಮತ್ತು ಲಗತ್ತುಗಳು"
+  },
+  "ctxBreakdownProject": {
+    "message": "ಪ್ರಾಜೆಕ್ಟ್ ಜ್ಞಾನ"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "ಸಿಸ್ಟಮ್ ಓವರ್‌ಹೆಡ್"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "ಉಳಿದಿರುವುದು"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 ಸಂದೇಶಗಳು"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 ಬ್ಲಾಕ್‌ಗಳು"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 ಕರೆಗಳು"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 ಫಲಿತಾಂಶಗಳು"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 ಫೈಲ್‌ಗಳು"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "ಕಾಂಟೆಕ್ಸ್ಟ್ ವಿಂಡೋದಲ್ಲಿ ಇನ್ನೂ ಏನೂ ಇಲ್ಲ."
+  },
+  "ctxBreakdownNote": {
+    "message": "ಈ ಸಂಭಾಷಣೆಯಿಂದ ಸ್ಥಳೀಯವಾಗಿ ಅಂದಾಜಿಸಲಾಗಿದೆ."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "ಸ್ಥಳೀಯವಾಗಿ ಅಂದಾಜಿಸಲಾಗಿದೆ. ಟೂಲ್ ಮತ್ತು ಹುಡುಕಾಟ ಫಲಿತಾಂಶಗಳಿಂದಾಗಿ ಇದು ಅಂದಾಜು ಮಾತ್ರ."
+  },
+  "resetBannerSessionTitle": {
+    "message": "ನಿಮ್ಮ 5-ಗಂಟೆಗಳ Claude ಮಿತಿ ರೀಸೆಟ್ ಆಗಿದೆ"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "ನಿಮ್ಮ ಸಾಪ್ತಾಹಿಕ Claude ಮಿತಿ ರೀಸೆಟ್ ಆಗಿದೆ"
+  },
+  "resetBannerAction": {
+    "message": "Claude ತೆರೆಯಿರಿ"
+  },
+  "setSecResetAlerts": {
+    "message": "ರೀಸೆಟ್ ಎಚ್ಚರಿಕೆಗಳು"
+  },
+  "setResetBannerScope": {
+    "message": "ಇಲ್ಲಿ ಎಚ್ಚರಿಕೆಗಳನ್ನು ತೋರಿಸಿ"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai ನಲ್ಲಿ ಮಾತ್ರ"
+  },
+  "setResetScopeEverywhere": {
+    "message": "ಯಾವುದೇ ಸೈಟ್"
+  },
+  "setResetBannerTestGo": {
+    "message": "ಪರೀಕ್ಷೆ ಕಳುಹಿಸಿ"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1ಸೆ ನಲ್ಲಿ"
+  },
+  "grantTitle": {
+    "message": "ಯಾವುದೇ ಸೈಟ್‌ನಲ್ಲಿ ರೀಸೆಟ್ ಎಚ್ಚರಿಕೆಗಳನ್ನು ತೋರಿಸಿ"
+  },
+  "grantBody": {
+    "message": "claude.ai ಹೊರಗೆ ಬ್ಯಾನರ್ ತೋರಿಸಲು ಎಕ್ಸ್‌ಟೆನ್ಶನ್‌ಗೆ Chrome ನಲ್ಲಿ ನಿಮ್ಮ ಅನುಮತಿ ಬೇಕು. ಇದನ್ನು ಬ್ಯಾನರ್ ತೋರಿಸಲು ಮಾತ್ರ ಬಳಸಲಾಗುತ್ತದೆ — ಯಾವುದೇ ಪುಟದ ವಿಷಯವನ್ನು ಓದಲಾಗುವುದಿಲ್ಲ ಅಥವಾ ಎಲ್ಲಿಯೂ ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ."
+  },
+  "grantDenied": {
+    "message": "ಅನುಮತಿ ನೀಡಲಾಗಿಲ್ಲ. ರೀಸೆಟ್ ಎಚ್ಚರಿಕೆಗಳು claude.ai ನಲ್ಲಿ ಮಾತ್ರ ಇರುತ್ತವೆ."
+  },
+  "grantAllow": {
+    "message": "ಮುಂದುವರಿಸಿ"
+  },
+  "grantCancel": {
+    "message": "ರದ್ದುಮಾಡಿ"
+  },
+  "setOptRing": {
+    "message": "ರಿಂಗ್"
+  },
+  "setOptPercentText": {
+    "message": "ಶೇಕಡಾವಾರು"
+  },
+  "setSecDisplay": {
+    "message": "ಪ್ರದರ್ಶನ"
+  },
+  "setSecPacing": {
+    "message": "ವೇಗದ ಅಂದಾಜು"
+  },
+  "setOptOff": {
+    "message": "ಆಫ್"
+  },
+  "setUsageBar": {
+    "message": "ಬಳಕೆಯ ಬಾರ್"
+  },
+  "setUsageBarDesc": {
+    "message": "ಬಾರ್ ಯಾವ ಮಿತಿಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡುತ್ತದೆ."
+  },
+  "setShowPct": {
+    "message": "% ತೋರಿಸಿ"
+  },
+  "setContextDesc": {
+    "message": "ಪ್ರಸ್ತುತ ಚಾಟ್ ಎಷ್ಟು ತುಂಬಿದೆ."
+  },
+  "setCacheTimerDesc": {
+    "message": "ಪ್ರಾಂಪ್ಟ್ ಕ್ಯಾಶ್ ಸಕ್ರಿಯವಾಗಿರುವಾಗ ಚಾಟ್ ಹೆಡರ್‌ನಲ್ಲಿ ಕೌಂಟ್‌ಡೌನ್."
+  },
+  "setPacing": {
+    "message": "ವೇಗದ ಅಂದಾಜುಗಳನ್ನು ತೋರಿಸಿ"
+  },
+  "setPacingDesc": {
+    "message": "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಮಾತ್ರ ಸಂಗ್ರಹಿಸಲಾದ ಬಳಕೆಯ ಮಾದರಿಗಳಿಂದ ಅಂದಾಜುಗಳನ್ನು ಕಲಿಯಲಾಗುತ್ತದೆ. ಇದನ್ನು ಆಫ್ ಮಾಡಿದರೆ ಅವುಗಳನ್ನು ಸಂಗ್ರಹಿಸುವುದು ನಿಲ್ಲುತ್ತದೆ."
+  },
+  "set5hrPace": {
+    "message": "5-ಗಂಟೆಗಳ ವೇಗ"
+  },
+  "set5hrPaceDesc": {
+    "message": "5-ಗಂಟೆಗಳ ಶೇಕಡಾವಾರು ಪಕ್ಕದಲ್ಲಿ ತೋರಿಸಲಾಗುತ್ತದೆ."
+  },
+  "setLearnedData": {
+    "message": "ಕಲಿತ ಬಳಕೆ"
+  },
+  "setResetAlertsDesc": {
+    "message": "ನಿಮ್ಮ 5-ಗಂಟೆಗಳ ಅಥವಾ ಸಾಪ್ತಾಹಿಕ ಮಿತಿ ರೀಸೆಟ್ ಆದಾಗ ಬ್ಯಾನರ್. ಯಾವುದೇ ಸೈಟ್‌ಗೆ Chrome ಅನುಮತಿ ಬೇಕು."
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store ನಲ್ಲಿ ರೇಟ್ ಮಾಡಿ"
+  },
+  "threadsLabel": {
+    "message": "ಥ್ರೆಡ್‌ಗಳು"
+  },
+  "threadSettled": {
+    "message": "ಇತ್ಯರ್ಥಗೊಂಡವು ($1)"
+  },
+  "threadKindChat": {
+    "message": "ಚಾಟ್"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "ರೂಟೀನ್"
+  },
+  "threadKindCode": {
+    "message": "ಕೋಡ್"
+  },
+  "threadKindProject": {
+    "message": "ಪ್ರಾಜೆಕ್ಟ್"
+  },
+  "threadKindOther": {
+    "message": "ಥ್ರೆಡ್"
+  },
+  "threadStatusWorking": {
+    "message": "ಕೆಲಸ ಮಾಡುತ್ತಿದೆ"
+  },
+  "threadStatusAwaiting": {
+    "message": "ಕಾಯುತ್ತಿದೆ"
+  },
+  "threadStatusError": {
+    "message": "ದೋಷ"
+  },
+  "threadStatusUnread": {
+    "message": "ಓದದಿರುವುದು"
+  },
+  "threadStatusOpen": {
+    "message": "ತೆರೆದಿದೆ"
+  },
+  "setSecSidebar": {
+    "message": "ಸೈಡ್‌ಬಾರ್"
+  },
+  "setThreadSidebar": {
+    "message": "ಥ್ರೆಡ್ ನೋಟ"
+  },
+  "setThreadSidebarDesc": {
+    "message": "ಎಲ್ಲವೂ ಇತ್ಯರ್ಥಗೊಂಡ ಸ್ಥಿತಿಯಲ್ಲಿ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಚಾಟ್‌ನಲ್ಲಿ ಹೊಸ ಚಟುವಟಿಕೆ ಬಂದಾಗ, ನೀವು ಅದನ್ನು ಇತ್ಯರ್ಥಗೊಳಿಸುವವರೆಗೆ ಅದು ಕಾರ್ಡ್ ಆಗುತ್ತದೆ."
+  },
+  "threadNavLabel": {
+    "message": "ಪ್ರಾಜೆಕ್ಟ್‌ಗಳು ಮತ್ತು ಟೂಲ್‌ಗಳು"
+  },
+  "threadStatusPinned": {
+    "message": "ಪಿನ್ ಮಾಡಲಾಗಿದೆ"
+  },
+  "threadStatusDone": {
+    "message": "ಪೂರ್ಣಗೊಂಡಿದೆ"
+  },
+  "threadWorkingFor": {
+    "message": "$1 ಕೆಲಸ ಮಾಡುತ್ತಿದೆ"
+  },
+  "threadWaitingFor": {
+    "message": "$1 ಕಾಯುತ್ತಿದೆ"
+  },
+  "threadDoneAgo": {
+    "message": "$1 ಪೂರ್ಣಗೊಂಡಿದೆ"
+  },
+  "threadAgoSeconds": {
+    "message": "$1ಸೆ"
+  },
+  "threadAgoMinutes": {
+    "message": "$1ನಿ"
+  },
+  "threadAgoHours": {
+    "message": "$1ಗಂ"
+  },
+  "threadAgoDays": {
+    "message": "$1ದಿ"
+  },
+  "threadAgoWeeks": {
+    "message": "$1ವಾ"
+  },
+  "threadSearch": {
+    "message": "ಹುಡುಕಿ"
+  },
+  "threadNewChat": {
+    "message": "ಹೊಸ ಚಾಟ್"
+  },
+  "threadSort": {
+    "message": "ಥ್ರೆಡ್‌ಗಳನ್ನು ವಿಂಗಡಿಸಿ"
+  },
+  "threadSortEdited": {
+    "message": "ಇತ್ತೀಚೆಗೆ ಎಡಿಟ್ ಮಾಡಿದ್ದು"
+  },
+  "threadSortCreated": {
+    "message": "ಇತ್ತೀಚೆಗೆ ರಚಿಸಿದ್ದು"
+  },
+  "setThreadSort": {
+    "message": "ಕ್ರಮ"
+  },
+  "setThreadSortDesc": {
+    "message": "ಇತ್ತೀಚೆಗೆ ಎಡಿಟ್ ಮಾಡಿದ್ದು ಆಯ್ಕೆಯು ಥ್ರೆಡ್ ಬದಲಾದಾಗ ಅಥವಾ Claude ಪ್ರತಿಕ್ರಿಯಿಸಿದಾಗ ಅದನ್ನು ಮೇಲಕ್ಕೆ ತರುತ್ತದೆ."
+  },
+  "threadSettle": {
+    "message": "ಇತ್ಯರ್ಥಗೊಳಿಸಿ"
+  }
+}

@@ -12,6 +12,9 @@ export const STORAGE_KEYS = {
   reviewBannerDismissedAt: "reviewBannerDismissedAt",
   installedAt: "installedAt",
   detectedTheme: "detectedTheme",
+  // Claude's UI language tag (e.g. "en-US") as last seen on a claude.ai page, so
+  // the popup, grant page and worker can follow the language they can't read.
+  claudeLanguage: "claudeLanguage",
   prompts: "prompts",
   openSettingsOnLoad: "openSettingsOnLoad",
   // Reset timestamps the alarm has already fired for, so a rollover banners once

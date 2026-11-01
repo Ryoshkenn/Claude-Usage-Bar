@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Timing for prompt-cache ikke tilgængelig"
+  },
+  "cacheUnknown": {
+    "message": "cache ukendt"
+  },
+  "cacheExpired": {
+    "message": "Prompt-cache udløbet"
+  },
+  "cacheExpiresIn": {
+    "message": "Prompt-cache udløber om $1"
+  },
+  "expiredShort": {
+    "message": "udløbet"
+  },
+  "cacheHasExpired": {
+    "message": "Prompt-cachen er udløbet"
+  },
+  "cacheSavings": {
+    "message": "Cachelagrede tokens sparer ~90% af input-omkostningen"
+  },
+  "ringSession": {
+    "message": "5-timers session"
+  },
+  "ringWeekly": {
+    "message": "Ugentligt · alle modeller"
+  },
+  "ringWeeklyFable": {
+    "message": "Ugentligt · Fable"
+  },
+  "ringContext": {
+    "message": "Kontekstvindue"
+  },
+  "weeklyScoped": {
+    "message": "Ugentligt · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% ved nulstilling"
+  },
+  "pacePastReset": {
+    "message": "+$1 over nulstilling"
+  },
+  "lastsToReset": {
+    "message": "rækker til nulstilling"
+  },
+  "paceActiveLeft": {
+    "message": "~$1t aktiv tilbage"
+  },
+  "paceEmptyDate": {
+    "message": "tom $1"
+  },
+  "paceEmptyIn": {
+    "message": "tom om $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 besk. tilbage"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 besk. tilbage"
+  },
+  "ctxCalculating": {
+    "message": "Beregner kontekstforbrug..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude-forbrug $1"
+  },
+  "usage": {
+    "message": "Forbrug"
+  },
+  "planUsage": {
+    "message": "Planforbrug"
+  },
+  "openSettings": {
+    "message": "Åbn udvidelsesindstillinger"
+  },
+  "fiveHourLimit": {
+    "message": "5-timers grænse"
+  },
+  "resetUnknown": {
+    "message": "nulstilling ukendt"
+  },
+  "weeklyLearningAria": {
+    "message": "Ugentligt forbrugsestimat lærer stadig"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Ugentlige estimater kan være unøjagtige i den første uge, mens Usage Bar lærer dit mønster."
+  },
+  "ctxCalcLoading": {
+    "message": "Beregning af kontekst indlæses"
+  },
+  "ctxWindowFull": {
+    "message": "Kontekstvindue $1% fyldt"
+  },
+  "reviewEnjoying": {
+    "message": "Glad for Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Bedøm i Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Modellen kunne ikke fastslås for disse beskeder. Dette kan stamme fra Claude Code og Cowork."
+  },
+  "noMessages": {
+    "message": "Ingen beskeder"
+  },
+  "errNoWorker": {
+    "message": "Kunne ikke kontakte udvidelsens baggrundsproces"
+  },
+  "errLoadUsage": {
+    "message": "Kunne ikke indlæse Claude-forbrug"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Glad for den?"
+  },
+  "fiveHour": {
+    "message": "5-timers"
+  },
+  "weekly": {
+    "message": "Ugentligt"
+  },
+  "refreshAll": {
+    "message": "Opdater al statistik"
+  },
+  "customizeOverlay": {
+    "message": "Tilpas visning"
+  },
+  "usageSummary": {
+    "message": "Forbrugsoversigt"
+  },
+  "total": {
+    "message": "I alt"
+  },
+  "avgPerMo": {
+    "message": "Gns. / md."
+  },
+  "avgPerDay": {
+    "message": "Gns. / dag"
+  },
+  "busiest": {
+    "message": "Mest aktiv"
+  },
+  "messagesSent": {
+    "message": "Sendte beskeder"
+  },
+  "fourteenDays": {
+    "message": "14 dage"
+  },
+  "monthly": {
+    "message": "Månedligt"
+  },
+  "collecting": {
+    "message": "Indsamler forbrug — din daglige graf udfyldes, når du chatter på claude.ai."
+  },
+  "allTime": {
+    "message": "Altid"
+  },
+  "dayStreak": {
+    "message": "$1 dages stime"
+  },
+  "reset": {
+    "message": "Nulstil"
+  },
+  "segOther": {
+    "message": "Andet"
+  },
+  "setSecGeneral": {
+    "message": "Generelt"
+  },
+  "setSecWheel": {
+    "message": "Kontekstvindue"
+  },
+  "setSecCacheTimer": {
+    "message": "Cache-timer"
+  },
+  "setShowOverlay": {
+    "message": "Vis overlejring"
+  },
+  "setShowOverlayDesc": {
+    "message": "Slå alt i skrivefeltet til eller fra."
+  },
+  "setTour": {
+    "message": "Gennemgang af funktioner"
+  },
+  "setTourBtn": {
+    "message": "Afspil gennemgang igen"
+  },
+  "setPrivacy": {
+    "message": "Privatlivspolitik"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Ugentligt estimat"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Brugbare timer tilbage, dag og tidspunkt du løber tør, eller hvor du ligger ved nulstilling."
+  },
+  "setDeleteHistory": {
+    "message": "Slet historik"
+  },
+  "setSamples": {
+    "message": "$1 målinger"
+  },
+  "setOptPctReset": {
+    "message": "Procent ved nulstilling"
+  },
+  "setOptTimePast": {
+    "message": "Tid ud over nulstilling"
+  },
+  "setOptMsgsLeft": {
+    "message": "Beskeder tilbage"
+  },
+  "setOptActiveHours": {
+    "message": "Aktive timer"
+  },
+  "setOptDaysTime": {
+    "message": "Dage / tid"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Hvad der bruger kontekstvinduet"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 af $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Dine beskeder"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claudes svar"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Udvidet tænkning"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Værktøjskald"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Værktøjsresultater"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Filer og vedhæftninger"
+  },
+  "ctxBreakdownProject": {
+    "message": "Projektviden"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Systemforbrug"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Resterende"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 beskeder"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blokke"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 kald"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 resultater"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 filer"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Intet i kontekstvinduet endnu."
+  },
+  "ctxBreakdownNote": {
+    "message": "Estimeret lokalt ud fra denne samtale."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Estimeret lokalt. Værktøjs- og søgeresultater gør dette omtrentligt."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Din 5-timers Claude-grænse er nulstillet"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Din ugentlige Claude-grænse er nulstillet"
+  },
+  "resetBannerAction": {
+    "message": "Åbn Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Nulstillingsbeskeder"
+  },
+  "setResetBannerScope": {
+    "message": "Vis beskeder på"
+  },
+  "setResetScopeClaude": {
+    "message": "Kun claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Alle sider"
+  },
+  "setResetBannerTestGo": {
+    "message": "Send test"
+  },
+  "setResetBannerTestCounting": {
+    "message": "om $1s"
+  },
+  "grantTitle": {
+    "message": "Vis nulstillingsbeskeder på alle sider"
+  },
+  "grantBody": {
+    "message": "Chrome kræver din tilladelse, før udvidelsen kan vise et banner uden for claude.ai. Den bruges kun til at vise banneret — intet sideindhold læses eller sendes nogen steder."
+  },
+  "grantDenied": {
+    "message": "Tilladelse blev ikke givet. Nulstillingsbeskeder vises kun på claude.ai."
+  },
+  "grantAllow": {
+    "message": "Fortsæt"
+  },
+  "grantCancel": {
+    "message": "Annuller"
+  },
+  "setOptRing": {
+    "message": "Ring"
+  },
+  "setOptPercentText": {
+    "message": "Procent"
+  },
+  "setSecDisplay": {
+    "message": "Visning"
+  },
+  "setSecPacing": {
+    "message": "Tempo"
+  },
+  "setOptOff": {
+    "message": "Fra"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "Hvilken grænse bjælken følger."
+  },
+  "setShowPct": {
+    "message": "Vis %"
+  },
+  "setContextDesc": {
+    "message": "Hvor fyldt den aktuelle chat er."
+  },
+  "setCacheTimerDesc": {
+    "message": "Nedtælling i chattens toplinje, mens prompt-cachen er aktiv."
+  },
+  "setPacing": {
+    "message": "Vis tempoestimater"
+  },
+  "setPacingDesc": {
+    "message": "Estimater lærer ud fra numeriske forbrugsmålinger, der kun gemmes i denne browser. Slås dette fra, stoppes indsamlingen."
+  },
+  "set5hrPace": {
+    "message": "5-timers tempo"
+  },
+  "set5hrPaceDesc": {
+    "message": "Vises ved siden af 5-timers procenten."
+  },
+  "setLearnedData": {
+    "message": "Tillært forbrug"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner når din 5-timers eller ugentlige grænse nulstilles. Alle sider kræver tilladelse i Chrome."
+  },
+  "setReviewLink": {
+    "message": "Bedøm i Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Tråde"
+  },
+  "threadSettled": {
+    "message": "Henlagte ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Rutine"
+  },
+  "threadKindCode": {
+    "message": "Kode"
+  },
+  "threadKindProject": {
+    "message": "Projekt"
+  },
+  "threadKindOther": {
+    "message": "Tråd"
+  },
+  "threadStatusWorking": {
+    "message": "Arbejder"
+  },
+  "threadStatusAwaiting": {
+    "message": "Venter"
+  },
+  "threadStatusError": {
+    "message": "Fejl"
+  },
+  "threadStatusUnread": {
+    "message": "Ulæst"
+  },
+  "threadStatusOpen": {
+    "message": "Åben"
+  },
+  "setSecSidebar": {
+    "message": "Sidepanel"
+  },
+  "setThreadSidebar": {
+    "message": "Trådvisning"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Alt starter som henlagt. En chat bliver til et kort, når der er ny aktivitet, indtil du henlægger den."
+  },
+  "threadNavLabel": {
+    "message": "Projekter og værktøjer"
+  },
+  "threadStatusPinned": {
+    "message": "Fastgjort"
+  },
+  "threadStatusDone": {
+    "message": "Færdig"
+  },
+  "threadWorkingFor": {
+    "message": "Arbejder $1"
+  },
+  "threadWaitingFor": {
+    "message": "Venter $1"
+  },
+  "threadDoneAgo": {
+    "message": "Færdig $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1t"
+  },
+  "threadAgoDays": {
+    "message": "$1d"
+  },
+  "threadAgoWeeks": {
+    "message": "$1u"
+  },
+  "threadSearch": {
+    "message": "Søg"
+  },
+  "threadNewChat": {
+    "message": "Ny chat"
+  },
+  "threadSort": {
+    "message": "Sortér tråde"
+  },
+  "threadSortEdited": {
+    "message": "Senest redigeret"
+  },
+  "threadSortCreated": {
+    "message": "Senest oprettet"
+  },
+  "setThreadSort": {
+    "message": "Rækkefølge"
+  },
+  "setThreadSortDesc": {
+    "message": "Senest redigeret flytter en tråd op, når den ændres eller Claude svarer."
+  },
+  "threadSettle": {
+    "message": "Henlæg"
+  }
+}

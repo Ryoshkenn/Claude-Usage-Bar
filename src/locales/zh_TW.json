@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "無法取得提示詞快取時間"
+  },
+  "cacheUnknown": {
+    "message": "快取未知"
+  },
+  "cacheExpired": {
+    "message": "提示詞快取已過期"
+  },
+  "cacheExpiresIn": {
+    "message": "提示詞快取將於 $1 後過期"
+  },
+  "expiredShort": {
+    "message": "已過期"
+  },
+  "cacheHasExpired": {
+    "message": "提示詞快取已過期"
+  },
+  "cacheSavings": {
+    "message": "快取 Token 可節省 ~90% 輸入成本"
+  },
+  "ringSession": {
+    "message": "5 小時工作階段"
+  },
+  "ringWeekly": {
+    "message": "每週 · 所有模型"
+  },
+  "ringWeeklyFable": {
+    "message": "每週 · Fable"
+  },
+  "ringContext": {
+    "message": "上下文視窗"
+  },
+  "weeklyScoped": {
+    "message": "每週 · $1"
+  },
+  "pacePctAtReset": {
+    "message": "重置時達 $1%"
+  },
+  "pacePastReset": {
+    "message": "重置後 +$1"
+  },
+  "lastsToReset": {
+    "message": "可維持至重置"
+  },
+  "paceActiveLeft": {
+    "message": "剩餘 ~$1 小時可用"
+  },
+  "paceEmptyDate": {
+    "message": "將於 $1 用盡"
+  },
+  "paceEmptyIn": {
+    "message": "將於 $1 後用盡"
+  },
+  "paceMsgLeft": {
+    "message": "剩餘 ~$1 則訊息"
+  },
+  "paceMsgsLeft": {
+    "message": "剩餘 ~$1 則訊息"
+  },
+  "ctxCalculating": {
+    "message": "正在計算上下文用量..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude 用量 $1"
+  },
+  "usage": {
+    "message": "用量"
+  },
+  "planUsage": {
+    "message": "方案用量"
+  },
+  "openSettings": {
+    "message": "開啟擴充功能設定"
+  },
+  "fiveHourLimit": {
+    "message": "5 小時額度"
+  },
+  "resetUnknown": {
+    "message": "重置時間未知"
+  },
+  "weeklyLearningAria": {
+    "message": "每週用量預估仍在學習中"
+  },
+  "weeklyLearningTooltip": {
+    "message": "第一週期間，Usage Bar 正在學習您的使用模式，每週預估可能較不準確。"
+  },
+  "ctxCalcLoading": {
+    "message": "正在載入上下文計算"
+  },
+  "ctxWindowFull": {
+    "message": "上下文視窗已使用 $1%"
+  },
+  "reviewEnjoying": {
+    "message": "喜歡 Claude Usage Bar 嗎？"
+  },
+  "reviewRate": {
+    "message": "在 Chrome Store 評分 ↗"
+  },
+  "otherHint": {
+    "message": "無法判斷這些訊息所使用的模型。可能來自 Claude Code 與 Cowork。"
+  },
+  "noMessages": {
+    "message": "無訊息"
+  },
+  "errNoWorker": {
+    "message": "無法連線至擴充功能背景處理程序"
+  },
+  "errLoadUsage": {
+    "message": "無法載入 Claude 用量"
+  },
+  "reviewEnjoyingShort": {
+    "message": "喜歡嗎？"
+  },
+  "fiveHour": {
+    "message": "5 小時"
+  },
+  "weekly": {
+    "message": "每週"
+  },
+  "refreshAll": {
+    "message": "重新整理所有統計"
+  },
+  "customizeOverlay": {
+    "message": "自訂介面"
+  },
+  "usageSummary": {
+    "message": "用量摘要"
+  },
+  "total": {
+    "message": "總計"
+  },
+  "avgPerMo": {
+    "message": "每月平均"
+  },
+  "avgPerDay": {
+    "message": "每日平均"
+  },
+  "busiest": {
+    "message": "最頻繁"
+  },
+  "messagesSent": {
+    "message": "已傳送訊息"
+  },
+  "fourteenDays": {
+    "message": "14 天"
+  },
+  "monthly": {
+    "message": "每月"
+  },
+  "collecting": {
+    "message": "正在收集用量 — 當您在 claude.ai 對話時，每日圖表將逐步建立。"
+  },
+  "allTime": {
+    "message": "累計"
+  },
+  "dayStreak": {
+    "message": "連續 $1 天"
+  },
+  "reset": {
+    "message": "重置"
+  },
+  "segOther": {
+    "message": "其他"
+  },
+  "setSecGeneral": {
+    "message": "一般"
+  },
+  "setSecWheel": {
+    "message": "上下文視窗"
+  },
+  "setSecCacheTimer": {
+    "message": "快取計時器"
+  },
+  "setShowOverlay": {
+    "message": "顯示資訊列"
+  },
+  "setShowOverlayDesc": {
+    "message": "開啟或關閉輸入框中的所有額外介面。"
+  },
+  "setTour": {
+    "message": "功能導覽"
+  },
+  "setTourBtn": {
+    "message": "重播導覽"
+  },
+  "setPrivacy": {
+    "message": "隱私權政策"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "每週預估"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "剩餘可用時數、額度用盡的日期與時間，或重置時的預計用量。"
+  },
+  "setDeleteHistory": {
+    "message": "刪除紀錄"
+  },
+  "setSamples": {
+    "message": "$1 筆樣本"
+  },
+  "setOptPctReset": {
+    "message": "重置時百分比"
+  },
+  "setOptTimePast": {
+    "message": "超過重置時間"
+  },
+  "setOptMsgsLeft": {
+    "message": "剩餘訊息數"
+  },
+  "setOptActiveHours": {
+    "message": "可用時數"
+  },
+  "setOptDaysTime": {
+    "message": "日期 / 時間"
+  },
+  "ctxBreakdownTitle": {
+    "message": "上下文視窗用量明細"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "您的訊息"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude 的回覆"
+  },
+  "ctxBreakdownThinking": {
+    "message": "延展思考"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "工具呼叫"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "工具結果"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "檔案與附件"
+  },
+  "ctxBreakdownProject": {
+    "message": "專案知識"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "系統開銷"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "剩餘空間"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 則訊息"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 個區塊"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 次呼叫"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 個結果"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 個檔案"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "上下文視窗目前為空。"
+  },
+  "ctxBreakdownNote": {
+    "message": "根據此對話於本機估算。"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "於本機估算。受工具與搜尋結果影響，此為約略值。"
+  },
+  "resetBannerSessionTitle": {
+    "message": "您的 5 小時 Claude 額度已重置"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "您的每週 Claude 額度已重置"
+  },
+  "resetBannerAction": {
+    "message": "開啟 Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "重置提醒"
+  },
+  "setResetBannerScope": {
+    "message": "顯示提醒於"
+  },
+  "setResetScopeClaude": {
+    "message": "僅限 claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "所有網站"
+  },
+  "setResetBannerTestGo": {
+    "message": "發送測試"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1 秒後"
+  },
+  "grantTitle": {
+    "message": "在所有網站顯示重置提醒"
+  },
+  "grantBody": {
+    "message": "Chrome 需要您的授權，擴充功能才能在 claude.ai 以外的網站顯示橫幅提醒。此權限僅用於顯示橫幅 — 絕不會讀取或傳送任何網頁內容。"
+  },
+  "grantDenied": {
+    "message": "未授予權限。重置提醒將僅在 claude.ai 顯示。"
+  },
+  "grantAllow": {
+    "message": "繼續"
+  },
+  "grantCancel": {
+    "message": "取消"
+  },
+  "setOptRing": {
+    "message": "圓環"
+  },
+  "setOptPercentText": {
+    "message": "百分比"
+  },
+  "setSecDisplay": {
+    "message": "顯示"
+  },
+  "setSecPacing": {
+    "message": "配速預估"
+  },
+  "setOptOff": {
+    "message": "關閉"
+  },
+  "setUsageBar": {
+    "message": "進度條"
+  },
+  "setUsageBarDesc": {
+    "message": "選擇進度條追蹤的額度。"
+  },
+  "setShowPct": {
+    "message": "顯示 %"
+  },
+  "setContextDesc": {
+    "message": "目前對話的上下文已滿程度。"
+  },
+  "setCacheTimerDesc": {
+    "message": "當提示詞快取有效時，於對話標題列顯示倒數。"
+  },
+  "setPacing": {
+    "message": "顯示配速預估"
+  },
+  "setPacingDesc": {
+    "message": "預估功能會根據僅儲存於此瀏覽器的用量樣本進行學習。關閉此功能將停止收集。"
+  },
+  "set5hrPace": {
+    "message": "5 小時配速"
+  },
+  "set5hrPaceDesc": {
+    "message": "顯示於 5 小時百分比旁。"
+  },
+  "setLearnedData": {
+    "message": "已學習的用量資料"
+  },
+  "setResetAlertsDesc": {
+    "message": "當 5 小時或每週額度重置時顯示橫幅提醒。選擇所有網站需授予 Chrome 權限。"
+  },
+  "setReviewLink": {
+    "message": "在 Chrome Web Store 評分"
+  },
+  "threadsLabel": {
+    "message": "對話串"
+  },
+  "threadSettled": {
+    "message": "已歸檔 ($1)"
+  },
+  "threadKindChat": {
+    "message": "對話"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "例行任務"
+  },
+  "threadKindCode": {
+    "message": "程式碼"
+  },
+  "threadKindProject": {
+    "message": "專案"
+  },
+  "threadKindOther": {
+    "message": "對話串"
+  },
+  "threadStatusWorking": {
+    "message": "執行中"
+  },
+  "threadStatusAwaiting": {
+    "message": "等待中"
+  },
+  "threadStatusError": {
+    "message": "錯誤"
+  },
+  "threadStatusUnread": {
+    "message": "未讀"
+  },
+  "threadStatusOpen": {
+    "message": "開啟"
+  },
+  "setSecSidebar": {
+    "message": "側邊欄"
+  },
+  "setThreadSidebar": {
+    "message": "對話串檢視"
+  },
+  "setThreadSidebarDesc": {
+    "message": "所有對話預設為已歸檔。當有新動態時會轉為卡片顯示，直到您將其歸檔。"
+  },
+  "threadNavLabel": {
+    "message": "專案與工具"
+  },
+  "threadStatusPinned": {
+    "message": "已釘選"
+  },
+  "threadStatusDone": {
+    "message": "已完成"
+  },
+  "threadWorkingFor": {
+    "message": "已執行 $1"
+  },
+  "threadWaitingFor": {
+    "message": "已等待 $1"
+  },
+  "threadDoneAgo": {
+    "message": "完成於 $1前"
+  },
+  "threadAgoSeconds": {
+    "message": "$1秒"
+  },
+  "threadAgoMinutes": {
+    "message": "$1分"
+  },
+  "threadAgoHours": {
+    "message": "$1時"
+  },
+  "threadAgoDays": {
+    "message": "$1天"
+  },
+  "threadAgoWeeks": {
+    "message": "$1週"
+  },
+  "threadSearch": {
+    "message": "搜尋"
+  },
+  "threadNewChat": {
+    "message": "新對話"
+  },
+  "threadSort": {
+    "message": "排序對話串"
+  },
+  "threadSortEdited": {
+    "message": "最近編輯"
+  },
+  "threadSortCreated": {
+    "message": "最近建立"
+  },
+  "setThreadSort": {
+    "message": "排序"
+  },
+  "setThreadSortDesc": {
+    "message": "「最近編輯」會在對話變動或 Claude 回覆時將該對話串移至上方。"
+  },
+  "threadSettle": {
+    "message": "歸檔"
+  }
+}

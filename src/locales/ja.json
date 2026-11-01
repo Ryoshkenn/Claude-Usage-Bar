@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "入力欄の表示をすべてオン/オフします。"
   },
-  "setLanguage": {
-    "message": "言語"
-  },
   "setTour": {
     "message": "機能ツアー"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "5時間または週間の上限がリセットされたときにバナーを表示します。「すべてのサイト」には Chrome の権限が必要です。"
-  },
-  "setLanguageShortDesc": {
-    "message": "翻訳は不正確な場合があります。"
   },
   "setReviewLink": {
     "message": "Chrome ウェブストアで評価"

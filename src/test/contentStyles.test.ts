@@ -90,6 +90,14 @@ describe("content styles", () => {
     expect(contentScript).toContain("[STORAGE_KEYS.detectedTheme]: light ? \"light\" : \"dark\"");
   });
 
+  it("follows Claude's <html lang>, watches it, and mirrors it for other contexts", () => {
+    expect(contentScript).toContain("const tag = document.documentElement.lang.trim();");
+    expect(contentScript).toContain("setLanguage(tag);");
+    expect(contentScript).toContain("[STORAGE_KEYS.claudeLanguage]: tag");
+    expect(contentScript).toContain('attributeFilter: ["lang"]');
+    expect(contentScript).not.toContain("settings.language");
+  });
+
   it("keeps the message rail in light mode when the rail is created after theme sync", () => {
     expect(messageRailScript).toContain("let currentThemeIsLight = false;");
     expect(messageRailScript).toContain("currentThemeIsLight = isLight;");

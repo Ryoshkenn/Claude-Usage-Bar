@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Waktu cache prompt tidak tersedia"
+  },
+  "cacheUnknown": {
+    "message": "cache tidak diketahui"
+  },
+  "cacheExpired": {
+    "message": "Cache prompt kedaluwarsa"
+  },
+  "cacheExpiresIn": {
+    "message": "Cache prompt berakhir dalam $1"
+  },
+  "expiredShort": {
+    "message": "kedaluwarsa"
+  },
+  "cacheHasExpired": {
+    "message": "Cache prompt telah kedaluwarsa"
+  },
+  "cacheSavings": {
+    "message": "Token ter-cache hemat ~90% biaya input"
+  },
+  "ringSession": {
+    "message": "Sesi 5 jam"
+  },
+  "ringWeekly": {
+    "message": "Mingguan · semua model"
+  },
+  "ringWeeklyFable": {
+    "message": "Mingguan · Fable"
+  },
+  "ringContext": {
+    "message": "Jendela konteks"
+  },
+  "weeklyScoped": {
+    "message": "Mingguan · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% saat reset"
+  },
+  "pacePastReset": {
+    "message": "+$1 lewat reset"
+  },
+  "lastsToReset": {
+    "message": "cukup hingga reset"
+  },
+  "paceActiveLeft": {
+    "message": "~$1j aktif tersisa"
+  },
+  "paceEmptyDate": {
+    "message": "habis $1"
+  },
+  "paceEmptyIn": {
+    "message": "habis dalam $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 psn tersisa"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 psn tersisa"
+  },
+  "ctxCalculating": {
+    "message": "Menghitung pemakaian konteks..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Pemakaian Claude $1"
+  },
+  "usage": {
+    "message": "Pemakaian"
+  },
+  "planUsage": {
+    "message": "Pemakaian paket"
+  },
+  "openSettings": {
+    "message": "Buka pengaturan ekstensi"
+  },
+  "fiveHourLimit": {
+    "message": "Batas 5 jam"
+  },
+  "resetUnknown": {
+    "message": "reset tidak diketahui"
+  },
+  "weeklyLearningAria": {
+    "message": "Estimasi pemakaian mingguan masih mempelajari pola"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Estimasi mingguan mungkin belum akurat selama minggu pertama selagi Usage Bar mempelajari pola Anda."
+  },
+  "ctxCalcLoading": {
+    "message": "Memuat perhitungan konteks"
+  },
+  "ctxWindowFull": {
+    "message": "Jendela konteks $1% penuh"
+  },
+  "reviewEnjoying": {
+    "message": "Suka Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Beri nilai di Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Model tidak dapat ditentukan untuk pesan ini. Ini bisa berasal dari Claude Code dan cowork."
+  },
+  "noMessages": {
+    "message": "Tidak ada pesan"
+  },
+  "errNoWorker": {
+    "message": "Tidak dapat menghubungi background worker ekstensi"
+  },
+  "errLoadUsage": {
+    "message": "Gagal memuat pemakaian Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Suka ini?"
+  },
+  "fiveHour": {
+    "message": "5 jam"
+  },
+  "weekly": {
+    "message": "Mingguan"
+  },
+  "refreshAll": {
+    "message": "Muat ulang semua statistik"
+  },
+  "customizeOverlay": {
+    "message": "Sesuaikan overlay"
+  },
+  "usageSummary": {
+    "message": "Ringkasan pemakaian"
+  },
+  "total": {
+    "message": "Total"
+  },
+  "avgPerMo": {
+    "message": "Rata2 / bln"
+  },
+  "avgPerDay": {
+    "message": "Rata2 / hr"
+  },
+  "busiest": {
+    "message": "Tersibuk"
+  },
+  "messagesSent": {
+    "message": "Pesan terkirim"
+  },
+  "fourteenDays": {
+    "message": "14 Hari"
+  },
+  "monthly": {
+    "message": "Bulanan"
+  },
+  "collecting": {
+    "message": "Mengumpulkan data pemakaian — grafik harian akan terisi saat Anda mengobrol di claude.ai."
+  },
+  "allTime": {
+    "message": "Semua waktu"
+  },
+  "dayStreak": {
+    "message": "Beruntun $1 hari"
+  },
+  "reset": {
+    "message": "Reset"
+  },
+  "segOther": {
+    "message": "Lainnya"
+  },
+  "setSecGeneral": {
+    "message": "Umum"
+  },
+  "setSecWheel": {
+    "message": "Jendela konteks"
+  },
+  "setSecCacheTimer": {
+    "message": "Timer cache"
+  },
+  "setShowOverlay": {
+    "message": "Tampilkan overlay"
+  },
+  "setShowOverlayDesc": {
+    "message": "Aktifkan atau nonaktifkan semua tampilan di kolom chat."
+  },
+  "setTour": {
+    "message": "Tur fitur"
+  },
+  "setTourBtn": {
+    "message": "Ulangi Tur"
+  },
+  "setPrivacy": {
+    "message": "Kebijakan privasi"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Estimasi mingguan"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Sisa jam aktif, hari dan waktu kuota habis, atau posisi pemakaian saat reset."
+  },
+  "setDeleteHistory": {
+    "message": "Hapus riwayat"
+  },
+  "setSamples": {
+    "message": "$1 sampel"
+  },
+  "setOptPctReset": {
+    "message": "Persentase saat reset"
+  },
+  "setOptTimePast": {
+    "message": "Waktu lewat reset"
+  },
+  "setOptMsgsLeft": {
+    "message": "Pesan tersisa"
+  },
+  "setOptActiveHours": {
+    "message": "Jam aktif"
+  },
+  "setOptDaysTime": {
+    "message": "Hari / waktu"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Rincian pemakaian jendela konteks"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 dari $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Pesan Anda"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Balasan Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Penalaran mendalam"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Panggilan alat"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Hasil alat"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "File & lampiran"
+  },
+  "ctxBreakdownProject": {
+    "message": "Pengetahuan proyek"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Overhead sistem"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Tersisa"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 pesan"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 blok"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 panggilan"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 hasil"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 file"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Belum ada isi di jendela konteks."
+  },
+  "ctxBreakdownNote": {
+    "message": "Diperkirakan secara lokal dari percakapan ini."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Diperkirakan secara lokal. Hasil alat dan pencarian membuat nilai ini berupa perkiraan."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Batas 5 jam Claude Anda telah direset"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Batas mingguan Claude Anda telah direset"
+  },
+  "resetBannerAction": {
+    "message": "Buka Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Notifikasi reset"
+  },
+  "setResetBannerScope": {
+    "message": "Tampilkan di"
+  },
+  "setResetScopeClaude": {
+    "message": "Hanya claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Semua situs"
+  },
+  "setResetBannerTestGo": {
+    "message": "Kirim tes"
+  },
+  "setResetBannerTestCounting": {
+    "message": "dalam $1d"
+  },
+  "grantTitle": {
+    "message": "Tampilkan notifikasi reset di semua situs"
+  },
+  "grantBody": {
+    "message": "Chrome memerlukan izin Anda sebelum ekstensi dapat menampilkan banner di luar claude.ai. Izin ini hanya digunakan untuk menampilkan banner — isi halaman tidak pernah dibaca atau dikirim ke mana pun."
+  },
+  "grantDenied": {
+    "message": "Izin tidak diberikan. Notifikasi reset tetap hanya di claude.ai."
+  },
+  "grantAllow": {
+    "message": "Lanjutkan"
+  },
+  "grantCancel": {
+    "message": "Batal"
+  },
+  "setOptRing": {
+    "message": "Cincin"
+  },
+  "setOptPercentText": {
+    "message": "Persentase"
+  },
+  "setSecDisplay": {
+    "message": "Tampilan"
+  },
+  "setSecPacing": {
+    "message": "Laju pemakaian"
+  },
+  "setOptOff": {
+    "message": "Mati"
+  },
+  "setUsageBar": {
+    "message": "Bilah pemakaian"
+  },
+  "setUsageBarDesc": {
+    "message": "Batas mana yang dilacak bilah."
+  },
+  "setShowPct": {
+    "message": "Tampilkan %"
+  },
+  "setContextDesc": {
+    "message": "Seberapa penuh chat saat ini."
+  },
+  "setCacheTimerDesc": {
+    "message": "Hitung mundur di header chat selagi cache prompt aktif."
+  },
+  "setPacing": {
+    "message": "Tampilkan estimasi laju"
+  },
+  "setPacingDesc": {
+    "message": "Estimasi dipelajari dari sampel angka pemakaian yang disimpan hanya di browser ini. Mematikannya akan menghentikan pengumpulan sampel."
+  },
+  "set5hrPace": {
+    "message": "Laju 5 jam"
+  },
+  "set5hrPaceDesc": {
+    "message": "Ditampilkan di sebelah persentase 5 jam."
+  },
+  "setLearnedData": {
+    "message": "Data pola pemakaian"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner saat batas 5 jam atau mingguan direset. Semua situs memerlukan izin Chrome."
+  },
+  "setReviewLink": {
+    "message": "Beri nilai di Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Utas"
+  },
+  "threadSettled": {
+    "message": "Tersimpan ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Rutin"
+  },
+  "threadKindCode": {
+    "message": "Kode"
+  },
+  "threadKindProject": {
+    "message": "Proyek"
+  },
+  "threadKindOther": {
+    "message": "Utas"
+  },
+  "threadStatusWorking": {
+    "message": "Memproses"
+  },
+  "threadStatusAwaiting": {
+    "message": "Menunggu"
+  },
+  "threadStatusError": {
+    "message": "Error"
+  },
+  "threadStatusUnread": {
+    "message": "Belum dibaca"
+  },
+  "threadStatusOpen": {
+    "message": "Terbuka"
+  },
+  "setSecSidebar": {
+    "message": "Bilah sisi"
+  },
+  "setThreadSidebar": {
+    "message": "Tampilan utas"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Semua dimulai dalam keadaan tersimpan. Chat menjadi kartu saat ada aktivitas baru, hingga Anda menyimpannya."
+  },
+  "threadNavLabel": {
+    "message": "Proyek & alat"
+  },
+  "threadStatusPinned": {
+    "message": "Disematkan"
+  },
+  "threadStatusDone": {
+    "message": "Selesai"
+  },
+  "threadWorkingFor": {
+    "message": "Memproses $1"
+  },
+  "threadWaitingFor": {
+    "message": "Menunggu $1"
+  },
+  "threadDoneAgo": {
+    "message": "Selesai $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1d"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1j"
+  },
+  "threadAgoDays": {
+    "message": "$1hr"
+  },
+  "threadAgoWeeks": {
+    "message": "$1mg"
+  },
+  "threadSearch": {
+    "message": "Cari"
+  },
+  "threadNewChat": {
+    "message": "Chat baru"
+  },
+  "threadSort": {
+    "message": "Urutkan utas"
+  },
+  "threadSortEdited": {
+    "message": "Terbaru diedit"
+  },
+  "threadSortCreated": {
+    "message": "Terbaru dibuat"
+  },
+  "setThreadSort": {
+    "message": "Urutan"
+  },
+  "setThreadSortDesc": {
+    "message": "Terbaru diedit memindahkan utas ke atas saat ada perubahan atau balasan Claude."
+  },
+  "threadSettle": {
+    "message": "Simpan"
+  }
+}

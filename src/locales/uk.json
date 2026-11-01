@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Час дії кешу запиту недоступний"
+  },
+  "cacheUnknown": {
+    "message": "кеш невідомий"
+  },
+  "cacheExpired": {
+    "message": "Кеш запиту сплив"
+  },
+  "cacheExpiresIn": {
+    "message": "Кеш запиту спливає через $1"
+  },
+  "expiredShort": {
+    "message": "сплив"
+  },
+  "cacheHasExpired": {
+    "message": "Час дії кешу запиту сплив"
+  },
+  "cacheSavings": {
+    "message": "Кешовані токени заощаджують ~90% вартості вводу"
+  },
+  "ringSession": {
+    "message": "5-годинна сесія"
+  },
+  "ringWeekly": {
+    "message": "Тижневий · усі моделі"
+  },
+  "ringWeeklyFable": {
+    "message": "Тижневий · Fable"
+  },
+  "ringContext": {
+    "message": "Вікно контексту"
+  },
+  "weeklyScoped": {
+    "message": "Тижневий · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% на момент скидання"
+  },
+  "pacePastReset": {
+    "message": "+$1 після скидання"
+  },
+  "lastsToReset": {
+    "message": "вистачить до скидання"
+  },
+  "paceActiveLeft": {
+    "message": "~$1 год активної роботи"
+  },
+  "paceEmptyDate": {
+    "message": "вичерпається $1"
+  },
+  "paceEmptyIn": {
+    "message": "вичерпається через $1"
+  },
+  "paceMsgLeft": {
+    "message": "залиш. ~$1 повід."
+  },
+  "paceMsgsLeft": {
+    "message": "залиш. ~$1 повід."
+  },
+  "ctxCalculating": {
+    "message": "Обчислення використання контексту..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Використання Claude $1"
+  },
+  "usage": {
+    "message": "Використання"
+  },
+  "planUsage": {
+    "message": "Використання тарифу"
+  },
+  "openSettings": {
+    "message": "Відкрити налаштування розширення"
+  },
+  "fiveHourLimit": {
+    "message": "5-годинний ліміт"
+  },
+  "resetUnknown": {
+    "message": "час скидання невідомий"
+  },
+  "weeklyLearningAria": {
+    "message": "Оцінка тижневого використання ще навчається"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Тижневі оцінки можуть бути неточними протягом першого тижня, поки Usage Bar вивчає ваш ритм."
+  },
+  "ctxCalcLoading": {
+    "message": "Завантаження обчислення контексту"
+  },
+  "ctxWindowFull": {
+    "message": "Вікно контексту заповнено на $1%"
+  },
+  "reviewEnjoying": {
+    "message": "Подобається Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Оцінити в Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Не вдалося визначити модель для цих повідомлень. Це може бути з Claude Code та Cowork."
+  },
+  "noMessages": {
+    "message": "Немає повідомлень"
+  },
+  "errNoWorker": {
+    "message": "Не вдалося зв'язатися з фоновим процесом розширення"
+  },
+  "errLoadUsage": {
+    "message": "Не вдалося завантажити дані використання Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Подобається?"
+  },
+  "fiveHour": {
+    "message": "5-годинний"
+  },
+  "weekly": {
+    "message": "Тижневий"
+  },
+  "refreshAll": {
+    "message": "Оновити всю статистику"
+  },
+  "customizeOverlay": {
+    "message": "Налаштувати панель"
+  },
+  "usageSummary": {
+    "message": "Підсумок використання"
+  },
+  "total": {
+    "message": "Усього"
+  },
+  "avgPerMo": {
+    "message": "Сер. / міс."
+  },
+  "avgPerDay": {
+    "message": "Сер. / день"
+  },
+  "busiest": {
+    "message": "Піковий день"
+  },
+  "messagesSent": {
+    "message": "Надіслано повідомлень"
+  },
+  "fourteenDays": {
+    "message": "14 днів"
+  },
+  "monthly": {
+    "message": "Щомісяця"
+  },
+  "collecting": {
+    "message": "Збір даних — ваш щоденний графік заповнюватиметься під час спілкування на claude.ai."
+  },
+  "allTime": {
+    "message": "За весь час"
+  },
+  "dayStreak": {
+    "message": "$1 дн. поспіль"
+  },
+  "reset": {
+    "message": "Скидання"
+  },
+  "segOther": {
+    "message": "Інше"
+  },
+  "setSecGeneral": {
+    "message": "Загальні"
+  },
+  "setSecWheel": {
+    "message": "Вікно контексту"
+  },
+  "setSecCacheTimer": {
+    "message": "Таймер кешу"
+  },
+  "setShowOverlay": {
+    "message": "Показувати панель"
+  },
+  "setShowOverlayDesc": {
+    "message": "Увімкнути або вимкнути всі індикатори в полі введення."
+  },
+  "setTour": {
+    "message": "Огляд функцій"
+  },
+  "setTourBtn": {
+    "message": "Повторити огляд"
+  },
+  "setPrivacy": {
+    "message": "Політика конфіденційності"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Тижневий прогноз"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Залишок активних годин, день і час вичерпання ліміту або відсоток на момент скидання."
+  },
+  "setDeleteHistory": {
+    "message": "Видалити історію"
+  },
+  "setSamples": {
+    "message": "Зразків: $1"
+  },
+  "setOptPctReset": {
+    "message": "Відсоток на момент скидання"
+  },
+  "setOptTimePast": {
+    "message": "Час після скидання"
+  },
+  "setOptMsgsLeft": {
+    "message": "Залишок повідомлень"
+  },
+  "setOptActiveHours": {
+    "message": "Активні години"
+  },
+  "setOptDaysTime": {
+    "message": "Дні / час"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Що займає вікно контексту"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 з $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Ваші повідомлення"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Відповіді Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Розширене мислення"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Виклики інструментів"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Результати інструментів"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Файли та вкладення"
+  },
+  "ctxBreakdownProject": {
+    "message": "Знання проєкту"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Системні дані"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Залишилося"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 повід."
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 бл."
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 викл."
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 рез."
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 файл."
+  },
+  "ctxBreakdownEmpty": {
+    "message": "У вікні контексту ще нічого немає."
+  },
+  "ctxBreakdownNote": {
+    "message": "Оцінено локально на основі цієї розмови."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Оцінено локально. Через результати інструментів та пошуку значення є приблизним."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Ваш 5-годинний ліміт Claude скинуто"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Ваш тижневий ліміт Claude скинуто"
+  },
+  "resetBannerAction": {
+    "message": "Відкрити Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Сповіщення про скидання"
+  },
+  "setResetBannerScope": {
+    "message": "Показувати сповіщення на"
+  },
+  "setResetScopeClaude": {
+    "message": "Тільки claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Будь-якому сайті"
+  },
+  "setResetBannerTestGo": {
+    "message": "Тест"
+  },
+  "setResetBannerTestCounting": {
+    "message": "через $1с"
+  },
+  "grantTitle": {
+    "message": "Показувати сповіщення про скидання на будь-якому сайті"
+  },
+  "grantBody": {
+    "message": "Chrome потребує вашого дозволу, щоб розширення могло показувати банер поза межами claude.ai. Дозвіл використовується лише для показу банера — вміст сторінок ніколи не зчитується і нікуди не передається."
+  },
+  "grantDenied": {
+    "message": "Дозвіл не надано. Сповіщення про скидання залишаються тільки на claude.ai."
+  },
+  "grantAllow": {
+    "message": "Продовжити"
+  },
+  "grantCancel": {
+    "message": "Скасувати"
+  },
+  "setOptRing": {
+    "message": "Кільце"
+  },
+  "setOptPercentText": {
+    "message": "Відсоток"
+  },
+  "setSecDisplay": {
+    "message": "Відображення"
+  },
+  "setSecPacing": {
+    "message": "Темп використання"
+  },
+  "setOptOff": {
+    "message": "Вимк."
+  },
+  "setUsageBar": {
+    "message": "Шкала використання"
+  },
+  "setUsageBarDesc": {
+    "message": "Який ліміт відстежує шкала."
+  },
+  "setShowPct": {
+    "message": "Показувати %"
+  },
+  "setContextDesc": {
+    "message": "Наскільки заповнений поточний чат."
+  },
+  "setCacheTimerDesc": {
+    "message": "Зворотний відлік у заголовку чату, поки кеш запиту активний."
+  },
+  "setPacing": {
+    "message": "Показувати прогнози темпу"
+  },
+  "setPacingDesc": {
+    "message": "Прогнози навчаються на числових зразках використання, що зберігаються лише в цьому браузері. Вимкнення зупиняє їх збір."
+  },
+  "set5hrPace": {
+    "message": "5-годинний темп"
+  },
+  "set5hrPaceDesc": {
+    "message": "Показується поруч із 5-годинним відсотком."
+  },
+  "setLearnedData": {
+    "message": "Зібрані дані"
+  },
+  "setResetAlertsDesc": {
+    "message": "Банер при скиданні 5-годинного або тижневого ліміту. Для роботи на всіх сайтах потрібен дозвіл Chrome."
+  },
+  "setReviewLink": {
+    "message": "Оцінити в Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Гілки"
+  },
+  "threadSettled": {
+    "message": "Відкладені ($1)"
+  },
+  "threadKindChat": {
+    "message": "Чат"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Рутина"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Проєкт"
+  },
+  "threadKindOther": {
+    "message": "Гілка"
+  },
+  "threadStatusWorking": {
+    "message": "Працює"
+  },
+  "threadStatusAwaiting": {
+    "message": "Очікує"
+  },
+  "threadStatusError": {
+    "message": "Помилка"
+  },
+  "threadStatusUnread": {
+    "message": "Непрочитано"
+  },
+  "threadStatusOpen": {
+    "message": "Відкрито"
+  },
+  "setSecSidebar": {
+    "message": "Бічна панель"
+  },
+  "setThreadSidebar": {
+    "message": "Перегляд гілок"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Спочатку все відкладено. Чат стає карткою, коли в ньому з'являється нова активність, доки ви не відкладете його."
+  },
+  "threadNavLabel": {
+    "message": "Проєкти та інструменти"
+  },
+  "threadStatusPinned": {
+    "message": "Закріплено"
+  },
+  "threadStatusDone": {
+    "message": "Готово"
+  },
+  "threadWorkingFor": {
+    "message": "Працює $1"
+  },
+  "threadWaitingFor": {
+    "message": "Очікує $1"
+  },
+  "threadDoneAgo": {
+    "message": "Готово $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1с"
+  },
+  "threadAgoMinutes": {
+    "message": "$1хв"
+  },
+  "threadAgoHours": {
+    "message": "$1год"
+  },
+  "threadAgoDays": {
+    "message": "$1д"
+  },
+  "threadAgoWeeks": {
+    "message": "$1т"
+  },
+  "threadSearch": {
+    "message": "Пошук"
+  },
+  "threadNewChat": {
+    "message": "Новий чат"
+  },
+  "threadSort": {
+    "message": "Сортувати гілки"
+  },
+  "threadSortEdited": {
+    "message": "Нещодавно змінені"
+  },
+  "threadSortCreated": {
+    "message": "Нещодавно створені"
+  },
+  "setThreadSort": {
+    "message": "Порядок"
+  },
+  "setThreadSortDesc": {
+    "message": "«Нещодавно змінені» піднімає гілку вгору при змінах або відповіді Claude."
+  },
+  "threadSettle": {
+    "message": "Відкласти"
+  }
+}

@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "Alles im Eingabefeld ein- oder ausblenden."
   },
-  "setLanguage": {
-    "message": "Sprache"
-  },
   "setTour": {
     "message": "Funktionstour"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "Banner, wenn dein 5-Stunden- oder Wochenlimit zurückgesetzt wird. „Jede Website“ erfordert eine Chrome-Berechtigung."
-  },
-  "setLanguageShortDesc": {
-    "message": "Übersetzungen können ungenau sein."
   },
   "setReviewLink": {
     "message": "Im Chrome Web Store bewerten"

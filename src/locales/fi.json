@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Kehotevälimuistin aika ei saatavilla"
+  },
+  "cacheUnknown": {
+    "message": "välimuisti tuntematon"
+  },
+  "cacheExpired": {
+    "message": "Kehotevälimuisti vanhentui"
+  },
+  "cacheExpiresIn": {
+    "message": "Kehotevälimuisti vanhenee $1 kuluttua"
+  },
+  "expiredShort": {
+    "message": "vanhentunut"
+  },
+  "cacheHasExpired": {
+    "message": "Kehotevälimuisti on vanhentunut"
+  },
+  "cacheSavings": {
+    "message": "Välimuistissa olevat tokenit säästävät ~90% syötekustannuksista"
+  },
+  "ringSession": {
+    "message": "5 tunnin istunto"
+  },
+  "ringWeekly": {
+    "message": "Viikoittainen · kaikki mallit"
+  },
+  "ringWeeklyFable": {
+    "message": "Viikoittainen · Fable"
+  },
+  "ringContext": {
+    "message": "Konteksti-ikkuna"
+  },
+  "weeklyScoped": {
+    "message": "Viikoittainen · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% nollauksessa"
+  },
+  "pacePastReset": {
+    "message": "+$1 nollauksen yli"
+  },
+  "lastsToReset": {
+    "message": "riittää nollaukseen"
+  },
+  "paceActiveLeft": {
+    "message": "~$1h aktiivista jäljellä"
+  },
+  "paceEmptyDate": {
+    "message": "loppuu $1"
+  },
+  "paceEmptyIn": {
+    "message": "loppuu $1 kuluttua"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 viesti jäljellä"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 viestiä jäljellä"
+  },
+  "ctxCalculating": {
+    "message": "Lasketaan kontekstin käyttöä..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude-käyttö $1"
+  },
+  "usage": {
+    "message": "Käyttö"
+  },
+  "planUsage": {
+    "message": "Tilauksen käyttö"
+  },
+  "openSettings": {
+    "message": "Avaa laajennuksen asetukset"
+  },
+  "fiveHourLimit": {
+    "message": "5 tunnin raja"
+  },
+  "resetUnknown": {
+    "message": "nollaus tuntematon"
+  },
+  "weeklyLearningAria": {
+    "message": "Viikoittaisen käytön arvio opettelee vielä"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Viikkoarviot voivat olla epätarkkoja ensimmäisen viikon ajan, kun Usage Bar opettelee käyttötapaasi."
+  },
+  "ctxCalcLoading": {
+    "message": "Kontekstin laskenta latautuu"
+  },
+  "ctxWindowFull": {
+    "message": "Konteksti-ikkuna $1% täynnä"
+  },
+  "reviewEnjoying": {
+    "message": "Pidätkö Claude Usage Barista?"
+  },
+  "reviewRate": {
+    "message": "Arvostele Chrome Storessa ↗"
+  },
+  "otherHint": {
+    "message": "Näiden viestien mallia ei voitu määrittää. Tämä voi johtua Claude Codesta ja Coworkista."
+  },
+  "noMessages": {
+    "message": "Ei viestejä"
+  },
+  "errNoWorker": {
+    "message": "Laajennuksen taustaprosessiin ei saatu yhteyttä"
+  },
+  "errLoadUsage": {
+    "message": "Claude-käytön lataaminen epäonnistui"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Pidätkö tästä?"
+  },
+  "fiveHour": {
+    "message": "5 tuntia"
+  },
+  "weekly": {
+    "message": "Viikoittainen"
+  },
+  "refreshAll": {
+    "message": "Päivitä kaikki tilastot"
+  },
+  "customizeOverlay": {
+    "message": "Mukauta näkymää"
+  },
+  "usageSummary": {
+    "message": "Käytön yhteenveto"
+  },
+  "total": {
+    "message": "Yhteensä"
+  },
+  "avgPerMo": {
+    "message": "Keskim. / kk"
+  },
+  "avgPerDay": {
+    "message": "Keskim. / pv"
+  },
+  "busiest": {
+    "message": "Vilkkain"
+  },
+  "messagesSent": {
+    "message": "Lähetetyt viestit"
+  },
+  "fourteenDays": {
+    "message": "14 päivää"
+  },
+  "monthly": {
+    "message": "Kuukausittain"
+  },
+  "collecting": {
+    "message": "Kerätään käyttötietoja — päivittäinen kaavio täyttyy, kun keskustelet claude.ai-sivustolla."
+  },
+  "allTime": {
+    "message": "Kaikki ajat"
+  },
+  "dayStreak": {
+    "message": "$1 päivän putki"
+  },
+  "reset": {
+    "message": "Nollaus"
+  },
+  "segOther": {
+    "message": "Muu"
+  },
+  "setSecGeneral": {
+    "message": "Yleiset"
+  },
+  "setSecWheel": {
+    "message": "Konteksti-ikkuna"
+  },
+  "setSecCacheTimer": {
+    "message": "Välimuistiajastin"
+  },
+  "setShowOverlay": {
+    "message": "Näytä käyttöliittymä"
+  },
+  "setShowOverlayDesc": {
+    "message": "Ota kaikki viestikentän elementit käyttöön tai pois käytöstä."
+  },
+  "setTour": {
+    "message": "Esittelykierros"
+  },
+  "setTourBtn": {
+    "message": "Toista kierros"
+  },
+  "setPrivacy": {
+    "message": "Tietosuojakäytäntö"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Viikkoarvio"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Jäljellä olevat käyttötunnit, loppumispäivä ja -aika tai tilanne nollaushetkellä."
+  },
+  "setDeleteHistory": {
+    "message": "Poista historia"
+  },
+  "setSamples": {
+    "message": "$1 näytettä"
+  },
+  "setOptPctReset": {
+    "message": "Prosentti nollauksessa"
+  },
+  "setOptTimePast": {
+    "message": "Aika nollauksen yli"
+  },
+  "setOptMsgsLeft": {
+    "message": "Viestejä jäljellä"
+  },
+  "setOptActiveHours": {
+    "message": "Aktiiviset tunnit"
+  },
+  "setOptDaysTime": {
+    "message": "Päivät / aika"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Konteksti-ikkunan käyttö"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 / $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Omat viestisi"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Clauden vastaukset"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Laajennettu ajattelu"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Työkalukutsut"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Työkalutulokset"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Tiedostot ja liitteet"
+  },
+  "ctxBreakdownProject": {
+    "message": "Projektin tiedot"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Järjestelmäkuorma"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Jäljellä"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 viestiä"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 lohkoa"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 kutsua"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 tulosta"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 tiedostoa"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Konteksti-ikkunassa ei ole vielä mitään."
+  },
+  "ctxBreakdownNote": {
+    "message": "Arvioitu paikallisesti tästä keskustelusta."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Arvioitu paikallisesti. Työkalu- ja hakutulokset tekevät tästä likimääräisen."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Clauden 5 tunnin rajasi on nollautunut"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Clauden viikkorajasi on nollautunut"
+  },
+  "resetBannerAction": {
+    "message": "Avaa Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Nollausilmoitukset"
+  },
+  "setResetBannerScope": {
+    "message": "Näytä ilmoitukset"
+  },
+  "setResetScopeClaude": {
+    "message": "Vain claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Kaikilla sivustoilla"
+  },
+  "setResetBannerTestGo": {
+    "message": "Lähetä testi"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1s kuluttua"
+  },
+  "grantTitle": {
+    "message": "Näytä nollausilmoitukset kaikilla sivustoilla"
+  },
+  "grantBody": {
+    "message": "Chrome tarvitsee lupasi, ennen kuin laajennus voi näyttää ilmoituspalkin claude.ai-sivuston ulkopuolella. Lupaa käytetään vain ilmoituksen näyttämiseen — sivujen sisältöä ei koskaan lueta tai lähetetä minnekään."
+  },
+  "grantDenied": {
+    "message": "Lupaa ei myönnetty. Nollausilmoitukset näytetään vain claude.ai-sivustolla."
+  },
+  "grantAllow": {
+    "message": "Jatka"
+  },
+  "grantCancel": {
+    "message": "Peruuta"
+  },
+  "setOptRing": {
+    "message": "Rengas"
+  },
+  "setOptPercentText": {
+    "message": "Prosentti"
+  },
+  "setSecDisplay": {
+    "message": "Näyttö"
+  },
+  "setSecPacing": {
+    "message": "Tahti"
+  },
+  "setOptOff": {
+    "message": "Pois"
+  },
+  "setUsageBar": {
+    "message": "Käyttöpalkki"
+  },
+  "setUsageBarDesc": {
+    "message": "Mitä rajaa palkki seuraa."
+  },
+  "setShowPct": {
+    "message": "Näytä %"
+  },
+  "setContextDesc": {
+    "message": "Kuinka täynnä nykyinen keskustelu on."
+  },
+  "setCacheTimerDesc": {
+    "message": "Lähtölaskenta keskustelun ylätunnisteessa kehotevälimuistin ollessa aktiivinen."
+  },
+  "setPacing": {
+    "message": "Näytä tahtiarviot"
+  },
+  "setPacingDesc": {
+    "message": "Arviot oppivat vain tähän selaimeen tallennetuista numeerisista käyttönäytteistä. Pois kytkeminen lopettaa niiden keräämisen."
+  },
+  "set5hrPace": {
+    "message": "5 tunnin tahti"
+  },
+  "set5hrPaceDesc": {
+    "message": "Näytetään 5 tunnin prosenttiluvun vieressä."
+  },
+  "setLearnedData": {
+    "message": "Opittu käyttö"
+  },
+  "setResetAlertsDesc": {
+    "message": "Ilmoituspalkki, kun 5 tunnin tai viikon raja nollautuu. Kaikki sivustot vaativat Chromen luvan."
+  },
+  "setReviewLink": {
+    "message": "Arvostele Chrome Web Storessa"
+  },
+  "threadsLabel": {
+    "message": "Ketjut"
+  },
+  "threadSettled": {
+    "message": "Kuitatut ($1)"
+  },
+  "threadKindChat": {
+    "message": "Keskustelu"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Rutiini"
+  },
+  "threadKindCode": {
+    "message": "Koodi"
+  },
+  "threadKindProject": {
+    "message": "Projekti"
+  },
+  "threadKindOther": {
+    "message": "Ketju"
+  },
+  "threadStatusWorking": {
+    "message": "Työstää"
+  },
+  "threadStatusAwaiting": {
+    "message": "Odottaa"
+  },
+  "threadStatusError": {
+    "message": "Virhe"
+  },
+  "threadStatusUnread": {
+    "message": "Lukematon"
+  },
+  "threadStatusOpen": {
+    "message": "Avoinna"
+  },
+  "setSecSidebar": {
+    "message": "Sivupalkki"
+  },
+  "setThreadSidebar": {
+    "message": "Ketjunäkymä"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Kaikki ovat aluksi kuitattuja. Keskustelusta tulee kortti, kun siinä on uutta toimintaa, kunnes kuittaat sen."
+  },
+  "threadNavLabel": {
+    "message": "Projektit ja työkalut"
+  },
+  "threadStatusPinned": {
+    "message": "Kiinnitetty"
+  },
+  "threadStatusDone": {
+    "message": "Valmis"
+  },
+  "threadWorkingFor": {
+    "message": "Työstänyt $1"
+  },
+  "threadWaitingFor": {
+    "message": "Odottanut $1"
+  },
+  "threadDoneAgo": {
+    "message": "Valmis $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1min"
+  },
+  "threadAgoHours": {
+    "message": "$1t"
+  },
+  "threadAgoDays": {
+    "message": "$1pv"
+  },
+  "threadAgoWeeks": {
+    "message": "$1vk"
+  },
+  "threadSearch": {
+    "message": "Haku"
+  },
+  "threadNewChat": {
+    "message": "Uusi keskustelu"
+  },
+  "threadSort": {
+    "message": "Järjestä ketjut"
+  },
+  "threadSortEdited": {
+    "message": "Viimeksi muokattu"
+  },
+  "threadSortCreated": {
+    "message": "Viimeksi luotu"
+  },
+  "setThreadSort": {
+    "message": "Järjestys"
+  },
+  "setThreadSortDesc": {
+    "message": "Viimeksi muokattu nostaa ketjun ylös, kun se muuttuu tai Claude vastaa."
+  },
+  "threadSettle": {
+    "message": "Kuittaa"
+  }
+}

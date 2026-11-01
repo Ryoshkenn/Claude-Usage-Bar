@@ -23,7 +23,6 @@ const settings: Settings = {
   weeklyManualStartHour: 9,
   hasSeenTour: true,
   showClipboard: true,
-  language: "en",
   resetBannerScope: "claude",
   threadSidebar: false,
   threadSidebarSort: "edited",

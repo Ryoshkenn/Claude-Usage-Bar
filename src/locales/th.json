@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "ไม่มีข้อมูลเวลาแคชพรอมต์"
+  },
+  "cacheUnknown": {
+    "message": "ไม่ทราบสถานะแคช"
+  },
+  "cacheExpired": {
+    "message": "แคชพรอมต์หมดอายุแล้ว"
+  },
+  "cacheExpiresIn": {
+    "message": "แคชพรอมต์จะหมดอายุใน $1"
+  },
+  "expiredShort": {
+    "message": "หมดอายุ"
+  },
+  "cacheHasExpired": {
+    "message": "แคชพรอมต์หมดอายุแล้ว"
+  },
+  "cacheSavings": {
+    "message": "โทเคนที่แคชไว้ช่วยประหยัดต้นทุนอินพุต ~90%"
+  },
+  "ringSession": {
+    "message": "เซสชัน 5 ชั่วโมง"
+  },
+  "ringWeekly": {
+    "message": "รายสัปดาห์ · ทุกโมเดล"
+  },
+  "ringWeeklyFable": {
+    "message": "รายสัปดาห์ · Fable"
+  },
+  "ringContext": {
+    "message": "หน้าต่างบริบท"
+  },
+  "weeklyScoped": {
+    "message": "รายสัปดาห์ · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% เมื่อรีเซ็ต"
+  },
+  "pacePastReset": {
+    "message": "+$1 หลังรีเซ็ต"
+  },
+  "lastsToReset": {
+    "message": "พอใช้ถึงเวลารีเซ็ต"
+  },
+  "paceActiveLeft": {
+    "message": "เหลือเวลาใช้งาน ~$1 ชม."
+  },
+  "paceEmptyDate": {
+    "message": "หมดเมื่อ $1"
+  },
+  "paceEmptyIn": {
+    "message": "จะหมดใน $1"
+  },
+  "paceMsgLeft": {
+    "message": "เหลือ ~$1 ข้อความ"
+  },
+  "paceMsgsLeft": {
+    "message": "เหลือ ~$1 ข้อความ"
+  },
+  "ctxCalculating": {
+    "message": "กำลังคำนวณการใช้บริบท..."
+  },
+  "ariaClaudeUsage": {
+    "message": "การใช้งาน Claude $1"
+  },
+  "usage": {
+    "message": "การใช้งาน"
+  },
+  "planUsage": {
+    "message": "การใช้งานตามแพ็กเกจ"
+  },
+  "openSettings": {
+    "message": "เปิดการตั้งค่าส่วนขยาย"
+  },
+  "fiveHourLimit": {
+    "message": "ขีดจำกัด 5 ชั่วโมง"
+  },
+  "resetUnknown": {
+    "message": "ไม่ทราบเวลารีเซ็ต"
+  },
+  "weeklyLearningAria": {
+    "message": "กำลังเรียนรู้การประเมินการใช้งานรายสัปดาห์"
+  },
+  "weeklyLearningTooltip": {
+    "message": "การประเมินรายสัปดาห์อาจยังไม่แม่นยำในช่วงสัปดาห์แรก ขณะที่ Usage Bar กำลังเรียนรู้รูปแบบการใช้งานของคุณ"
+  },
+  "ctxCalcLoading": {
+    "message": "กำลังโหลดการคำนวณบริบท"
+  },
+  "ctxWindowFull": {
+    "message": "หน้าต่างบริบทเต็มแล้ว $1%"
+  },
+  "reviewEnjoying": {
+    "message": "ชอบ Claude Usage Bar ไหม?"
+  },
+  "reviewRate": {
+    "message": "ให้คะแนนบน Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "ไม่สามารถระบุโมเดลสำหรับข้อความเหล่านี้ได้ ซึ่งอาจมาจาก Claude Code และ Cowork"
+  },
+  "noMessages": {
+    "message": "ไม่มีข้อความ"
+  },
+  "errNoWorker": {
+    "message": "ไม่สามารถติดต่อเวิร์กเกอร์เบื้องหลังของส่วนขยายได้"
+  },
+  "errLoadUsage": {
+    "message": "ไม่สามารถโหลดข้อมูลการใช้งาน Claude ได้"
+  },
+  "reviewEnjoyingShort": {
+    "message": "ถูกใจไหม?"
+  },
+  "fiveHour": {
+    "message": "5 ชั่วโมง"
+  },
+  "weekly": {
+    "message": "รายสัปดาห์"
+  },
+  "refreshAll": {
+    "message": "รีเฟรชสถิติทั้งหมด"
+  },
+  "customizeOverlay": {
+    "message": "ปรับแต่งโอเวอร์เลย์"
+  },
+  "usageSummary": {
+    "message": "สรุปการใช้งาน"
+  },
+  "total": {
+    "message": "ทั้งหมด"
+  },
+  "avgPerMo": {
+    "message": "เฉลี่ย / เดือน"
+  },
+  "avgPerDay": {
+    "message": "เฉลี่ย / วัน"
+  },
+  "busiest": {
+    "message": "ใช้มากที่สุด"
+  },
+  "messagesSent": {
+    "message": "ข้อความที่ส่ง"
+  },
+  "fourteenDays": {
+    "message": "14 วัน"
+  },
+  "monthly": {
+    "message": "รายเดือน"
+  },
+  "collecting": {
+    "message": "กำลังเก็บข้อมูลการใช้งาน — กราฟรายวันจะค่อยๆ แสดงผลเมื่อคุณแชทบน claude.ai"
+  },
+  "allTime": {
+    "message": "ทั้งหมดตลอดกาล"
+  },
+  "dayStreak": {
+    "message": "ต่อเนื่อง $1 วัน"
+  },
+  "reset": {
+    "message": "รีเซ็ต"
+  },
+  "segOther": {
+    "message": "อื่นๆ"
+  },
+  "setSecGeneral": {
+    "message": "ทั่วไป"
+  },
+  "setSecWheel": {
+    "message": "หน้าต่างบริบท"
+  },
+  "setSecCacheTimer": {
+    "message": "ตัวจับเวลาแคช"
+  },
+  "setShowOverlay": {
+    "message": "แสดงโอเวอร์เลย์"
+  },
+  "setShowOverlayDesc": {
+    "message": "เปิดหรือปิดทุกอย่างในช่องแชท"
+  },
+  "setTour": {
+    "message": "ทัวร์แนะนำฟีเจอร์"
+  },
+  "setTourBtn": {
+    "message": "ดูทัวร์อีกครั้ง"
+  },
+  "setPrivacy": {
+    "message": "นโยบายความเป็นส่วนตัว"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "การประเมินรายสัปดาห์"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "จำนวนชั่วโมงที่เหลือใช้งานได้ วันและเวลาที่โควตาจะหมด หรือระดับการใช้งานเมื่อถึงเวลารีเซ็ต"
+  },
+  "setDeleteHistory": {
+    "message": "ลบประวัติ"
+  },
+  "setSamples": {
+    "message": "$1 ตัวอย่าง"
+  },
+  "setOptPctReset": {
+    "message": "เปอร์เซ็นต์เมื่อรีเซ็ต"
+  },
+  "setOptTimePast": {
+    "message": "เวลาที่เกินหลังรีเซ็ต"
+  },
+  "setOptMsgsLeft": {
+    "message": "ข้อความที่เหลือ"
+  },
+  "setOptActiveHours": {
+    "message": "ชั่วโมงที่ใช้งานได้"
+  },
+  "setOptDaysTime": {
+    "message": "วัน / เวลา"
+  },
+  "ctxBreakdownTitle": {
+    "message": "สิ่งที่ใช้พื้นที่หน้าต่างบริบท"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 จาก $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "ข้อความของคุณ"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "คำตอบของ Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "การคิดวิเคราะห์เชิงลึก"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "การเรียกใช้เครื่องมือ"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "ผลลัพธ์จากเครื่องมือ"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ไฟล์และไฟล์แนบ"
+  },
+  "ctxBreakdownProject": {
+    "message": "ความรู้ของโปรเจกต์"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "ส่วนที่ระบบใช้"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "คงเหลือ"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 ข้อความ"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 บล็อก"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 ครั้ง"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 ผลลัพธ์"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 ไฟล์"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "ยังไม่มีข้อมูลในหน้าต่างบริบท"
+  },
+  "ctxBreakdownNote": {
+    "message": "ประเมินในเครื่องจากการสนทนานี้"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "ประเมินในเครื่อง ผลลัพธ์จากเครื่องมือและการค้นหาทำให้ค่านี้เป็นค่าประมาณ"
+  },
+  "resetBannerSessionTitle": {
+    "message": "ขีดจำกัด Claude รอบ 5 ชั่วโมงของคุณรีเซ็ตแล้ว"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "ขีดจำกัด Claude รายสัปดาห์ของคุณรีเซ็ตแล้ว"
+  },
+  "resetBannerAction": {
+    "message": "เปิด Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "การแจ้งเตือนเมื่อรีเซ็ต"
+  },
+  "setResetBannerScope": {
+    "message": "แสดงการแจ้งเตือนบน"
+  },
+  "setResetScopeClaude": {
+    "message": "เฉพาะ claude.ai"
+  },
+  "setResetScopeEverywhere": {
+    "message": "ทุกเว็บไซต์"
+  },
+  "setResetBannerTestGo": {
+    "message": "ส่งการทดสอบ"
+  },
+  "setResetBannerTestCounting": {
+    "message": "ใน $1 วิ"
+  },
+  "grantTitle": {
+    "message": "แสดงการแจ้งเตือนเมื่อรีเซ็ตบนทุกเว็บไซต์"
+  },
+  "grantBody": {
+    "message": "Chrome ต้องการสิทธิ์อนุญาตจากคุณก่อนที่ส่วนขยายจะสามารถแสดงแบนเนอร์นอก claude.ai ได้ สิทธิ์นี้ใช้เพื่อแสดงแบนเนอร์เท่านั้น — ไม่มีการอ่านหรือส่งเนื้อหาในหน้าเว็บไปที่ใดทั้งสิ้น"
+  },
+  "grantDenied": {
+    "message": "ไม่ได้รับสิทธิ์อนุญาต การแจ้งเตือนเมื่อรีเซ็ตจะแสดงเฉพาะบน claude.ai เท่านั้น"
+  },
+  "grantAllow": {
+    "message": "ดำเนินการต่อ"
+  },
+  "grantCancel": {
+    "message": "ยกเลิก"
+  },
+  "setOptRing": {
+    "message": "วงแหวน"
+  },
+  "setOptPercentText": {
+    "message": "เปอร์เซ็นต์"
+  },
+  "setSecDisplay": {
+    "message": "การแสดงผล"
+  },
+  "setSecPacing": {
+    "message": "อัตราการใช้งาน"
+  },
+  "setOptOff": {
+    "message": "ปิด"
+  },
+  "setUsageBar": {
+    "message": "แถบการใช้งาน"
+  },
+  "setUsageBarDesc": {
+    "message": "เลือกขีดจำกัดที่แถบจะติดตาม"
+  },
+  "setShowPct": {
+    "message": "แสดง %"
+  },
+  "setContextDesc": {
+    "message": "แชทปัจจุบันใกล้เต็มแค่ไหน"
+  },
+  "setCacheTimerDesc": {
+    "message": "เวลานับถอยหลังที่ส่วนหัวของแชทขณะที่แคชพรอมต์ยังพร้อมใช้งาน"
+  },
+  "setPacing": {
+    "message": "แสดงการประเมินอัตราการใช้งาน"
+  },
+  "setPacingDesc": {
+    "message": "การประเมินจะเรียนรู้จากตัวอย่างตัวเลขการใช้งานที่จัดเก็บไว้เฉพาะในเบราว์เซอร์นี้ การปิดตัวเลือกนี้จะหยุดเก็บข้อมูลดังกล่าว"
+  },
+  "set5hrPace": {
+    "message": "อัตราการใช้งานรอบ 5 ชั่วโมง"
+  },
+  "set5hrPaceDesc": {
+    "message": "แสดงข้างเปอร์เซ็นต์ของรอบ 5 ชั่วโมง"
+  },
+  "setLearnedData": {
+    "message": "ข้อมูลการใช้งานที่เรียนรู้"
+  },
+  "setResetAlertsDesc": {
+    "message": "แบนเนอร์แจ้งเมื่อขีดจำกัดรอบ 5 ชั่วโมงหรือรายสัปดาห์รีเซ็ต การแสดงบนทุกเว็บไซต์ต้องได้รับสิทธิ์จาก Chrome"
+  },
+  "setReviewLink": {
+    "message": "ให้คะแนนบน Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "เธรด"
+  },
+  "threadSettled": {
+    "message": "เก็บพักแล้ว ($1)"
+  },
+  "threadKindChat": {
+    "message": "แชท"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "รูทีน"
+  },
+  "threadKindCode": {
+    "message": "โค้ด"
+  },
+  "threadKindProject": {
+    "message": "โปรเจกต์"
+  },
+  "threadKindOther": {
+    "message": "เธรด"
+  },
+  "threadStatusWorking": {
+    "message": "กำลังทำงาน"
+  },
+  "threadStatusAwaiting": {
+    "message": "กำลังรอ"
+  },
+  "threadStatusError": {
+    "message": "ข้อผิดพลาด"
+  },
+  "threadStatusUnread": {
+    "message": "ยังไม่ได้อ่าน"
+  },
+  "threadStatusOpen": {
+    "message": "เปิดอยู่"
+  },
+  "setSecSidebar": {
+    "message": "แถบด้านข้าง"
+  },
+  "setThreadSidebar": {
+    "message": "มุมมองเธรด"
+  },
+  "setThreadSidebarDesc": {
+    "message": "ทุกอย่างเริ่มต้นในกลุ่มที่เก็บพักไว้ แชทจะกลายเป็นการ์ดเมื่อมีความเคลื่อนไหวใหม่ จนกว่าคุณจะเก็บพักมัน"
+  },
+  "threadNavLabel": {
+    "message": "โปรเจกต์และเครื่องมือ"
+  },
+  "threadStatusPinned": {
+    "message": "ปักหมุดแล้ว"
+  },
+  "threadStatusDone": {
+    "message": "เสร็จสิ้น"
+  },
+  "threadWorkingFor": {
+    "message": "กำลังทำงาน $1"
+  },
+  "threadWaitingFor": {
+    "message": "กำลังรอ $1"
+  },
+  "threadDoneAgo": {
+    "message": "เสร็จเมื่อ $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1วิ"
+  },
+  "threadAgoMinutes": {
+    "message": "$1น."
+  },
+  "threadAgoHours": {
+    "message": "$1ชม."
+  },
+  "threadAgoDays": {
+    "message": "$1ว."
+  },
+  "threadAgoWeeks": {
+    "message": "$1สัปดาห์"
+  },
+  "threadSearch": {
+    "message": "ค้นหา"
+  },
+  "threadNewChat": {
+    "message": "แชทใหม่"
+  },
+  "threadSort": {
+    "message": "เรียงลำดับเธรด"
+  },
+  "threadSortEdited": {
+    "message": "แก้ไขล่าสุด"
+  },
+  "threadSortCreated": {
+    "message": "สร้างล่าสุด"
+  },
+  "setThreadSort": {
+    "message": "ลำดับ"
+  },
+  "setThreadSortDesc": {
+    "message": "แก้ไขล่าสุดจะเลื่อนเธรดขึ้นด้านบนเมื่อมีการเปลี่ยนแปลงหรือเมื่อ Claude ตอบกลับ"
+  },
+  "threadSettle": {
+    "message": "เก็บพัก"
+  }
+}

@@ -83,7 +83,6 @@ export const DEFAULT_SETTINGS: Settings = {
   weeklyManualWorkDays: [1, 2, 3, 4, 5],
   weeklyManualActiveHoursPerDay: 5,
   weeklyManualStartHour: 9,
-  language: "en",
   hasSeenTour: false,
   showClipboard: true,
   // Banners default to claude.ai only: useful out of the box, and it needs no
@@ -109,6 +108,8 @@ interface RemovedSettings {
   // open on activity, uncapped) — both dropped before release.
   threadDoneAlerts?: unknown;
   threadSidebarRecentCount?: unknown;
+  // UI language picker — the UI now follows Claude's own language.
+  language?: unknown;
 }
 
 const migrateSettings = (stored: Settings & RemovedSettings): Settings => {
@@ -116,6 +117,7 @@ const migrateSettings = (stored: Settings & RemovedSettings): Settings => {
     weeklyPaceMode: _paceMode,
     threadDoneAlerts: _threadDoneAlerts,
     threadSidebarRecentCount: _threadRecentCount,
+    language: _language,
     resetBannerSession,
     resetBannerWeekly,
     ...settings
@@ -242,6 +244,16 @@ export const updateSettings = async (
   const settings: Settings = { ...current.settings, ...partial };
   await safeStorageSet(adapter, { [STORAGE_KEYS.settings]: settings });
   return settings;
+};
+
+// Claude's UI language tag as last mirrored by a claude.ai tab; undefined until one
+// has loaded, which setLanguage() treats as English.
+export const getClaudeLanguage = async (
+  adapter: StorageAdapter = chromeStorageAdapter,
+): Promise<string | undefined> => {
+  const data = await safeStorageGet(adapter, STORAGE_KEYS.claudeLanguage);
+  const tag = data[STORAGE_KEYS.claudeLanguage];
+  return typeof tag === "string" ? tag : undefined;
 };
 
 export const saveDailyUsage = async (

@@ -159,8 +159,16 @@ token estimation).
 - Two themes: every overlay style needs a `.cub-theme-light` counterpart in `styles.css`.
 - i18n: wrap user-facing strings with `t("key", "English fallback", subs?)` from `src/shared/i18n.ts`
   (positional `$1`..`$9` placeholders). Catalogs are `src/locales/<lang>.json` (Chrome message format,
-  bundled at build — not chrome.i18n). Add the key to **every** catalog; resolution is active language →
-  English catalog → inline fallback, so partial coverage is safe. The active language is the `language`
-  setting (default `"en"`, user-picked under General), applied via `setLanguage()` when storage loads in
-  `content.tsx` and `popup.tsx` — NOT the browser locale. New languages: add a `src/locales/<lang>.json`
-  and an entry in `SUPPORTED_LANGUAGES`. Brand names (Claude, Opus/Sonnet/Haiku, Usage Bar) stay untranslated.
+  bundled at build — not chrome.i18n). Resolution is active language → English catalog → inline fallback,
+  but `i18n.test.ts` requires every catalog to carry exactly en.json's keys and `$n` placeholders, so add a
+  new key to **every** catalog. There is no language setting (the old `language` field is stripped in
+  `migrateSettings`): the UI follows Claude's own language, NOT the browser locale. The content script reads
+  `<html lang>` on claude.ai (and watches the attribute — Claude switches without a reload), calls
+  `setLanguage(tag)`, and mirrors the tag to `STORAGE_KEYS.claudeLanguage`; the popup, grant page and worker
+  can't see the page, so they read it back with `getClaudeLanguage()`. React UI that outlives a switch
+  re-renders via `useSyncExternalStore(onLanguageChange, getLanguage)`. `catalogForTag()` maps the BCP-47 tag
+  to a catalog (explicit `TAG_TO_CATALOG` → exact catalog name → base language → `en`). Every language in
+  Claude's language picker has a catalog (es-419 and es-ES share `es`); if Claude adds one, add
+  `src/locales/<lang>.json`, import it into `CATALOGS`, and map the tag if it isn't a catalog name or base
+  language. Brand names (Claude, Claude Code, Cowork, Opus/Sonnet/Haiku/Fable, Usage Bar, Chrome, GitHub) stay
+  untranslated.

@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "कंपोज़र में सब कुछ चालू या बंद करें।"
   },
-  "setLanguage": {
-    "message": "भाषा"
-  },
   "setTour": {
     "message": "फ़ीचर टूर"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "जब आपकी 5-घंटे या साप्ताहिक सीमा रीसेट हो तो बैनर। \"कोई भी साइट\" के लिए Chrome अनुमति चाहिए।"
-  },
-  "setLanguageShortDesc": {
-    "message": "अनुवाद गलत हो सकते हैं।"
   },
   "setReviewLink": {
     "message": "Chrome वेब स्टोर पर रेटिंग दें"

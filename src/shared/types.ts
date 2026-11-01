@@ -47,8 +47,6 @@ export interface Settings {
   weeklyManualStartHour: number;
   hasSeenTour: boolean;
   showClipboard: boolean;
-  // Overlay/popup UI language. Default "en"; user-selectable in settings. See SUPPORTED_LANGUAGES.
-  language: string;
   // Show a banner when a usage window rolls over. "off" disables it entirely,
   // "claude" only banners claude.ai tabs (no extra permission), "everywhere"
   // banners any normal site and requires the optional all-sites host permission.

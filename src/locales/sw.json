@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Muda wa kache ya dokezo haupatikani"
+  },
+  "cacheUnknown": {
+    "message": "kache haijulikani"
+  },
+  "cacheExpired": {
+    "message": "Muda wa kache ya dokezo umeisha"
+  },
+  "cacheExpiresIn": {
+    "message": "Kache ya dokezo itaisha baada ya $1"
+  },
+  "expiredShort": {
+    "message": "imeisha"
+  },
+  "cacheHasExpired": {
+    "message": "Muda wa kache ya dokezo umeisha"
+  },
+  "cacheSavings": {
+    "message": "Tokeni zilizohifadhiwa huokoa ~90% ya gharama ya uingizaji"
+  },
+  "ringSession": {
+    "message": "Kipindi cha saa 5"
+  },
+  "ringWeekly": {
+    "message": "Kila wiki · miundo yote"
+  },
+  "ringWeeklyFable": {
+    "message": "Kila wiki · Fable"
+  },
+  "ringContext": {
+    "message": "Dirisha la muktadha"
+  },
+  "weeklyScoped": {
+    "message": "Kila wiki · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% wakati wa kuwekwa upya"
+  },
+  "pacePastReset": {
+    "message": "+$1 baada ya kuwekwa upya"
+  },
+  "lastsToReset": {
+    "message": "inatosha hadi kuwekwa upya"
+  },
+  "paceActiveLeft": {
+    "message": "~saa $1 za kutumia zimebaki"
+  },
+  "paceEmptyDate": {
+    "message": "itaisha $1"
+  },
+  "paceEmptyIn": {
+    "message": "itaisha baada ya $1"
+  },
+  "paceMsgLeft": {
+    "message": "~ujumbe $1 umebaki"
+  },
+  "paceMsgsLeft": {
+    "message": "~jumbe $1 zimebaki"
+  },
+  "ctxCalculating": {
+    "message": "Inakokotoa matumizi ya muktadha..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Matumizi ya Claude $1"
+  },
+  "usage": {
+    "message": "Matumizi"
+  },
+  "planUsage": {
+    "message": "Matumizi ya mpango"
+  },
+  "openSettings": {
+    "message": "Fungua mipangilio ya kiendelezi"
+  },
+  "fiveHourLimit": {
+    "message": "Kikomo cha saa 5"
+  },
+  "resetUnknown": {
+    "message": "muda wa kuwekwa upya haujulikani"
+  },
+  "weeklyLearningAria": {
+    "message": "Makadirio ya matumizi ya kila wiki bado yanajifunza"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Makadirio ya kila wiki yanaweza kukosa usahihi katika wiki ya kwanza wakati Usage Bar inajifunza mwenendo wako."
+  },
+  "ctxCalcLoading": {
+    "message": "Ukokotoaji wa muktadha unapakia"
+  },
+  "ctxWindowFull": {
+    "message": "Dirisha la muktadha limejaa $1%"
+  },
+  "reviewEnjoying": {
+    "message": "Je, unafurahia Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "Kadiria kwenye Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Muundo haukuweza kubainishwa kwa jumbe hizi. Hii inaweza kutokana na Claude Code na cowork."
+  },
+  "noMessages": {
+    "message": "Hakuna jumbe"
+  },
+  "errNoWorker": {
+    "message": "Imeshindwa kuwasiliana na huduma ya chinichini ya kiendelezi"
+  },
+  "errLoadUsage": {
+    "message": "Imeshindwa kupakia matumizi ya Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Unaifurahia?"
+  },
+  "fiveHour": {
+    "message": "Saa 5"
+  },
+  "weekly": {
+    "message": "Kila wiki"
+  },
+  "refreshAll": {
+    "message": "Sasisha takwimu zote"
+  },
+  "customizeOverlay": {
+    "message": "Geuza wekeleo kukufaa"
+  },
+  "usageSummary": {
+    "message": "Muhtasari wa matumizi"
+  },
+  "total": {
+    "message": "Jumla"
+  },
+  "avgPerMo": {
+    "message": "Wastani / mwezi"
+  },
+  "avgPerDay": {
+    "message": "Wastani / siku"
+  },
+  "busiest": {
+    "message": "Shughuli nyingi zaidi"
+  },
+  "messagesSent": {
+    "message": "Jumbe zilizotumwa"
+  },
+  "fourteenDays": {
+    "message": "Siku 14"
+  },
+  "monthly": {
+    "message": "Kila mwezi"
+  },
+  "collecting": {
+    "message": "Inakusanya matumizi — chati yako ya kila siku hujazwa unavyopiga gumzo kwenye claude.ai."
+  },
+  "allTime": {
+    "message": "Muda wote"
+  },
+  "dayStreak": {
+    "message": "Mfululizo wa siku $1"
+  },
+  "reset": {
+    "message": "Weka upya"
+  },
+  "segOther": {
+    "message": "Nyingine"
+  },
+  "setSecGeneral": {
+    "message": "Jumla"
+  },
+  "setSecWheel": {
+    "message": "Dirisha la muktadha"
+  },
+  "setSecCacheTimer": {
+    "message": "Kipima muda cha kache"
+  },
+  "setShowOverlay": {
+    "message": "Onyesha wekeleo"
+  },
+  "setShowOverlayDesc": {
+    "message": "Washa au zima kila kitu kwenye kisanduku cha kuandikia."
+  },
+  "setTour": {
+    "message": "Ziara ya vipengele"
+  },
+  "setTourBtn": {
+    "message": "Rudia Ziara"
+  },
+  "setPrivacy": {
+    "message": "Sera ya faragha"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Makadirio ya kila wiki"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Saa za matumizi zilizobaki, siku na saa utakapoishiwa, au utakapokuwa wakati wa kuwekwa upya."
+  },
+  "setDeleteHistory": {
+    "message": "Futa historia"
+  },
+  "setSamples": {
+    "message": "Sampuli $1"
+  },
+  "setOptPctReset": {
+    "message": "Asilimia wakati wa kuwekwa upya"
+  },
+  "setOptTimePast": {
+    "message": "Muda baada ya kuwekwa upya"
+  },
+  "setOptMsgsLeft": {
+    "message": "Jumbe zilizobaki"
+  },
+  "setOptActiveHours": {
+    "message": "Saa za matumizi"
+  },
+  "setOptDaysTime": {
+    "message": "Siku / saa"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Kinachotumia dirisha la muktadha"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 kati ya $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Jumbe zako"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Majibu ya Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Ufikiriaji wa kina"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Miito ya zana"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Matokeo ya zana"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Faili na viambatisho"
+  },
+  "ctxBreakdownProject": {
+    "message": "Maarifa ya mradi"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "Matumizi ya mfumo"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Inayobaki"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "jumbe $1"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "vitalu $1"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "miito $1"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "matokeo $1"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "faili $1"
+  },
+  "ctxBreakdownEmpty": {
+    "message": " bado hakuna chochote kwenye dirisha la muktadha."
+  },
+  "ctxBreakdownNote": {
+    "message": "Imekadiriwa hapa kutokana na mazungumzo haya."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Imekadiriwa hapa. Matokeo ya zana na utafutaji hufanya hii kuwa makadirio."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Kikomo chako cha Claude cha saa 5 kimewekwa upya"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Kikomo chako cha Claude cha kila wiki kimewekwa upya"
+  },
+  "resetBannerAction": {
+    "message": "Fungua Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Arifa za kuwekwa upya"
+  },
+  "setResetBannerScope": {
+    "message": "Onyesha arifa kwenye"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai pekee"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Tovuti yoyote"
+  },
+  "setResetBannerTestGo": {
+    "message": "Tuma jaribio"
+  },
+  "setResetBannerTestCounting": {
+    "message": "baada ya sek $1"
+  },
+  "grantTitle": {
+    "message": "Onyesha arifa za kuwekwa upya kwenye tovuti yoyote"
+  },
+  "grantBody": {
+    "message": "Chrome inahitaji ruhusa yako kabla ya kiendelezi kuonyesha bango nje ya claude.ai. Inatumika tu kuonyesha bango — hakuna maudhui ya ukurasa yanayosomwa au kutumwa popote."
+  },
+  "grantDenied": {
+    "message": "Ruhusa haikutolewa. Arifa za kuwekwa upya zitabaki kwenye claude.ai pekee."
+  },
+  "grantAllow": {
+    "message": "Endelea"
+  },
+  "grantCancel": {
+    "message": "Ghairi"
+  },
+  "setOptRing": {
+    "message": "Pete"
+  },
+  "setOptPercentText": {
+    "message": "Asilimia"
+  },
+  "setSecDisplay": {
+    "message": "Mwonekano"
+  },
+  "setSecPacing": {
+    "message": "Kasi ya matumizi"
+  },
+  "setOptOff": {
+    "message": "Zima"
+  },
+  "setUsageBar": {
+    "message": "Upau wa matumizi"
+  },
+  "setUsageBarDesc": {
+    "message": "Kikomo ambacho upau unafuatilia."
+  },
+  "setShowPct": {
+    "message": "Onyesha %"
+  },
+  "setContextDesc": {
+    "message": "Kiasi ambacho gumzo la sasa limejaa."
+  },
+  "setCacheTimerDesc": {
+    "message": "Kipima muda katika kichwa cha gumzo wakati kache ya dokezo bado inafanya kazi."
+  },
+  "setPacing": {
+    "message": "Onyesha makadirio ya kasi"
+  },
+  "setPacingDesc": {
+    "message": "Makadirio hujifunza kutokana na sampuli za nambari za matumizi zilizohifadhiwa kwenye kivinjari hiki pekee. Kuzima hii husimamisha ukusanyaji wake."
+  },
+  "set5hrPace": {
+    "message": "Kasi ya saa 5"
+  },
+  "set5hrPaceDesc": {
+    "message": "Inaonyeshwa kando ya asilimia ya saa 5."
+  },
+  "setLearnedData": {
+    "message": "Matumizi yaliyojifunzwa"
+  },
+  "setResetAlertsDesc": {
+    "message": "Bango wakati kikomo chako cha saa 5 au cha kila wiki kinapowekwa upya. Tovuti yoyote inahitaji ruhusa ya Chrome."
+  },
+  "setReviewLink": {
+    "message": "Kadiria kwenye Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Mijadala"
+  },
+  "threadSettled": {
+    "message": "Iliyotulia ($1)"
+  },
+  "threadKindChat": {
+    "message": "Gumzo"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Ratiba"
+  },
+  "threadKindCode": {
+    "message": "Msimbo"
+  },
+  "threadKindProject": {
+    "message": "Mradi"
+  },
+  "threadKindOther": {
+    "message": "Mjadala"
+  },
+  "threadStatusWorking": {
+    "message": "Inafanya kazi"
+  },
+  "threadStatusAwaiting": {
+    "message": "Inasubiri"
+  },
+  "threadStatusError": {
+    "message": "Hitilafu"
+  },
+  "threadStatusUnread": {
+    "message": "Haijasomwa"
+  },
+  "threadStatusOpen": {
+    "message": "Wazi"
+  },
+  "setSecSidebar": {
+    "message": "Upau wa pembeni"
+  },
+  "setThreadSidebar": {
+    "message": "Mwonekano wa mijadala"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Kila kitu huanza kikiwa kimetulia. Gumzo huwa kadi linapokuwa na shughuli mpya, hadi utakapolituliza."
+  },
+  "threadNavLabel": {
+    "message": "Miradi na zana"
+  },
+  "threadStatusPinned": {
+    "message": "Imebandikwa"
+  },
+  "threadStatusDone": {
+    "message": "Imekamilika"
+  },
+  "threadWorkingFor": {
+    "message": "Inafanya kazi $1"
+  },
+  "threadWaitingFor": {
+    "message": "Inasubiri $1"
+  },
+  "threadDoneAgo": {
+    "message": "Imekamilika $1"
+  },
+  "threadAgoSeconds": {
+    "message": "sek $1"
+  },
+  "threadAgoMinutes": {
+    "message": "dak $1"
+  },
+  "threadAgoHours": {
+    "message": "saa $1"
+  },
+  "threadAgoDays": {
+    "message": "siku $1"
+  },
+  "threadAgoWeeks": {
+    "message": "wiki $1"
+  },
+  "threadSearch": {
+    "message": "Tafuta"
+  },
+  "threadNewChat": {
+    "message": "Gumzo jipya"
+  },
+  "threadSort": {
+    "message": "Panga mijadala"
+  },
+  "threadSortEdited": {
+    "message": "Iliyohaririwa hivi karibuni"
+  },
+  "threadSortCreated": {
+    "message": "Iliyoundwa hivi karibuni"
+  },
+  "setThreadSort": {
+    "message": "Mpangilio"
+  },
+  "setThreadSortDesc": {
+    "message": "Iliyohaririwa hivi karibuni husogeza mjadala juu unapobadilika au Claude anapojibu."
+  },
+  "threadSettle": {
+    "message": "Tuliza"
+  }
+}

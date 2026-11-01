@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "Turn everything in the composer on or off."
   },
-  "setLanguage": {
-    "message": "Language"
-  },
   "setTour": {
     "message": "Feature tour"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "Banner when your 5-hour or weekly limit resets. Any site needs Chrome permission."
-  },
-  "setLanguageShortDesc": {
-    "message": "Translations may be inaccurate."
   },
   "setReviewLink": {
     "message": "Rate on Chrome Web Store"

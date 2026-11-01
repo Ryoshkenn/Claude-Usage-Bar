@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "প্রম্পট ক্যাশ টাইমিং উপলব্ধ নয়"
+  },
+  "cacheUnknown": {
+    "message": "ক্যাশ অজানা"
+  },
+  "cacheExpired": {
+    "message": "প্রম্পট ক্যাশের মেয়াদ শেষ"
+  },
+  "cacheExpiresIn": {
+    "message": "প্রম্পট ক্যাশের মেয়াদ শেষ হবে $1 পরে"
+  },
+  "expiredShort": {
+    "message": "মেয়াদ শেষ"
+  },
+  "cacheHasExpired": {
+    "message": "প্রম্পট ক্যাশের মেয়াদ শেষ হয়ে গেছে"
+  },
+  "cacheSavings": {
+    "message": "ক্যাশড টোকেন ~90% ইনপুট খরচ বাঁচায়"
+  },
+  "ringSession": {
+    "message": "৫-ঘণ্টার সেশন"
+  },
+  "ringWeekly": {
+    "message": "সাপ্তাহিক · সব মডেল"
+  },
+  "ringWeeklyFable": {
+    "message": "সাপ্তাহিক · Fable"
+  },
+  "ringContext": {
+    "message": "কনটেক্সট উইন্ডো"
+  },
+  "weeklyScoped": {
+    "message": "সাপ্তাহিক · $1"
+  },
+  "pacePctAtReset": {
+    "message": "রিসেটের সময় $1%"
+  },
+  "pacePastReset": {
+    "message": "রিসেটের পর +$1"
+  },
+  "lastsToReset": {
+    "message": "রিসেট পর্যন্ত চলবে"
+  },
+  "paceActiveLeft": {
+    "message": "~$1ঘ সক্রিয় সময় বাকি"
+  },
+  "paceEmptyDate": {
+    "message": "শেষ হবে $1"
+  },
+  "paceEmptyIn": {
+    "message": "$1-এ শেষ হবে"
+  },
+  "paceMsgLeft": {
+    "message": "~$1টি মেসেজ বাকি"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1টি মেসেজ বাকি"
+  },
+  "ctxCalculating": {
+    "message": "কনটেক্সট ব্যবহার হিসাব করা হচ্ছে..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Claude ব্যবহার $1"
+  },
+  "usage": {
+    "message": "ব্যবহার"
+  },
+  "planUsage": {
+    "message": "প্ল্যানের ব্যবহার"
+  },
+  "openSettings": {
+    "message": "এক্সটেনশন সেটিংস খুলুন"
+  },
+  "fiveHourLimit": {
+    "message": "৫-ঘণ্টার সীমা"
+  },
+  "resetUnknown": {
+    "message": "রিসেট অজানা"
+  },
+  "weeklyLearningAria": {
+    "message": "সাপ্তাহিক ব্যবহারের অনুমান এখনও শিখছে"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Usage Bar আপনার ব্যবহারের ধরন শেখার সময় প্রথম সপ্তাহে সাপ্তাহিক অনুমান কিছুটা কম-বেশি হতে পারে।"
+  },
+  "ctxCalcLoading": {
+    "message": "কনটেক্সট হিসাব লোড হচ্ছে"
+  },
+  "ctxWindowFull": {
+    "message": "কনটেক্সট উইন্ডো $1% পূর্ণ"
+  },
+  "reviewEnjoying": {
+    "message": "Claude Usage Bar ভালো লাগছে?"
+  },
+  "reviewRate": {
+    "message": "Chrome Store-এ রেট দিন ↗"
+  },
+  "otherHint": {
+    "message": "এই মেসেজগুলোর জন্য মডেল নির্ধারণ করা যায়নি। এটি Claude Code এবং Cowork থেকে আসতে পারে।"
+  },
+  "noMessages": {
+    "message": "কোনো মেসেজ নেই"
+  },
+  "errNoWorker": {
+    "message": "এক্সটেনশন ব্যাকগ্রাউন্ড ওয়ার্কারের সাথে যোগাযোগ করা যাচ্ছে না"
+  },
+  "errLoadUsage": {
+    "message": "Claude-এর ব্যবহার লোড করা যায়নি"
+  },
+  "reviewEnjoyingShort": {
+    "message": "ভালো লাগছে?"
+  },
+  "fiveHour": {
+    "message": "৫-ঘণ্টা"
+  },
+  "weekly": {
+    "message": "সাপ্তাহিক"
+  },
+  "refreshAll": {
+    "message": "সব পরিসংখ্যান রিফ্রেশ করুন"
+  },
+  "customizeOverlay": {
+    "message": "ওভারলে কাস্টমাইজ করুন"
+  },
+  "usageSummary": {
+    "message": "ব্যবহারের সারাংশ"
+  },
+  "total": {
+    "message": "মোট"
+  },
+  "avgPerMo": {
+    "message": "গড় / মাস"
+  },
+  "avgPerDay": {
+    "message": "গড় / দিন"
+  },
+  "busiest": {
+    "message": "সবচেয়ে ব্যস্ত"
+  },
+  "messagesSent": {
+    "message": "পাঠানো মেসেজ"
+  },
+  "fourteenDays": {
+    "message": "১৪ দিন"
+  },
+  "monthly": {
+    "message": "মাসিক"
+  },
+  "collecting": {
+    "message": "ব্যবহারের তথ্য সংগ্রহ করা হচ্ছে — আপনি claude.ai-তে চ্যাট করার সাথে সাথে আপনার দৈনিক চার্ট তৈরি হবে।"
+  },
+  "allTime": {
+    "message": "সর্বমোট"
+  },
+  "dayStreak": {
+    "message": "$1-দিনের ধারাবাহিকতা"
+  },
+  "reset": {
+    "message": "রিসেট"
+  },
+  "segOther": {
+    "message": "অন্যান্য"
+  },
+  "setSecGeneral": {
+    "message": "সাধারণ"
+  },
+  "setSecWheel": {
+    "message": "কনটেক্সট উইন্ডো"
+  },
+  "setSecCacheTimer": {
+    "message": "ক্যাশ টাইমার"
+  },
+  "setShowOverlay": {
+    "message": "ওভারলে দেখান"
+  },
+  "setShowOverlayDesc": {
+    "message": "কম্পোজারে সবকিছু চালু বা বন্ধ করুন।"
+  },
+  "setTour": {
+    "message": "ফিচার ট্যুর"
+  },
+  "setTourBtn": {
+    "message": "ট্যুর আবার দেখুন"
+  },
+  "setPrivacy": {
+    "message": "গোপনীয়তা নীতি"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "সাপ্তাহিক অনুমান"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "ব্যবহারযোগ্য কত ঘণ্টা বাকি, কোন দিন ও সময়ে শেষ হবে, অথবা রিসেটের সময় কতটুকু থাকবে।"
+  },
+  "setDeleteHistory": {
+    "message": "হিস্ট্রি মুছুন"
+  },
+  "setSamples": {
+    "message": "$1টি নমুনা"
+  },
+  "setOptPctReset": {
+    "message": "রিসেটের সময় শতাংশ"
+  },
+  "setOptTimePast": {
+    "message": "রিসেটের পরের সময়"
+  },
+  "setOptMsgsLeft": {
+    "message": "বাকি মেসেজ"
+  },
+  "setOptActiveHours": {
+    "message": "সক্রিয় ঘণ্টা"
+  },
+  "setOptDaysTime": {
+    "message": "দিন / সময়"
+  },
+  "ctxBreakdownTitle": {
+    "message": "কনটেক্সট উইন্ডোতে কী ব্যবহৃত হচ্ছে"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$2-এর মধ্যে $1 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "আপনার মেসেজ"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Claude-এর উত্তর"
+  },
+  "ctxBreakdownThinking": {
+    "message": "বিস্তারিত চিন্তাভাবনা"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "টুল কল"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "টুলের ফলাফল"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "ফাইল ও সংযুক্তি"
+  },
+  "ctxBreakdownProject": {
+    "message": "প্রজেক্ট নলেজ"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "সিস্টেম ওভারহেড"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "বাকি"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1টি মেসেজ"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1টি ব্লক"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1টি কল"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1টি ফলাফল"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1টি ফাইল"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "কনটেক্সট উইন্ডোতে এখনও কিছু নেই।"
+  },
+  "ctxBreakdownNote": {
+    "message": "এই কথোপকথন থেকে লোকালি অনুমান করা হয়েছে।"
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "লোকালি অনুমান করা হয়েছে। টুল এবং সার্চের ফলাফলের কারণে এটি আনুমানিক।"
+  },
+  "resetBannerSessionTitle": {
+    "message": "আপনার ৫-ঘণ্টার Claude সীমা রিসেট হয়েছে"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "আপনার সাপ্তাহিক Claude সীমা রিসেট হয়েছে"
+  },
+  "resetBannerAction": {
+    "message": "Claude খুলুন"
+  },
+  "setSecResetAlerts": {
+    "message": "রিসেট অ্যালার্ট"
+  },
+  "setResetBannerScope": {
+    "message": "অ্যালার্ট দেখান"
+  },
+  "setResetScopeClaude": {
+    "message": "শুধু claude.ai-তে"
+  },
+  "setResetScopeEverywhere": {
+    "message": "যেকোনো সাইটে"
+  },
+  "setResetBannerTestGo": {
+    "message": "টেস্ট পাঠান"
+  },
+  "setResetBannerTestCounting": {
+    "message": "$1সে-এ"
+  },
+  "grantTitle": {
+    "message": "যেকোনো সাইটে রিসেট অ্যালার্ট দেখান"
+  },
+  "grantBody": {
+    "message": "claude.ai-এর বাইরে ব্যানার দেখানোর আগে এক্সটেনশনটির Chrome থেকে আপনার অনুমতি প্রয়োজন। এটি শুধুমাত্র ব্যানার দেখানোর জন্য ব্যবহৃত হয় — পেজের কোনো তথ্য কখনও পড়া বা কোথাও পাঠানো হয় না।"
+  },
+  "grantDenied": {
+    "message": "অনুমতি দেওয়া হয়নি। রিসেট অ্যালার্ট শুধুমাত্র claude.ai-তেই থাকবে।"
+  },
+  "grantAllow": {
+    "message": "চালিয়ে যান"
+  },
+  "grantCancel": {
+    "message": "বাতিল"
+  },
+  "setOptRing": {
+    "message": "রিং"
+  },
+  "setOptPercentText": {
+    "message": "শতাংশ"
+  },
+  "setSecDisplay": {
+    "message": "ডিসপ্লে"
+  },
+  "setSecPacing": {
+    "message": "গতির অনুমান"
+  },
+  "setOptOff": {
+    "message": "বন্ধ"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "বারটি কোন সীমা ট্র্যাক করবে।"
+  },
+  "setShowPct": {
+    "message": "% দেখান"
+  },
+  "setContextDesc": {
+    "message": "বর্তমান চ্যাটটি কতটুকু পূর্ণ।"
+  },
+  "setCacheTimerDesc": {
+    "message": "প্রম্পট ক্যাশ সক্রিয় থাকাকালীন চ্যাট হেডারে কাউন্টডাউন।"
+  },
+  "setPacing": {
+    "message": "গতির অনুমান দেখান"
+  },
+  "setPacingDesc": {
+    "message": "শুধুমাত্র এই ব্রাউজারে সংরক্ষিত ব্যবহারের সংখ্যাগত নমুনা থেকে অনুমান শেখা হয়। এটি বন্ধ করলে তথ্য সংগ্রহ বন্ধ হয়ে যাবে।"
+  },
+  "set5hrPace": {
+    "message": "৫-ঘণ্টার গতি"
+  },
+  "set5hrPaceDesc": {
+    "message": "৫-ঘণ্টার শতাংশের পাশে দেখানো হয়।"
+  },
+  "setLearnedData": {
+    "message": "শেখা ব্যবহারের তথ্য"
+  },
+  "setResetAlertsDesc": {
+    "message": "আপনার ৫-ঘণ্টা বা সাপ্তাহিক সীমা রিসেট হলে ব্যানার দেখায়। যেকোনো সাইটের জন্য Chrome-এর অনুমতি প্রয়োজন।"
+  },
+  "setReviewLink": {
+    "message": "Chrome Web Store-এ রেট দিন"
+  },
+  "threadsLabel": {
+    "message": "থ্রেড"
+  },
+  "threadSettled": {
+    "message": "গুছিয়ে রাখা ($1)"
+  },
+  "threadKindChat": {
+    "message": "চ্যাট"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "রুটিন"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "প্রজেক্ট"
+  },
+  "threadKindOther": {
+    "message": "থ্রেড"
+  },
+  "threadStatusWorking": {
+    "message": "কাজ চলছে"
+  },
+  "threadStatusAwaiting": {
+    "message": "অপেক্ষমাণ"
+  },
+  "threadStatusError": {
+    "message": "ত্রুটি"
+  },
+  "threadStatusUnread": {
+    "message": "অপঠিত"
+  },
+  "threadStatusOpen": {
+    "message": "খোলা"
+  },
+  "setSecSidebar": {
+    "message": "সাইডবার"
+  },
+  "setThreadSidebar": {
+    "message": "থ্রেড ভিউ"
+  },
+  "setThreadSidebarDesc": {
+    "message": "শুরুতে সবকিছু গুছিয়ে রাখা থাকে। কোনো চ্যাটে নতুন কার্যকলাপ হলে তা কার্ড হিসেবে দেখায়, যতক্ষণ না আপনি তা গুছিয়ে রাখেন।"
+  },
+  "threadNavLabel": {
+    "message": "প্রজেক্ট ও টুল"
+  },
+  "threadStatusPinned": {
+    "message": "পিন করা"
+  },
+  "threadStatusDone": {
+    "message": "সম্পন্ন"
+  },
+  "threadWorkingFor": {
+    "message": "কাজ চলছে $1"
+  },
+  "threadWaitingFor": {
+    "message": "অপেক্ষমাণ $1"
+  },
+  "threadDoneAgo": {
+    "message": "সম্পন্ন $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1সে"
+  },
+  "threadAgoMinutes": {
+    "message": "$1মি"
+  },
+  "threadAgoHours": {
+    "message": "$1ঘ"
+  },
+  "threadAgoDays": {
+    "message": "$1দি"
+  },
+  "threadAgoWeeks": {
+    "message": "$1স"
+  },
+  "threadSearch": {
+    "message": "খুঁজুন"
+  },
+  "threadNewChat": {
+    "message": "নতুন চ্যাট"
+  },
+  "threadSort": {
+    "message": "থ্রেড সাজান"
+  },
+  "threadSortEdited": {
+    "message": "সর্বশেষ সম্পাদিত"
+  },
+  "threadSortCreated": {
+    "message": "সর্বশেষ তৈরি"
+  },
+  "setThreadSort": {
+    "message": "ক্রম"
+  },
+  "setThreadSortDesc": {
+    "message": "সর্বশেষ সম্পাদিত অপশনটি থ্রেডে পরিবর্তন হলে বা Claude উত্তর দিলে সেটিকে উপরে নিয়ে আসে।"
+  },
+  "threadSettle": {
+    "message": "গুছিয়ে রাখুন"
+  }
+}

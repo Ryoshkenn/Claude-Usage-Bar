@@ -179,9 +179,6 @@
   "setShowOverlayDesc": {
     "message": "Attiva o disattiva tutto nel compositore."
   },
-  "setLanguage": {
-    "message": "Lingua"
-  },
   "setTour": {
     "message": "Tour delle funzioni"
   },
@@ -367,9 +364,6 @@
   },
   "setResetAlertsDesc": {
     "message": "Banner quando il limite di 5 ore o settimanale si azzera. «Qualsiasi sito» richiede l'autorizzazione di Chrome."
-  },
-  "setLanguageShortDesc": {
-    "message": "Le traduzioni potrebbero essere imprecise."
   },
   "setReviewLink": {
     "message": "Valuta sul Chrome Web Store"

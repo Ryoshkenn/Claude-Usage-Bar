@@ -1,0 +1,476 @@
+{
+  "cacheTimingUnavailable": {
+    "message": "Hindi available ang oras ng prompt cache"
+  },
+  "cacheUnknown": {
+    "message": "hindi alam ang cache"
+  },
+  "cacheExpired": {
+    "message": "Nag-expire na ang prompt cache"
+  },
+  "cacheExpiresIn": {
+    "message": "Mag-e-expire ang prompt cache sa $1"
+  },
+  "expiredShort": {
+    "message": "nag-expire na"
+  },
+  "cacheHasExpired": {
+    "message": "Nag-expire na ang prompt cache"
+  },
+  "cacheSavings": {
+    "message": "Nakakatipid ang naka-cache na token ng ~90% sa input cost"
+  },
+  "ringSession": {
+    "message": "5-oras na session"
+  },
+  "ringWeekly": {
+    "message": "Lingguhan · lahat ng modelo"
+  },
+  "ringWeeklyFable": {
+    "message": "Lingguhan · Fable"
+  },
+  "ringContext": {
+    "message": "Context window"
+  },
+  "weeklyScoped": {
+    "message": "Lingguhan · $1"
+  },
+  "pacePctAtReset": {
+    "message": "$1% sa pag-reset"
+  },
+  "pacePastReset": {
+    "message": "+$1 lagpas sa reset"
+  },
+  "lastsToReset": {
+    "message": "tatagal hanggang reset"
+  },
+  "paceActiveLeft": {
+    "message": "~$1o aktibo pang natitira"
+  },
+  "paceEmptyDate": {
+    "message": "ubos sa $1"
+  },
+  "paceEmptyIn": {
+    "message": "mauubos sa $1"
+  },
+  "paceMsgLeft": {
+    "message": "~$1 msg natitira"
+  },
+  "paceMsgsLeft": {
+    "message": "~$1 msg natitira"
+  },
+  "ctxCalculating": {
+    "message": "Kinakalkula ang paggamit ng context..."
+  },
+  "ariaClaudeUsage": {
+    "message": "Paggamit sa Claude $1"
+  },
+  "usage": {
+    "message": "Paggamit"
+  },
+  "planUsage": {
+    "message": "Paggamit sa plano"
+  },
+  "openSettings": {
+    "message": "Buksan ang mga setting ng extension"
+  },
+  "fiveHourLimit": {
+    "message": "5-oras na limitasyon"
+  },
+  "resetUnknown": {
+    "message": "hindi alam ang reset"
+  },
+  "weeklyLearningAria": {
+    "message": "Pinag-aaralan pa ang lingguhang tantya ng paggamit"
+  },
+  "weeklyLearningTooltip": {
+    "message": "Maaaring hindi pa tumpak ang mga lingguhang tantya sa unang linggo habang pinag-aaralan ng Usage Bar ang iyong pattern."
+  },
+  "ctxCalcLoading": {
+    "message": "Naglo-load ang pagkalkula ng context"
+  },
+  "ctxWindowFull": {
+    "message": "$1% puno na ang context window"
+  },
+  "reviewEnjoying": {
+    "message": "Nagugustuhan mo ba ang Claude Usage Bar?"
+  },
+  "reviewRate": {
+    "message": "I-rate sa Chrome Store ↗"
+  },
+  "otherHint": {
+    "message": "Hindi matukoy ang modelo para sa mga mensaheng ito. Maaaring galing ito sa Claude Code at cowork."
+  },
+  "noMessages": {
+    "message": "Walang mensahe"
+  },
+  "errNoWorker": {
+    "message": "Hindi makontak ang background worker ng extension"
+  },
+  "errLoadUsage": {
+    "message": "Hindi ma-load ang paggamit sa Claude"
+  },
+  "reviewEnjoyingShort": {
+    "message": "Nagugustuhan mo ba?"
+  },
+  "fiveHour": {
+    "message": "5-oras"
+  },
+  "weekly": {
+    "message": "Lingguhan"
+  },
+  "refreshAll": {
+    "message": "I-refresh lahat ng stats"
+  },
+  "customizeOverlay": {
+    "message": "I-customize ang overlay"
+  },
+  "usageSummary": {
+    "message": "Buod ng paggamit"
+  },
+  "total": {
+    "message": "Kabuuan"
+  },
+  "avgPerMo": {
+    "message": "Avg / buwan"
+  },
+  "avgPerDay": {
+    "message": "Avg / araw"
+  },
+  "busiest": {
+    "message": "Pinakaaktibo"
+  },
+  "messagesSent": {
+    "message": "Mga naipadalang mensahe"
+  },
+  "fourteenDays": {
+    "message": "14 na Araw"
+  },
+  "monthly": {
+    "message": "Buwanan"
+  },
+  "collecting": {
+    "message": "Kinokolekta ang paggamit — mapupunan ang araw-araw mong chart habang nakikipag-chat ka sa claude.ai."
+  },
+  "allTime": {
+    "message": "Lahat ng panahon"
+  },
+  "dayStreak": {
+    "message": "$1-araw na streak"
+  },
+  "reset": {
+    "message": "Reset"
+  },
+  "segOther": {
+    "message": "Iba pa"
+  },
+  "setSecGeneral": {
+    "message": "Pangkalahatan"
+  },
+  "setSecWheel": {
+    "message": "Context window"
+  },
+  "setSecCacheTimer": {
+    "message": "Timer ng cache"
+  },
+  "setShowOverlay": {
+    "message": "Ipakita ang overlay"
+  },
+  "setShowOverlayDesc": {
+    "message": "I-on o i-off ang lahat sa composer."
+  },
+  "setTour": {
+    "message": "Tour ng mga feature"
+  },
+  "setTourBtn": {
+    "message": "Ulitin ang Tour"
+  },
+  "setPrivacy": {
+    "message": "Patakaran sa privacy"
+  },
+  "setProject": {
+    "message": "GitHub"
+  },
+  "setWeeklyEstimate": {
+    "message": "Lingguhang tantya"
+  },
+  "setWeeklyEstimateDesc": {
+    "message": "Natitirang magagamit na oras, ang araw at oras kung kailan ka mauubusan, o kung nasaan ka na sa pag-reset."
+  },
+  "setDeleteHistory": {
+    "message": "I-delete ang history"
+  },
+  "setSamples": {
+    "message": "$1 sample"
+  },
+  "setOptPctReset": {
+    "message": "Porsyento sa pag-reset"
+  },
+  "setOptTimePast": {
+    "message": "Oras na lagpas sa reset"
+  },
+  "setOptMsgsLeft": {
+    "message": "Mga natitirang mensahe"
+  },
+  "setOptActiveHours": {
+    "message": "Mga aktibong oras"
+  },
+  "setOptDaysTime": {
+    "message": "Araw / oras"
+  },
+  "ctxBreakdownTitle": {
+    "message": "Ano ang gumagamit sa context window"
+  },
+  "ctxBreakdownTotal": {
+    "message": "$1 sa $2 · $3%"
+  },
+  "ctxBreakdownUser": {
+    "message": "Mga mensahe mo"
+  },
+  "ctxBreakdownAssistant": {
+    "message": "Mga sagot ni Claude"
+  },
+  "ctxBreakdownThinking": {
+    "message": "Mas malalim na pag-iisip"
+  },
+  "ctxBreakdownToolCalls": {
+    "message": "Mga pagtawag sa tool"
+  },
+  "ctxBreakdownToolResults": {
+    "message": "Mga resulta ng tool"
+  },
+  "ctxBreakdownAttachments": {
+    "message": "Mga file at attachment"
+  },
+  "ctxBreakdownProject": {
+    "message": "Kaalaman sa proyekto"
+  },
+  "ctxBreakdownOverhead": {
+    "message": "System overhead"
+  },
+  "ctxBreakdownRemaining": {
+    "message": "Natitira"
+  },
+  "ctxBreakdownCountMessages": {
+    "message": "$1 mensahe"
+  },
+  "ctxBreakdownCountBlocks": {
+    "message": "$1 block"
+  },
+  "ctxBreakdownCountCalls": {
+    "message": "$1 pagtawag"
+  },
+  "ctxBreakdownCountResults": {
+    "message": "$1 resulta"
+  },
+  "ctxBreakdownCountFiles": {
+    "message": "$1 file"
+  },
+  "ctxBreakdownEmpty": {
+    "message": "Wala pang laman ang context window."
+  },
+  "ctxBreakdownNote": {
+    "message": "Tinantya nang lokal mula sa usapang ito."
+  },
+  "ctxBreakdownNoteEstimate": {
+    "message": "Tinantya nang lokal. Nagiging tantya lang ito dahil sa mga resulta ng tool at paghahanap."
+  },
+  "resetBannerSessionTitle": {
+    "message": "Na-reset na ang iyong 5-oras na limitasyon sa Claude"
+  },
+  "resetBannerWeeklyTitle": {
+    "message": "Na-reset na ang iyong lingguhang limitasyon sa Claude"
+  },
+  "resetBannerAction": {
+    "message": "Buksan ang Claude"
+  },
+  "setSecResetAlerts": {
+    "message": "Mga alerto sa pag-reset"
+  },
+  "setResetBannerScope": {
+    "message": "Ipakita ang mga alerto sa"
+  },
+  "setResetScopeClaude": {
+    "message": "claude.ai lang"
+  },
+  "setResetScopeEverywhere": {
+    "message": "Kahit anong site"
+  },
+  "setResetBannerTestGo": {
+    "message": "Magpadala ng test"
+  },
+  "setResetBannerTestCounting": {
+    "message": "sa $1s"
+  },
+  "grantTitle": {
+    "message": "Ipakita ang mga alerto sa pag-reset sa kahit anong site"
+  },
+  "grantBody": {
+    "message": "Kailangan ng Chrome ang iyong pahintulot bago makapagpakita ang extension ng banner sa labas ng claude.ai. Ginagamit lang ito para ipakita ang banner — kailanman ay walang binabasa o ipinapadalang content ng page kahit saan."
+  },
+  "grantDenied": {
+    "message": "Hindi nabigyan ng pahintulot. Mananatili sa claude.ai lang ang mga alerto sa pag-reset."
+  },
+  "grantAllow": {
+    "message": "Magpatuloy"
+  },
+  "grantCancel": {
+    "message": "Kanselahin"
+  },
+  "setOptRing": {
+    "message": "Bilog"
+  },
+  "setOptPercentText": {
+    "message": "Porsyento"
+  },
+  "setSecDisplay": {
+    "message": "Display"
+  },
+  "setSecPacing": {
+    "message": "Bilis ng paggamit"
+  },
+  "setOptOff": {
+    "message": "Naka-off"
+  },
+  "setUsageBar": {
+    "message": "Usage bar"
+  },
+  "setUsageBarDesc": {
+    "message": "Aling limitasyon ang sinusubaybayan ng bar."
+  },
+  "setShowPct": {
+    "message": "Ipakita ang %"
+  },
+  "setContextDesc": {
+    "message": "Kung gaano na kapuno ang kasalukuyang chat."
+  },
+  "setCacheTimerDesc": {
+    "message": "Countdown sa header ng chat habang aktibo pa ang prompt cache."
+  },
+  "setPacing": {
+    "message": "Ipakita ang mga tantya sa bilis ng paggamit"
+  },
+  "setPacingDesc": {
+    "message": "Natututo ang mga tantya mula sa mga numerikal na sample ng paggamit na naka-store lang sa browser na ito. Titigil sa pagkolekta kapag na-off ito."
+  },
+  "set5hrPace": {
+    "message": "Bilis sa 5-oras"
+  },
+  "set5hrPaceDesc": {
+    "message": "Ipinapakita sa tabi ng porsyento para sa 5-oras."
+  },
+  "setLearnedData": {
+    "message": "Natutunang paggamit"
+  },
+  "setResetAlertsDesc": {
+    "message": "Banner kapag na-reset ang iyong 5-oras o lingguhang limitasyon. Kailangan ng pahintulot sa Chrome para sa kahit anong site."
+  },
+  "setReviewLink": {
+    "message": "I-rate sa Chrome Web Store"
+  },
+  "threadsLabel": {
+    "message": "Mga Thread"
+  },
+  "threadSettled": {
+    "message": "Naitabi ($1)"
+  },
+  "threadKindChat": {
+    "message": "Chat"
+  },
+  "threadKindCowork": {
+    "message": "Cowork"
+  },
+  "threadKindRoutine": {
+    "message": "Routine"
+  },
+  "threadKindCode": {
+    "message": "Code"
+  },
+  "threadKindProject": {
+    "message": "Proyekto"
+  },
+  "threadKindOther": {
+    "message": "Thread"
+  },
+  "threadStatusWorking": {
+    "message": "Gumagawa"
+  },
+  "threadStatusAwaiting": {
+    "message": "Naghihintay"
+  },
+  "threadStatusError": {
+    "message": "Error"
+  },
+  "threadStatusUnread": {
+    "message": "Hindi pa nababasa"
+  },
+  "threadStatusOpen": {
+    "message": "Bukas"
+  },
+  "setSecSidebar": {
+    "message": "Sidebar"
+  },
+  "setThreadSidebar": {
+    "message": "View ng thread"
+  },
+  "setThreadSidebarDesc": {
+    "message": "Nagsisimula ang lahat bilang naitabi. Nagiging card ang chat kapag may bagong aktibidad, hanggang sa itabi mo ito."
+  },
+  "threadNavLabel": {
+    "message": "Mga proyekto at tool"
+  },
+  "threadStatusPinned": {
+    "message": "Naka-pin"
+  },
+  "threadStatusDone": {
+    "message": "Tapos na"
+  },
+  "threadWorkingFor": {
+    "message": "Gumagawa $1"
+  },
+  "threadWaitingFor": {
+    "message": "Naghihintay $1"
+  },
+  "threadDoneAgo": {
+    "message": "Tapos na $1"
+  },
+  "threadAgoSeconds": {
+    "message": "$1s"
+  },
+  "threadAgoMinutes": {
+    "message": "$1m"
+  },
+  "threadAgoHours": {
+    "message": "$1o"
+  },
+  "threadAgoDays": {
+    "message": "$1a"
+  },
+  "threadAgoWeeks": {
+    "message": "$1l"
+  },
+  "threadSearch": {
+    "message": "Maghanap"
+  },
+  "threadNewChat": {
+    "message": "Bagong chat"
+  },
+  "threadSort": {
+    "message": "Pagbukud-bukurin ang mga thread"
+  },
+  "threadSortEdited": {
+    "message": "Pinakabagong na-edit"
+  },
+  "threadSortCreated": {
+    "message": "Pinakabagong ginawa"
+  },
+  "setThreadSort": {
+    "message": "Pagkakasunod-sunod"
+  },
+  "setThreadSortDesc": {
+    "message": "Iniaakyat ng Pinakabagong na-edit ang isang thread kapag may nagbago rito o sumagot si Claude."
+  },
+  "threadSettle": {
+    "message": "Itabi"
+  }
+}
