@@ -351,11 +351,12 @@ const SEARCH_RESCAN_MS = 3_000;
 const threadTimes = new Map<string, ThreadTimes>();
 // Row key → working / done timestamps, mirrored to chrome.storage.session.
 let activity: Record<string, ThreadActivity> = {};
-// Rows this tab's own sidebar has shown working. Only that local working → idle
-// transition writes "done" to the shared marks: acting on another tab's mark
-// while the two sidebars briefly disagree had each tab overwrite the other's
-// entry in session storage, back and forth, until they caught up.
-const seenWorking = new Set<string>();
+// The live state this tab's own sidebar last showed for each row. The shared
+// marks are only written when that local state changes: rewriting them to match
+// this tab whenever two sidebars briefly disagree (working here, waiting or idle
+// there) had each tab overwrite the other's entry in session storage, back and
+// forth, until they caught up.
+const localStatus = new Map<string, "working" | "awaiting">();
 // Where each thread sits, mirrored to chrome.storage.local. Every thread counts
 // as settled as of `viewSince` (when the view was turned on); `opened` holds
 // row key → when it opened, `settled` row key → when it was settled by hand. A
@@ -1172,19 +1173,23 @@ const trackActivity = (
   looking: boolean,
 ): { status: ThreadStatus | null; changed: boolean } => {
   const previous = activity[key];
+  const seen = localStatus.get(key);
+  const live = info.status === "working" || info.status === "awaiting" ? info.status : undefined;
   let next: ThreadActivity | undefined = previous;
 
-  if (info.status === "working" || info.status === "awaiting") {
-    seenWorking.add(key);
+  if (live) {
+    localStatus.set(key, live);
+    // No change here: whatever another tab recorded stands.
+    if (seen === live) return { status: live, changed: false };
     next = { workingSince: previous?.workingSince ?? now };
-    if (info.status === "awaiting") next.awaitingSince = previous?.awaitingSince ?? now;
-  } else if (previous?.workingSince) {
-    if (!seenWorking.delete(key)) {
-      // Another tab saw it working and this sidebar shows it idle. Show it done
-      // here, but leave the shared mark to the tab that saw it working.
-      return { status: info.status ?? (looking ? null : "done"), changed: false };
-    }
+    if (live === "awaiting") next.awaitingSince = previous?.awaitingSince ?? now;
+  } else if (seen) {
+    localStatus.delete(key);
     next = looking ? undefined : { doneAt: now };
+  } else if (previous?.workingSince) {
+    // Another tab saw it working and this sidebar shows it idle. Show it done
+    // here, but leave the shared mark to the tab that saw it working.
+    return { status: info.status ?? (looking ? null : "done"), changed: false };
   } else if (previous?.doneAt && looking) {
     next = undefined;
   }
@@ -1501,6 +1506,6 @@ export const resetThreadSidebarForTests = (): void => {
   isActive = () => true;
   threadTimes.clear();
   activity = {};
-  seenWorking.clear();
+  localStatus.clear();
   sortMenuOpen = false;
 };

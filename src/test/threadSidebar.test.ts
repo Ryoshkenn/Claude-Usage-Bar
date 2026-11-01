@@ -789,6 +789,36 @@ describe("shared state", () => {
     expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
   });
 
+  it("doesn't bounce the waiting mark between a working and a waiting sidebar", async () => {
+    // Tab A's sidebar shows the thread waiting on the user; this one shows it working.
+    const since = Date.now() - 60_000;
+    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: since, awaitingSince: since + 1_000 } };
+    mountSidebar(read([{ key: "chat:w", status: "running" }]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    const write = vi.spyOn(chrome.storage.session, "set");
+    const onChanged = vi.mocked(chrome.storage.onChanged.addListener).mock.calls[0][0];
+
+    // A keeps re-publishing its waiting mark; B, seeing nothing new, stays quiet.
+    for (let i = 0; i < 3; i++) {
+      const entry = { workingSince: since, awaitingSince: since + 2_000 + i };
+      onChanged({ [STORAGE_KEYS.threadActivity]: { newValue: { "chat:w": entry } } }, "session");
+    }
+    await settle();
+    expect(write).not.toHaveBeenCalled();
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("working");
+
+    // Once B sees it waiting too, the shared mark already says so: nothing to write.
+    rowEl("chat:w").querySelector(".status-dot")!.setAttribute("data-kind", "awaiting");
+    applyThreadSidebar();
+    expect(write).not.toHaveBeenCalled();
+    // B's own change still goes out: it sees the thread finish.
+    stopWorking("chat:w");
+    applyThreadSidebar();
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(typeof (session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe("number");
+  });
+
   it("doesn't trade working and done marks with a tab whose sidebar disagrees", async () => {
     // Tab A's sidebar shows the thread working; this one (tab B) shows it idle.
     const mark = { workingSince: Date.now() - 60_000 };
