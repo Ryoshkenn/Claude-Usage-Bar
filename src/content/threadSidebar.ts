@@ -1254,6 +1254,9 @@ const activeSince = (key: string, since: number | undefined): boolean => {
   const updatedAt = threadTimes.get(threadIdOf(key))?.updatedAt ?? 0;
   return (
     (local?.workingSince ?? 0) >= since ||
+    // Stopping to wait on you counts too: a task settled while it ran comes
+    // back once it needs input.
+    (local?.awaitingSince ?? 0) >= since ||
     (local?.doneAt ?? 0) >= since ||
     updatedAt > since + SETTLE_GRACE_MS
   );

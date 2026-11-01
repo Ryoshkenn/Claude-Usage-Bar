@@ -589,6 +589,20 @@ describe("thread sidebar DOM", () => {
     expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
   });
 
+  it("brings back a task settled while running once it waits on you", async () => {
+    mountSidebar(read([{ key: "cowork:t1", status: "running" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    rowEl("cowork:t1").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    expect(placementOf("cowork:t1")).toBe("settled");
+
+    // A moment later it stops to ask for input.
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    rowEl("cowork:t1").querySelector(".status-dot")!.setAttribute("data-kind", "awaiting");
+    applyThreadSidebar();
+    expect(placementOf("cowork:t1")).not.toBe("settled");
+    expect(rowEl("cowork:t1").getAttribute("data-cub-thread-status")).toBe("awaiting");
+  });
+
   it("settles the thread you're on too when asked", () => {
     history.replaceState(null, "", "/chat/c0");
     mountSidebar(read(ten.slice(0, 4)));
