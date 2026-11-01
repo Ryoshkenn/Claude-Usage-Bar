@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { createRoot } from "react-dom/client";
 import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { getClaudeLanguage, getStorage, resetUsage } from "../shared/storage";
@@ -13,7 +13,7 @@ import {
   type ChartBar,
 } from "../shared/usageChart";
 import type { ApiUsageResponse, StorageShape } from "../shared/types";
-import { setLanguage, t } from "../shared/i18n";
+import { getLanguage, onLanguageChange, setLanguage, t } from "../shared/i18n";
 import { formatResetsIn } from "../shared/resetText";
 import "./popup.css";
 
@@ -118,6 +118,8 @@ const UsageChart = ({ bars, view }: { bars: ChartBar[]; view: ChartView }) => {
 };
 
 export const Popup = () => {
+  // Re-render when Claude's language arrives or changes.
+  useSyncExternalStore(onLanguageChange, getLanguage);
   const [state, setState] = useState<StorageShape | null>(null);
   const [apiStatus, setApiStatus] = useState<"idle" | "loading" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
@@ -207,6 +209,11 @@ export const Popup = () => {
     const handleStorageChange = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
       if (area !== "local") {
         return;
+      }
+
+      // Claude switched language in a tab while this popup is open.
+      if (changes[STORAGE_KEYS.claudeLanguage]) {
+        setLanguage(changes[STORAGE_KEYS.claudeLanguage].newValue as string | undefined);
       }
 
       setState((current) =>

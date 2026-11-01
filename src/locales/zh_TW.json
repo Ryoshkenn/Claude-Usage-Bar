@@ -387,7 +387,7 @@
     "message": "對話串"
   },
   "threadSettled": {
-    "message": "已歸檔 ($1)"
+    "message": "已完成 ($1)"
   },
   "threadKindChat": {
     "message": "對話"
@@ -429,7 +429,7 @@
     "message": "對話串檢視"
   },
   "setThreadSidebarDesc": {
-    "message": "所有對話預設為已歸檔。當有新動態時會轉為卡片顯示，直到您將其歸檔。"
+    "message": "一開始全部為已完成。對話有新動態後會顯示為卡片，直到你將其標為完成。"
   },
   "threadNavLabel": {
     "message": "專案與工具"
@@ -486,7 +486,7 @@
     "message": "「最近編輯」會在對話變動或 Claude 回覆時將該對話串移至上方。"
   },
   "threadSettle": {
-    "message": "歸檔"
+    "message": "標為完成"
   },
   "clipRetiringTitle": {
     "message": "提示詞剪貼簿即將停用"

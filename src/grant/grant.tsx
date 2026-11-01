@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createRoot } from "react-dom/client";
-import { MESSAGE_TYPES } from "../shared/constants";
+import { MESSAGE_TYPES, STORAGE_KEYS } from "../shared/constants";
 import { getClaudeLanguage, updateSettings } from "../shared/storage";
 import { getLanguage, onLanguageChange, setLanguage, t } from "../shared/i18n";
 import "./grant.css";
@@ -23,6 +23,14 @@ const Grant = () => {
   useSyncExternalStore(onLanguageChange, getLanguage);
   useEffect(() => {
     void getClaudeLanguage().then(setLanguage);
+    // And follow it if Claude switches language while this window is open.
+    const onChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
+      if (area === "local" && changes[STORAGE_KEYS.claudeLanguage]) {
+        setLanguage(changes[STORAGE_KEYS.claudeLanguage].newValue as string | undefined);
+      }
+    };
+    chrome.storage.onChanged.addListener(onChanged);
+    return () => chrome.storage.onChanged.removeListener(onChanged);
   }, []);
 
   const allow = async () => {
