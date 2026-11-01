@@ -160,4 +160,36 @@ describe("catalogs", () => {
       expect(placeholders(translated), `${file} ${id}`).toEqual(placeholders(message));
     }
   });
+
+  // Machine translations occasionally slip a word in from another language's
+  // script (Thai inside Amharic, Russian inside Finnish). Every letter must be in
+  // the catalog's own script, or Latin for brand names like Claude and Opus.
+  const SCRIPTS: Record<string, string[]> = {
+    am: ["Ethiopic"],
+    bn: ["Bengali"],
+    bho: ["Devanagari"],
+    hi: ["Devanagari"],
+    mr: ["Devanagari"],
+    gu: ["Gujarati"],
+    kn: ["Kannada"],
+    ml: ["Malayalam"],
+    ta: ["Tamil"],
+    te: ["Telugu"],
+    th: ["Thai"],
+    ru: ["Cyrillic"],
+    uk: ["Cyrillic"],
+    ja: ["Han", "Hiragana", "Katakana"],
+    ko: ["Hangul"],
+    zh_CN: ["Han"],
+    zh_TW: ["Han"],
+  };
+
+  it.each(files)("%s stays in its own script", (file) => {
+    const scripts = ["Latin", "Common", ...(SCRIPTS[file.replace(/\.json$/, "")] ?? [])];
+    const allowed = new RegExp(`^(?:${scripts.map((script) => `\\p{Script=${script}}`).join("|")})$`, "u");
+    for (const [id, { message }] of Object.entries(read(file))) {
+      const stray = [...message].filter((char) => /\p{L}/u.test(char) && !allowed.test(char));
+      expect(stray.join(""), `${file} ${id}: ${message}`).toBe("");
+    }
+  });
 });
