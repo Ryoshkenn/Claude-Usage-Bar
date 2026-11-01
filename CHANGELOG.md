@@ -2,7 +2,7 @@
 
 All notable changes since the 1.0.0 Chrome Web Store release are documented here.
 
-## [Unreleased]
+## [1.7.0] - 2026-10-31
 
 ### Added
 - The onboarding tour now covers the usage bar, the message navigator, the cache timer, the thread view and pace estimates. For the cache timer and the thread view it shows a preview in the card and asks whether to turn them on; the thread view preview plays a thread being started, working, finishing and being settled, beside Claude's own sidebar.
