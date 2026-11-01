@@ -949,6 +949,24 @@ describe("shared state", () => {
     expect(stored.settled["chat:c5"]).toBe(otherSettle);
   });
 
+  it("retries a settle whose write failed instead of dropping it", async () => {
+    const since = Date.now() - 60 * 60_000;
+    local[STORAGE_KEYS.threadPlaces] = { since, open: { "chat:c4": since + 1_000 }, settled: {} };
+    mountSidebar(read(ten.slice(0, 6)));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    vi.spyOn(chrome.storage.local, "set").mockRejectedValueOnce(new Error("QUOTA_BYTES quota exceeded"));
+
+    rowEl("chat:c4").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    await settle();
+    expect(placementOf("chat:c4")).toBe("settled");
+    expect((local[STORAGE_KEYS.threadPlaces] as { settled: object }).settled).toEqual({});
+
+    applyThreadSidebar();
+    await settle();
+    expect(Object.keys((local[STORAGE_KEYS.threadPlaces] as { settled: object }).settled)).toEqual(["chat:c4"]);
+  });
+
   it("places rows even when the stored places can't be read", async () => {
     vi.spyOn(chrome.storage.local, "get").mockRejectedValue(new Error("read failed"));
     mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 3)]));

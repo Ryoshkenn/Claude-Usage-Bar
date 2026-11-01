@@ -453,6 +453,14 @@ const loadActivity = (): void => {
     });
 };
 
+// Placement changes count up; the worker has confirmed everything up to
+// placesSaved. Anything newer (a write that failed, or one made while another
+// was in flight) is resent on the next pass, as the whole current state: the
+// worker merges newest-time-per-key, so resending is harmless.
+let placesVersion = 0;
+let placesSaved = 0;
+let placesWriting = false;
+
 // The worker merges these into what's stored (newest time per key), one tab at
 // a time, so a settle or open from another tab this one hasn't adopted yet
 // survives. Its storage event brings the merged result back here.
@@ -460,7 +468,21 @@ const savePlaces = (): void => {
   const places = sanitizePlaces({ since: viewSince, open: opened, settled });
   opened = places.open;
   settled = places.settled;
-  void sendToWorker({ type: MESSAGE_TYPES.threadPlacesPatch, places });
+  placesVersion += 1;
+  flushPlaces();
+};
+
+const flushPlaces = (): void => {
+  if (placesWriting || placesSaved >= placesVersion || !placesLoaded || !enabled) return;
+  placesWriting = true;
+  const version = placesVersion;
+  const places = sanitizePlaces({ since: viewSince, open: opened, settled });
+  void sendToWorker({ type: MESSAGE_TYPES.threadPlacesPatch, places }).then((ok) => {
+    placesWriting = false;
+    if (!ok) return;
+    placesSaved = Math.max(placesSaved, version);
+    flushPlaces();
+  });
 };
 
 const adoptPlaces = (places: ThreadPlaces): void => {
@@ -499,6 +521,8 @@ const loadPlaces = (): void => {
 const forgetPlaces = (): void => {
   placesLoad += 1;
   placesLoaded = false;
+  // Nothing unsaved survives the view being turned off.
+  placesSaved = placesVersion;
   viewSince = undefined;
   opened = {};
   settled = {};
@@ -1288,6 +1312,8 @@ export const applyThreadSidebar = (): void => {
   // Also retries changes a failed write left pending.
   if (activityChanged || pendingActivity.size > 0) saveActivity();
   if (placesChanged) savePlaces();
+  // Also resends a placement change a failed write left unconfirmed.
+  else flushPlaces();
 
   // Display order: labels and pinned rows keep Claude's order; everything else
   // is sorted by the chosen rule, then sectioned.
@@ -1524,5 +1550,8 @@ export const resetThreadSidebarForTests = (): void => {
   pendingActivity.clear();
   activityWriting = false;
   activityLoaded = false;
+  placesVersion = 0;
+  placesSaved = 0;
+  placesWriting = false;
   sortMenuOpen = false;
 };
