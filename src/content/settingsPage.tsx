@@ -58,8 +58,18 @@ const findNavButtonByLabel = (label: string): HTMLButtonElement | null => {
   return null;
 };
 
-const findSettingsNav = (): HTMLUListElement | null =>
-  findNavButtonByLabel("General")?.closest("ul") ?? null;
+// Our item goes right after Claude's own "Usage" (Account / Billing / Usage
+// group, Oct 2026 layout). The li testids are stable where labels get renamed
+// ("General" became "Appearance" but kept general-settings); the label lookups
+// cover layouts without testids, oldest last.
+const findNavAnchorLi = (): HTMLLIElement | null =>
+  document.querySelector<HTMLLIElement>('li[data-testid="usage-settings"]') ??
+  findNavButtonByLabel("Usage")?.closest("li") ??
+  document.querySelector<HTMLLIElement>('li[data-testid="general-settings"]') ??
+  findNavButtonByLabel("General")?.closest("li") ??
+  null;
+
+const findSettingsNav = (): HTMLUListElement | null => findNavAnchorLi()?.closest("ul") ?? null;
 
 // The new settings overlay's scrollable content region styles its sections via
 // [data-settings-section] arbitrary variants (e.g. "[&_[data-settings-section]]:gap-4").
@@ -137,14 +147,14 @@ let panelActive = false;
 // Claude's nav-button class strings, copied exactly from the DOM. The base set
 // is shared by every item; the active/inactive sets toggle per current route.
 const NAV_BTN_BASE =
-  "flex h-control w-full cursor-pointer items-center gap-sm rounded px-sm text-left text-body transition-colors";
-const NAV_BTN_INACTIVE = "text-secondary hover:bg-fill-ghost-hover hover:text-primary";
-const NAV_BTN_ACTIVE = "bg-alpha-2 font-medium text-primary";
+  "hit-row hit-row-main flex h-list-row w-full items-center gap-sm rounded px-sm text-start text-body focus-visible:shadow-focus focus-visible:outline-hidden";
+const NAV_BTN_INACTIVE = "text-secondary-control hover:bg-fill-ghost-hover hover:text-primary";
+const NAV_BTN_ACTIVE = "bg-fill-ghost-selected font-medium text-primary";
 
 const buildNavIcon = (): HTMLSpanElement => {
   const icon = document.createElement("span");
   icon.setAttribute("data-cds", "Icon");
-  icon.className = "shrink-0 text-secondary";
+  icon.className = "shrink-0 text-secondary-control";
   icon.setAttribute("aria-hidden", "true");
   // Match the 1em / 20px box Claude's Anthropicons glyphs occupy so our row
   // aligns with the others; render a small bar-meter SVG inside it.
@@ -184,10 +194,9 @@ const injectNavItem = () => {
 
   li.appendChild(btn);
 
-  // Insert directly after General (2nd position, above Account)
-  const generalLi = findNavButtonByLabel("General")?.closest("li");
-  if (generalLi?.nextSibling) {
-    ul.insertBefore(li, generalLi.nextSibling);
+  const anchorLi = findNavAnchorLi();
+  if (anchorLi?.parentElement === ul && anchorLi.nextSibling) {
+    ul.insertBefore(li, anchorLi.nextSibling);
   } else {
     ul.appendChild(li);
   }
@@ -199,6 +208,8 @@ const updateNavActiveState = () => {
   const btn = navLi?.querySelector<HTMLElement>("[data-cub-nav]");
   if (!btn) return;
   const isActive = panelActive;
+  // Lets styles.css mute Claude's own (now stale) current item.
+  btn.closest("nav")?.toggleAttribute("data-cub-panel-active", isActive);
   if (isActive) {
     btn.classList.remove(...NAV_BTN_INACTIVE.split(" "));
     btn.classList.add(...NAV_BTN_ACTIVE.split(" "));

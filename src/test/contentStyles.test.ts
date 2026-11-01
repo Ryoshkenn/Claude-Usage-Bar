@@ -129,7 +129,7 @@ describe("content styles", () => {
 
   it("only auto-shows the onboarding tour on Claude's new-chat route", () => {
     expect(contentScript).toContain("const isNewChatPage = (): boolean => location.pathname === \"/new\" || location.pathname === \"/new/\";");
-    expect(contentScript).toContain("storageState.settings.hasSeenTour === false && isNewChatPage()");
+    expect(contentScript).toContain("storageState?.settings.hasSeenTour === false && isNewChatPage()");
   });
 
   it("uses 5-hour session estimates on Claude design routes", () => {

@@ -23,6 +23,7 @@ import {
   findCoworkControlsAnchor,
   findDisclaimerMount,
   findNewChatInsertionPoint,
+  findToolbarSlot,
   measureCardActionStrip,
   measureChinGap,
   type ChinSlot,
@@ -411,10 +412,12 @@ const ensureTourHost = () => {
   tourRoot = createRoot(tourHost);
 };
 
+const isTourRunning = (): boolean => storageState?.settings.hasSeenTour === false && isNewChatPage();
+
 const renderTour = () => {
   if (!storageState || !isActiveInstance()) return;
   ensureTourHost();
-  const showTour = storageState.settings.hasSeenTour === false && isNewChatPage();
+  const showTour = isTourRunning();
   tourRoot?.render(
     <React.StrictMode>
       {showTour ? (
@@ -654,7 +657,7 @@ const mountHostOverDisclaimer = (): boolean => {
   }
 
   const disclaimerMount = findDisclaimerMount();
-  const chin = isDesignPage() ? null : findChinSlot();
+  const chin = isDesignPage() ? null : (findChinSlot() ?? findToolbarSlot());
   // Cowork rows keep their own anchoring next to Skip/Approve.
   if (chin && !findCoworkControlsAnchor(disclaimerMount)) {
     return mountHostInChin(chin);
@@ -720,7 +723,11 @@ const render = () => {
         showClipboard: false,
         ringTarget: "hidden" as const,
       }
-    : storageState.settings;
+    : isTourRunning()
+      ? // The bar is off by default, but the tour's first steps point at it and
+        // its details panel — show it until the tour is done or skipped.
+        { ...storageState.settings, showBar: true }
+      : storageState.settings;
   root?.render(
     <React.StrictMode>
       <ContentApp

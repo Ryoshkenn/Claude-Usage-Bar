@@ -889,6 +889,19 @@ button.cub-ctx-percent[data-loading="true"] {
   position: relative;
 }
 
+/* While our panel is the visible section, Claude's nav still marks the item it
+   last showed (aria-current) as selected. Mute it so only "Usage Bar" reads as
+   current. Claude's own tokens, so both themes follow and need no light rule. */
+[data-cub-panel-active] li > button[aria-current="page"]:not([data-cub-nav]) {
+  background-color: transparent !important;
+  color: var(--control-ink, var(--cds-text-secondary)) !important;
+  font-weight: inherit !important;
+}
+
+[data-cub-panel-active] li > button[aria-current="page"]:not([data-cub-nav]):hover {
+  background-color: var(--cds-fill-ghost-hover) !important;
+}
+
 /* Settings dropdowns (CdsSelect in settingsPage.tsx). The trigger keeps
    Claude's combobox classes; the menu is ours. Surface and text come from
    Claude's tokens and hovers from currentColor, so both themes follow Claude's

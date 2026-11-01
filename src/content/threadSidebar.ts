@@ -36,6 +36,9 @@ const ROW_SELECTOR = "[data-row-key]";
 const MAIN_BUTTON_SELECTOR = "[data-row-main-button]";
 const GROUP_LABEL_SELECTOR = "[data-sidebar-group-label]";
 const NEW_LINK_SELECTOR = 'a[href="/new"][data-row-main-button]';
+// Claude's Search row beside New (Oct 2026 layout): a sidebar row, not a bar,
+// advertising Ctrl/⌘+K. Hidden like New; our Search row clicks it.
+const SEARCH_ROW_SELECTOR = '[data-row-main-button][aria-keyshortcuts$="+k" i]';
 // claude.ai's "unread / read" grouping keys its label rows label:unread-<group>.
 const UNREAD_GROUP_KEY = "label:unread-unread";
 
@@ -715,6 +718,11 @@ const openClaudeSearch = (): void => {
     headingButton.click();
     return;
   }
+  const searchRow = scope.querySelector<HTMLElement>(SEARCH_ROW_SELECTOR);
+  if (searchRow) {
+    searchRow.click();
+    return;
+  }
   const barTrigger = claudeSearchBar?.isConnected
     ? claudeSearchBar.matches('button, [role="button"]')
       ? claudeSearchBar
@@ -924,11 +932,13 @@ const findClaudeSearchBar = (scope: Element, sidebar: Element): HTMLElement | nu
 };
 
 // Our row takes the place of Claude's top search bar when the layout has one,
-// otherwise of Claude's New row. Both of Claude's are hidden: our row drives
-// them.
+// otherwise of Claude's New row. Claude's New, search bar and Search row are
+// all hidden: our row drives them.
 const syncTopRow = (scope: Element, sidebar: Element): void => {
   const newLink = scope.querySelector<HTMLElement>(NEW_LINK_SELECTOR);
   if (newLink) setAttr(newLink, HIDDEN_ATTR, "");
+  const searchRow = scope.querySelector<HTMLElement>(SEARCH_ROW_SELECTOR);
+  if (searchRow) setAttr(searchRow, HIDDEN_ATTR, "");
   const bar = findClaudeSearchBar(scope, sidebar);
 
   let row = document.getElementById(TOP_ROW_ID);
@@ -939,7 +949,9 @@ const syncTopRow = (scope: Element, sidebar: Element): void => {
       bar.before(row);
     }
   } else {
-    const host = newLink?.closest(".shrink-0") ?? newLink?.parentElement ?? sidebar.firstElementChild;
+    // From the link's parent: the link itself is .shrink-0 in newer markup, and
+    // the row must never end up inside the (hidden) link.
+    const host = newLink?.parentElement?.closest(".shrink-0") ?? newLink?.parentElement ?? sidebar.firstElementChild;
     if (!host) return;
     if (!row || row.parentElement !== host) {
       row ??= buildTopRow();

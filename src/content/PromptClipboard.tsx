@@ -105,6 +105,8 @@ export const PromptClipboard = () => {
     setRenderOpen(true);
     const composer =
       findDisclaimerMount() ??
+      document.querySelector<HTMLElement>('[data-cds="ChatComposer"]') ??
+      document.querySelector('[data-testid="chat-input"]')?.closest<HTMLElement>("fieldset") ??
       document.querySelector<HTMLElement>("div.cursor-text.rounded-\\[20px\\]");
     if (composer) {
       const rect = composer.getBoundingClientRect();
@@ -351,7 +353,11 @@ export const PromptClipboard = () => {
                         <button
                           type="button"
                           className="cub-prompt-action primary"
-                          onClick={() => handleInsert(entry.content)}
+                          onClick={(e) => {
+                            // The card inserts on click too; don't let it run again.
+                            e.stopPropagation();
+                            handleInsert(entry.content);
+                          }}
                         >
                           Insert
                         </button>

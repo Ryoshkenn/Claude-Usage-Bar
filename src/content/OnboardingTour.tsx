@@ -20,17 +20,23 @@ interface TourStep {
   title: string;
   body: string;
   forceShowBar?: boolean;
+  // Steps that draw their own demo element look themselves up by id.
+  id?: "messageRail" | "cacheTimer";
   postNavDelay?: number;
   scrollIntoView?: boolean;
   allowInteraction?: boolean;
 }
 
-const MESSAGE_NAV_STEP = 6;
-const CACHE_TIMER_STEP = 7;
 const THEME_SYNC_INTERVAL_MS = 500;
 
-// Compute where to render the demo cache timer: centered inside <main> on /new
+// Compute where to render the demo cache timer: the start of the page header,
+// where the real timer sits in chats. <main> now spans the whole frame, sidebar
+// included, so it's only the fallback.
 function getCacheTimerDemoPos(): TargetRect {
+  const header = document.querySelector<HTMLElement>("header")?.getBoundingClientRect();
+  if (header && header.width > 0 && header.height > 0) {
+    return { top: header.top + Math.max(0, (header.height - 28) / 2), left: header.left + 12, width: 88, height: 28 };
+  }
   const main = document.querySelector<HTMLElement>("main");
   if (main) {
     const r = main.getBoundingClientRect();
@@ -39,7 +45,12 @@ function getCacheTimerDemoPos(): TargetRect {
   return { top: Math.round(window.innerHeight * 0.12), left: 12, width: 88, height: 28 };
 }
 
-const STEPS: TourStep[] = [
+// The message rail is switched off in content.tsx ("TEMP: message rail
+// disabled"); its step stays out of the tour until the rail is back, so the tour
+// never shows off something the user can't find.
+const MESSAGE_RAIL_ENABLED = false;
+
+const ALL_STEPS: TourStep[] = [
   {
     navigateTo: "/new",
     selector: null,
@@ -84,6 +95,7 @@ const STEPS: TourStep[] = [
     allowInteraction: true,
   },
   {
+    id: "messageRail",
     navigateTo: "/new",
     selector: null,
     fallbackRect: () => ({
@@ -97,11 +109,12 @@ const STEPS: TourStep[] = [
     postNavDelay: 400,
   },
   {
+    id: "cacheTimer",
     navigateTo: "/new",
     selector: null,
     fallbackRect: getCacheTimerDemoPos,
     title: "Cache Timer",
-    body: "After Claude responds, this countdown shows how long your prompt cache stays warm — saving tokens on follow-up messages. This only appears in active chats.",
+    body: "After Claude responds, this countdown shows how long your prompt cache stays warm — saving tokens on follow-up messages. Turn it on under Display; it appears in active chats.",
   },
   {
     navigateTo: "/new",
@@ -110,6 +123,10 @@ const STEPS: TourStep[] = [
     body: "You're all caught up on Claude Usage Bar's features. Start a new chat and enjoy!",
   },
 ];
+
+const STEPS = ALL_STEPS.filter((s) => MESSAGE_RAIL_ENABLED || s.id !== "messageRail");
+const MESSAGE_NAV_STEP = STEPS.findIndex((s) => s.id === "messageRail");
+const CACHE_TIMER_STEP = STEPS.findIndex((s) => s.id === "cacheTimer");
 
 const PAD = 10;
 const ARROW_H = 9; // height of the CSS arrow pointer
