@@ -429,7 +429,7 @@
     "message": "Trådvisning"
   },
   "setThreadSidebarDesc": {
-    "message": "Alt starter som lagret. En samtale blir et kort når den har ny aktivitet, helt til du legger den bort."
+    "message": "De nyeste samtalene dine vises som kort, og resten som lagret. En tråd blir til et kort ved ny aktivitet, helt til du legger den bort. Fungerer i Code også."
   },
   "threadNavLabel": {
     "message": "Prosjekter og verktøy"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Konverter mine prompts til skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Velkommen til Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "En rask titt på hva den legger til i Claude. Det tar bare et minutt."
+  },
+  "tourBarTitle": {
+    "message": "Forbruksindikator"
+  },
+  "tourBarBody": {
+    "message": "Forbruket ditt for 5-timersgrensen, rett i skrivefeltet. Den fylles opp mens du bruker Claude og blir oransje når du nærmer deg grensen."
+  },
+  "tourDetailsTitle": {
+    "message": "Forbruksdetaljer"
+  },
+  "tourDetailsBody": {
+    "message": "Hold pekeren over indikatoren for detaljer: forbrukstakt, ukentlig forbruk og når hver grense nullstilles."
+  },
+  "tourRailTitle": {
+    "message": "Meldingsnavigator"
+  },
+  "tourRailBody": {
+    "message": "I en samtale viser disse merkene langs høyre kant meldingene dine, og det opplyste merket viser hvor du er. Klikk på et merke for å hoppe til det."
+  },
+  "tourCacheTitle": {
+    "message": "Hurtigbuffernedtelling"
+  },
+  "tourCacheBody": {
+    "message": "Etter at Claude svarer, holdes hurtigbufferen varm i noen minutter, slik at en oppfølging bruker mindre av kvoten din. Hurtigbuffernedtellingen teller ned tiden øverst i samtalen."
+  },
+  "tourCacheAsk": {
+    "message": "Vise hurtigbuffernedtellingen?"
+  },
+  "tourUseIt": {
+    "message": "Bruk den"
+  },
+  "tourThreadTitle": {
+    "message": "Trådvisning"
+  },
+  "tourThreadBody": {
+    "message": "Gjør sidefeltet om til kort. Tråder som venter på deg kommer først, deretter ferdig arbeid, og så arbeid som fortsatt pågår. Legg bort et kort når du er ferdig med det."
+  },
+  "tourThreadAsk": {
+    "message": "Bruke trådvisningen?"
+  },
+  "tourUseThis": {
+    "message": "Bruk denne"
+  },
+  "tourSettingsTitle": {
+    "message": "Innstillinger"
+  },
+  "tourSettingsBody": {
+    "message": "Denne pilen åpner innstillingene for Usage Bar, der du kan endre alt dette. La oss gå dit nå."
+  },
+  "tourPacingTitle": {
+    "message": "Forbrukstakt"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar lærer seg bruksmønsteret ditt for 5-timers- og ukesgrensene for å beregne forbrukstakten din. Målingene blir i denne nettleseren, og ingen ledetekster, svar eller rådata lagres. Slå av forbrukstakt her hvis du heller vil la være."
+  },
+  "tourDoneTitle": {
+    "message": "Alt er klart!"
+  },
+  "tourDoneBody": {
+    "message": "Alt annet finner du i Innstillinger under Usage Bar, og du kan starte denne omvisningen på nytt derfra under Generelt."
+  },
+  "tourAria": {
+    "message": "Omvisning: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 av $2"
+  },
+  "tourSkip": {
+    "message": "Hopp over"
+  },
+  "tourBack": {
+    "message": "Forrige trinn"
+  },
+  "tourNoThanks": {
+    "message": "Nei takk"
+  },
+  "tourDone": {
+    "message": "Ferdig"
+  },
+  "tourNext": {
+    "message": "Neste →"
+  },
+  "tourMockThread2": {
+    "message": "Utkast til ukesrapport"
+  },
+  "tourMockThread1": {
+    "message": "Fiks innloggingsfeilen"
+  },
+  "tourMockThread3": {
+    "message": "Tur til Lisboa"
+  },
+  "tourMockThread4": {
+    "message": "Oppskriftsideer"
+  },
+  "tourMockThread5": {
+    "message": "Gaveideer"
+  },
+  "tourThreadStepStart": {
+    "message": "Startet"
+  },
+  "tourThreadClaude": {
+    "message": "Claudes sidefelt"
+  },
+  "tourThreadOurs": {
+    "message": "Trådvisning"
+  },
+  "setMessageRail": {
+    "message": "Meldingsnavigator"
+  },
+  "setMessageRailDesc": {
+    "message": "Merker langs høyre kant av en samtale, ett for hver melding du har sendt. Klikk på et merke for å hoppe til meldingen."
+  },
+  "sessionNotUsedYet": {
+    "message": "ikke brukt ennå"
+  },
+  "introNew": {
+    "message": "Nytt i Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Trådvisningen er her"
+  },
+  "introThreadBody": {
+    "message": "Sidefeltet ditt som kort: tråder som venter på deg kommer først, deretter ferdig arbeid, så arbeid som fortsatt kjører, og resten samles under Lagret. Det fungerer også i Code, og du kan slå det av eller på når som helst i innstillingene under Usage Bar."
   }
 }

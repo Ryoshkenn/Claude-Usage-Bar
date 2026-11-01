@@ -941,6 +941,17 @@ const SettingsPage = () => {
             onChange={(v) => update({ showCacheTimer: v })}
           />
         </Row>
+        <Row
+          labelId={id("show-message-rail")}
+          label={t("setMessageRail", "Message navigator")}
+          description={t("setMessageRailDesc", "Marks on the right edge of a chat, one for each message you sent. Click one to jump to it.")}
+        >
+          <Switch
+            labelledBy={id("show-message-rail")}
+            checked={settings.showMessageRail !== false}
+            onChange={(v) => update({ showMessageRail: v })}
+          />
+        </Row>
       </Section>
 
       <Section id="cub-section-sidebar" title={t("setSecSidebar", "Sidebar")}>
@@ -950,7 +961,7 @@ const SettingsPage = () => {
             label={t("setThreadSidebar", "Thread view")}
             description={t(
               "setThreadSidebarDesc",
-              "Everything starts settled. A chat becomes a card once it has new activity, until you settle it.",
+              "Your latest chats start as cards and the rest as settled. A thread becomes a card when it has new activity, until you settle it. Works in Code too.",
             )}
           >
             <Switch

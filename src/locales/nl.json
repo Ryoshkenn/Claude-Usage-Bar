@@ -429,7 +429,7 @@
     "message": "Gespreksweergave"
   },
   "setThreadSidebarDesc": {
-    "message": "Alles begint als afgehandeld. Een chat wordt een kaart zodra er nieuwe activiteit is, totdat je hem afhandelt."
+    "message": "Je nieuwste chats beginnen als kaarten en de rest als afgehandeld. Een gesprek wordt een kaart bij nieuwe activiteit, totdat je het afhandelt. Werkt ook in Code."
   },
   "threadNavLabel": {
     "message": "Projecten & tools"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Mijn prompts omzetten naar skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Welkom bij Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Een korte blik op wat het toevoegt aan Claude. Het duurt maar een minuut."
+  },
+  "tourBarTitle": {
+    "message": "Gebruiksbalk"
+  },
+  "tourBarBody": {
+    "message": "Je 5-uursgebruik, direct in het tekstveld. De balk loopt vol terwijl je Claude gebruikt en kleurt oranje vlak bij de limiet."
+  },
+  "tourDetailsTitle": {
+    "message": "Gebruiksdetails"
+  },
+  "tourDetailsBody": {
+    "message": "Houd de muisaanwijzer op de balk voor de details: je tempo, je wekelijkse gebruik en wanneer elke limiet wordt gereset."
+  },
+  "tourRailTitle": {
+    "message": "Berichtennavigatie"
+  },
+  "tourRailBody": {
+    "message": "In een chat staan deze streepjes aan de rechterkant voor jouw berichten, en het opgelichte streepje geeft aan waar je bent. Klik op een streepje om ernaartoe te springen."
+  },
+  "tourCacheTitle": {
+    "message": "Cachetimer"
+  },
+  "tourCacheBody": {
+    "message": "Nadat Claude antwoordt, blijft je promptcache een paar minuten warm, zodat een vervolgvraag minder van je limiet kost. De cachetimer telt dit af boven in de chat."
+  },
+  "tourCacheAsk": {
+    "message": "Cachetimer tonen?"
+  },
+  "tourUseIt": {
+    "message": "Gebruiken"
+  },
+  "tourThreadTitle": {
+    "message": "Gespreksweergave"
+  },
+  "tourThreadBody": {
+    "message": "Verandert je zijbalk in kaarten. Gesprekken die op jou wachten staan bovenaan, daarna afgerond werk en tot slot werk dat nog bezig is. Handel een kaart af zodra je er klaar mee bent."
+  },
+  "tourThreadAsk": {
+    "message": "Gespreksweergave gebruiken?"
+  },
+  "tourUseThis": {
+    "message": "Dit gebruiken"
+  },
+  "tourSettingsTitle": {
+    "message": "Instellingen"
+  },
+  "tourSettingsBody": {
+    "message": "Dit pijltje opent de instellingen van Usage Bar, waar je dit allemaal kunt aanpassen. Laten we daar nu naartoe gaan."
+  },
+  "tourPacingTitle": {
+    "message": "Temposchattingen"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar leert je 5-uurs- en wekelijkse gebruikspatronen om je tempo in te schatten. Metingen blijven in deze browser en er worden geen prompts, antwoorden of ruwe gegevens opgeslagen. Schakel Tempo hier uit als je dit liever niet wilt."
+  },
+  "tourDoneTitle": {
+    "message": "Helemaal klaar!"
+  },
+  "tourDoneBody": {
+    "message": "Al het andere vind je in de instellingen onder Usage Bar. Je kunt deze rondleiding daar onder Algemeen opnieuw starten."
+  },
+  "tourAria": {
+    "message": "Rondleiding: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 van $2"
+  },
+  "tourSkip": {
+    "message": "Overslaan"
+  },
+  "tourBack": {
+    "message": "Vorige stap"
+  },
+  "tourNoThanks": {
+    "message": "Nee, bedankt"
+  },
+  "tourDone": {
+    "message": "Klaar"
+  },
+  "tourNext": {
+    "message": "Volgende →"
+  },
+  "tourMockThread2": {
+    "message": "Concept weekrapport"
+  },
+  "tourMockThread1": {
+    "message": "Inlogbug oplossen"
+  },
+  "tourMockThread3": {
+    "message": "Reis naar Lissabon"
+  },
+  "tourMockThread4": {
+    "message": "Receptideeën"
+  },
+  "tourMockThread5": {
+    "message": "Cadeau-ideeën"
+  },
+  "tourThreadStepStart": {
+    "message": "Gestart"
+  },
+  "tourThreadClaude": {
+    "message": "Zijbalk van Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Gespreksweergave"
+  },
+  "setMessageRail": {
+    "message": "Berichtennavigatie"
+  },
+  "setMessageRailDesc": {
+    "message": "Streepjes aan de rechterkant van een chat, één voor elk bericht dat je hebt gestuurd. Klik erop om ernaartoe te springen."
+  },
+  "sessionNotUsedYet": {
+    "message": "nog niet gebruikt"
+  },
+  "introNew": {
+    "message": "Nieuw in Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "De gespreksweergave is er"
+  },
+  "introThreadBody": {
+    "message": "Je zijbalk als kaarten: gesprekken die op je wachten staan bovenaan, gevolgd door afgerond werk en werk dat nog bezig is, en de rest wordt ingeklapt onder Afgehandeld. Het werkt ook in Code, en je kunt het altijd aan- of uitzetten in de instellingen onder Usage Bar."
   }
 }

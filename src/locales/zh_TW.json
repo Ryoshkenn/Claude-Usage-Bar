@@ -429,7 +429,7 @@
     "message": "對話串檢視"
   },
   "setThreadSidebarDesc": {
-    "message": "一開始全部為已完成。對話有新動態後會顯示為卡片，直到你將其標為完成。"
+    "message": "最近的對話會以卡片顯示，其餘則收合為已完成。當對話串有新動態時會變成卡片，直到你將其標為完成。在 Code 中也適用。"
   },
   "threadNavLabel": {
     "message": "專案與工具"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "將我的提示詞轉換為技能"
+  },
+  "tourWelcomeTitle": {
+    "message": "歡迎使用 Claude Usage Bar！"
+  },
+  "tourWelcomeBody": {
+    "message": "快速瀏覽它為 Claude 帶來的新功能，只需一分鐘。"
+  },
+  "tourBarTitle": {
+    "message": "用量進度條"
+  },
+  "tourBarBody": {
+    "message": "在輸入框內直接顯示你的 5 小時方案用量。進度條會隨著你使用 Claude 而填滿，並在接近上限時轉為橘色。"
+  },
+  "tourDetailsTitle": {
+    "message": "用量詳情"
+  },
+  "tourDetailsBody": {
+    "message": "將游標停留在進度條上即可查看詳細資訊：你的配速、每週用量，以及各項上限的重置時間。"
+  },
+  "tourRailTitle": {
+    "message": "訊息導覽列"
+  },
+  "tourRailBody": {
+    "message": "在對話中，右側邊緣的標記代表你傳送過的訊息，亮起的標記則是你目前所在的位置。點擊任一標記即可跳轉至該處。"
+  },
+  "tourCacheTitle": {
+    "message": "快取計時器"
+  },
+  "tourCacheBody": {
+    "message": "Claude 回覆後，你的提示詞快取會維持有效幾分鐘，期間內接續提問可消耗較少額度。快取計時器會在對話標題列倒數這段時間。"
+  },
+  "tourCacheAsk": {
+    "message": "要顯示快取計時器嗎？"
+  },
+  "tourUseIt": {
+    "message": "啟用"
+  },
+  "tourThreadTitle": {
+    "message": "對話串檢視"
+  },
+  "tourThreadBody": {
+    "message": "將側邊欄轉為卡片介面。需要你回應的對話串會排在最前面，接著是已完成的工作，再來是執行中的工作。處理完畢後，即可將卡片標為完成。"
+  },
+  "tourThreadAsk": {
+    "message": "要使用對話串檢視嗎？"
+  },
+  "tourUseThis": {
+    "message": "套用此檢視"
+  },
+  "tourSettingsTitle": {
+    "message": "設定"
+  },
+  "tourSettingsBody": {
+    "message": "點擊這個箭頭可開啟 Usage Bar 的設定，隨時調整上述所有選項。現在就去看看吧。"
+  },
+  "tourPacingTitle": {
+    "message": "配速預估"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar 會學習你的 5 小時與每週使用習慣來預估配速。取樣資料僅保存在此瀏覽器中，不會儲存任何提示詞、回覆或原始資料。若你不希望使用此功能，可在此關閉配速預估。"
+  },
+  "tourDoneTitle": {
+    "message": "設定完成！"
+  },
+  "tourDoneBody": {
+    "message": "其他設定皆位於「設定」中的「Usage Bar」下方，你也可以在「一般」中重新觀看此導覽。"
+  },
+  "tourAria": {
+    "message": "功能導覽：$1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "略過"
+  },
+  "tourBack": {
+    "message": "上一步"
+  },
+  "tourNoThanks": {
+    "message": "不用了，謝謝"
+  },
+  "tourDone": {
+    "message": "完成"
+  },
+  "tourNext": {
+    "message": "下一步 →"
+  },
+  "tourMockThread2": {
+    "message": "週報草稿"
+  },
+  "tourMockThread1": {
+    "message": "修復登入錯誤"
+  },
+  "tourMockThread3": {
+    "message": "里斯本之旅"
+  },
+  "tourMockThread4": {
+    "message": "食譜靈感"
+  },
+  "tourMockThread5": {
+    "message": "禮物點子"
+  },
+  "tourThreadStepStart": {
+    "message": "已開始"
+  },
+  "tourThreadClaude": {
+    "message": "Claude 的側邊欄"
+  },
+  "tourThreadOurs": {
+    "message": "對話串檢視"
+  },
+  "setMessageRail": {
+    "message": "訊息導覽列"
+  },
+  "setMessageRailDesc": {
+    "message": "在對話右側邊緣顯示標記，每則你傳送的訊息對應一個標記。點擊即可跳轉至該訊息。"
+  },
+  "sessionNotUsedYet": {
+    "message": "尚未使用"
+  },
+  "introNew": {
+    "message": "Usage Bar 新功能"
+  },
+  "introThreadTitle": {
+    "message": "推出對話串檢視"
+  },
+  "introThreadBody": {
+    "message": "將側邊欄改為卡片樣式：待您處理的對話串會排在最前面，接著是已完成與執行中的工作，其餘則收合在「已完成」下方。這項功能也支援 Code，您可以隨時在「設定」的 Usage Bar 中開啟或關閉。"
   }
 }

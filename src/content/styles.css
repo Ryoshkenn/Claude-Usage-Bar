@@ -19,9 +19,21 @@
    while it's hovered, focused, or showing a panel / the clipboard modal. */
 #claude-usage-bar-root:hover,
 #claude-usage-bar-root:focus-within,
-#claude-usage-bar-root:has(.cub-ctx-panel, .cub-prompt-backdrop),
-body.cub-tour-bar-open #claude-usage-bar-root {
+#claude-usage-bar-root:has(.cub-ctx-panel, .cub-prompt-backdrop) {
   z-index: 2147483647 !important;
+}
+
+/* The details panel was just used to open settings: it stays shut, and the bar
+   drops back under Claude's settings overlay, until the pointer leaves it. */
+#claude-usage-bar-root:has(.cub-meter--dismissed) {
+  z-index: 50 !important;
+}
+
+/* While the tour holds the details panel open, the bar sits just under the
+   tour's own layer (2147483647), so the tour's dimming and spotlight ring draw
+   over the panel instead of hiding beneath it. */
+body.cub-tour-bar-open #claude-usage-bar-root {
+  z-index: 2147483646 !important;
 }
 
 /* Below-card slot on claude.ai/new: the host is inserted as its own row directly
@@ -505,6 +517,13 @@ button.cub-ctx-percent[data-loading="true"] {
   transform: translateX(-50%) translateY(0);
   transition-delay: 250ms;
   visibility: visible;
+}
+
+.cub-meter.cub-meter--dismissed .cub-usage-tooltip {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition-delay: 0ms !important;
 }
 
 .cub-wheel-wrap:hover .cub-token-tooltip,
@@ -1153,6 +1172,348 @@ body.cub-tour-bar-open .cub-usage-tooltip {
   background: rgb(216 138 108);
 }
 
+/* The tour card's content, held to the window's height (less the card's
+   padding and margin) and scrolled past that. */
+.cub-tour-card-scroll {
+  max-height: calc(100vh - 50px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* A card on its own, centred: the thread view announcement (ThreadViewIntro). */
+.cub-tour-card--centered {
+  top: 50%;
+  left: 50%;
+  width: min(540px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  transform: translate(-50%, -50%);
+}
+
+.cub-tour-buttons--end {
+  justify-content: flex-end;
+}
+
+/* "No thanks" on a step that offers its feature */
+.cub-tour-btn-decline {
+  height: 32px;
+  background: none;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 7px;
+  padding: 0 12px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  color: rgb(195 194 184);
+  pointer-events: all;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.cub-tour-btn-decline:hover {
+  background: rgb(255 255 255 / 6%);
+  color: rgb(245 245 241);
+}
+
+.cub-tour-question {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(245 245 241);
+}
+
+/* ── Tour previews (tourPreviews.tsx) ────────────────────────────────────── */
+
+.cub-tour-preview {
+  --cub-tour-surface: rgb(31 31 30);
+  --cub-tour-line: rgb(255 255 255 / 7%);
+  --cub-tour-text: rgb(245 245 241);
+  --cub-tour-muted: rgb(165 164 156);
+  margin: 0 0 14px;
+  color: var(--cub-tour-text);
+  user-select: none;
+}
+
+.cub-tour-cache-preview {
+  overflow: hidden;
+  border: 1px solid var(--cub-tour-line);
+  border-radius: 10px;
+  background: var(--cub-tour-surface);
+}
+
+.cub-tour-mock-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 8px 0 12px;
+  border-bottom: 1px solid var(--cub-tour-line);
+}
+
+.cub-tour-mock-title {
+  overflow: hidden;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The real timer's hover tooltip would be clipped by the preview. */
+.cub-tour-cache-preview .cub-cache-timer-tooltip {
+  display: none;
+}
+
+.cub-tour-mock-spacer {
+  flex: 1;
+}
+
+.cub-tour-mock-pill {
+  flex: none;
+  width: 54px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--cub-tour-line);
+}
+
+.cub-tour-mock-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+}
+
+.cub-tour-mock-bubble--user {
+  align-self: flex-end;
+  width: 45%;
+  height: 22px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 9%);
+}
+
+.cub-tour-mock-line {
+  width: 90%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--cub-tour-line);
+}
+
+.cub-tour-mock-line--short {
+  width: 60%;
+}
+
+.cub-tour-thread-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cub-tour-thread-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 212px;
+  padding: 10px 8px 8px;
+  border: 1px solid var(--cub-tour-line);
+  border-radius: 10px;
+  background: var(--cub-tour-surface);
+  box-sizing: border-box;
+}
+
+.cub-tour-thread-heading {
+  margin: 0 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cub-tour-muted);
+}
+
+.cub-tour-thread-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+}
+
+.cub-tour-thread-row,
+.cub-tour-thread-card {
+  overflow: hidden;
+  transition:
+    max-height 360ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms ease,
+    padding 360ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 300ms ease;
+}
+
+.cub-tour-thread-row {
+  flex: none;
+  max-height: 30px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgb(195 194 184);
+}
+
+.cub-tour-thread-card {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 64px;
+  padding: 8px 10px;
+  border-radius: 9px;
+}
+
+.cub-tour-thread-row--out,
+.cub-tour-thread-card--out {
+  max-height: 0;
+  padding-block: 0;
+  opacity: 0;
+}
+
+/* The new thread, while it's live: the tint the real view gives the open thread. */
+.cub-tour-thread-card--in[data-state="started"],
+.cub-tour-thread-card--in[data-state="working"],
+.cub-tour-thread-card--in[data-state="done"] {
+  background: rgb(0 0 0 / 28%);
+}
+
+.cub-tour-thread-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--cub-tour-muted);
+}
+
+.cub-tour-thread-chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  color: rgb(108 160 232);
+  background: rgb(108 160 232 / 16%);
+}
+
+.cub-tour-thread-when {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: auto;
+  white-space: nowrap;
+}
+
+.cub-tour-thread-when[data-state="working"] {
+  color: rgb(108 160 232);
+}
+
+.cub-tour-thread-when[data-state="done"] {
+  color: rgb(106 182 128);
+}
+
+.cub-tour-thread-spinner {
+  animation: cub-tour-spin 2.4s linear infinite;
+}
+
+@keyframes cub-tour-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cub-tour-thread-title {
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Settle, pressed a moment after the thread finishes. */
+.cub-tour-thread-settle {
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px 2px 5px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: rgb(195 194 184);
+  background: rgb(52 51 49);
+  animation: cub-tour-settle-press 2.2s ease forwards;
+}
+
+@keyframes cub-tour-settle-press {
+  0%, 30% { opacity: 0; transform: translateY(2px); }
+  45%, 75% { opacity: 1; transform: none; }
+  85% { opacity: 1; transform: scale(0.92); background: rgb(70 69 66); }
+  100% { opacity: 1; transform: none; }
+}
+
+.cub-tour-thread-settled {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 6px 4px 0;
+  font-size: 12px;
+  color: var(--cub-tour-muted);
+}
+
+.cub-tour-thread-rule {
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.25;
+}
+
+.cub-tour-thread-settled--bump span:first-child {
+  animation: cub-tour-bump 700ms ease;
+}
+
+@keyframes cub-tour-bump {
+  40% { color: var(--cub-tour-text); }
+}
+
+.cub-tour-thread-steps {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cub-tour-thread-steps li {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--cub-tour-muted);
+  background: rgb(255 255 255 / 5%);
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.cub-tour-thread-steps li[data-active="true"] {
+  color: rgb(255 255 255);
+  background: rgb(204 124 94);
+}
+
+.cub-tour-preview--still *,
+.cub-tour-preview--still *::before {
+  transition: none !important;
+  animation: none !important;
+}
+
 /* ── Light theme overrides ───────────────────────────────────────────────── */
 
 .cub-tour-light .cub-tour-card {
@@ -1199,6 +1560,55 @@ body.cub-tour-bar-open .cub-usage-tooltip {
 .cub-tour-light .cub-tour-btn-back:hover {
   background: rgb(0 0 0 / 9%);
   color: rgb(40 40 38);
+}
+
+.cub-tour-light .cub-tour-btn-decline {
+  border-color: rgb(0 0 0 / 12%);
+  color: rgb(80 78 72);
+}
+
+.cub-tour-light .cub-tour-btn-decline:hover {
+  background: rgb(0 0 0 / 5%);
+  color: rgb(40 40 38);
+}
+
+.cub-tour-light .cub-tour-question {
+  color: rgb(28 28 27);
+}
+
+.cub-tour-light .cub-tour-preview {
+  --cub-tour-surface: rgb(248 246 241);
+  --cub-tour-line: rgb(0 0 0 / 8%);
+  --cub-tour-text: rgb(28 28 27);
+  --cub-tour-muted: rgb(120 118 112);
+}
+
+.cub-tour-light .cub-tour-mock-bubble--user {
+  background: rgb(0 0 0 / 8%);
+}
+
+.cub-tour-light .cub-tour-thread-row {
+  color: rgb(80 78 72);
+}
+
+.cub-tour-light .cub-tour-thread-card--in[data-state="started"],
+.cub-tour-light .cub-tour-thread-card--in[data-state="working"],
+.cub-tour-light .cub-tour-thread-card--in[data-state="done"] {
+  background: rgb(92 62 30 / 9%);
+}
+
+.cub-tour-light .cub-tour-thread-settle {
+  color: rgb(80 78 72);
+  background: rgb(236 232 224);
+}
+
+.cub-tour-light .cub-tour-thread-steps li {
+  background: rgb(0 0 0 / 5%);
+}
+
+.cub-tour-light .cub-tour-thread-steps li[data-active="true"] {
+  color: rgb(255 255 255);
+  background: rgb(204 124 94);
 }
 
 /* ── Prompt Clipboard ────────────────────────────────────────── */

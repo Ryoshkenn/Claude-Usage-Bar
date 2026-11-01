@@ -1,5 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useLayoutEffect, useRef } from "react";
+import { t } from "../shared/i18n";
+import { updateSettings } from "../shared/storage";
 import { closeSettingsOverlay, isSettingsOverlayOpen, openUsageBarSettings } from "./settingsPage";
+import { CacheTimerPreview, ThreadViewPreview } from "./tourPreviews";
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
@@ -10,127 +13,170 @@ interface TargetRect {
   height: number;
 }
 
+type StepId =
+  | "welcome"
+  | "usageBar"
+  | "usageDetails"
+  | "messageRail"
+  | "cacheTimer"
+  | "threadView"
+  | "settings"
+  | "pacing"
+  | "done";
+
+// A step that offers its feature: "No thanks" and a "Use it" button in place
+// of Next, each saving the choice and moving on.
+interface TourChoice {
+  setting: "showCacheTimer" | "threadSidebar";
+  question: () => string;
+  accept: () => string;
+}
+
 interface TourStep {
+  id: StepId;
   navigateTo?: string;
   // Open the settings overlay (a modal, opened via Claude's shortcut) and make
   // our panel its active section, instead of navigating to a page route.
   openSettings?: boolean;
   selector: string | null;
   fallbackRect?: () => TargetRect;
-  title: string;
-  body: string;
+  title: () => string;
+  body: () => string;
   forceShowBar?: boolean;
-  // Steps that draw their own demo element look themselves up by id.
-  id?: "messageRail" | "cacheTimer";
   postNavDelay?: number;
   scrollIntoView?: boolean;
   allowInteraction?: boolean;
+  // Card width; steps with a preview in the card need more room.
+  width?: number;
+  choice?: TourChoice;
 }
 
 const THEME_SYNC_INTERVAL_MS = 500;
 
-// Compute where to render the demo cache timer: the start of the page header,
-// where the real timer sits in chats. <main> now spans the whole frame, sidebar
-// included, so it's only the fallback.
-function getCacheTimerDemoPos(): TargetRect {
-  const header = document.querySelector<HTMLElement>("header")?.getBoundingClientRect();
-  if (header && header.width > 0 && header.height > 0) {
-    return { top: header.top + Math.max(0, (header.height - 28) / 2), left: header.left + 12, width: 88, height: 28 };
-  }
-  const main = document.querySelector<HTMLElement>("main");
-  if (main) {
-    const r = main.getBoundingClientRect();
-    return { top: r.top + 12, left: r.left + 12, width: 88, height: 28 };
-  }
-  return { top: Math.round(window.innerHeight * 0.12), left: 12, width: 88, height: 28 };
-}
+// Where the real message rail sits (styles.css: 20px from the right edge,
+// centred, 36×18 markers 5px apart), for the demo one.
+const DEMO_RAIL_MARKERS = 5;
+const DEMO_RAIL_HEIGHT = DEMO_RAIL_MARKERS * 18 + (DEMO_RAIL_MARKERS - 1) * 5;
+const getDemoRailRect = (): TargetRect => ({
+  top: Math.round(window.innerHeight / 2 - DEMO_RAIL_HEIGHT / 2),
+  left: window.innerWidth - 56,
+  width: 36,
+  height: DEMO_RAIL_HEIGHT,
+});
 
-// The message rail is switched off in content.tsx ("TEMP: message rail
-// disabled"); its step stays out of the tour until the rail is back, so the tour
-// never shows off something the user can't find.
-const MESSAGE_RAIL_ENABLED = false;
-
-const ALL_STEPS: TourStep[] = [
+const STEPS: TourStep[] = [
   {
+    id: "welcome",
     navigateTo: "/new",
     selector: null,
-    title: "Welcome to Claude Usage Bar!",
-    body: "Let's take a quick tour of all the features — we'll highlight each one as we go. It only takes a moment.",
+    title: () => t("tourWelcomeTitle", "Welcome to Claude Usage Bar!"),
+    body: () => t("tourWelcomeBody", "A quick look at what it adds to Claude. It only takes a minute."),
   },
   {
+    id: "usageBar",
     navigateTo: "/new",
     selector: ".cub-meter",
-    title: "Usage Bar",
-    body: "This bar tracks your Claude plan usage for the current 5-hour window. It turns orange as you approach the limit.",
+    title: () => t("tourBarTitle", "Usage bar"),
+    body: () =>
+      t(
+        "tourBarBody",
+        "Your 5-hour plan usage, right in the composer. It fills up as you use Claude and turns orange near the limit.",
+      ),
   },
   {
+    id: "usageDetails",
     navigateTo: "/new",
     selector: ".cub-usage-tooltip",
-    title: "Usage Details Panel",
-    body: "Hover the bar to open this panel — it shows your 5-hour pace and weekly usage.",
+    title: () => t("tourDetailsTitle", "Usage details"),
+    body: () => t("tourDetailsBody", "Hover the bar for the details: your pace, weekly usage, and when each limit resets."),
     forceShowBar: true,
-  },
-  {
-    navigateTo: "/new",
-    selector: ".cub-usage-link",
-    title: "Settings Shortcut",
-    body: "This arrow takes you directly to your extension settings. Let's go there now!",
-    forceShowBar: true,
-  },
-  {
-    openSettings: true,
-    selector: "#cub-section-display",
-    title: "Extension Settings",
-    body: "Pick what the bar tracks, how the context window shows, and whether the cache timer appears. You can replay this tour anytime under General.",
-    postNavDelay: 650,
-    scrollIntoView: true,
-  },
-  {
-    openSettings: true,
-    selector: "#cub-section-pacing",
-    title: "Pace estimates",
-    body: "Claude Usage Bar learns local 5-hour and weekly usage patterns to power smarter pace estimates. Samples stay in this browser — no prompts, responses, or raw payloads are stored. If you'd rather not have this data collected, turn pacing off here.",
-    postNavDelay: 200,
-    scrollIntoView: true,
-    allowInteraction: true,
   },
   {
     id: "messageRail",
     navigateTo: "/new",
     selector: null,
-    fallbackRect: () => ({
-      top: Math.round(window.innerHeight / 2) - 33,
-      left: window.innerWidth - 56,
-      width: 36,
-      height: 66,
-    }),
-    title: "Message Navigator",
-    body: "These dash markers on the right edge let you jump between messages in long conversations with a single click. This only appears inside active chats.",
+    fallbackRect: getDemoRailRect,
+    title: () => t("tourRailTitle", "Message navigator"),
+    body: () =>
+      t(
+        "tourRailBody",
+        "In a chat, these marks on the right edge stand for your messages, and the bright one is where you are. Click any mark to jump to it.",
+      ),
     postNavDelay: 400,
   },
   {
     id: "cacheTimer",
     navigateTo: "/new",
     selector: null,
-    fallbackRect: getCacheTimerDemoPos,
-    title: "Cache Timer",
-    body: "After Claude responds, this countdown shows how long your prompt cache stays warm — saving tokens on follow-up messages. Turn it on under Display; it appears in active chats.",
+    title: () => t("tourCacheTitle", "Cache timer"),
+    body: () =>
+      t(
+        "tourCacheBody",
+        "After Claude replies, your prompt cache stays warm for a few minutes, so a follow-up costs less of your limit. The cache timer counts that down in the chat header.",
+      ),
+    width: 340,
+    choice: {
+      setting: "showCacheTimer",
+      question: () => t("tourCacheAsk", "Show the cache timer?"),
+      accept: () => t("tourUseIt", "Use it"),
+    },
   },
   {
+    id: "threadView",
     navigateTo: "/new",
     selector: null,
-    title: "All set!",
-    body: "You're all caught up on Claude Usage Bar's features. Start a new chat and enjoy!",
+    title: () => t("tourThreadTitle", "Thread view"),
+    body: () =>
+      t(
+        "tourThreadBody",
+        "Turns your sidebar into cards. Threads that need you come first, then finished work, then work still running. Settle a card once you're done with it.",
+      ),
+    width: 540,
+    choice: {
+      setting: "threadSidebar",
+      question: () => t("tourThreadAsk", "Use the thread view?"),
+      accept: () => t("tourUseThis", "Use this"),
+    },
+  },
+  {
+    id: "settings",
+    navigateTo: "/new",
+    selector: ".cub-usage-link",
+    title: () => t("tourSettingsTitle", "Settings"),
+    body: () =>
+      t("tourSettingsBody", "This arrow opens Usage Bar's settings, where you can change any of this. Let's go there now."),
+    forceShowBar: true,
+  },
+  {
+    id: "pacing",
+    openSettings: true,
+    selector: "#cub-section-pacing",
+    title: () => t("tourPacingTitle", "Pace estimates"),
+    body: () =>
+      t(
+        "tourPacingBody",
+        "Usage Bar learns your 5-hour and weekly usage patterns to estimate your pace. Samples stay in this browser, and no prompts, responses or raw data are stored. Turn pacing off here if you'd rather not.",
+      ),
+    postNavDelay: 650,
+    scrollIntoView: true,
+    allowInteraction: true,
+  },
+  {
+    id: "done",
+    navigateTo: "/new",
+    selector: null,
+    title: () => t("tourDoneTitle", "All set!"),
+    body: () =>
+      t(
+        "tourDoneBody",
+        "Everything else is in Settings under Usage Bar, and you can replay this tour from there under General.",
+      ),
   },
 ];
 
-const STEPS = ALL_STEPS.filter((s) => MESSAGE_RAIL_ENABLED || s.id !== "messageRail");
-const MESSAGE_NAV_STEP = STEPS.findIndex((s) => s.id === "messageRail");
-const CACHE_TIMER_STEP = STEPS.findIndex((s) => s.id === "cacheTimer");
-
 const PAD = 10;
 const ARROW_H = 9; // height of the CSS arrow pointer
-const CARD_WIDTH = 268;
+const CARD_WIDTH = 280;
 const CARD_HEIGHT_APPROX = 210;
 
 // Try to find element with up to maxAttempts retries (250ms each)
@@ -156,16 +202,18 @@ async function findElement(
   return null;
 }
 
-// Compute card position in viewport space (preferring above the target)
+// Compute card position in viewport space (preferring above the target), from
+// the card's measured size.
 function computeCardPos(
   rect: TargetRect | null,
+  card: { width: number; height: number },
 ): { top: number; left: number; arrowSide: "top" | "bottom" | "none"; arrowLeft: number } {
   if (!rect) {
     return {
-      top: Math.max(8, (window.innerHeight - CARD_HEIGHT_APPROX) / 2),
-      left: Math.max(8, (window.innerWidth - CARD_WIDTH) / 2),
+      top: Math.max(8, (window.innerHeight - card.height) / 2),
+      left: Math.max(8, (window.innerWidth - card.width) / 2),
       arrowSide: "none",
-      arrowLeft: CARD_WIDTH / 2,
+      arrowLeft: card.width / 2,
     };
   }
 
@@ -174,7 +222,7 @@ function computeCardPos(
   let top: number;
   let arrowSide: "top" | "bottom";
   if (spaceAbove >= 80) {
-    top = Math.max(8, rect.top - PAD - ARROW_H - CARD_HEIGHT_APPROX);
+    top = Math.max(8, rect.top - PAD - ARROW_H - card.height);
     arrowSide = "bottom";
   } else {
     top = rect.top + rect.height + PAD + ARROW_H;
@@ -183,29 +231,57 @@ function computeCardPos(
 
   // Safety net: keep the card on-screen even if the target is tall or partly
   // scrolled out of view, so the step is never positioned where it can't be seen.
-  const maxTop = Math.max(8, window.innerHeight - CARD_HEIGHT_APPROX - 8);
+  const maxTop = Math.max(8, window.innerHeight - card.height - 8);
   top = Math.min(Math.max(8, top), maxTop);
 
-  const idealLeft = rect.left + rect.width / 2 - CARD_WIDTH / 2;
-  const left = Math.max(8, Math.min(idealLeft, window.innerWidth - CARD_WIDTH - 8));
-  const arrowLeft = Math.max(16, Math.min(rect.left + rect.width / 2 - left, CARD_WIDTH - 16));
+  const idealLeft = rect.left + rect.width / 2 - card.width / 2;
+  const left = Math.max(8, Math.min(idealLeft, window.innerWidth - card.width - 8));
+  const arrowLeft = Math.max(16, Math.min(rect.left + rect.width / 2 - left, card.width - 16));
 
   return { top, left, arrowSide, arrowLeft };
 }
 
+// Claude marks its theme with data-mode on <html> (older builds: a class,
+// data-theme or data-color-scheme); without one, the OS setting decides.
 const isLightTheme = (): boolean => {
   const el = document.documentElement;
   if (
     el.classList.contains("dark") ||
+    el.getAttribute("data-mode") === "dark" ||
     el.getAttribute("data-theme") === "dark" ||
     el.getAttribute("data-color-scheme") === "dark"
   ) return false;
   if (
     el.classList.contains("light") ||
+    el.getAttribute("data-mode") === "light" ||
     el.getAttribute("data-theme") === "light" ||
     el.getAttribute("data-color-scheme") === "light"
   ) return true;
   return !window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
+
+// Follows Claude's theme while the tour (or another card drawn in its layer)
+// is up.
+export const useLightTheme = (): boolean => {
+  const [light, setLight] = useState(isLightTheme);
+  useEffect(() => {
+    const syncLight = () => setLight(isLightTheme());
+    const obs = new MutationObserver(syncLight);
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-mode", "data-theme", "data-color-scheme", "style"],
+    });
+    obs.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
+    });
+    const interval = window.setInterval(() => setLight(isLightTheme()), THEME_SYNC_INTERVAL_MS);
+    return () => {
+      obs.disconnect();
+      window.clearInterval(interval);
+    };
+  }, []);
+  return light;
 };
 
 // Get the offset of our tour host from the viewport top-left.
@@ -225,14 +301,18 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
   const [step, setStep] = useState(0);
   const [targetRect, setTargetRect] = useState<TargetRect | null>(null);
   const [fading, setFading] = useState(false);
-  const [light, setLight] = useState(isLightTheme);
+  const light = useLightTheme();
   const [hostOffset, setHostOffset] = useState({ top: 0, left: 0 });
   const [demoRailDots, setDemoRailDots] = useState(0);
+  const [demoRailActive, setDemoRailActive] = useState(0);
+  const [cardSize, setCardSize] = useState({ width: CARD_WIDTH, height: CARD_HEIGHT_APPROX });
   const cancelRef = useRef(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = STEPS.length;
   const current = STEPS[step];
   const isLast = step === totalSteps - 1;
+  const cardWidth = Math.min(current.width ?? CARD_WIDTH, window.innerWidth - 16);
 
   // Recompute host offset (handles CSS transforms on ancestor elements)
   const syncHostOffset = useCallback(() => {
@@ -244,6 +324,22 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     window.addEventListener("resize", syncHostOffset);
     return () => window.removeEventListener("resize", syncHostOffset);
   }, [syncHostOffset]);
+
+  // The card's real size places it; previews make some steps much taller.
+  useLayoutEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const measure = () =>
+      setCardSize((previous) =>
+        previous.width === el.offsetWidth && previous.height === el.offsetHeight
+          ? previous
+          : { width: el.offsetWidth, height: el.offsetHeight },
+      );
+    measure();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    observer?.observe(el);
+    return () => observer?.disconnect();
+  }, [step]);
 
   // Main step execution effect
   useEffect(() => {
@@ -332,39 +428,29 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     };
   }, [step, syncHostOffset]);
 
-  // Theme observer
+  // Demo message rail: the markers come in one by one, then the bright one
+  // moves down them the way it follows you through a chat.
   useEffect(() => {
-    const syncLight = () => setLight(isLightTheme());
-    const obs = new MutationObserver(syncLight);
-    obs.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
-    });
-    obs.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme", "data-color-scheme", "style"],
-    });
-    const interval = window.setInterval(() => setLight(isLightTheme()), THEME_SYNC_INTERVAL_MS);
-    return () => {
-      obs.disconnect();
-      window.clearInterval(interval);
-    };
-  }, []);
-
-  // Animate fake message-rail dots into existence one per second
-  useEffect(() => {
-    if (step !== MESSAGE_NAV_STEP) {
+    if (current.id !== "messageRail") {
       setDemoRailDots(0);
+      setDemoRailActive(0);
       return;
     }
-    setDemoRailDots(1);
-    const t1 = window.setTimeout(() => setDemoRailDots(2), 1000);
-    const t2 = window.setTimeout(() => setDemoRailDots(3), 2000);
-    return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-    };
-  }, [step]);
+    let dots = 0;
+    let active = 0;
+    setDemoRailDots(0);
+    const id = window.setInterval(() => {
+      if (dots < DEMO_RAIL_MARKERS) {
+        dots += 1;
+        active = dots - 1;
+        setDemoRailDots(dots);
+      } else {
+        active = (active + 1) % DEMO_RAIL_MARKERS;
+      }
+      setDemoRailActive(active);
+    }, 450);
+    return () => window.clearInterval(id);
+  }, [current.id]);
 
   // Re-measure on resize
   useEffect(() => {
@@ -410,37 +496,26 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     }
   };
 
-  // Compute demo element overlay positions (viewport coords → overlay-local coords)
+  const choose = (choice: TourChoice, value: boolean) => {
+    void updateSettings({ [choice.setting]: value }).catch(() => undefined);
+    next();
+  };
+
+  const railRect = getDemoRailRect();
   const demoRailStyle = {
     position: "absolute" as const,
-    top: Math.round(window.innerHeight / 2) - 33 - hostOffset.top,
-    left: window.innerWidth - 56 - hostOffset.left,
-    width: 36,
-    height: 66,
+    top: railRect.top - hostOffset.top,
+    left: railRect.left - hostOffset.left,
+    width: railRect.width,
+    height: railRect.height,
     display: "flex",
     flexDirection: "column" as const,
     alignItems: "flex-end",
-    gap: 6,
+    gap: 5,
     pointerEvents: "none" as const,
-  };
-  const cachePos = step === CACHE_TIMER_STEP ? getCacheTimerDemoPos() : { top: 0, left: 0, width: 0, height: 0 };
-  const demoCacheStyle = {
-    position: "absolute" as const,
-    top: cachePos.top - hostOffset.top,
-    left: cachePos.left - hostOffset.left,
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 4,
-    height: 28,
-    padding: "0 6px",
-    borderRadius: 6,
-    font: '12px/1 "Anthropic Sans", system-ui, sans-serif',
-    color: "rgb(204 124 94)",
-    pointerEvents: "none" as const,
-    userSelect: "none" as const,
   };
 
-  const cardVp = computeCardPos(targetRect);
+  const cardVp = computeCardPos(targetRect, { width: cardWidth, height: cardSize.height });
   // Adjust for host offset so positioning works even when a parent has CSS transforms
   const spotlightStyle = targetRect
     ? {
@@ -453,7 +528,7 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
   const cardStyle = {
     top: cardVp.top - hostOffset.top,
     left: cardVp.left - hostOffset.left,
-    width: CARD_WIDTH,
+    width: cardWidth,
   };
 
   const rootClass = [
@@ -465,6 +540,7 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
     .filter(Boolean)
     .join(" ");
   const demoRailClass = light ? "cub-tour-demo-rail cub-message-rail--light" : "cub-tour-demo-rail";
+  const title = current.title();
 
   return (
     <div className={rootClass}>
@@ -476,76 +552,75 @@ export const OnboardingTour = ({ onComplete }: OnboardingTourProps) => {
       {spotlightStyle && (
         <div className="cub-tour-spotlight" style={spotlightStyle} />
       )}
-      {step === MESSAGE_NAV_STEP && demoRailDots > 0 && (
+      {current.id === "messageRail" && demoRailDots > 0 && (
         <div className={demoRailClass} style={demoRailStyle}>
           {Array.from({ length: demoRailDots }, (_, i) => (
             <div
               key={i}
-              className={`cub-message-rail-marker${i === demoRailDots - 1 ? " cub-message-rail-marker--active" : ""}`}
+              className={`cub-message-rail-marker${i === demoRailActive ? " cub-message-rail-marker--active" : ""}`}
               style={{ pointerEvents: "none" }}
             />
           ))}
         </div>
       )}
-      {step === CACHE_TIMER_STEP && (
-        <div className="cub-tour-demo-cache" style={demoCacheStyle}>
-          <svg
-            className="cub-cache-timer-icon"
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-          <span className="cub-cache-timer-text">4:32</span>
-        </div>
-      )}
       <div
-        className="cub-tour-card"
+        ref={cardRef}
+        className={`cub-tour-card${current.choice ? " cub-tour-card--choice" : ""}`}
         style={cardStyle}
         role="dialog"
-        aria-label={`Feature tour: ${current.title}`}
+        aria-label={t("tourAria", "Feature tour: $1", title)}
       >
         {cardVp.arrowSide === "bottom" && (
           <div
             className="cub-tour-arrow cub-tour-arrow--bottom"
-            style={{ left: cardVp.arrowLeft - hostOffset.left }}
+            style={{ left: cardVp.arrowLeft }}
           />
         )}
-        <div className="cub-tour-step-count">{step + 1} of {totalSteps}</div>
-        <div className="cub-tour-title">{current.title}</div>
-        <p className="cub-tour-body">{current.body}</p>
-        <div className="cub-tour-buttons">
-          <button className="cub-tour-btn-skip" type="button" onClick={dismiss}>
-            Skip
-          </button>
-          <div className="cub-tour-nav">
-            {step > 0 && (
-              <button
-                className="cub-tour-btn-back"
-                type="button"
-                onClick={prev}
-                aria-label="Previous step"
-              >
-                ←
-              </button>
-            )}
-            <button className="cub-tour-btn-next" type="button" onClick={next}>
-              {isLast ? "Done" : "Next →"}
+        {/* Scrolls when the card is taller than the window (a short window, or
+            zoomed in), so its buttons stay reachable; the arrows stay outside. */}
+        <div className="cub-tour-card-scroll">
+          <div className="cub-tour-step-count">{t("tourStepCount", "$1 of $2", [step + 1, totalSteps])}</div>
+          <div className="cub-tour-title">{title}</div>
+          <p className="cub-tour-body">{current.body()}</p>
+          {current.id === "cacheTimer" && <CacheTimerPreview />}
+          {current.id === "threadView" && <ThreadViewPreview />}
+          {current.choice && <p className="cub-tour-question">{current.choice.question()}</p>}
+          <div className="cub-tour-buttons">
+            <button className="cub-tour-btn-skip" type="button" onClick={dismiss}>
+              {t("tourSkip", "Skip")}
             </button>
+            <div className="cub-tour-nav">
+              {step > 0 && (
+                <button
+                  className="cub-tour-btn-back"
+                  type="button"
+                  onClick={prev}
+                  aria-label={t("tourBack", "Previous step")}
+                >
+                  ←
+                </button>
+              )}
+              {current.choice ? (
+                <>
+                  <button className="cub-tour-btn-decline" type="button" onClick={() => choose(current.choice!, false)}>
+                    {t("tourNoThanks", "No thanks")}
+                  </button>
+                  <button className="cub-tour-btn-next" type="button" onClick={() => choose(current.choice!, true)}>
+                    {current.choice.accept()}
+                  </button>
+                </>
+              ) : (
+                <button className="cub-tour-btn-next" type="button" onClick={next}>
+                  {isLast ? t("tourDone", "Done") : t("tourNext", "Next →")}
+                </button>
+              )}
+            </div>
           </div>
         </div>
         {cardVp.arrowSide === "top" && (
           <div
             className="cub-tour-arrow cub-tour-arrow--top"
-            style={{ left: cardVp.arrowLeft - hostOffset.left }}
+            style={{ left: cardVp.arrowLeft }}
           />
         )}
       </div>

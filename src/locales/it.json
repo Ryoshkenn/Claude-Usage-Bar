@@ -429,7 +429,7 @@
     "message": "Vista conversazioni"
   },
   "setThreadSidebarDesc": {
-    "message": "All'inizio è tutto concluso. Una chat diventa una scheda appena ha nuova attività, finché non la concludi."
+    "message": "Le tue ultime chat iniziano come schede e le altre come concluse. Una conversazione diventa una scheda quando ha nuova attività, finché non la concludi. Funziona anche in Code."
   },
   "threadNavLabel": {
     "message": "Progetti e strumenti"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Converti i miei prompt in competenze"
+  },
+  "tourWelcomeTitle": {
+    "message": "Benvenuto in Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Uno sguardo rapido a ciò che aggiunge a Claude. Ci vuole solo un minuto."
+  },
+  "tourBarTitle": {
+    "message": "Barra di utilizzo"
+  },
+  "tourBarBody": {
+    "message": "L'utilizzo del tuo piano di 5 ore, direttamente nel campo di testo. Si riempie mentre usi Claude e diventa arancione vicino al limite."
+  },
+  "tourDetailsTitle": {
+    "message": "Dettagli di utilizzo"
+  },
+  "tourDetailsBody": {
+    "message": "Passa il cursore sulla barra per i dettagli: il tuo ritmo, l'utilizzo settimanale e quando si azzera ogni limite."
+  },
+  "tourRailTitle": {
+    "message": "Navigatore dei messaggi"
+  },
+  "tourRailBody": {
+    "message": "In una chat, questi indicatori sul bordo destro rappresentano i tuoi messaggi, e quello illuminato indica dove ti trovi. Fai clic su un indicatore per raggiungerlo."
+  },
+  "tourCacheTitle": {
+    "message": "Timer della cache"
+  },
+  "tourCacheBody": {
+    "message": "Dopo la risposta di Claude, la cache del prompt resta attiva per alcuni minuti, così un messaggio successivo consuma meno del tuo limite. Il timer della cache mostra il conto alla rovescia nell'intestazione della chat."
+  },
+  "tourCacheAsk": {
+    "message": "Mostrare il timer della cache?"
+  },
+  "tourUseIt": {
+    "message": "Usalo"
+  },
+  "tourThreadTitle": {
+    "message": "Vista conversazioni"
+  },
+  "tourThreadBody": {
+    "message": "Trasforma la barra laterale in schede. Le conversazioni che richiedono la tua attenzione appaiono per prime, seguite da quelle completate e da quelle in corso. Concludi una scheda quando hai finito."
+  },
+  "tourThreadAsk": {
+    "message": "Usare la vista conversazioni?"
+  },
+  "tourUseThis": {
+    "message": "Usa questa vista"
+  },
+  "tourSettingsTitle": {
+    "message": "Impostazioni"
+  },
+  "tourSettingsBody": {
+    "message": "Questa freccia apre le impostazioni di Usage Bar, dove puoi modificare qualsiasi opzione. Andiamoci ora."
+  },
+  "tourPacingTitle": {
+    "message": "Stime del ritmo"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar impara le tue abitudini di utilizzo su 5 ore e settimanali per stimare il tuo ritmo. I campioni restano in questo browser e non vengono salvati prompt, risposte o dati grezzi. Disattiva qui il calcolo del ritmo se preferisci non usarlo."
+  },
+  "tourDoneTitle": {
+    "message": "Tutto pronto!"
+  },
+  "tourDoneBody": {
+    "message": "Tutto il resto si trova nelle Impostazioni sotto Usage Bar, e da lì puoi rivedere questo tour nella sezione Generale."
+  },
+  "tourAria": {
+    "message": "Tour delle funzionalità: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 di $2"
+  },
+  "tourSkip": {
+    "message": "Salta"
+  },
+  "tourBack": {
+    "message": "Passaggio precedente"
+  },
+  "tourNoThanks": {
+    "message": "No, grazie"
+  },
+  "tourDone": {
+    "message": "Fatto"
+  },
+  "tourNext": {
+    "message": "Avanti →"
+  },
+  "tourMockThread2": {
+    "message": "Bozza del report settimanale"
+  },
+  "tourMockThread1": {
+    "message": "Correggere il bug di accesso"
+  },
+  "tourMockThread3": {
+    "message": "Viaggio a Lisbona"
+  },
+  "tourMockThread4": {
+    "message": "Idee per ricette"
+  },
+  "tourMockThread5": {
+    "message": "Idee regalo"
+  },
+  "tourThreadStepStart": {
+    "message": "Avviata"
+  },
+  "tourThreadClaude": {
+    "message": "Barra laterale di Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Vista conversazioni"
+  },
+  "setMessageRail": {
+    "message": "Navigatore dei messaggi"
+  },
+  "setMessageRailDesc": {
+    "message": "Indicatori sul bordo destro della chat, uno per ogni messaggio che hai inviato. Fai clic su uno per raggiungerlo."
+  },
+  "sessionNotUsedYet": {
+    "message": "non ancora utilizzato"
+  },
+  "introNew": {
+    "message": "Novità in Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "È arrivata la vista conversazioni"
+  },
+  "introThreadBody": {
+    "message": "La barra laterale in schede: prima le conversazioni che richiedono la tua attenzione, poi quelle completate, quelle in corso e il resto raccolto in Concluse. Funziona anche in Code e puoi attivarla o disattivarla in qualsiasi momento nelle Impostazioni sotto Usage Bar."
   }
 }

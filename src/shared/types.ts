@@ -36,6 +36,8 @@ export interface Settings {
   contextDisplay: ContextDisplay;
   showPace: boolean;
   showCacheTimer: boolean;
+  // Marks on the right edge of a chat, one per message you sent, to jump between them.
+  showMessageRail: boolean;
   paceSurplusFormat: PaceSurplusFormat;
   weeklyMetricsEnabled: boolean;
   weeklyEstimateDisplay: WeeklyEstimateDisplay;
@@ -46,6 +48,9 @@ export interface Settings {
   weeklyManualActiveHoursPerDay: number;
   weeklyManualStartHour: number;
   hasSeenTour: boolean;
+  // The one-time "thread view is here" card for people who had Usage Bar
+  // before it; the tour sets it too, since it covers the thread view.
+  seenThreadViewIntro: boolean;
   showClipboard: boolean;
   // Show a banner when a usage window rolls over. "off" disables it entirely,
   // "claude" only banners claude.ai tabs (no extra permission), "everywhere"

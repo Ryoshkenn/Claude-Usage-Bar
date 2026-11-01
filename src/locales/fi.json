@@ -429,7 +429,7 @@
     "message": "Ketjunäkymä"
   },
   "setThreadSidebarDesc": {
-    "message": "Kaikki ovat aluksi kuitattuja. Keskustelusta tulee kortti, kun siinä on uutta toimintaa, kunnes kuittaat sen."
+    "message": "Uusimmat keskustelusi näkyvät aluksi kortteina ja loput kuitattuina. Ketju muuttuu kortiksi, kun siinä tapahtuu uutta, kunnes kuittaat sen. Toimii myös Codessa."
   },
   "threadNavLabel": {
     "message": "Projektit ja työkalut"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Muunna kehotteeni taidoiksi"
+  },
+  "tourWelcomeTitle": {
+    "message": "Tervetuloa Claude Usage Bariin!"
+  },
+  "tourWelcomeBody": {
+    "message": "Pikakatsaus siihen, mitä lisäosa tuo Claudeen. Tämä vie vain minuutin."
+  },
+  "tourBarTitle": {
+    "message": "Käyttöpalkki"
+  },
+  "tourBarBody": {
+    "message": "5 tunnin tilauksesi käyttö suoraan viestikentässä. Palkki täyttyy käyttäessäsi Claudea ja muuttuu oranssiksi rajan lähestyessä."
+  },
+  "tourDetailsTitle": {
+    "message": "Käyttötiedot"
+  },
+  "tourDetailsBody": {
+    "message": "Vie hiiri palkin päälle nähdäksesi lisätiedot: tahtisi, viikoittaisen käytön ja rajojen nollautumisajat."
+  },
+  "tourRailTitle": {
+    "message": "Viestinavigaattori"
+  },
+  "tourRailBody": {
+    "message": "Nämä keskustelun oikean reunan merkit kuvaavat viestejäsi, ja kirkas merkki näyttää nykyisen kohtasi. Siirry mihin tahansa viestiin napsauttamalla sen merkkiä."
+  },
+  "tourCacheTitle": {
+    "message": "Välimuistiajastin"
+  },
+  "tourCacheBody": {
+    "message": "Kun Claude vastaa, kehotevälimuistisi pysyy lämpimänä muutaman minuutin, jolloin jatkokysymys kuluttaa vähemmän käyttörajaasi. Välimuistiajastin laskee tätä aikaa keskustelun ylätunnisteessa."
+  },
+  "tourCacheAsk": {
+    "message": "Näytetäänkö välimuistiajastin?"
+  },
+  "tourUseIt": {
+    "message": "Ota käyttöön"
+  },
+  "tourThreadTitle": {
+    "message": "Ketjunäkymä"
+  },
+  "tourThreadBody": {
+    "message": "Muuttaa sivupalkin korteiksi. Huomiotasi odottavat ketjut näkyvät ensin, sitten valmiit ja sen jälkeen käynnissä olevat. Kuittaa kortti, kun et enää tarvitse sitä."
+  },
+  "tourThreadAsk": {
+    "message": "Otetaanko ketjunäkymä käyttöön?"
+  },
+  "tourUseThis": {
+    "message": "Käytä tätä"
+  },
+  "tourSettingsTitle": {
+    "message": "Asetukset"
+  },
+  "tourSettingsBody": {
+    "message": "Tämä nuoli avaa Usage Barin asetukset, joissa voit muuttaa näitä valintoja. Mennään sinne nyt."
+  },
+  "tourPacingTitle": {
+    "message": "Tahtiarviot"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar oppii 5 tunnin ja viikoittaiset käyttötapasi arvioidakseen tahtiasi. Näytteet pysyvät tässä selaimessa, eikä kehotteita, vastauksia tai raakadataa tallenneta. Voit poistaa tahdin seurannan käytöstä tästä, jos et halua käyttää sitä."
+  },
+  "tourDoneTitle": {
+    "message": "Kaikki valmista!"
+  },
+  "tourDoneBody": {
+    "message": "Kaikki muu löytyy asetuksista kohdasta Usage Bar, ja voit käydä tämän kierroksen uudelleen kohdasta Yleiset."
+  },
+  "tourAria": {
+    "message": "Ominaisuuskierros: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "Ohita"
+  },
+  "tourBack": {
+    "message": "Edellinen vaihe"
+  },
+  "tourNoThanks": {
+    "message": "Ei kiitos"
+  },
+  "tourDone": {
+    "message": "Valmis"
+  },
+  "tourNext": {
+    "message": "Seuraava →"
+  },
+  "tourMockThread2": {
+    "message": "Viikkoraportin luonnos"
+  },
+  "tourMockThread1": {
+    "message": "Korjaa kirjautumisbugi"
+  },
+  "tourMockThread3": {
+    "message": "Matka Lissaboniin"
+  },
+  "tourMockThread4": {
+    "message": "Resepti-ideoita"
+  },
+  "tourMockThread5": {
+    "message": "Lahjaideoita"
+  },
+  "tourThreadStepStart": {
+    "message": "Aloitettu"
+  },
+  "tourThreadClaude": {
+    "message": "Clauden sivupalkki"
+  },
+  "tourThreadOurs": {
+    "message": "Ketjunäkymä"
+  },
+  "setMessageRail": {
+    "message": "Viestinavigaattori"
+  },
+  "setMessageRailDesc": {
+    "message": "Merkit keskustelun oikeassa reunassa, yksi kullekin lähettämällesi viestille. Siirry viestiin napsauttamalla merkkiä."
+  },
+  "sessionNotUsedYet": {
+    "message": "ei vielä käytetty"
+  },
+  "introNew": {
+    "message": "Uutta Usage Barissa"
+  },
+  "introThreadTitle": {
+    "message": "Ketjunäkymä on täällä"
+  },
+  "introThreadBody": {
+    "message": "Sivupalkkisi kortteina: huomiotasi vaativat ketjut näkyvät ensin, sitten valmiit, sitten käynnissä olevat ja loput taittuvat Kuitatut-ryhmään. Se toimii myös Codessa, ja voit ottaa sen käyttöön tai poistaa käytöstä milloin tahansa asetuksista kohdasta Usage Bar."
   }
 }

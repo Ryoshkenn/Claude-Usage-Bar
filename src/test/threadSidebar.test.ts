@@ -39,6 +39,10 @@ interface SidebarSpec {
   // Oct 2026 markup: the New link itself is .shrink-0 and Search is a row
   // beside it (Ctrl+K) rather than a bar.
   searchRow?: boolean;
+  // Claude Code sessions, in their own list beside the chat one. With
+  // `codeMode` that list is the one showing and the chat list is hidden.
+  codeGroups?: { label: [string, string]; rows: RowSpec[] }[];
+  codeMode?: boolean;
 }
 
 const idOf = (key: string): string => key.slice(key.indexOf(":") + 1);
@@ -47,7 +51,13 @@ const idOf = (key: string): string => key.slice(key.indexOf(":") + 1);
 // [data-row] → main button + trailing decoration + hover actions).
 const rowHtml = ({ key, status, unreadMark, current, icon }: RowSpec): string => {
   const id = idOf(key);
-  const href = key.startsWith("cowork:") ? `/cowork/${id}` : key.startsWith("project:") ? `/project/${id}` : `/chat/${id}`;
+  const href = key.startsWith("cowork:")
+    ? `/cowork/${id}`
+    : key.startsWith("project:")
+      ? `/project/${id}`
+      : key.startsWith("code:")
+        ? `/code/${id}`
+        : `/chat/${id}`;
   return `
     <div data-row-key="${key}" class="relative df-drag-shiftable">
       <div><div id="base-${id}">
@@ -87,9 +97,13 @@ const pinnedHtml = ({ pinned = [], pinnedProjects, pinnedCollapsed }: SidebarSpe
     <div class="flex flex-col">${pinned.map(rowHtml).join("")}</div>
   </div>`;
 
+const groupsHtml = (groups: SidebarSpec["groups"]): string =>
+  groups.map(({ label, rows }) => `${labelHtml(...label)}<div class="contents">${rows.map(rowHtml).join("")}</div>`).join("");
+
 // Wrappers above the lists are display:contents in claude.ai, which makes the
 // scroll column the nearest real box holding both pinned and recents.
 const mountSidebar = (spec: SidebarSpec) => {
+  const newHref = spec.codeMode ? "/code" : "/new";
   document.body.innerHTML = `
     <aside aria-label="Sidebar">
       <div data-testid="sidebar">
@@ -100,8 +114,8 @@ const mountSidebar = (spec: SidebarSpec) => {
         }
         ${
           spec.searchRow
-            ? '<div class="shrink-0" id="new-host"><div class="contents"><a href="/new" class="w-full shrink-0" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div><button type="button" id="search-row" class="w-full shrink-0" data-row="" data-row-main-button="" data-row-nav="" aria-keyshortcuts="Control+k">Search</button></div>'
-            : '<div class="shrink-0" id="new-host"><div class="contents"><a href="/new" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div></div>'
+            ? `<div class="shrink-0" id="new-host"><div class="contents"><a href="${newHref}" class="w-full shrink-0" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div><button type="button" id="search-row" class="w-full shrink-0" data-row="" data-row-main-button="" data-row-nav="" aria-keyshortcuts="Control+k">Search</button></div>`
+            : `<div class="shrink-0" id="new-host"><div class="contents"><a href="${newHref}" data-row="" data-row-main-button="" aria-keyshortcuts="Control+Shift+o">New</a></div></div>`
         }
         <div class="dframe-nav-scroll" id="nav-scroll">
           <div data-testid="nav-pin-rows">
@@ -112,19 +126,29 @@ const mountSidebar = (spec: SidebarSpec) => {
             </div>
             <div data-nav-end-spacer="true"></div>
           </div>
-          <div class="dframe-recents-by-mode" data-mode="cowork" style="display: contents">
-            <div data-kind="cowork" style="display: contents">
+          <div class="dframe-recents-by-mode" data-mode="${spec.codeMode ? "code" : "cowork"}" style="display: contents">
+            <div data-kind="cowork" style="${spec.codeMode ? "display: none !important;" : "display: contents"}">
               <div data-first-paint-hold="released" style="display: contents">
                 ${spec.pinned || spec.pinnedProjects ? pinnedHtml(spec) : ""}
                 <div data-testid="sidebar-recents" data-recents-list="" class="df-recents-anchor">
                   <div class="group/section relative isolate flex flex-col gap-px">
-                    ${spec.groups
-                      .map(({ label, rows }) => `${labelHtml(...label)}<div class="contents">${rows.map(rowHtml).join("")}</div>`)
-                      .join("")}
+                    ${groupsHtml(spec.groups)}
                   </div>
                 </div>
               </div>
             </div>
+            ${
+              spec.codeGroups
+                ? `<div data-kind="code" class="df-session-list" style="${spec.codeMode ? "display: contents" : "display: none !important;"}">
+                    <div style="display: contents">
+                      <div data-testid="sidebar-pinned" id="code-pinned" class="flex flex-col gap-px"></div>
+                      <div data-testid="sidebar-recents" id="code-recents" class="df-recents-anchor">
+                        <div class="group/section relative isolate flex flex-col gap-px">${groupsHtml(spec.codeGroups)}</div>
+                      </div>
+                    </div>
+                  </div>`
+                : ""
+            }
           </div>
         </div>
       </div>
@@ -215,9 +239,9 @@ describe("placeThreadRows", () => {
     expect(placeThreadRows(rows)).toEqual(["label", "open", "label-hidden", "settled"]);
   });
 
-  it("leads with pinned threads and hides pinned projects", () => {
+  it("keeps pinned threads as cards, live with the rest when they have a status, and hides pinned projects", () => {
     const rows = [row({ hidden: true }), row({ pinned: true }), row({ pinned: true, status: "working" }), row({ open: true }), row()];
-    expect(placeThreadRows(rows)).toEqual(["hidden", "pinned", "pinned", "open", "settled"]);
+    expect(placeThreadRows(rows)).toEqual(["hidden", "pinned", "live", "open", "settled"]);
   });
 });
 
@@ -338,7 +362,7 @@ describe("thread sidebar DOM", () => {
     applyThreadSidebar();
     expect(placementOf("chat:c3")).toBe("open");
     expect(isCard("chat:c3")).toBe(true);
-    expect(orderOf("chat:c3")).toBeLessThan(4_000_000);
+    expect(orderOf("chat:c3")).toBeLessThan(6_000_000);
     expect(settledToggle()?.textContent).toBe("Settled (9)");
   });
 
@@ -428,7 +452,7 @@ describe("thread sidebar DOM", () => {
     expect(placementOf("label:unread-read")).toBe("label-hidden");
   });
 
-  it("leads with pinned threads, drops pinned projects and Claude's Pinned heading", () => {
+  it("puts pinned threads after the live ones, drops pinned projects and Claude's Pinned heading", () => {
     mountSidebar({
       ...read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 5)]),
       pinned: [{ key: "chat:p1", icon: true }, { key: "cowork:cse_p2", icon: true, status: "awaiting" }],
@@ -437,17 +461,48 @@ describe("thread sidebar DOM", () => {
     syncThreadSidebar({ threadSidebar: true });
 
     expect(placementOf("chat:p1")).toBe("pinned");
-    expect(placementOf("cowork:cse_p2")).toBe("pinned");
+    // Pinned and waiting on you: up with the other live threads.
+    expect(placementOf("cowork:cse_p2")).toBe("live");
     expect(rowEl("chat:p1").querySelector(".cub-thread-pin")).not.toBeNull();
+    expect(rowEl("cowork:cse_p2").querySelector(".cub-thread-pin")).not.toBeNull();
+    expect(rowEl("cowork:cse_p2").querySelector(".cub-thread-settle")).toBeNull();
     expect(whenOf("cowork:cse_p2")).toMatch(/^Waiting/);
     expect(orderOf("cowork:cse_p2")).toBeLessThan(orderOf("chat:w"));
+    expect(orderOf("chat:w")).toBeLessThan(orderOf("chat:p1"));
     expect(placementOf("section:home-projects")).toBe("hidden");
     expect(rowEl("project:p1").hasAttribute("data-cub-thread")).toBe(false);
     const pinnedLabel = document.querySelector('[data-testid="sidebar-pinned"] [data-sidebar-group-label]')!;
     expect(pinnedLabel.hasAttribute("data-cub-thread-hidden")).toBe(true);
     expect(placementOf("chat:w")).toBe("live");
-    expect(rowEl("chat:w").hasAttribute("data-cub-thread-first")).toBe(true);
+    expect(rowEl("chat:p1").hasAttribute("data-cub-thread-first")).toBe(true);
+    expect(rowEl("cowork:cse_p2").hasAttribute("data-cub-thread-first")).toBe(false);
     expect(placementOf("chat:c0")).toBe("settled");
+  });
+
+  it("orders cards by what needs you: waiting, then done, then working, then the rest", async () => {
+    mountSidebar({
+      ...read([
+        { key: "chat:work", status: "running" },
+        { key: "chat:ready", status: "ready" },
+        { key: "chat:ask", status: "awaiting" },
+        { key: "chat:new", unreadMark: true },
+        { key: "chat:broke", status: "error" },
+        { key: "chat:idle" },
+        ...ten.slice(0, 3),
+      ]),
+      pinned: [{ key: "chat:pin" }],
+    });
+    history.replaceState(null, "", "/chat/idle");
+    syncThreadSidebar({ threadSidebar: true });
+    history.replaceState(null, "", "/new");
+    applyThreadSidebar();
+
+    const cards = ["chat:work", "chat:ready", "chat:ask", "chat:new", "chat:broke", "chat:idle", "chat:pin"];
+    const byOrder = [...cards].sort((a, b) => orderOf(a) - orderOf(b));
+    expect(byOrder.slice(0, 2).sort()).toEqual(["chat:ask", "chat:broke"]);
+    expect(byOrder.slice(2, 4).sort()).toEqual(["chat:new", "chat:ready"]);
+    expect(byOrder.slice(4)).toEqual(["chat:work", "chat:pin", "chat:idle"]);
+    expect(orderOf("chat:idle")).toBeLessThan(orderOf("chat:c0"));
   });
 
   it("keeps a collapsed Pinned heading so the group can still be opened", () => {
@@ -761,31 +816,96 @@ describe("thread sidebar DOM", () => {
     applyThreadSidebar();
     expect(document.body.innerHTML).toBe("<main></main>");
   });
+
+  const codeSessions = Array.from({ length: 6 }, (_, i) => ({ key: `code:session_0${i}abcdefgh` }));
+  const codeSpec = (codeMode: boolean): SidebarSpec => ({
+    ...read(ten.slice(0, 4)),
+    pinned: [{ key: "chat:p1" }],
+    codeMode,
+    codeGroups: [
+      { label: ["label:code-day-1", "Yesterday"], rows: [{ key: codeSessions[0].key, status: "running" }, codeSessions[1]] },
+      { label: ["label:code-day-2", "Oct 29"], rows: codeSessions.slice(2) },
+    ],
+  });
+
+  it("works on the Code session list while Code mode shows it, not the hidden chat list", () => {
+    history.replaceState(null, "", "/code");
+    const { column } = mountSidebar(codeSpec(true));
+    const chatRecents = document.querySelector('[data-kind="cowork"] [data-testid="sidebar-recents"]')!;
+    const chatBefore = chatRecents.outerHTML;
+    syncThreadSidebar({ threadSidebar: true });
+
+    expect(column.getAttribute("data-cub-threads")).toBe("on");
+    expect(placementOf(codeSessions[0].key)).toBe("live");
+    expect(kindTextOf(codeSessions[0].key)).toBe("Code");
+    expect(placementOf(codeSessions[1].key)).toBe("settled");
+    // Only the first date heading stays, as "Threads".
+    expect(placementOf("label:code-day-1")).toBe("label");
+    expect(placementOf("label:code-day-2")).toBe("label-hidden");
+    expect(settledToggle()?.parentElement?.id).toBe("code-recents");
+    expect(settledToggle()?.textContent).toBe("Settled (5)");
+    // The hidden chat list and its pinned rows are left alone.
+    expect(chatRecents.outerHTML).toBe(chatBefore);
+    expect(rowEl("chat:p1").hasAttribute("data-cub-thread")).toBe(false);
+    expect(document.querySelector('[data-kind="cowork"]')!.hasAttribute("data-cub-thread-flat")).toBe(false);
+
+    // New starts a Code session, through Claude's own New row.
+    const newLink = document.querySelector<HTMLAnchorElement>('a[href="/code"]')!;
+    expect(newLink.hasAttribute("data-cub-thread-hidden")).toBe(true);
+    const newClicks = vi.fn((event: Event) => event.preventDefault());
+    newLink.addEventListener("click", newClicks);
+    document.querySelector<HTMLButtonElement>(`#${TOP_ROW_ID} .cub-thread-new`)!.click();
+    expect(newClicks).toHaveBeenCalledTimes(1);
+  });
+
+  it("follows a switch between the chat and Code lists", async () => {
+    const before = (mountSidebar(codeSpec(false)), document.body.innerHTML);
+    syncThreadSidebar({ threadSidebar: true });
+    expect(placementOf("chat:p1")).toBe("pinned");
+    expect(rowEl(codeSessions[0].key).hasAttribute("data-cub-thread")).toBe(false);
+
+    // Claude flips the mode wrapper's attributes, nothing else.
+    const byMode = document.querySelector<HTMLElement>(".dframe-recents-by-mode")!;
+    document.querySelector<HTMLElement>('[data-kind="cowork"]')!.setAttribute("style", "display: none !important;");
+    document.querySelector<HTMLElement>('[data-kind="code"]')!.setAttribute("style", "display: contents");
+    byMode.setAttribute("data-mode", "code");
+    await flushObservers();
+    expect(placementOf(codeSessions[0].key)).toBe("live");
+    expect(settledToggle()?.parentElement?.id).toBe("code-recents");
+
+    syncThreadSidebar({ threadSidebar: false });
+    byMode.setAttribute("data-mode", "cowork");
+    document.querySelector<HTMLElement>('[data-kind="cowork"]')!.setAttribute("style", "display: contents");
+    document.querySelector<HTMLElement>('[data-kind="code"]')!.setAttribute("style", "display: none !important;");
+    expect(document.body.innerHTML).toBe(before);
+  });
 });
 
 describe("shared state", () => {
-  const session: Record<string, unknown> = {};
   const local: Record<string, unknown> = {};
   // Like chrome.storage, values are copied in and out, never shared by reference.
   const area = (store: Record<string, unknown>) => ({
     get: async (key: string) => (key in store ? { [key]: structuredClone(store[key]) } : {}),
     set: async (items: Record<string, unknown>) => Object.assign(store, structuredClone(items)),
-    remove: async (key: string) => {
-      delete store[key];
+    remove: async (keys: string | string[]) => {
+      for (const key of [keys].flat()) delete store[key];
     },
   });
   const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+  // Writes of the activity marks (places share the same storage area).
+  const spyActivityWrites = () => {
+    const write = vi.spyOn(chrome.storage.local, "set");
+    return () => write.mock.calls.filter(([items]) => STORAGE_KEYS.threadActivity in (items as object)).length;
+  };
 
   beforeEach(() => {
-    for (const store of [session, local]) for (const key of Object.keys(store)) delete store[key];
+    for (const key of Object.keys(local)) delete local[key];
     const storage = {
-      session: area(session),
       local: area(local),
       onChanged: { addListener: vi.fn(), removeListener: vi.fn() },
     };
     // The worker: the one writer of the shared state, as background.ts sets it up.
     const writer = createThreadStoreWriter({
-      session: storage.session as unknown as chrome.storage.StorageArea,
       local: storage.local as unknown as chrome.storage.StorageArea,
       viewEnabled: async () => true,
     });
@@ -795,67 +915,77 @@ describe("shared state", () => {
     vi.stubGlobal("chrome", { runtime: { id: "test", sendMessage, lastError: undefined }, storage });
   });
 
-  it("shares the done mark across tabs through session storage", async () => {
+  it("shares the done mark across tabs and reloads through local storage", async () => {
     mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
     syncThreadSidebar({ threadSidebar: true });
     await settle();
     stopWorking("chat:w");
     await flushObservers();
-    const stored = session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>;
+    await settle();
+    const stored = local[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>;
     expect(typeof stored["chat:w"]?.doneAt).toBe("number");
+
+    // A reload (a fresh content script) reads it back.
+    resetThreadSidebarForTests();
+    local[STORAGE_KEYS.threadActivity] = stored;
+    local[STORAGE_KEYS.threadPlaces] = { since: Date.now() - 60_000, open: {}, settled: {}, seeded: ["chat"] };
+    mountSidebar(read([{ key: "chat:w" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
   });
 
   it("keeps a thread's stored working time when the page loads with it working", async () => {
     const since = Date.now() - 5 * 60_000;
     const done = { doneAt: Date.now() - 60_000 };
-    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: since }, "chat:x": done };
+    local[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: since }, "chat:x": done };
     mountSidebar(read([{ key: "chat:w", status: "running" }, { key: "chat:x" }, ...ten.slice(0, 2)]));
     syncThreadSidebar({ threadSidebar: true });
     await settle();
-    expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": { workingSince: since }, "chat:x": done });
+    expect(local[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": { workingSince: since }, "chat:x": done });
     expect(whenOf("chat:w")).toBe("Working 5m");
   });
 
   it("picks up a done mark another tab recorded", async () => {
     const mark = { workingSince: Date.now() - 60_000 };
-    session[STORAGE_KEYS.threadActivity] = { "chat:w": mark };
+    local[STORAGE_KEYS.threadActivity] = { "chat:w": mark };
     mountSidebar(read([{ key: "chat:w" }]));
     syncThreadSidebar({ threadSidebar: true });
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
     // Shown here, but the shared mark stays the other tab's to finish.
-    expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
+    expect(local[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
   });
 
   it("doesn't bounce the waiting mark between a working and a waiting sidebar", async () => {
     // Tab A's sidebar shows the thread waiting on the user; this one shows it working.
     const since = Date.now() - 60_000;
-    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: since, awaitingSince: since + 1_000 } };
+    local[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: since, awaitingSince: since + 1_000 } };
     mountSidebar(read([{ key: "chat:w", status: "running" }]));
     syncThreadSidebar({ threadSidebar: true });
     await settle();
-    const write = vi.spyOn(chrome.storage.session, "set");
+    const writes = spyActivityWrites();
     const onChanged = vi.mocked(chrome.storage.onChanged.addListener).mock.calls[0][0];
 
     // A keeps re-publishing its waiting mark; B, seeing nothing new, stays quiet.
     for (let i = 0; i < 3; i++) {
       const entry = { workingSince: since, awaitingSince: since + 2_000 + i };
-      onChanged({ [STORAGE_KEYS.threadActivity]: { newValue: { "chat:w": entry } } }, "session");
+      onChanged({ [STORAGE_KEYS.threadActivity]: { newValue: { "chat:w": entry } } }, "local");
     }
     await settle();
-    expect(write).not.toHaveBeenCalled();
+    expect(writes()).toBe(0);
     expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("working");
 
     // Once B sees it waiting too, the shared mark already says so: nothing to write.
     rowEl("chat:w").querySelector(".status-dot")!.setAttribute("data-kind", "awaiting");
     applyThreadSidebar();
-    expect(write).not.toHaveBeenCalled();
+    expect(writes()).toBe(0);
     // B's own change still goes out: it sees the thread finish.
     stopWorking("chat:w");
     applyThreadSidebar();
     await settle();
-    expect(write).toHaveBeenCalledTimes(1);
-    expect(typeof (session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe("number");
+    expect(writes()).toBe(1);
+    expect(typeof (local[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe("number");
   });
 
   it("keeps another tab's marks it hasn't caught up with when it writes its own", async () => {
@@ -864,12 +994,12 @@ describe("shared state", () => {
     await settle();
     // Another tab records a mark; its storage event hasn't reached this tab yet.
     const other = { workingSince: Date.now() - 5_000 };
-    session[STORAGE_KEYS.threadActivity] = { ...(session[STORAGE_KEYS.threadActivity] as object), "chat:x": other };
+    local[STORAGE_KEYS.threadActivity] = { ...(local[STORAGE_KEYS.threadActivity] as object), "chat:x": other };
 
     stopWorking("chat:w");
     applyThreadSidebar();
     await settle();
-    const stored = session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number; workingSince?: number }>;
+    const stored = local[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number; workingSince?: number }>;
     expect(stored["chat:x"]).toEqual(other);
     expect(typeof stored["chat:w"]?.doneAt).toBe("number");
   });
@@ -878,15 +1008,23 @@ describe("shared state", () => {
     mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
     syncThreadSidebar({ threadSidebar: true });
     await settle();
-    vi.spyOn(chrome.storage.session, "set").mockRejectedValueOnce(new Error("Access to storage is not allowed"));
+    const set = chrome.storage.local.set;
+    let fail = true;
+    vi.spyOn(chrome.storage.local, "set").mockImplementation(async (items: Record<string, unknown>) => {
+      if (fail && STORAGE_KEYS.threadActivity in items) {
+        fail = false;
+        throw new Error("QUOTA_BYTES quota exceeded");
+      }
+      return set(items);
+    });
     stopWorking("chat:w");
     applyThreadSidebar();
     await settle();
-    expect((session[STORAGE_KEYS.threadActivity] as Record<string, object>)["chat:w"]).not.toHaveProperty("doneAt");
+    expect((local[STORAGE_KEYS.threadActivity] as Record<string, object>)["chat:w"]).not.toHaveProperty("doneAt");
 
     applyThreadSidebar();
     await settle();
-    expect(typeof (session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe(
+    expect(typeof (local[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe(
       "number",
     );
   });
@@ -894,36 +1032,141 @@ describe("shared state", () => {
   it("doesn't trade working and done marks with a tab whose sidebar disagrees", async () => {
     // Tab A's sidebar shows the thread working; this one (tab B) shows it idle.
     const mark = { workingSince: Date.now() - 60_000 };
-    session[STORAGE_KEYS.threadActivity] = { "chat:w": mark };
+    local[STORAGE_KEYS.threadActivity] = { "chat:w": mark };
     mountSidebar(read([{ key: "chat:w" }]));
     syncThreadSidebar({ threadSidebar: true });
     await settle();
-    const write = vi.spyOn(chrome.storage.session, "set");
+    const writes = spyActivityWrites();
     const onChanged = vi.mocked(chrome.storage.onChanged.addListener).mock.calls[0][0];
 
     // A re-publishes its mark (as it would after any write of B's); B must not answer.
     for (let i = 0; i < 3; i++) {
-      onChanged({ [STORAGE_KEYS.threadActivity]: { newValue: { "chat:w": { ...mark } } } }, "session");
+      onChanged({ [STORAGE_KEYS.threadActivity]: { newValue: { "chat:w": { ...mark } } } }, "local");
     }
     await settle();
-    expect(write).not.toHaveBeenCalled();
-    expect(session[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
+    expect(writes()).toBe(0);
+    expect(local[STORAGE_KEYS.threadActivity]).toEqual({ "chat:w": mark });
     expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
   });
 
-  it("starts from everything settled the first time, and forgets it all when turned off", async () => {
-    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 3)]));
+  it("starts with the latest 3 threads open and the rest settled, and forgets it all when turned off", async () => {
+    mountSidebar(read(ten.slice(0, 6)));
     const before = Date.now();
     syncThreadSidebar({ threadSidebar: true });
     await settle();
-    const stored = local[STORAGE_KEYS.threadPlaces] as { since: number; open: Record<string, number> };
+    const stored = local[STORAGE_KEYS.threadPlaces] as { since: number; open: Record<string, number>; seeded: string[] };
     expect(stored.since).toBeGreaterThanOrEqual(before);
-    expect(Object.keys(stored.open)).toEqual(["chat:w"]);
+    expect(Object.keys(stored.open).sort()).toEqual(["chat:c0", "chat:c1", "chat:c2"]);
+    expect(stored.seeded).toEqual(["chat"]);
+    expect(["chat:c0", "chat:c1", "chat:c2"].map(placementOf)).toEqual(["open", "open", "open"]);
+    expect(placementOf("chat:c3")).toBe("settled");
+    expect(rowEl("chat:c0").hasAttribute("data-cub-thread-status")).toBe(false);
+
+    // Settled again by hand, they stay settled: seeding happens once.
+    rowEl("chat:c0").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    await settle();
+    applyThreadSidebar();
     expect(placementOf("chat:c0")).toBe("settled");
+
+    stopWorking("chat:c1");
+    rowEl("chat:c1").querySelector("[data-row]")!.insertAdjacentHTML(
+      "beforeend",
+      '<span data-row-decoration=""><span class="status-dot" data-kind="running"></span></span>',
+    );
+    applyThreadSidebar();
+    await settle();
+    expect(local).toHaveProperty(STORAGE_KEYS.threadActivity);
 
     syncThreadSidebar({ threadSidebar: false });
     await settle();
     expect(local).not.toHaveProperty(STORAGE_KEYS.threadPlaces);
+    expect(local).not.toHaveProperty(STORAGE_KEYS.threadActivity);
+
+    // On again: the latest 3 again (c1 is still working).
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(["chat:c0", "chat:c1", "chat:c2", "chat:c3"].map(placementOf)).toEqual(["open", "live", "open", "settled"]);
+  });
+
+  it("opens the latest 3 Code sessions the first time the Code list shows", async () => {
+    const since = Date.now() - 60 * 60_000;
+    local[STORAGE_KEYS.threadPlaces] = { since, open: {}, settled: {}, seeded: ["chat"] };
+    const sessions = Array.from({ length: 5 }, (_, i) => ({ key: `code:session_0${i}abcdefgh` }));
+    mountSidebar({ ...read(ten.slice(0, 4)), codeMode: true, codeGroups: [{ label: ["label:code-day-1", "Today"], rows: sessions }] });
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(sessions.map(({ key }) => placementOf(key))).toEqual(["open", "open", "open", "settled", "settled"]);
+    expect((local[STORAGE_KEYS.threadPlaces] as { seeded: string[] }).seeded).toEqual(["chat", "code"]);
+    // The chat list was already in use: nothing of it opened.
+    expect(ten.slice(0, 4).every(({ key }) => !(local[STORAGE_KEYS.threadPlaces] as { open: object }).open.hasOwnProperty(key))).toBe(true);
+  });
+
+  it("doesn't seed a chat list the view was already running on", async () => {
+    const since = Date.now() - 60 * 60_000;
+    local[STORAGE_KEYS.threadPlaces] = { since, open: {}, settled: {} };
+    mountSidebar(read(ten.slice(0, 6)));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(ten.slice(0, 6).every(({ key }) => placementOf(key) === "settled")).toBe(true);
+  });
+
+  it("waits for Claude to load a list before seeding it", async () => {
+    mountSidebar(read([]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect((local[STORAGE_KEYS.threadPlaces] as { seeded?: string[] }).seeded ?? []).toEqual([]);
+
+    document.querySelector('[data-testid="sidebar-recents"] .contents')!.innerHTML = ten.slice(0, 4).map(rowHtml).join("");
+    await flushObservers();
+    await settle();
+    expect(["chat:c0", "chat:c1", "chat:c2", "chat:c3"].map(placementOf)).toEqual(["open", "open", "open", "settled"]);
+  });
+
+  it("keeps a thread Claude marked a card after the mark goes, as on a reload", async () => {
+    const since = Date.now() - 60 * 60_000;
+    local[STORAGE_KEYS.threadPlaces] = { since, open: {}, settled: {}, seeded: ["chat"] };
+    mountSidebar({
+      groups: [
+        { label: ["label:unread-unread", "Unread"], rows: [{ key: "chat:u1" }] },
+        { label: ["label:unread-read", "Read"], rows: [{ key: "chat:r1", status: "ready" }, ...ten.slice(0, 3)] },
+      ],
+    });
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(placementOf("chat:u1")).toBe("live");
+    expect(placementOf("chat:r1")).toBe("live");
+
+    // After a reload Claude no longer shows either mark.
+    resetThreadSidebarForTests();
+    mountSidebar(read([{ key: "chat:u1" }, { key: "chat:r1" }, ...ten.slice(0, 3)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(placementOf("chat:u1")).toBe("open");
+    expect(placementOf("chat:r1")).toBe("open");
+    expect(placementOf("chat:c0")).toBe("settled");
+  });
+
+  it("clears a mark left by a closed tab once you open the thread", async () => {
+    const start = Date.now();
+    vi.useFakeTimers({ toFake: ["Date"], now: start });
+    // Working when the browser closed; the tab that saw it is gone.
+    local[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: start - 60 * 60_000 } };
+    local[STORAGE_KEYS.threadPlaces] = { since: start - 2 * 60 * 60_000, open: {}, settled: {}, seeded: ["chat"] };
+    mountSidebar(read([{ key: "chat:w" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(rowEl("chat:w").getAttribute("data-cub-thread-status")).toBe("done");
+
+    vi.setSystemTime(start + 10_000);
+    history.replaceState(null, "", "/chat/w");
+    applyThreadSidebar();
+    await settle();
+    expect(local[STORAGE_KEYS.threadActivity]).toEqual({});
+    history.replaceState(null, "", "/new");
+    applyThreadSidebar();
+    expect(rowEl("chat:w").hasAttribute("data-cub-thread-status")).toBe(false);
+    expect(placementOf("chat:w")).toBe("open");
+    vi.useRealTimers();
   });
 
   it("keeps open and hand-settled threads in local storage, ids and times only", async () => {
@@ -1009,7 +1252,7 @@ describe("shared state", () => {
   it("lets a done mark expire in a tab that stays open", async () => {
     const start = Date.now();
     vi.useFakeTimers({ toFake: ["Date"], now: start });
-    session[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: start - 60_000 } };
+    local[STORAGE_KEYS.threadActivity] = { "chat:w": { workingSince: start - 60_000 } };
     mountSidebar(read([{ key: "chat:w" }]));
     syncThreadSidebar({ threadSidebar: true });
     await settle();

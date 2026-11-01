@@ -34,6 +34,11 @@ let activeKey: string | null = null;
 let clickLockUntil = 0;
 let currentThemeIsLight = false;
 let lastConversationKey = "";
+// Claude changes the URL a moment before it swaps the transcript, so the first
+// passes after a switch can still find the previous chat's messages on the
+// page. Its nodes, as last seen there (same node, same text), are skipped in
+// the new chat rather than taken for its own.
+let previousChatEls = new WeakMap<HTMLElement, string>();
 
 const getUserMessages = (): HTMLElement[] => {
   const seen = new Set<HTMLElement>();
@@ -188,6 +193,13 @@ const reconcile = (domMsgs: HTMLElement[], scroller: HTMLElement | null): void =
   entries.sort((a, b) => a.top - b.top);
 };
 
+// Switched off in settings: drop the rail and everything it remembered.
+export const removeMessageRail = (): void => {
+  resetState();
+  lastConversationKey = "";
+  previousChatEls = new WeakMap();
+};
+
 export const syncMessageRailTheme = (isLight: boolean): void => {
   currentThemeIsLight = isLight;
   railEl?.classList.toggle("cub-message-rail--light", isLight);
@@ -199,10 +211,12 @@ export const tickMessageRail = (): void => {
   const convo = conversationKey();
   if (convo !== lastConversationKey) {
     lastConversationKey = convo;
+    previousChatEls = new WeakMap();
+    for (const entry of entries) if (entry.el?.isConnected) previousChatEls.set(entry.el, entry.key);
     resetState();
   }
 
-  const domMsgs = getUserMessages();
+  const domMsgs = getUserMessages().filter((el) => previousChatEls.get(el) !== keyOf(el));
   const scroller = domMsgs.length > 0 ? findScroller(domMsgs[0]) : null;
   reconcile(domMsgs, scroller);
 

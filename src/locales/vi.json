@@ -429,7 +429,7 @@
     "message": "Chế độ xem luồng"
   },
   "setThreadSidebarDesc": {
-    "message": "Mọi thứ bắt đầu ở mục đã xếp gọn. Cuộc trò chuyện sẽ thành thẻ khi có hoạt động mới cho đến khi bạn xếp gọn."
+    "message": "Các cuộc trò chuyện gần nhất sẽ hiển thị dưới dạng thẻ, còn lại được xếp gọn. Một luồng sẽ chuyển thành thẻ khi có hoạt động mới cho đến khi bạn xếp gọn. Hoạt động cả trong Code."
   },
   "threadNavLabel": {
     "message": "Dự án & công cụ"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Chuyển đổi câu lệnh của tôi thành kỹ năng"
+  },
+  "tourWelcomeTitle": {
+    "message": "Chào mừng đến với Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Điểm qua nhanh những tính năng được bổ sung vào Claude. Chỉ mất khoảng một phút."
+  },
+  "tourBarTitle": {
+    "message": "Thanh mức dùng"
+  },
+  "tourBarBody": {
+    "message": "Mức dùng gói 5 giờ của bạn, nằm ngay trong khung soạn thảo. Thanh sẽ đầy dần khi bạn dùng Claude và chuyển sang màu cam khi gần chạm giới hạn."
+  },
+  "tourDetailsTitle": {
+    "message": "Chi tiết mức dùng"
+  },
+  "tourDetailsBody": {
+    "message": "Di chuột vào thanh để xem chi tiết: tốc độ dùng, mức dùng theo tuần và thời điểm đặt lại từng giới hạn."
+  },
+  "tourRailTitle": {
+    "message": "Thanh điều hướng tin nhắn"
+  },
+  "tourRailBody": {
+    "message": "Trong cuộc trò chuyện, các vạch ở cạnh phải đại diện cho tin nhắn của bạn, và vạch sáng nhất là vị trí hiện tại. Nhấp vào bất kỳ vạch nào để chuyển đến tin nhắn đó."
+  },
+  "tourCacheTitle": {
+    "message": "Bộ đếm bộ nhớ đệm"
+  },
+  "tourCacheBody": {
+    "message": "Sau khi Claude phản hồi, bộ nhớ đệm lời nhắc vẫn được giữ trong vài phút, giúp tin nhắn tiếp theo tốn ít hạn mức hơn. Bộ đếm bộ nhớ đệm sẽ đếm ngược thời gian này ngay trên đầu cuộc trò chuyện."
+  },
+  "tourCacheAsk": {
+    "message": "Hiển thị bộ đếm bộ nhớ đệm?"
+  },
+  "tourUseIt": {
+    "message": "Sử dụng"
+  },
+  "tourThreadTitle": {
+    "message": "Chế độ xem luồng"
+  },
+  "tourThreadBody": {
+    "message": "Biến thanh bên thành các thẻ. Các luồng đang chờ bạn sẽ xếp đầu tiên, tiếp đến là việc đã xong, rồi đến việc đang xử lý. Hãy xếp gọn thẻ khi bạn đã làm xong."
+  },
+  "tourThreadAsk": {
+    "message": "Dùng chế độ xem luồng?"
+  },
+  "tourUseThis": {
+    "message": "Dùng chế độ này"
+  },
+  "tourSettingsTitle": {
+    "message": "Cài đặt"
+  },
+  "tourSettingsBody": {
+    "message": "Mũi tên này mở phần cài đặt của Usage Bar, nơi bạn có thể thay đổi bất kỳ tùy chọn nào. Hãy mở thử ngay bây giờ."
+  },
+  "tourPacingTitle": {
+    "message": "Ước tính tốc độ dùng"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar học thói quen sử dụng 5 giờ và hàng tuần của bạn để ước tính tốc độ dùng. Dữ liệu mẫu chỉ lưu trên trình duyệt này, không lưu lại lời nhắc, phản hồi hay dữ liệu thô nào. Bạn có thể tắt tính năng này tại đây nếu không muốn dùng."
+  },
+  "tourDoneTitle": {
+    "message": "Đã hoàn tất!"
+  },
+  "tourDoneBody": {
+    "message": "Mọi tùy chỉnh khác đều nằm trong phần Cài đặt mục Usage Bar, và bạn có thể xem lại hướng dẫn này tại mục Chung."
+  },
+  "tourAria": {
+    "message": "Hướng dẫn tính năng: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "Bỏ qua"
+  },
+  "tourBack": {
+    "message": "Bước trước"
+  },
+  "tourNoThanks": {
+    "message": "Không, cảm ơn"
+  },
+  "tourDone": {
+    "message": "Xong"
+  },
+  "tourNext": {
+    "message": "Tiếp →"
+  },
+  "tourMockThread2": {
+    "message": "Bản nháp báo cáo tuần"
+  },
+  "tourMockThread1": {
+    "message": "Sửa lỗi đăng nhập"
+  },
+  "tourMockThread3": {
+    "message": "Chuyến đi Lisbon"
+  },
+  "tourMockThread4": {
+    "message": "Ý tưởng công thức nấu ăn"
+  },
+  "tourMockThread5": {
+    "message": "Ý tưởng quà tặng"
+  },
+  "tourThreadStepStart": {
+    "message": "Đã bắt đầu"
+  },
+  "tourThreadClaude": {
+    "message": "Thanh bên của Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Chế độ xem luồng"
+  },
+  "setMessageRail": {
+    "message": "Thanh điều hướng tin nhắn"
+  },
+  "setMessageRailDesc": {
+    "message": "Các vạch đánh dấu ở cạnh phải cuộc trò chuyện, tương ứng với từng tin nhắn bạn đã gửi. Nhấp vào một vạch để chuyển đến tin nhắn đó."
+  },
+  "sessionNotUsedYet": {
+    "message": "chưa sử dụng"
+  },
+  "introNew": {
+    "message": "Mới trong Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Đã có chế độ xem luồng"
+  },
+  "introThreadBody": {
+    "message": "Thanh bên dưới dạng thẻ: các luồng cần bạn phản hồi đứng đầu, tiếp đến là việc đã xong, việc đang xử lý, và phần còn lại thu gọn vào mục Đã xếp gọn. Tính năng này cũng hoạt động trong Code, và bạn có thể bật hoặc tắt bất cứ lúc nào trong Cài đặt tại mục Usage Bar."
   }
 }

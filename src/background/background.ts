@@ -33,16 +33,8 @@ const CLAUDE_API_ORIGIN = "https://claude.ai";
 const FETCH_COOLDOWN_MS = 60_000;
 export const TEST_BANNER_DELAY_MS = 5_000;
 
-// The thread view keeps its per-thread working / done marks in session storage
-// so every claude.ai tab shares them; content scripts can only reach that area
-// once it's opened up. Runs on every worker start (cheap, idempotent).
-void chrome.storage.session
-  ?.setAccessLevel?.({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
-  .catch(() => undefined);
-
 // The only writer of the thread view's shared state; tabs send it their changes.
 const threadStore = createThreadStoreWriter({
-  session: chrome.storage.session,
   local: chrome.storage.local,
   viewEnabled: async () => {
     const data = await chrome.storage.local.get(STORAGE_KEYS.settings);

@@ -429,7 +429,7 @@
     "message": "Mwonekano wa mijadala"
   },
   "setThreadSidebarDesc": {
-    "message": "Kila kitu huanza kikiwa kimetulia. Gumzo huwa kadi linapokuwa na shughuli mpya, hadi utakapolituliza."
+    "message": "Gumzo zako za hivi punde huanza kama kadi na zilizosalia kama zilizotulia. Mjadala huwa kadi unapokuwa na shughuli mpya, hadi uutulize. Inafanya kazi kwenye Code pia."
   },
   "threadNavLabel": {
     "message": "Miradi na zana"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Badilisha vidokezo vyangu kuwa skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Karibu kwenye Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Muhtasari mfupi wa kile inachoongeza kwenye Claude. Inachukua dakika moja tu."
+  },
+  "tourBarTitle": {
+    "message": "Upau wa matumizi"
+  },
+  "tourBarBody": {
+    "message": "Matumizi ya mpango wako wa saa 5, moja kwa moja kwenye kisanduku cha kuandikia. Hujaa unapotumia Claude na kubadilika kuwa rangi ya chungwa ukikaribia kikomo."
+  },
+  "tourDetailsTitle": {
+    "message": "Maelezo ya matumizi"
+  },
+  "tourDetailsBody": {
+    "message": "Pitisha kipanya juu ya upau kuona maelezo: kasi yako, matumizi ya wiki, na wakati kila kikomo kinapoanza upya."
+  },
+  "tourRailTitle": {
+    "message": "Kielekezi cha ujumbe"
+  },
+  "tourRailBody": {
+    "message": "Kwenye gumzo, alama hizi kwenye ukingo wa kulia zinawakilisha ujumbe wako, na ile inayong'aa ndipo ulipo. Bofya alama yoyote ili kurukia hapo."
+  },
+  "tourCacheTitle": {
+    "message": "Kipima muda cha kache"
+  },
+  "tourCacheBody": {
+    "message": "Baada ya Claude kujibu, kache yako ya maagizo hubaki hai kwa dakika chache, kwa hivyo ujumbe unaofuata unatumia kiasi kidogo cha kikomo chako. Kipima muda cha kache huhesabu muda huo kwenye kichwa cha gumzo."
+  },
+  "tourCacheAsk": {
+    "message": "Onyesha kipima muda cha kache?"
+  },
+  "tourUseIt": {
+    "message": "Itumie"
+  },
+  "tourThreadTitle": {
+    "message": "Mwonekano wa mijadala"
+  },
+  "tourThreadBody": {
+    "message": "Hubadilisha upau wako wa pembeni kuwa kadi. Mijadala inayokuhitaji huja kwanza, kisha kazi iliyokamilika, halafu kazi inayoendelea. Tuliza kadi ukishamalizana nayo."
+  },
+  "tourThreadAsk": {
+    "message": "Tumia mwonekano wa mijadala?"
+  },
+  "tourUseThis": {
+    "message": "Tumia hii"
+  },
+  "tourSettingsTitle": {
+    "message": "Mipangilio"
+  },
+  "tourSettingsBody": {
+    "message": "Mshale huu hufungua mipangilio ya Usage Bar, ambapo unaweza kubadilisha chochote kati ya hivi. Twende hapo sasa."
+  },
+  "tourPacingTitle": {
+    "message": "Makadirio ya kasi"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar hujifunza mifumo yako ya matumizi ya saa 5 na ya wiki ili kukadiria kasi yako. Sampuli hubaki kwenye kivinjari hiki, na hakuna maagizo, majibu au data ghafi inayohifadhiwa. Zima kasi ya matumizi hapa ikiwa hupendi."
+  },
+  "tourDoneTitle": {
+    "message": "Kila kitu kiko tayari!"
+  },
+  "tourDoneBody": {
+    "message": "Kila kitu kingine kipo kwenye Mipangilio chini ya Usage Bar, na unaweza kurudia ziara hii kutoka hapo chini ya Jumla."
+  },
+  "tourAria": {
+    "message": "Ziara ya vipengele: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 kati ya $2"
+  },
+  "tourSkip": {
+    "message": "Ruka"
+  },
+  "tourBack": {
+    "message": "Hatua iliyotangulia"
+  },
+  "tourNoThanks": {
+    "message": "Hapana, asante"
+  },
+  "tourDone": {
+    "message": "Imekamilika"
+  },
+  "tourNext": {
+    "message": "Inayofuata →"
+  },
+  "tourMockThread2": {
+    "message": "Rasimu ya ripoti ya wiki"
+  },
+  "tourMockThread1": {
+    "message": "Rekebisha hitilafu ya kuingia"
+  },
+  "tourMockThread3": {
+    "message": "Safari ya Lisbon"
+  },
+  "tourMockThread4": {
+    "message": "Mawazo ya mapishi"
+  },
+  "tourMockThread5": {
+    "message": "Mawazo ya zawadi"
+  },
+  "tourThreadStepStart": {
+    "message": "Imeenza"
+  },
+  "tourThreadClaude": {
+    "message": "Upau wa pembeni wa Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Mwonekano wa mijadala"
+  },
+  "setMessageRail": {
+    "message": "Kielekezi cha ujumbe"
+  },
+  "setMessageRailDesc": {
+    "message": "Alama kwenye ukingo wa kulia wa gumzo, moja kwa kila ujumbe uliotuma. Bofya moja ili kurukia ujumbe huo."
+  },
+  "sessionNotUsedYet": {
+    "message": "haijatumika bado"
+  },
+  "introNew": {
+    "message": "Mpya kwenye Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Mwonekano wa mijadala upo sasa"
+  },
+  "introThreadBody": {
+    "message": "Upau wako wa pembeni kama kadi: mijadala inayokuhitaji huja kwanza, kisha kazi iliyokamilika, kisha kazi inayoendelea, na iliyobaki hukunjwa chini ya Iliyotulia. Inafanya kazi kwenye Code pia, na unaweza kuiwasha au kuizima wakati wowote kwenye Mipangilio chini ya Usage Bar."
   }
 }

@@ -2,6 +2,27 @@
 
 All notable changes since the 1.0.0 Chrome Web Store release are documented here.
 
+## [Unreleased]
+
+### Added
+- The onboarding tour now covers the usage bar, the message navigator, the cache timer, the thread view and pace estimates. For the cache timer and the thread view it shows a preview in the card and asks whether to turn them on; the thread view preview plays a thread being started, working, finishing and being settled, beside Claude's own sidebar.
+- The message navigator is back, with a switch under Display.
+- The thread view now works in Claude's Code tab too, on the Code session list.
+- People who already use Usage Bar see a one-time card announcing the thread view, with the same preview as the tour and a choice to turn it on. It shows once and never again, in any tab.
+
+### Changed
+- The usage bar is on by default, and stays on after the tour.
+- Thread view cards that need you come first: a question or permission request (or an error), then finished work, then work still running, then pinned threads and the rest.
+- Turning the thread view on starts with your 3 latest chats (and, the first time you open Code, your 3 latest sessions) as cards instead of an empty list.
+- The thread view keeps its state across reloads and browser restarts: a thread Claude marked keeps its card after the mark is gone, and done marks are stored with the rest instead of only for the browser session. Turning the view off still forgets all of it.
+- The tour is translated into all of Claude's languages (machine-generated).
+
+### Fixed
+- Fixed the tour's settings-arrow step hiding its highlight under the usage details panel.
+- Clicking the details panel's settings arrow now closes the panel instead of leaving it over the settings.
+- Fixed the message navigator showing a stray mark carried over from the previous chat.
+- Fixed the tour using dark colours while Claude is in light mode with a dark OS theme.
+
 ## [1.6.0] - 2026-10-31
 
 ### Added

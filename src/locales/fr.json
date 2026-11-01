@@ -429,7 +429,7 @@
     "message": "Vue des conversations"
   },
   "setThreadSidebarDesc": {
-    "message": "Au départ, tout est terminé. Une conversation devient une carte dès qu'il s'y passe quelque chose, jusqu'à ce que vous la terminiez."
+    "message": "Vos conversations récentes s'affichent sous forme de cartes et les autres sont classées dans Terminées. Une conversation redevient une carte lorsqu'elle a une nouvelle activité, jusqu'à ce que vous la terminiez. Fonctionne aussi dans Code."
   },
   "threadNavLabel": {
     "message": "Projets et outils"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Convertir mes prompts en compétences"
+  },
+  "tourWelcomeTitle": {
+    "message": "Bienvenue dans Claude Usage Bar !"
+  },
+  "tourWelcomeBody": {
+    "message": "Un aperçu rapide de ce que l'extension ajoute à Claude. Cela ne prend qu'une minute."
+  },
+  "tourBarTitle": {
+    "message": "Barre d'utilisation"
+  },
+  "tourBarBody": {
+    "message": "Votre utilisation sur 5 heures, directement dans la zone de saisie. Elle se remplit à mesure que vous utilisez Claude et devient orange près de la limite."
+  },
+  "tourDetailsTitle": {
+    "message": "Détails d'utilisation"
+  },
+  "tourDetailsBody": {
+    "message": "Survolez la barre pour voir les détails : votre rythme, votre utilisation hebdomadaire et l'heure de réinitialisation de chaque limite."
+  },
+  "tourRailTitle": {
+    "message": "Navigateur de messages"
+  },
+  "tourRailBody": {
+    "message": "Dans une conversation, ces repères sur le bord droit représentent vos messages, et le plus lumineux indique où vous êtes. Cliquez sur un repère pour y accéder."
+  },
+  "tourCacheTitle": {
+    "message": "Minuteur de cache"
+  },
+  "tourCacheBody": {
+    "message": "Après une réponse de Claude, votre cache de prompt reste actif quelques minutes : un message de suivi consomme alors moins de votre limite. Le minuteur de cache affiche ce décompte dans l'en-tête de la conversation."
+  },
+  "tourCacheAsk": {
+    "message": "Afficher le minuteur de cache ?"
+  },
+  "tourUseIt": {
+    "message": "L'utiliser"
+  },
+  "tourThreadTitle": {
+    "message": "Vue des conversations"
+  },
+  "tourThreadBody": {
+    "message": "Transforme votre barre latérale en cartes. Les conversations qui vous attendent apparaissent en premier, suivies de celles terminées, puis de celles en cours. Terminez une carte une fois que vous n'en avez plus besoin."
+  },
+  "tourThreadAsk": {
+    "message": "Utiliser la vue des conversations ?"
+  },
+  "tourUseThis": {
+    "message": "Utiliser cette vue"
+  },
+  "tourSettingsTitle": {
+    "message": "Paramètres"
+  },
+  "tourSettingsBody": {
+    "message": "Cette flèche ouvre les paramètres d'Usage Bar, où vous pouvez modifier chacune de ces options. Allons-y maintenant."
+  },
+  "tourPacingTitle": {
+    "message": "Estimations du rythme"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar apprend vos habitudes d'utilisation sur 5 heures et à la semaine pour estimer votre rythme. Les échantillons restent dans ce navigateur, et aucun prompt, réponse ou donnée brute n'est stocké. Désactivez l'estimation du rythme ici si vous préférez."
+  },
+  "tourDoneTitle": {
+    "message": "Tout est prêt !"
+  },
+  "tourDoneBody": {
+    "message": "Tout le reste se trouve dans les Paramètres sous Usage Bar, et vous pouvez relancer cette présentation depuis la section Général."
+  },
+  "tourAria": {
+    "message": "Présentation des fonctionnalités : $1"
+  },
+  "tourStepCount": {
+    "message": "$1 sur $2"
+  },
+  "tourSkip": {
+    "message": "Passer"
+  },
+  "tourBack": {
+    "message": "Étape précédente"
+  },
+  "tourNoThanks": {
+    "message": "Non merci"
+  },
+  "tourDone": {
+    "message": "Terminé"
+  },
+  "tourNext": {
+    "message": "Suivant →"
+  },
+  "tourMockThread2": {
+    "message": "Brouillon du rapport hebdo"
+  },
+  "tourMockThread1": {
+    "message": "Corriger le bug de connexion"
+  },
+  "tourMockThread3": {
+    "message": "Voyage à Lisbonne"
+  },
+  "tourMockThread4": {
+    "message": "Idées de recettes"
+  },
+  "tourMockThread5": {
+    "message": "Idées de cadeaux"
+  },
+  "tourThreadStepStart": {
+    "message": "Lancée"
+  },
+  "tourThreadClaude": {
+    "message": "Barre latérale de Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Vue des conversations"
+  },
+  "setMessageRail": {
+    "message": "Navigateur de messages"
+  },
+  "setMessageRailDesc": {
+    "message": "Repères sur le bord droit d'une conversation, un pour chaque message envoyé. Cliquez sur l'un d'eux pour y accéder."
+  },
+  "sessionNotUsedYet": {
+    "message": "pas encore utilisé"
+  },
+  "introNew": {
+    "message": "Nouveau dans Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "La vue des conversations est là"
+  },
+  "introThreadBody": {
+    "message": "Votre barre latérale sous forme de cartes : les conversations qui vous attendent apparaissent en premier, suivies de celles terminées, puis de celles en cours, et le reste est regroupé sous Terminées. Elle fonctionne aussi dans Code, et vous pouvez l'activer ou la désactiver à tout moment dans Paramètres, sous Usage Bar."
   }
 }

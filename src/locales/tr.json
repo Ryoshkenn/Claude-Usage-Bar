@@ -429,7 +429,7 @@
     "message": "Sohbet görünümü"
   },
   "setThreadSidebarDesc": {
-    "message": "Her şey kaldırılmış olarak başlar. Bir sohbet yeni etkinlik olduğunda siz onu kaldırana kadar karta dönüşür."
+    "message": "Son sohbetleriniz kart olarak, diğerleri ise kaldırılanlar altında başlar. Bir sohbet yeni bir etkinlik olduğunda siz onu kaldırana kadar karta dönüşür. Code'da da çalışır."
   },
   "threadNavLabel": {
     "message": "Projeler ve araçlar"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "İstemlerimi becerilere dönüştür"
+  },
+  "tourWelcomeTitle": {
+    "message": "Claude Usage Bar'a hoş geldiniz!"
+  },
+  "tourWelcomeBody": {
+    "message": "Claude'a neler kattığına hızlı bir bakış. Yalnızca bir dakika sürer."
+  },
+  "tourBarTitle": {
+    "message": "Kullanım çubuğu"
+  },
+  "tourBarBody": {
+    "message": "5 saatlik plan kullanımınız, doğrudan mesaj yazma alanında. Claude'u kullandıkça dolar ve sınıra yaklaştığında turuncuya döner."
+  },
+  "tourDetailsTitle": {
+    "message": "Kullanım ayrıntıları"
+  },
+  "tourDetailsBody": {
+    "message": "Ayrıntılar için çubuğun üzerine gelin: kullanım hızınız, haftalık kullanımınız ve her limitin ne zaman sıfırlanacağı."
+  },
+  "tourRailTitle": {
+    "message": "Mesaj gezgini"
+  },
+  "tourRailBody": {
+    "message": "Bir sohbette sağ kenardaki bu işaretler mesajlarınızı temsil eder; parlak olan ise bulunduğunuz yeri gösterir. Oraya atlamak için herhangi bir işarete tıklayın."
+  },
+  "tourCacheTitle": {
+    "message": "Önbellek sayacı"
+  },
+  "tourCacheBody": {
+    "message": "Claude yanıt verdikten sonra istem önbelleğiniz birkaç dakika hazır kalır; böylece devam mesajları limitinizden daha az harcar. Önbellek sayacı bu süreyi sohbet başlığında geri sayar."
+  },
+  "tourCacheAsk": {
+    "message": "Önbellek sayacı gösterilsin mi?"
+  },
+  "tourUseIt": {
+    "message": "Kullan"
+  },
+  "tourThreadTitle": {
+    "message": "Sohbet görünümü"
+  },
+  "tourThreadBody": {
+    "message": "Kenar çubuğunuzu kartlara dönüştürür. Sizi bekleyen sohbetler en başta, ardından tamamlananlar ve hala çalışanlar gelir. İşiniz bittiğinde kartı kaldırabilirsiniz."
+  },
+  "tourThreadAsk": {
+    "message": "Sohbet görünümü kullanılsın mı?"
+  },
+  "tourUseThis": {
+    "message": "Bunu kullan"
+  },
+  "tourSettingsTitle": {
+    "message": "Ayarlar"
+  },
+  "tourSettingsBody": {
+    "message": "Bu ok, tüm bunları değiştirebileceğiniz Usage Bar ayarlarını açar. Şimdi oraya gidelim."
+  },
+  "tourPacingTitle": {
+    "message": "Kullanım hızı tahminleri"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar, hızınızı tahmin etmek için 5 saatlik ve haftalık kullanım alışkanlıklarınızı öğrenir. Örnekler bu tarayıcıda kalır; hiçbir istem, yanıt veya ham veri saklanmaz. İstemiyorsanız kullanım hızını buradan kapatabilirsiniz."
+  },
+  "tourDoneTitle": {
+    "message": "Her şey hazır!"
+  },
+  "tourDoneBody": {
+    "message": "Diğer tüm seçenekler Usage Bar altındaki Ayarlar'da yer alır; bu turu oradaki Genel bölümünden istediğiniz zaman tekrar oynatabilirsiniz."
+  },
+  "tourAria": {
+    "message": "Özellik turu: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 / $2"
+  },
+  "tourSkip": {
+    "message": "Atla"
+  },
+  "tourBack": {
+    "message": "Önceki adım"
+  },
+  "tourNoThanks": {
+    "message": "Hayır, teşekkürler"
+  },
+  "tourDone": {
+    "message": "Bitti"
+  },
+  "tourNext": {
+    "message": "İleri →"
+  },
+  "tourMockThread2": {
+    "message": "Haftalık rapor taslağı"
+  },
+  "tourMockThread1": {
+    "message": "Giriş hatasını düzelt"
+  },
+  "tourMockThread3": {
+    "message": "Lizbon gezisi"
+  },
+  "tourMockThread4": {
+    "message": "Tarif fikirleri"
+  },
+  "tourMockThread5": {
+    "message": "Hediye fikirleri"
+  },
+  "tourThreadStepStart": {
+    "message": "Başladı"
+  },
+  "tourThreadClaude": {
+    "message": "Claude kenar çubuğu"
+  },
+  "tourThreadOurs": {
+    "message": "Sohbet görünümü"
+  },
+  "setMessageRail": {
+    "message": "Mesaj gezgini"
+  },
+  "setMessageRailDesc": {
+    "message": "Sohbetin sağ kenarında, gönderdiğiniz her mesaj için bir işaret yer alır. Bir mesaja atlamak için işaretine tıklayın."
+  },
+  "sessionNotUsedYet": {
+    "message": "henüz kullanılmadı"
+  },
+  "introNew": {
+    "message": "Usage Bar'da yeni"
+  },
+  "introThreadTitle": {
+    "message": "Sohbet görünümü burada"
+  },
+  "introThreadBody": {
+    "message": "Kenar çubuğunuz kartlar halinde: önce sizi bekleyen sohbetler, ardından tamamlanan işler, sonra hâlâ çalışanlar gelir; geri kalanlar ise Kaldırılanlar altında toplanır. Code'da da çalışır ve Ayarlar'daki Usage Bar bölümünden istediğiniz zaman açıp kapatabilirsiniz."
   }
 }

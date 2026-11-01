@@ -50,12 +50,12 @@
   display: none !important;
 }
 
-/* Between the open band (3000000+) and the settled band (5000000+), and locked to
+/* Between the open band (5000000+) and the settled band (7000000+), and locked to
    the bottom of the scroll column: pushed down there while the cards are few,
    stuck there while they're many and scroll under it. Open, it also sticks to
    the top as its rows scroll under it, so it can always be folded again. */
 #cub-thread-settled-toggle {
-  order: 4000000;
+  order: 6000000;
   position: sticky;
   bottom: 0;
   z-index: 5;
@@ -260,8 +260,8 @@
   display: none !important;
 }
 
-/* Divider above the first card of each section after the first (pinned →
-   live → open). */
+/* Divider above the first card of each section after the first (live →
+   pinned → open). */
 [data-cub-thread-first]::before {
   content: "";
   display: block;

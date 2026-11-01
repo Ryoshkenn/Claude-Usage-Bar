@@ -429,7 +429,7 @@
     "message": "Jerin zare"
   },
   "setThreadSidebarDesc": {
-    "message": "Komai yana farawa a adane. Hira tana zama kati da zarar an sami sabon motsi, har sai ka adana ta."
+    "message": "Sabbin tattaunawarka suna farawa a matsayin kati sauran kuma a matsayin waɗanda aka adana. Zare yana zama kati idan yana da sabon motsi, har sai ka adana shi. Yana aiki a Code ma."
   },
   "threadNavLabel": {
     "message": "Ayyuka & kayan aiki"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Maida tambayoyina zuwa skills"
+  },
+  "tourWelcomeTitle": {
+    "message": "Barka da zuwa Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Taƙaitaccen duba kan abin da yake ƙarawa a Claude. Mintuna ɗaya kacal zai ɗauka."
+  },
+  "tourBarTitle": {
+    "message": "Sandar amfani"
+  },
+  "tourBarBody": {
+    "message": "Amfanin tsarinka na sa'o'i 5, a nan cikin wurin rubutu. Yana cika yayin da kake amfani da Claude kuma ya koma ruwan lemu kusa da iyaka."
+  },
+  "tourDetailsTitle": {
+    "message": "Cikakken bayanin amfani"
+  },
+  "tourDetailsBody": {
+    "message": "Ɗora linzami a kan sandar don ganin cikakken bayani: gudun amfaninka, amfanin mako-mako, da lokacin da kowace iyaka za ta sake farawa."
+  },
+  "tourRailTitle": {
+    "message": "Mai jagorar saƙonni"
+  },
+  "tourRailBody": {
+    "message": "A cikin tattaunawa, waɗannan alamun da ke gefen dama suna wakiltar saƙonninka, kuma mai haske ita ce inda kake. Danna kowace alama don tsallakawa zuwa gare ta."
+  },
+  "tourCacheTitle": {
+    "message": "Agogon ma'ajiya"
+  },
+  "tourCacheBody": {
+    "message": "Bayan Claude ya ba da amsa, ma'ajiyar tambayarka tana kasancewa a shirye na 'yan mintuna, don haka ci gaba da magana yana cin ƙasa daga iyakarka. Agogon ma'ajiya yana ƙirga wannan lokacin a saman tattaunawa."
+  },
+  "tourCacheAsk": {
+    "message": "A nuna agogon ma'ajiya?"
+  },
+  "tourUseIt": {
+    "message": "Yi amfani da shi"
+  },
+  "tourThreadTitle": {
+    "message": "Jerin zare"
+  },
+  "tourThreadBody": {
+    "message": "Yana maida sandar gefenka zuwa katuna. Zaren da ke buƙatarka suna zuwa farko, sannan aikin da aka gama, sannan aikin da ke gudana. Adana kati da zarar ka gama da shi."
+  },
+  "tourThreadAsk": {
+    "message": "A yi amfani da jerin zare?"
+  },
+  "tourUseThis": {
+    "message": "Yi amfani da wannan"
+  },
+  "tourSettingsTitle": {
+    "message": "Saituna"
+  },
+  "tourSettingsBody": {
+    "message": "Wannan kibiyar tana buɗe saitunan Usage Bar, inda za ka iya sauya kowane daga cikin waɗannan. Mu je can yanzu."
+  },
+  "tourPacingTitle": {
+    "message": "Ƙiyasin gudun amfani"
+  },
+  "tourPacingBody": {
+    "message": "Usage Bar yana koyon yanayin amfaninka na sa'o'i 5 da na mako-mako don ƙiyasta gudun amfaninka. Samfuran suna nan a cikin wannan burauzar, kuma ba a adana tambayoyi, amsoshi ko ɗanyen bayanai. Kashe gudun amfani a nan idan ba ka so."
+  },
+  "tourDoneTitle": {
+    "message": "Komai ya kammala!"
+  },
+  "tourDoneBody": {
+    "message": "Komai yana cikin Saituna a ƙarƙashin Usage Bar, kuma za ka iya sake kunna wannan zagayen daga can a ƙarƙashin Gabaɗaya."
+  },
+  "tourAria": {
+    "message": "Zagayen fasaloli: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 cikin $2"
+  },
+  "tourSkip": {
+    "message": "Tsallake"
+  },
+  "tourBack": {
+    "message": "Matakin baya"
+  },
+  "tourNoThanks": {
+    "message": "A'a, na gode"
+  },
+  "tourDone": {
+    "message": "An gama"
+  },
+  "tourNext": {
+    "message": "Na gaba →"
+  },
+  "tourMockThread2": {
+    "message": "Daflar rahoton mako-mako"
+  },
+  "tourMockThread1": {
+    "message": "Gyara matsalar shiga"
+  },
+  "tourMockThread3": {
+    "message": "Tafiya zuwa Lisbon"
+  },
+  "tourMockThread4": {
+    "message": "Shawarwarin girke-girke"
+  },
+  "tourMockThread5": {
+    "message": "Shawarwarin kyaututtuka"
+  },
+  "tourThreadStepStart": {
+    "message": "An fara"
+  },
+  "tourThreadClaude": {
+    "message": "Sandar gefe ta Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Jerin zare"
+  },
+  "setMessageRail": {
+    "message": "Mai jagorar saƙonni"
+  },
+  "setMessageRailDesc": {
+    "message": "Alamu a gefen dama na tattaunawa, ɗaya ga kowane saƙon da ka tura. Danna ɗaya don tsallakawa zuwa gare shi."
+  },
+  "sessionNotUsedYet": {
+    "message": "ba a yi amfani da shi tukuna ba"
+  },
+  "introNew": {
+    "message": "Sabo a Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "Ga jerin zare nan"
+  },
+  "introThreadBody": {
+    "message": "Gefen shafinka a matsayin katuna: zare da ke jiranka su ke gaba, sai aikin da aka gama, sai aikin da ke gudana, sauran kuma a ninke su a ƙarƙashin An adana. Yana aiki a Code ma, kuma za ka iya kunnawa ko kashewa a kowane lokaci a Saituna ƙarƙashin Usage Bar."
   }
 }

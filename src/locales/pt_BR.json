@@ -429,7 +429,7 @@
     "message": "Visão de conversas"
   },
   "setThreadSidebarDesc": {
-    "message": "No início, tudo fica concluído. Uma conversa vira cartão quando tem atividade nova, até você concluí-la."
+    "message": "Suas conversas mais recentes começam como cartões e o restante como concluídas. Uma conversa vira cartão quando tem nova atividade, até você concluí-la. Funciona no Code também."
   },
   "threadNavLabel": {
     "message": "Projetos e ferramentas"
@@ -499,5 +499,134 @@
   },
   "clipConvertToSkills": {
     "message": "Converter meus prompts em habilidades"
+  },
+  "tourWelcomeTitle": {
+    "message": "Bem-vindo ao Claude Usage Bar!"
+  },
+  "tourWelcomeBody": {
+    "message": "Uma visão rápida do que ele adiciona ao Claude. Leva só um minuto."
+  },
+  "tourBarTitle": {
+    "message": "Barra de uso"
+  },
+  "tourBarBody": {
+    "message": "O uso do seu limite de 5 horas, direto no campo de mensagem. Ela preenche conforme você usa o Claude e fica laranja perto do limite."
+  },
+  "tourDetailsTitle": {
+    "message": "Detalhes de uso"
+  },
+  "tourDetailsBody": {
+    "message": "Passe o mouse sobre a barra para ver os detalhes: seu ritmo, o uso semanal e quando cada limite reinicia."
+  },
+  "tourRailTitle": {
+    "message": "Navegador de mensagens"
+  },
+  "tourRailBody": {
+    "message": "Em uma conversa, estes marcadores na borda direita representam suas mensagens, e o mais claro indica onde você está. Clique em qualquer marcador para ir até ele."
+  },
+  "tourCacheTitle": {
+    "message": "Temporizador de cache"
+  },
+  "tourCacheBody": {
+    "message": "Depois que o Claude responde, o cache do seu prompt continua ativo por alguns minutos, então a próxima mensagem consome menos do seu limite. O temporizador de cache faz essa contagem regressiva no cabeçalho da conversa."
+  },
+  "tourCacheAsk": {
+    "message": "Mostrar o temporizador de cache?"
+  },
+  "tourUseIt": {
+    "message": "Usar"
+  },
+  "tourThreadTitle": {
+    "message": "Visão de conversas"
+  },
+  "tourThreadBody": {
+    "message": "Transforma sua barra lateral em cartões. As conversas que precisam de você vêm primeiro, depois as concluídas e, em seguida, as que ainda estão em andamento. Conclua um cartão quando terminar."
+  },
+  "tourThreadAsk": {
+    "message": "Usar a visão de conversas?"
+  },
+  "tourUseThis": {
+    "message": "Usar"
+  },
+  "tourSettingsTitle": {
+    "message": "Configurações"
+  },
+  "tourSettingsBody": {
+    "message": "Esta seta abre as configurações do Usage Bar, onde você pode alterar qualquer uma dessas opções. Vamos até lá agora."
+  },
+  "tourPacingTitle": {
+    "message": "Estimativas de ritmo"
+  },
+  "tourPacingBody": {
+    "message": "O Usage Bar aprende seus padrões de uso de 5 horas e semanal para estimar seu ritmo. As amostras ficam neste navegador, e nenhum prompt, resposta ou dado bruto é armazenado. Você pode desativar o ritmo aqui se preferir."
+  },
+  "tourDoneTitle": {
+    "message": "Tudo pronto!"
+  },
+  "tourDoneBody": {
+    "message": "Todo o resto fica nas configurações, em Usage Bar, e você pode rever este tour por lá, em Geral."
+  },
+  "tourAria": {
+    "message": "Tour de recursos: $1"
+  },
+  "tourStepCount": {
+    "message": "$1 de $2"
+  },
+  "tourSkip": {
+    "message": "Pular"
+  },
+  "tourBack": {
+    "message": "Etapa anterior"
+  },
+  "tourNoThanks": {
+    "message": "Não, obrigado"
+  },
+  "tourDone": {
+    "message": "Concluir"
+  },
+  "tourNext": {
+    "message": "Avançar →"
+  },
+  "tourMockThread2": {
+    "message": "Rascunho do relatório semanal"
+  },
+  "tourMockThread1": {
+    "message": "Corrigir bug de login"
+  },
+  "tourMockThread3": {
+    "message": "Viagem para Lisboa"
+  },
+  "tourMockThread4": {
+    "message": "Ideias de receitas"
+  },
+  "tourMockThread5": {
+    "message": "Ideias de presentes"
+  },
+  "tourThreadStepStart": {
+    "message": "Iniciada"
+  },
+  "tourThreadClaude": {
+    "message": "Barra lateral do Claude"
+  },
+  "tourThreadOurs": {
+    "message": "Visão de conversas"
+  },
+  "setMessageRail": {
+    "message": "Navegador de mensagens"
+  },
+  "setMessageRailDesc": {
+    "message": "Marcadores na borda direita da conversa, um para cada mensagem que você enviou. Clique em um para ir até ela."
+  },
+  "sessionNotUsedYet": {
+    "message": "ainda não usado"
+  },
+  "introNew": {
+    "message": "Novo no Usage Bar"
+  },
+  "introThreadTitle": {
+    "message": "A visão de conversas chegou"
+  },
+  "introThreadBody": {
+    "message": "Sua barra lateral em cartões: as conversas que precisam de você vêm primeiro, depois as tarefas concluídas, as que ainda estão em andamento e o restante fica recolhido em Concluídas. Funciona no Code também, e você pode ativar ou desativar quando quiser nas Configurações, em Usage Bar."
   }
 }

@@ -78,13 +78,14 @@ describe("storage helpers", () => {
       mode: "compact",
       barMetric: "session",
       ringTarget: "context",
-      showBar: false,
+      showBar: true,
       showBarLabel: false,
       showWheel: true,
       showWheelLabel: false,
       contextDisplay: "ring",
       showPace: true,
       showCacheTimer: false,
+      showMessageRail: true,
       paceSurplusFormat: "percent",
       weeklyMetricsEnabled: true,
       weeklyEstimateDisplay: "active_hours",
@@ -92,6 +93,7 @@ describe("storage helpers", () => {
       weeklyManualActiveHoursPerDay: 5,
       weeklyManualStartHour: 9,
       hasSeenTour: false,
+      seenThreadViewIntro: false,
       showClipboard: true,
       resetBannerScope: "claude",
       threadSidebar: false,
@@ -117,16 +119,17 @@ describe("storage helpers", () => {
     expect(state.settings.showWheelLabel).toBe(false);
   });
 
-  it("honors stored bar and cache-timer toggles instead of forcing them off", async () => {
-    const adapter = createAdapter({ settings: { showBar: true, showCacheTimer: true } });
+  it("honors stored bar, cache-timer and navigator toggles instead of forcing defaults", async () => {
+    const adapter = createAdapter({ settings: { showBar: false, showCacheTimer: true, showMessageRail: false } });
     const state = await getStorage(adapter);
-    expect(state.settings.showBar).toBe(true);
+    expect(state.settings.showBar).toBe(false);
     expect(state.settings.showCacheTimer).toBe(true);
+    expect(state.settings.showMessageRail).toBe(false);
 
-    const updated = await updateSettings({ showBar: true }, createAdapter());
-    expect(updated.showBar).toBe(true);
+    const updated = await updateSettings({ showBar: false }, createAdapter());
+    expect(updated.showBar).toBe(false);
     const reread = await getStorage(createAdapter({ settings: updated }));
-    expect(reread.settings.showBar).toBe(true);
+    expect(reread.settings.showBar).toBe(false);
   });
 
   it("defaults weekly learning on", async () => {
@@ -198,13 +201,14 @@ describe("storage helpers", () => {
       mode: "expanded",
       barMetric: "session",
       ringTarget: "context",
-      showBar: false,
+      showBar: true,
       showBarLabel: false,
       showWheel: true,
       showWheelLabel: false,
       contextDisplay: "ring",
       showPace: true,
       showCacheTimer: false,
+      showMessageRail: true,
       paceSurplusFormat: "percent",
       weeklyMetricsEnabled: true,
       weeklyEstimateDisplay: "active_hours",
@@ -212,6 +216,7 @@ describe("storage helpers", () => {
       weeklyManualActiveHoursPerDay: 5,
       weeklyManualStartHour: 9,
       hasSeenTour: false,
+      seenThreadViewIntro: false,
       showClipboard: true,
       resetBannerScope: "claude",
       threadSidebar: false,

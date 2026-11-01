@@ -60,6 +60,19 @@ The settings nav item anchors on Claude's `li[data-testid]`s (labels get renamed
 "Appearance" but kept `general-settings`) and sits after `usage-settings`. While our panel shows,
 `data-cub-panel-active` on the `<nav>` mutes Claude's still-`aria-current` item in `styles.css`.
 
+### Onboarding tour (`OnboardingTour.tsx`, previews in `tourPreviews.tsx`)
+Runs on `/new` while `hasSeenTour` is false (Settings → General → Replay Tour). The cache timer and
+thread view steps are choices ("No thanks" / "Use it") that write the setting; finishing or skipping
+sets `showBar: true` as well. The tour layer is z 2147483647; while it holds the details panel open
+(`body.cub-tour-bar-open`) the bar host sits at 2147483646, one below, so the spotlight ring around
+the settings arrow draws over the panel rather than under it.
+
+People who had finished the tour before the thread view existed get a one-time card instead
+(`ThreadViewIntro.tsx`, rendered in the tour's layer by `renderTour`): `threadIntroAction` decides,
+and `seenThreadViewIntro` is written the moment the card shows (not when it's answered), so a reload
+or another tab never brings it back. A tab in the background waits until it's looked at; someone who
+already turned the view on is just marked seen. Finishing or skipping the tour sets it too.
+
 ### Reset banners (`src/background/resetNotifier.ts`)
 `chrome.alarms` fires at each `resetsAt`; MV3 kills the worker after ~30s idle, so `setTimeout`
 can never reach a reset hours out. On wake the worker **re-fetches and confirms the reset time
@@ -105,11 +118,20 @@ types predate it. Verify it survives into `dist/manifest.json` after touching th
 
 ### Thread sidebar (`src/content/threadSidebar.ts`)
 Optional T3-style sidebar (`settings.threadSidebar`, off by default, under **Sidebar** in the
-settings panel). Everything starts settled under a "Settled (N)" bar; a thread becomes a card once it
-has activity after that — seen working or done in any tab, or an `updated_at` past the baseline
-(which also catches chats made on another device) — and stays one, uncapped, until its hover Settle
-button files it back (until its next activity). Pinned threads and live ones (working / waiting /
-done / unread) are always cards. The Settled bar is `position: sticky` at the bottom of the scroll
+settings panel; the tour offers it). Turning it on opens the 3 latest threads of the list on screen
+as cards (`SEED_OPEN_COUNT`, once per list — `threadPlaces.seeded` records "chat" / "code"; places
+stored before seeding existed count the chat list as seeded) and settles the rest under a "Settled (N)"
+bar; a thread becomes a card once it has activity after that — seen working or done in any tab, a
+live mark from Claude, or an `updated_at` past the baseline (which also catches chats made on another
+device) — and stays one, uncapped, until its hover Settle button files it back (until its next
+activity). Live ones lead, by `LIVE_ORDER_BASE`: waiting on you (or error), then done / unread, then
+working; then pinned threads; then the other cards. A pinned thread with a live status sits with the
+live ones.
+
+Claude keeps the chat list and the Code session list in the sidebar at once (`[data-kind="cowork"]` /
+`.df-session-list[data-kind="code"]` under `.dframe-recents-by-mode[data-mode]`) and hides the other
+mode's with an inline `display: none !important`. The module works on whichever list is displayed
+(`shownList`), and New in Code mode is Claude's `a[href="/code"]` row (both carry Ctrl+Shift+O). The Settled bar is `position: sticky` at the bottom of the scroll
 column (pushed there with `margin-top: auto` when the cards are few) and also at the top while
 open; it paints the sidebar's own computed background so rows can pass under it, and opening it
 over a long list scrolls its rows into view. Pinned projects are hidden (they stay under Projects), Claude's nav rows fold into
@@ -128,14 +150,15 @@ Live state is read from Claude's own markers: `.status-dot[data-kind=running|cla
 `[data-row-main-button]`: Claude uses it for the row's hit area. Claude Code sessions are only in the
 DOM while the sidebar is in Code mode; nothing merges them into the chat list.
 
-"Done" is ours: a row this tab saw working that stops while you weren't looking at it. The marks
-live in `chrome.storage.session` (`threadActivity`, row keys + timestamps only, shared by every
-claude.ai tab; the worker opens that area to content scripts with `setAccessLevel`). Placement lives
-in `chrome.storage.local` (`threadPlaces`: `since` — when the view was turned on, the baseline every
-thread counts as settled at — plus `open` and hand-`settled` maps of row key → time). Turning the view
-off removes it, so turning it on again starts from everything settled. Nothing opens until it has
-loaded, or a page load would judge activity against a made-up baseline; likewise nothing is tracked
-until the activity marks have loaded.
+"Done" is ours: a row seen working that stops while you weren't looking at it. The marks live in
+`chrome.storage.local` (`threadActivity`, row keys + timestamps only, shared by every claude.ai tab,
+expiring after a day) so they survive reloads and restarts; a working mark whose tab is gone shows the
+thread as done, and opening the thread clears it (after a few seconds of page load, while the sidebar
+may not show its working dot yet). Placement lives there too (`threadPlaces`: `since` — when the view
+was turned on, the baseline every thread counts as settled at — plus `open` and hand-`settled` maps of
+row key → time, and `seeded`). Turning the view off removes both, so turning it on again starts over.
+Nothing opens until places have loaded, or a page load would judge activity against a made-up
+baseline; likewise nothing is tracked until the activity marks have loaded.
 
 Tabs never write either store themselves. chrome.storage has no transactions, so two tabs each
 reading, merging and writing lost each other's changes. Each tab only writes when its own sidebar's

@@ -104,10 +104,19 @@ describe("content styles", () => {
     expect(messageRailScript).toContain('railEl.classList.toggle("cub-message-rail--light", currentThemeIsLight);');
   });
 
+  it("keeps a tall tour card's buttons on screen by scrolling its content", () => {
+    expect(styles).toContain(".cub-tour-card-scroll {\n  max-height: calc(100vh - 50px);\n  overflow-y: auto;");
+    expect(onboardingTourScript).toContain('<div className="cub-tour-card-scroll">');
+    expect(styles).toMatch(/\.cub-tour-card--centered \{[^}]*max-height: calc\(100vh - 16px\);[^}]*overflow-y: auto;/);
+  });
+
+  it("records the thread view card as seen the moment it shows, and after the tour", () => {
+    expect(contentScript).toContain("void updateSettings({ seenThreadViewIntro: true })");
+    expect(contentScript).toContain("void updateSettings({ hasSeenTour: true, showBar: true, seenThreadViewIntro: true });");
+  });
+
   it("re-syncs theme after delayed overlay elements are mounted or refreshed", () => {
-    // TEMP: message rail disabled (no tickMessageRail in the refresh path).
-    expect(contentScript).toContain("tickSettingsPage();");
-    expect(contentScript).not.toContain("tickMessageRail();");
+    expect(contentScript).toContain("tickSettingsPage();\n    syncMessageRail();\n    syncTheme();");
     expect(contentScript).toContain("render();\n  syncTheme();");
   });
 
