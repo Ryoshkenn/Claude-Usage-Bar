@@ -107,7 +107,10 @@ const ROW_GAP_PX = 2;
 
 // Flex `order` bands. Each row adds its position in the sorted list, so rows
 // stay sorted inside their band; the settled toggle sits between the bands.
-const ORDER_BASE = { label: 100, pinned: 1_000, live: 2_000, open: 3_000, settled: 5_000 } as const;
+// Bands are a million apart so no list is long enough to push one into the
+// next (the Settled toggle's order: 4000000 in threadSidebar.css sits between
+// open and settled).
+const ORDER_BASE = { label: 100, pinned: 1_000_000, live: 2_000_000, open: 3_000_000, settled: 5_000_000 } as const;
 
 export type ThreadKind = "chat" | "cowork" | "routine" | "code" | "project" | "other";
 export type ThreadStatus = "working" | "awaiting" | "error" | "done" | "unread";
@@ -396,18 +399,57 @@ const sanitizeActivity = (value: unknown, now = Date.now()): Record<string, Thre
   return out;
 };
 
+// This tab's changes not yet confirmed in session storage: row key → entry, or
+// null for a removal. A write merges just these keys into what's stored, so a
+// tab that hasn't caught up with another's write can't drop that tab's marks,
+// and a write that fails stays pending and is retried on the next pass.
+const pendingActivity = new Map<string, ThreadActivity | null>();
+let activityWriting = false;
+
+const setActivity = (key: string, entry: ThreadActivity | undefined): void => {
+  if (entry) activity[key] = entry;
+  else delete activity[key];
+  pendingActivity.set(key, entry ?? null);
+};
+
+const withPendingActivity = (stored: Record<string, ThreadActivity>): Record<string, ThreadActivity> => {
+  const merged = { ...stored };
+  pendingActivity.forEach((entry, key) => {
+    if (entry) merged[key] = entry;
+    else delete merged[key];
+  });
+  return sanitizeActivity(merged);
+};
+
 const saveActivity = (): void => {
-  activity = sanitizeActivity(activity);
-  void sessionArea()
-    ?.set({ [STORAGE_KEYS.threadActivity]: activity })
-    .catch(() => undefined);
+  const area = sessionArea();
+  if (!area || activityWriting || pendingActivity.size === 0) return;
+  activityWriting = true;
+  const writing = new Map(pendingActivity);
+  void area
+    .get(STORAGE_KEYS.threadActivity)
+    .then((data) => {
+      activity = withPendingActivity(sanitizeActivity(data[STORAGE_KEYS.threadActivity]));
+      return area.set({ [STORAGE_KEYS.threadActivity]: activity });
+    })
+    .then(() => {
+      writing.forEach((entry, key) => {
+        if (pendingActivity.get(key) === entry) pendingActivity.delete(key);
+      });
+      activityWriting = false;
+      // Changes made while this write was in flight go out now.
+      saveActivity();
+    })
+    .catch(() => {
+      activityWriting = false;
+    });
 };
 
 const loadActivity = (): void => {
   void sessionArea()
     ?.get(STORAGE_KEYS.threadActivity)
     .then((data) => {
-      activity = { ...sanitizeActivity(data[STORAGE_KEYS.threadActivity]), ...activity };
+      activity = withPendingActivity(sanitizeActivity(data[STORAGE_KEYS.threadActivity]));
       applyThreadSidebar();
     })
     .catch(() => undefined);
@@ -446,12 +488,40 @@ const sanitizePlaces = (value: unknown): ThreadPlaces => {
   return { since, open: keep(open, settledAt), settled: keep(settledEntries, openAt) };
 };
 
+// Newest time per key across two key → time maps.
+const latestTimes = (a: Record<string, number>, b: Record<string, number>): Record<string, number> => {
+  const out = { ...a };
+  for (const [key, at] of Object.entries(b)) {
+    if (!((out[key] ?? Number.NEGATIVE_INFINITY) >= at)) out[key] = at;
+  }
+  return out;
+};
+
+// Writes this tab's places merged into what's stored, newest time per key —
+// sanitizePlaces then settles a key found in both maps the same way — so a tab
+// that hasn't yet adopted another tab's settle or open can't write over it.
 const savePlaces = (): void => {
   const places = sanitizePlaces({ since: viewSince, open: opened, settled });
   opened = places.open;
   settled = places.settled;
-  void localArea()
-    ?.set({ [STORAGE_KEYS.threadPlaces]: places })
+  const area = localArea();
+  if (!area) return;
+  const load = placesLoad;
+  void area
+    .get(STORAGE_KEYS.threadPlaces)
+    .then((data) => {
+      // Turned off (or restarted) meanwhile: don't bring the old places back.
+      if (load !== placesLoad || !placesLoaded) return;
+      const stored = sanitizePlaces(data[STORAGE_KEYS.threadPlaces]);
+      const merged = sanitizePlaces({
+        since: viewSince,
+        open: latestTimes(stored.open, opened),
+        settled: latestTimes(stored.settled, settled),
+      });
+      opened = merged.open;
+      settled = merged.settled;
+      return area.set({ [STORAGE_KEYS.threadPlaces]: merged });
+    })
     .catch(() => undefined);
 };
 
@@ -481,7 +551,10 @@ const loadPlaces = (): void => {
       applyThreadSidebar();
     })
     .catch(() => {
-      if (load === placesLoad && !placesLoaded) adoptPlaces({ open: {}, settled: {} });
+      if (load === placesLoad && !placesLoaded) {
+        adoptPlaces({ open: {}, settled: {} });
+        applyThreadSidebar();
+      }
     });
 };
 
@@ -500,7 +573,7 @@ const forgetPlaces = (): void => {
 // threads opened or settled in another tab (local).
 const onStorageChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string): void => {
   if (area === "session" && changes[STORAGE_KEYS.threadActivity]) {
-    activity = sanitizeActivity(changes[STORAGE_KEYS.threadActivity].newValue);
+    activity = withPendingActivity(sanitizeActivity(changes[STORAGE_KEYS.threadActivity].newValue));
     applyThreadSidebar();
   } else if (area === "local" && changes[STORAGE_KEYS.threadPlaces] && placesLoaded) {
     // Gone means another tab turned the view off; this one is about to follow.
@@ -1157,7 +1230,7 @@ const settleThread = (key: string): void => {
   settled[key] = Date.now();
   delete opened[key];
   if (activity[key]?.doneAt) {
-    delete activity[key];
+    setActivity(key, undefined);
     saveActivity();
   }
   savePlaces();
@@ -1198,8 +1271,7 @@ const trackActivity = (
     next?.workingSince !== previous?.workingSince ||
     next?.awaitingSince !== previous?.awaitingSince ||
     next?.doneAt !== previous?.doneAt;
-  if (next) activity[key] = next;
-  else delete activity[key];
+  if (changed) setActivity(key, next);
   return { status: info.status ?? (next?.doneAt ? "done" : null), changed };
 };
 
@@ -1272,7 +1344,8 @@ export const applyThreadSidebar = (): void => {
     info.open = opened[key] !== undefined;
     info.settled = settled[key] !== undefined;
   });
-  if (activityChanged) saveActivity();
+  // Also retries changes a failed write left pending.
+  if (activityChanged || pendingActivity.size > 0) saveActivity();
   if (placesChanged) savePlaces();
 
   // Display order: labels and pinned rows keep Claude's order; everything else
@@ -1507,5 +1580,7 @@ export const resetThreadSidebarForTests = (): void => {
   threadTimes.clear();
   activity = {};
   localStatus.clear();
+  pendingActivity.clear();
+  activityWriting = false;
   sortMenuOpen = false;
 };

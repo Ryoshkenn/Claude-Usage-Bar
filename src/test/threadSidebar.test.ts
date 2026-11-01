@@ -301,7 +301,7 @@ describe("thread sidebar DOM", () => {
     expect(placementOf("label:unread-read")).toBe("label");
     expect(ten.every(({ key }) => placementOf(key) === "settled")).toBe(true);
     expect(ten.some(({ key }) => isCard(key))).toBe(false);
-    expect(orderOf("chat:c0")).toBeGreaterThan(4_000);
+    expect(orderOf("chat:c0")).toBeGreaterThan(4_000_000);
     expect(orderOf("chat:c0")).toBeLessThan(orderOf("chat:c1"));
     expect(rowEl("chat:c0").querySelector(".cub-thread-meta")).toBeNull();
     expect(document.querySelector("[data-group-name]")!.getAttribute("data-cub-thread-label")).toBe("Threads");
@@ -334,7 +334,7 @@ describe("thread sidebar DOM", () => {
     applyThreadSidebar();
     expect(placementOf("chat:c3")).toBe("open");
     expect(isCard("chat:c3")).toBe(true);
-    expect(orderOf("chat:c3")).toBeLessThan(4_000);
+    expect(orderOf("chat:c3")).toBeLessThan(4_000_000);
     expect(settledToggle()?.textContent).toBe("Settled (9)");
   });
 
@@ -748,9 +748,10 @@ describe("thread sidebar DOM", () => {
 describe("shared state", () => {
   const session: Record<string, unknown> = {};
   const local: Record<string, unknown> = {};
+  // Like chrome.storage, values are copied in and out, never shared by reference.
   const area = (store: Record<string, unknown>) => ({
-    get: async (key: string) => (key in store ? { [key]: store[key] } : {}),
-    set: async (items: Record<string, unknown>) => Object.assign(store, items),
+    get: async (key: string) => (key in store ? { [key]: structuredClone(store[key]) } : {}),
+    set: async (items: Record<string, unknown>) => Object.assign(store, structuredClone(items)),
     remove: async (key: string) => {
       delete store[key];
     },
@@ -815,8 +816,42 @@ describe("shared state", () => {
     // B's own change still goes out: it sees the thread finish.
     stopWorking("chat:w");
     applyThreadSidebar();
+    await settle();
     expect(write).toHaveBeenCalledTimes(1);
     expect(typeof (session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe("number");
+  });
+
+  it("keeps another tab's marks it hasn't caught up with when it writes its own", async () => {
+    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    // Another tab records a mark; its storage event hasn't reached this tab yet.
+    const other = { workingSince: Date.now() - 5_000 };
+    session[STORAGE_KEYS.threadActivity] = { ...(session[STORAGE_KEYS.threadActivity] as object), "chat:x": other };
+
+    stopWorking("chat:w");
+    applyThreadSidebar();
+    await settle();
+    const stored = session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number; workingSince?: number }>;
+    expect(stored["chat:x"]).toEqual(other);
+    expect(typeof stored["chat:w"]?.doneAt).toBe("number");
+  });
+
+  it("retries a mark whose write failed", async () => {
+    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 2)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    vi.spyOn(chrome.storage.session, "set").mockRejectedValueOnce(new Error("Access to storage is not allowed"));
+    stopWorking("chat:w");
+    applyThreadSidebar();
+    await settle();
+    expect((session[STORAGE_KEYS.threadActivity] as Record<string, object>)["chat:w"]).not.toHaveProperty("doneAt");
+
+    applyThreadSidebar();
+    await settle();
+    expect(typeof (session[STORAGE_KEYS.threadActivity] as Record<string, { doneAt?: number }>)["chat:w"]?.doneAt).toBe(
+      "number",
+    );
   });
 
   it("doesn't trade working and done marks with a tab whose sidebar disagrees", async () => {
@@ -865,11 +900,39 @@ describe("shared state", () => {
 
     rowEl("chat:c4").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
     expect(placementOf("chat:c4")).toBe("settled");
+    await settle();
     const stored = local[STORAGE_KEYS.threadPlaces] as Record<string, Record<string, number> | number>;
     expect(stored.since).toBe(since);
     expect(stored.open).toEqual({});
     expect(Object.keys(stored.settled)).toEqual(["chat:c4"]);
     expect(Object.values(stored.settled).every((value) => typeof value === "number")).toBe(true);
+  });
+
+  it("keeps a thread another tab settled when this tab saves before adopting it", async () => {
+    const since = Date.now() - 60 * 60_000;
+    local[STORAGE_KEYS.threadPlaces] = { since, open: { "chat:c4": since + 1_000, "chat:c5": since + 2_000 }, settled: {} };
+    mountSidebar(read(ten.slice(0, 6)));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    // Another tab settles c5; this tab hasn't seen that write yet.
+    const otherSettle = Date.now();
+    local[STORAGE_KEYS.threadPlaces] = { since, open: { "chat:c4": since + 1_000 }, settled: { "chat:c5": otherSettle } };
+
+    rowEl("chat:c4").querySelector<HTMLButtonElement>(".cub-thread-settle")!.click();
+    await settle();
+    const stored = local[STORAGE_KEYS.threadPlaces] as { open: Record<string, number>; settled: Record<string, number> };
+    expect(stored.open).toEqual({});
+    expect(Object.keys(stored.settled).sort()).toEqual(["chat:c4", "chat:c5"]);
+    expect(stored.settled["chat:c5"]).toBe(otherSettle);
+  });
+
+  it("places rows even when the stored places can't be read", async () => {
+    vi.spyOn(chrome.storage.local, "get").mockRejectedValue(new Error("read failed"));
+    mountSidebar(read([{ key: "chat:w", status: "running" }, ...ten.slice(0, 3)]));
+    syncThreadSidebar({ threadSidebar: true });
+    await settle();
+    expect(placementOf("chat:c0")).toBe("settled");
+    expect(placementOf("chat:w")).toBe("live");
   });
 
   it("opens threads that changed since, even on another device while the tab was shut", async () => {
