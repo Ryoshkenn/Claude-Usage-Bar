@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "час скидання невідомий"
   },
+  "resetsInM": {
+    "message": "скидання через $1 хв"
+  },
+  "resetsInHM": {
+    "message": "скидання через $1 год $2 хв"
+  },
+  "resetsInH": {
+    "message": "скидання через $1 год"
+  },
+  "resetsInDH": {
+    "message": "скидання через $1 д $2 год"
+  },
+  "resetsInD": {
+    "message": "скидання через $1 д"
+  },
   "weeklyLearningAria": {
     "message": "Оцінка тижневого використання ще навчається"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "రీసెట్ తెలియదు"
   },
+  "resetsInM": {
+    "message": "$1 ని.లో రీసెట్"
+  },
+  "resetsInHM": {
+    "message": "$1 గం. $2 ని.లో రీసెట్"
+  },
+  "resetsInH": {
+    "message": "$1 గం.లో రీసెట్"
+  },
+  "resetsInDH": {
+    "message": "$1 రో. $2 గం.లో రీసెట్"
+  },
+  "resetsInD": {
+    "message": "$1 రో.లో రీసెట్"
+  },
   "weeklyLearningAria": {
     "message": "వారపు వినియోగ అంచనా ఇంకా నేర్చుకుంటోంది"
   },

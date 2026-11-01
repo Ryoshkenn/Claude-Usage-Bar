@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "reset onbekend"
   },
+  "resetsInM": {
+    "message": "reset over $1m"
+  },
+  "resetsInHM": {
+    "message": "reset over $1u $2m"
+  },
+  "resetsInH": {
+    "message": "reset over $1u"
+  },
+  "resetsInDH": {
+    "message": "reset over $1d $2u"
+  },
+  "resetsInD": {
+    "message": "reset over $1d"
+  },
   "weeklyLearningAria": {
     "message": "Schatting van wekelijks gebruik is nog aan het leren"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "रीसेट पता नइखे"
   },
+  "resetsInM": {
+    "message": "$1 मि॰ में रीसेट होई"
+  },
+  "resetsInHM": {
+    "message": "$1 घं॰ $2 मि॰ में रीसेट होई"
+  },
+  "resetsInH": {
+    "message": "$1 घं॰ में रीसेट होई"
+  },
+  "resetsInDH": {
+    "message": "$1 दिन $2 घं॰ में रीसेट होई"
+  },
+  "resetsInD": {
+    "message": "$1 दिन में रीसेट होई"
+  },
   "weeklyLearningAria": {
     "message": "साप्ताहिक उपयोग के अनुमान अभी सीख रहल बा"
   },

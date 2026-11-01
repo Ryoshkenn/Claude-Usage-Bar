@@ -11,6 +11,7 @@ import type {
 } from "../shared/types";
 import { STORAGE_KEYS } from "../shared/constants";
 import { t } from "../shared/i18n";
+import { formatResetsIn } from "../shared/resetText";
 
 const STORE_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
@@ -462,7 +463,10 @@ export const ContentApp = ({
   }, [canOpenBreakdown]);
 
   const weeklyAllModelsPercentage = realUsageSnapshot?.weeklyAllModelsPercentageUsed;
-  const weeklyAllModelsResetText = realUsageSnapshot?.weeklyAllModelsResetText;
+  const weeklyAllModelsResetText = formatResetsIn(
+    realUsageSnapshot?.weeklyAllModelsResetsAt,
+    realUsageSnapshot?.weeklyAllModelsResetText,
+  );
   // Per-model weekly limits (e.g. Sonnet/Opus on Max plans). Empty on plans that
   // don't expose them, so the rows simply don't render.
   const weeklyScopedLimits = realUsageSnapshot?.weeklyScopedLimits ?? [];
@@ -471,7 +475,8 @@ export const ContentApp = ({
     sessionPercentage === 0 && typeof realUsageSnapshot?.sessionResetsAt !== "number";
   const sessionResetText = sessionHasNotStarted
     ? t("sessionNotUsedYet", "not used yet")
-    : realUsageSnapshot?.resetText ?? t("resetUnknown", "reset unknown");
+    : formatResetsIn(realUsageSnapshot?.sessionResetsAt, realUsageSnapshot?.resetText) ??
+      t("resetUnknown", "reset unknown");
 
   // Prefer the model-aware projection (so switching to a cheaper model lengthens
   // the estimate); fall back to the blended drain-rate projection until enough

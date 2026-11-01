@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "ripristino sconosciuto"
   },
+  "resetsInM": {
+    "message": "ripristino tra $1 min"
+  },
+  "resetsInHM": {
+    "message": "ripristino tra $1 h $2 min"
+  },
+  "resetsInH": {
+    "message": "ripristino tra $1 h"
+  },
+  "resetsInDH": {
+    "message": "ripristino tra $1 g $2 h"
+  },
+  "resetsInD": {
+    "message": "ripristino tra $1 g"
+  },
   "weeklyLearningAria": {
     "message": "La stima d'uso settimanale sta ancora imparando"
   },

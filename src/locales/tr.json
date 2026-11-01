@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "sıfırlama bilinmiyor"
   },
+  "resetsInM": {
+    "message": "$1 dk sonra sıfırlanır"
+  },
+  "resetsInHM": {
+    "message": "$1 sa $2 dk sonra sıfırlanır"
+  },
+  "resetsInH": {
+    "message": "$1 sa sonra sıfırlanır"
+  },
+  "resetsInDH": {
+    "message": "$1 g $2 sa sonra sıfırlanır"
+  },
+  "resetsInD": {
+    "message": "$1 g sonra sıfırlanır"
+  },
   "weeklyLearningAria": {
     "message": "Haftalık kullanım tahmini hâlâ öğreniyor"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "ba a san sake saiti ba"
   },
+  "resetsInM": {
+    "message": "sake saiti nan da $1m"
+  },
+  "resetsInHM": {
+    "message": "sake saiti nan da $1h $2m"
+  },
+  "resetsInH": {
+    "message": "sake saiti nan da $1h"
+  },
+  "resetsInDH": {
+    "message": "sake saiti nan da $1d $2h"
+  },
+  "resetsInD": {
+    "message": "sake saiti nan da $1d"
+  },
   "weeklyLearningAria": {
     "message": "Hasashen amfanin mako-mako yana kan koyo"
   },

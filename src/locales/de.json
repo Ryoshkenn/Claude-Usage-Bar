@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "Zurücksetzen unbekannt"
   },
+  "resetsInM": {
+    "message": "zurücksetzen in $1 Min."
+  },
+  "resetsInHM": {
+    "message": "zurücksetzen in $1 Std. $2 Min."
+  },
+  "resetsInH": {
+    "message": "zurücksetzen in $1 Std."
+  },
+  "resetsInDH": {
+    "message": "zurücksetzen in $1 T. $2 Std."
+  },
+  "resetsInD": {
+    "message": "zurücksetzen in $1 T."
+  },
   "weeklyLearningAria": {
     "message": "Wöchentliche Nutzungsschätzung lernt noch"
   },

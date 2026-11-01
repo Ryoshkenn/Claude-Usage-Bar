@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "nollaus tuntematon"
   },
+  "resetsInM": {
+    "message": "nollautuu $1 min kuluttua"
+  },
+  "resetsInHM": {
+    "message": "nollautuu $1 t $2 min kuluttua"
+  },
+  "resetsInH": {
+    "message": "nollautuu $1 t kuluttua"
+  },
+  "resetsInDH": {
+    "message": "nollautuu $1 pv $2 t kuluttua"
+  },
+  "resetsInD": {
+    "message": "nollautuu $1 pv kuluttua"
+  },
   "weeklyLearningAria": {
     "message": "Viikoittaisen käytön arvio opettelee vielä"
   },

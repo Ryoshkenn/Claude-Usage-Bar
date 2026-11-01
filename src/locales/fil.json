@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "hindi alam ang reset"
   },
+  "resetsInM": {
+    "message": "magre-reset sa $1m"
+  },
+  "resetsInHM": {
+    "message": "magre-reset sa $1h $2m"
+  },
+  "resetsInH": {
+    "message": "magre-reset sa $1h"
+  },
+  "resetsInDH": {
+    "message": "magre-reset sa $1d $2h"
+  },
+  "resetsInD": {
+    "message": "magre-reset sa $1d"
+  },
   "weeklyLearningAria": {
     "message": "Pinag-aaralan pa ang lingguhang tantya ng paggamit"
   },

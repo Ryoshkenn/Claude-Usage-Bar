@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "сброс неизвестен"
   },
+  "resetsInM": {
+    "message": "сброс через $1 мин"
+  },
+  "resetsInHM": {
+    "message": "сброс через $1 ч $2 мин"
+  },
+  "resetsInH": {
+    "message": "сброс через $1 ч"
+  },
+  "resetsInDH": {
+    "message": "сброс через $1 д $2 ч"
+  },
+  "resetsInD": {
+    "message": "сброс через $1 д"
+  },
   "weeklyLearningAria": {
     "message": "Недельный прогноз ещё обучается"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "റീസെറ്റ് അജ്ഞാതം"
   },
+  "resetsInM": {
+    "message": "$1 മി. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInHM": {
+    "message": "$1 മ. $2 മി. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInH": {
+    "message": "$1 മ. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInDH": {
+    "message": "$1 ദി. $2 മ. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
+  "resetsInD": {
+    "message": "$1 ദി. കഴിഞ്ഞ് റീസെറ്റ്"
+  },
   "weeklyLearningAria": {
     "message": "പ്രതിവാര ഉപയോഗ കണക്ക് ഇപ്പോഴും പഠിച്ചുകൊണ്ടിരിക്കുകയാണ്"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "nullstilling ukjent"
   },
+  "resetsInM": {
+    "message": "nullstilles om $1 min"
+  },
+  "resetsInHM": {
+    "message": "nullstilles om $1 t $2 min"
+  },
+  "resetsInH": {
+    "message": "nullstilles om $1 t"
+  },
+  "resetsInDH": {
+    "message": "nullstilles om $1 d $2 t"
+  },
+  "resetsInD": {
+    "message": "nullstilles om $1 d"
+  },
   "weeklyLearningAria": {
     "message": "Estimat for ukentlig bruk lærer fortsatt"
   },

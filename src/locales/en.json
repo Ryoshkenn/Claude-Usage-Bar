@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "reset unknown"
   },
+  "resetsInM": {
+    "message": "resets in $1m"
+  },
+  "resetsInHM": {
+    "message": "resets in $1h $2m"
+  },
+  "resetsInH": {
+    "message": "resets in $1h"
+  },
+  "resetsInDH": {
+    "message": "resets in $1d $2h"
+  },
+  "resetsInD": {
+    "message": "resets in $1d"
+  },
   "weeklyLearningAria": {
     "message": "Weekly usage estimate is still learning"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "リセット時刻不明"
   },
+  "resetsInM": {
+    "message": "$1分後にリセット"
+  },
+  "resetsInHM": {
+    "message": "$1時間$2分後にリセット"
+  },
+  "resetsInH": {
+    "message": "$1時間後にリセット"
+  },
+  "resetsInDH": {
+    "message": "$1日$2時間後にリセット"
+  },
+  "resetsInD": {
+    "message": "$1日後にリセット"
+  },
   "weeklyLearningAria": {
     "message": "週間使用量の推定を学習中です"
   },

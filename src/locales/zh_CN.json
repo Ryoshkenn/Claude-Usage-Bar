@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "重置时间未知"
   },
+  "resetsInM": {
+    "message": "$1分钟后重置"
+  },
+  "resetsInHM": {
+    "message": "$1小时$2分钟后重置"
+  },
+  "resetsInH": {
+    "message": "$1小时后重置"
+  },
+  "resetsInDH": {
+    "message": "$1天$2小时后重置"
+  },
+  "resetsInD": {
+    "message": "$1天后重置"
+  },
   "weeklyLearningAria": {
     "message": "每周用量预估仍在学习中"
   },

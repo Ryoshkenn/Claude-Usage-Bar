@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "muda wa kuwekwa upya haujulikani"
   },
+  "resetsInM": {
+    "message": "itawekwa upya baada ya dak $1"
+  },
+  "resetsInHM": {
+    "message": "itawekwa upya baada ya saa $1 dak $2"
+  },
+  "resetsInH": {
+    "message": "itawekwa upya baada ya saa $1"
+  },
+  "resetsInDH": {
+    "message": "itawekwa upya baada ya siku $1 saa $2"
+  },
+  "resetsInD": {
+    "message": "itawekwa upya baada ya siku $1"
+  },
   "weeklyLearningAria": {
     "message": "Makadirio ya matumizi ya kila wiki bado yanajifunza"
   },

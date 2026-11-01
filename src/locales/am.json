@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "ዳግም ማስጀመሪያ አይታወቅም"
   },
+  "resetsInM": {
+    "message": "በ$1 ደቂቃ ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInHM": {
+    "message": "በ$1 ሰዓት $2 ደቂቃ ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInH": {
+    "message": "በ$1 ሰዓት ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInDH": {
+    "message": "በ$1 ቀን $2 ሰዓት ውስጥ ዳግም ይጀምራል"
+  },
+  "resetsInD": {
+    "message": "በ$1 ቀን ውስጥ ዳግም ይጀምራል"
+  },
   "weeklyLearningAria": {
     "message": "ሳምንታዊ የአጠቃቀም ግምት ገና በመማር ላይ ነው"
   },

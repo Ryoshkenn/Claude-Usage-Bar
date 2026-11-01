@@ -131,7 +131,8 @@ claude.ai tab; the worker opens that area to content scripts with `setAccessLeve
 in `chrome.storage.local` (`threadPlaces`: `since` — when the view was turned on, the baseline every
 thread counts as settled at — plus `open` and hand-`settled` maps of row key → time). Turning the view
 off removes it, so turning it on again starts from everything settled. Nothing opens until it has
-loaded, or a page load would judge activity against a made-up baseline. Those row keys are the only
+loaded, or a page load would judge activity against a made-up baseline. Apart from Claude's language tag
+(`claudeLanguage`, e.g. "fr-FR") and the user's own clipboard prompts, those row keys are the only
 non-numeric thing the extension stores. There is deliberately no "task finished" banner — it was
 tried and removed.
 

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "không rõ lúc đặt lại"
   },
+  "resetsInM": {
+    "message": "đặt lại sau $1p"
+  },
+  "resetsInHM": {
+    "message": "đặt lại sau $1g $2p"
+  },
+  "resetsInH": {
+    "message": "đặt lại sau $1g"
+  },
+  "resetsInDH": {
+    "message": "đặt lại sau $1n $2g"
+  },
+  "resetsInD": {
+    "message": "đặt lại sau $1n"
+  },
   "weeklyLearningAria": {
     "message": "Ước tính mức dùng hàng tuần vẫn đang học"
   },

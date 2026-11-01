@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "ไม่ทราบเวลารีเซ็ต"
   },
+  "resetsInM": {
+    "message": "รีเซ็ตใน $1 นาที"
+  },
+  "resetsInHM": {
+    "message": "รีเซ็ตใน $1 ชม. $2 นาที"
+  },
+  "resetsInH": {
+    "message": "รีเซ็ตใน $1 ชม."
+  },
+  "resetsInDH": {
+    "message": "รีเซ็ตใน $1 วัน $2 ชม."
+  },
+  "resetsInD": {
+    "message": "รีเซ็ตใน $1 วัน"
+  },
   "weeklyLearningAria": {
     "message": "กำลังเรียนรู้การประเมินการใช้งานรายสัปดาห์"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "réinitialisation inconnue"
   },
+  "resetsInM": {
+    "message": "réinitialisation dans $1 min"
+  },
+  "resetsInHM": {
+    "message": "réinitialisation dans $1 h $2 min"
+  },
+  "resetsInH": {
+    "message": "réinitialisation dans $1 h"
+  },
+  "resetsInDH": {
+    "message": "réinitialisation dans $1 j $2 h"
+  },
+  "resetsInD": {
+    "message": "réinitialisation dans $1 j"
+  },
   "weeklyLearningAria": {
     "message": "L'estimation d'utilisation hebdomadaire est en cours d'apprentissage"
   },

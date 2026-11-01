@@ -14,6 +14,7 @@ import {
 } from "../shared/usageChart";
 import type { ApiUsageResponse, StorageShape } from "../shared/types";
 import { setLanguage, t } from "../shared/i18n";
+import { formatResetsIn } from "../shared/resetText";
 import "./popup.css";
 
 const STORE_URL =
@@ -267,12 +268,14 @@ export const Popup = () => {
             <div className="cub-lim">
               <span className="cub-k">{t("fiveHour", "5-hour")}</span>
               <span className="cub-v">{formatPercentage(snapshot?.percentageUsed)}</span>
-              <span className="cub-r">{snapshot?.resetText ?? "—"}</span>
+              <span className="cub-r">{formatResetsIn(snapshot?.sessionResetsAt, snapshot?.resetText) ?? "—"}</span>
             </div>
             <div className="cub-lim">
               <span className="cub-k">{t("weekly", "Weekly")}</span>
               <span className="cub-v">{formatPercentage(snapshot?.weeklyAllModelsPercentageUsed)}</span>
-              <span className="cub-r">{snapshot?.weeklyAllModelsResetText ?? "—"}</span>
+              <span className="cub-r">
+                {formatResetsIn(snapshot?.weeklyAllModelsResetsAt, snapshot?.weeklyAllModelsResetText) ?? "—"}
+              </span>
             </div>
           </div>
           <div className="cub-icons">

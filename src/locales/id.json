@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "reset tidak diketahui"
   },
+  "resetsInM": {
+    "message": "reset dalam $1 mnt"
+  },
+  "resetsInHM": {
+    "message": "reset dalam $1 j $2 mnt"
+  },
+  "resetsInH": {
+    "message": "reset dalam $1 j"
+  },
+  "resetsInDH": {
+    "message": "reset dalam $1 hr $2 j"
+  },
+  "resetsInD": {
+    "message": "reset dalam $1 hr"
+  },
   "weeklyLearningAria": {
     "message": "Estimasi pemakaian mingguan masih mempelajari pola"
   },

@@ -80,6 +80,21 @@
   "resetUnknown": {
     "message": "redefinição desconhecida"
   },
+  "resetsInM": {
+    "message": "redefine em $1 min"
+  },
+  "resetsInHM": {
+    "message": "redefine em $1 h $2 min"
+  },
+  "resetsInH": {
+    "message": "redefine em $1 h"
+  },
+  "resetsInDH": {
+    "message": "redefine em $1 d $2 h"
+  },
+  "resetsInD": {
+    "message": "redefine em $1 d"
+  },
   "weeklyLearningAria": {
     "message": "A estimativa de uso semanal ainda está aprendendo"
   },
