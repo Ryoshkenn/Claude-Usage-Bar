@@ -16,9 +16,12 @@ import { formatResetsIn } from "../shared/resetText";
 const STORE_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
 import {
+  computeEvenPacePercent,
   computeSessionProjection,
   computeWeeklyProjection,
   formatEta,
+  SESSION_WINDOW_MS,
+  WEEKLY_WINDOW_MS,
 } from "../shared/usageProjection";
 import {
   computeModelAwareSessionProjection,
@@ -549,6 +552,14 @@ export const ContentApp = ({
           paceFormat === "messages" ? "percent" : paceFormat,
           nowMs,
         );
+  // Where an even spend would put you by now. Only the 5-hour and all-models
+  // weekly windows get one; per-model rows (Fable etc.) don't.
+  const sessionEvenPace = showPace
+    ? computeEvenPacePercent(realUsageSnapshot?.sessionResetsAt, SESSION_WINDOW_MS, nowMs)
+    : null;
+  const weeklyEvenPace = showPace
+    ? computeEvenPacePercent(realUsageSnapshot?.weeklyAllModelsResetsAt, WEEKLY_WINDOW_MS, nowMs)
+    : null;
   const showWeeklyLearningNotice =
     settings.weeklyMetricsEnabled !== false &&
     weeklyUsageMetrics?.confidence !== "ready";
@@ -636,6 +647,9 @@ export const ContentApp = ({
             </span>
             <span className="cub-usage-track">
               <span style={{ width: `${sessionPercentage ?? 0}%` }} />
+              {sessionEvenPace !== null && (
+                <span className="cub-usage-pace" aria-hidden="true" style={{ left: `${sessionEvenPace}%` }} />
+              )}
             </span>
             <span className="cub-usage-row cub-usage-row--stacked">
               <span className="cub-usage-row-label">
@@ -674,6 +688,9 @@ export const ContentApp = ({
             </span>
             <span className="cub-usage-track">
               <span style={{ width: `${weeklyAllModelsPercentage ?? 0}%` }} />
+              {weeklyEvenPace !== null && (
+                <span className="cub-usage-pace" aria-hidden="true" style={{ left: `${weeklyEvenPace}%` }} />
+              )}
             </span>
             {weeklyScopedLimits.map((scoped) => (
               <Fragment key={scoped.modelLabel}>

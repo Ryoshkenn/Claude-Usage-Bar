@@ -488,9 +488,9 @@ button.cub-ctx-percent[data-loading="true"] {
 }
 
 .cub-usage-track {
+  position: relative;
   margin: 0 8px 5px;
   height: 4px;
-  overflow: hidden;
   border-radius: 999px;
   background: rgb(255 255 255 / 12%);
 }
@@ -498,8 +498,23 @@ button.cub-ctx-percent[data-loading="true"] {
 .cub-usage-track span {
   display: block;
   height: 100%;
+  max-width: 100%;
   border-radius: inherit;
   background: rgb(204 124 94);
+}
+
+/* Even-pace marker: where usage would be by now if spent evenly across the window. */
+.cub-usage-track .cub-usage-pace {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  height: auto;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: rgb(255 255 255);
+  box-shadow: 0 0 0 1px rgb(38 38 36 / 90%);
+  pointer-events: none;
 }
 
 .cub-token-tooltip span:first-child {
@@ -726,6 +741,11 @@ button.cub-ctx-percent[data-loading="true"] {
 
 #claude-usage-bar-root.cub-theme-light .cub-usage-track {
   background: rgb(235 233 228);
+}
+
+#claude-usage-bar-root.cub-theme-light .cub-usage-track .cub-usage-pace {
+  background: rgb(40 40 38);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 90%);
 }
 
 #claude-usage-bar-root.cub-theme-light .cub-token-tooltip span:first-child {

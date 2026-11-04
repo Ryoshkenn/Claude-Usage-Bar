@@ -195,6 +195,53 @@ describe("ContentApp", () => {
     expect(screen.getByText("3%")).toBeInTheDocument();
   });
 
+  it("marks even pace on the 5-hour and weekly tracks but not per-model rows", () => {
+    const now = Date.now();
+    render(
+      <ContentApp
+        settings={settings}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: now,
+          percentageUsed: 12,
+          // 2.5h into the 5-hour window, 3.5 days into the week: both halfway.
+          sessionResetsAt: now + 150 * 60_000,
+          weeklyAllModelsPercentageUsed: 4,
+          weeklyAllModelsResetsAt: now + 3.5 * 24 * 60 * 60_000,
+          weeklyScopedLimits: [{ modelLabel: "Fable", percentageUsed: 0, resetText: "resets in 6d" }],
+        }}
+      />,
+    );
+
+    const tracks = document.querySelectorAll(".cub-usage-track");
+    expect(tracks).toHaveLength(3);
+    const lefts = Array.from(tracks, (track) => {
+      const marker = track.querySelector<HTMLElement>(".cub-usage-pace");
+      return marker ? Math.round(parseFloat(marker.style.left)) : null;
+    });
+    expect(lefts).toEqual([50, 50, null]);
+  });
+
+  it("hides the even-pace markers when pacing is off", () => {
+    render(
+      <ContentApp
+        settings={{ ...settings, showPace: false }}
+        chatUsage={baseChatUsage}
+        realUsageSnapshot={{
+          source: "real",
+          capturedAt: Date.now(),
+          percentageUsed: 12,
+          sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+          weeklyAllModelsPercentageUsed: 4,
+          weeklyAllModelsResetsAt: Date.now() + 4 * 24 * 60 * 60_000,
+        }}
+      />,
+    );
+
+    expect(document.querySelector(".cub-usage-pace")).toBeNull();
+  });
+
   it("fills the bar from the Fable weekly-scoped limit when barMetric is weekly_fable", () => {
     render(
       <ContentApp
