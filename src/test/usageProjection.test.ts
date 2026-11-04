@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { UsageLogEntry } from "../shared/types";
 import {
+  computeEvenPacePercent,
+  SESSION_WINDOW_MS,
+  WEEKLY_WINDOW_MS,
   buildWeeklyUsageMetrics,
   computeSessionProjection,
   computeWeeklyProjection,
@@ -486,5 +489,22 @@ describe("weekly smart metrics", () => {
 
     expect(projection.status).toBe("projected_empty");
     expect(projection.etaMs).toBe(new Date("2026-06-02T11:20:00").getTime());
+  });
+});
+
+describe("computeEvenPacePercent", () => {
+  const HOUR = 60 * 60_000;
+  const NOW = 1_700_000_000_000;
+
+  it("is the share of the window already elapsed", () => {
+    expect(computeEvenPacePercent(NOW + 2.5 * HOUR, SESSION_WINDOW_MS, NOW)).toBe(50);
+    expect(computeEvenPacePercent(NOW + 3.5 * 24 * HOUR, WEEKLY_WINDOW_MS, NOW)).toBe(50);
+    expect(computeEvenPacePercent(NOW + 6 * 24 * HOUR + 3 * HOUR, WEEKLY_WINDOW_MS, NOW)).toBeCloseTo(12.5);
+  });
+
+  it("clamps to the track and gives up without a reset time", () => {
+    expect(computeEvenPacePercent(NOW - HOUR, SESSION_WINDOW_MS, NOW)).toBe(100);
+    expect(computeEvenPacePercent(NOW + 6 * HOUR, SESSION_WINDOW_MS, NOW)).toBe(0);
+    expect(computeEvenPacePercent(undefined, SESSION_WINDOW_MS, NOW)).toBeNull();
   });
 });

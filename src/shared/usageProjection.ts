@@ -62,12 +62,31 @@ export const formatEta = (etaMs: number, now: number): string => {
   return `${minutes}m`;
 };
 
+export const SESSION_WINDOW_MS = 5 * 60 * 60_000;
+
+/**
+ * Where usage would sit right now if the window's allowance were spent evenly:
+ * the share of the window that has elapsed, as a percent. Halfway through a
+ * 5-hour window (2.5h in) is 50; 3.5 days into the week is 50.
+ */
+export const computeEvenPacePercent = (
+  resetsAt: number | undefined,
+  windowMs: number,
+  now: number,
+): number | null => {
+  if (typeof resetsAt !== "number" || !Number.isFinite(resetsAt) || windowMs <= 0) {
+    return null;
+  }
+  const elapsedMs = windowMs - (resetsAt - now);
+  return Math.max(0, Math.min(100, (elapsedMs / windowMs) * 100));
+};
+
 export const computeFallbackPace = (
   sessionUsedPercent: number,
   sessionResetsAt: number,
   now: number,
 ): UsageProjection => {
-  const windowDurationMs = 5 * 60 * 60_000;
+  const windowDurationMs = SESSION_WINDOW_MS;
   const timeUntilResetMs = Math.max(0, sessionResetsAt - now);
   const elapsedMs = windowDurationMs - timeUntilResetMs;
 
@@ -145,7 +164,7 @@ export const computeSessionProjection = (
   return projectUsageDepletion(sessionUsedPercent, sessionResetsAt, rate, now);
 };
 
-const WEEKLY_WINDOW_MS = 7 * 24 * 60 * 60_000;
+export const WEEKLY_WINDOW_MS = 7 * 24 * 60 * 60_000;
 const WEEK_MS = WEEKLY_WINDOW_MS;
 const MIN_WEEKLY_READY_SAMPLES = 6;
 const SMART_WEEKLY_MIN_ACTIVE_HOURS = 50;
