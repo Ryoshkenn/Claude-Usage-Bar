@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "表示中"
   },
-  "setSecSidebar": {
-    "message": "サイドバー"
-  },
   "setThreadSidebar": {
     "message": "スレッド表示"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "サイドバーをカード形式で表示します。対応が必要なスレッドを最優先に、完了分、作業中と続き、残りは「完了済み」に折りたたまれます。Code でも使え、設定の Usage Bar からいつでもオン・オフを切り替えられます。"
+  },
+  "setSecBeta": {
+    "message": "ベータ"
+  },
+  "setBetaLearnedPace": {
+    "message": "学習したペースマーカー"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "週間ペースマーカーが直線ではなく、普段Claudeを使う時間帯に沿って進みます。1週間分の学習がたまるまでは直線です。"
+  },
+  "setBetaCompact": {
+    "message": "圧縮ボタン"
+  },
+  "setBetaCompactDesc": {
+    "message": "チャットが250Kトークンを超え、キャッシュが切れると、圧縮ボタンが新しいチャットを始めるための引き継ぎ要約の依頼文を作成します。"
+  },
+  "compactButton": {
+    "message": "圧縮"
+  },
+  "compactAria": {
+    "message": "このチャットを圧縮：新しいチャット用の引き継ぎ要約を作成"
+  },
+  "compactPrompt": {
+    "message": "この会話を、新しいチャットに貼り付けられる簡潔な引き継ぎとして要約してください：目的、主な決定事項、現在の状況、未解決の質問、そして今後も必要なコードや事実。簡潔にまとめてください。"
+  },
+  "compactTooltip": {
+    "message": "キャッシュが切れたため、次のメッセージでは$1トークンすべてを通常料金で読み直します。新しいチャットに持ち込める引き継ぎ要約の依頼文を作成します。"
   }
 }

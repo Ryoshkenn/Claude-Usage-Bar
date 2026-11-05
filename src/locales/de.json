@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Geöffnet"
   },
-  "setSecSidebar": {
-    "message": "Seitenleiste"
-  },
   "setThreadSidebar": {
     "message": "Unterhaltungsansicht"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Deine Seitenleiste als Karten: Unterhaltungen, die auf dich warten, stehen ganz oben, dann fertige Aufgaben, dann noch laufende, und der Rest wird unter Erledigt eingeklappt. Sie funktioniert auch in Code und lässt sich jederzeit in den Einstellungen unter Usage Bar ein- oder ausschalten."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Gelernte Tempomarke"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Die wöchentliche Tempomarke folgt den Stunden, in denen du Claude meist nutzt, statt einer geraden Linie. Bis eine Woche gelernt ist, bleibt sie gerade."
+  },
+  "setBetaCompact": {
+    "message": "Kompakt-Schaltfläche"
+  },
+  "setBetaCompactDesc": {
+    "message": "Sobald ein Chat 250K Tokens überschreitet und sein Cache abgelaufen ist, entwirft eine Kompakt-Schaltfläche eine Bitte um eine Übergabe-Zusammenfassung für einen neuen Chat."
+  },
+  "compactButton": {
+    "message": "Kompakt"
+  },
+  "compactAria": {
+    "message": "Chat kompakt machen: Übergabe-Zusammenfassung für einen neuen Chat entwerfen"
+  },
+  "compactPrompt": {
+    "message": "Fasse dieses Gespräch als kompakte Übergabe zusammen, die ich in einen neuen Chat einfügen kann: Ziel, wichtige Entscheidungen, aktueller Stand, offene Fragen und jeglicher Code oder Fakten, die ich noch brauche. Halte es knapp."
+  },
+  "compactTooltip": {
+    "message": "Der Cache ist abgelaufen, daher liest deine nächste Nachricht alle $1 Tokens zum vollen Preis neu. Dies entwirft eine Bitte um eine Übergabe-Zusammenfassung für einen neuen Chat."
   }
 }

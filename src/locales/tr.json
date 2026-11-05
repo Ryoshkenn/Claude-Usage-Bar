@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Açık"
   },
-  "setSecSidebar": {
-    "message": "Kenar çubuğu"
-  },
   "setThreadSidebar": {
     "message": "Sohbet görünümü"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Kenar çubuğunuz kartlar halinde: önce sizi bekleyen sohbetler, ardından tamamlanan işler, sonra hâlâ çalışanlar gelir; geri kalanlar ise Kaldırılanlar altında toplanır. Code'da da çalışır ve Ayarlar'daki Usage Bar bölümünden istediğiniz zaman açıp kapatabilirsiniz."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Öğrenilmiş tempo işareti"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Haftalık tempo işareti düz bir çizgi yerine Claude'u genelde kullandığınız saatleri izler. Bir haftalık öğrenme tamamlanana kadar düz kalır."
+  },
+  "setBetaCompact": {
+    "message": "Sıkıştır düğmesi"
+  },
+  "setBetaCompactDesc": {
+    "message": "Bir sohbet 250K tokeni geçtiğinde ve önbelleğinin süresi dolduğunda, Sıkıştır düğmesi yeni bir sohbete başlamak için devir özeti isteği hazırlar."
+  },
+  "compactButton": {
+    "message": "Sıkıştır"
+  },
+  "compactAria": {
+    "message": "Bu sohbeti sıkıştır: yeni bir sohbet için devir özeti hazırla"
+  },
+  "compactPrompt": {
+    "message": "Bu konuşmayı yeni bir sohbete yapıştırabileceğim kısa bir devir notu olarak özetle: amaç, önemli kararlar, mevcut durum, açık sorular ve hâlâ ihtiyaç duyacağım tüm kod veya bilgiler. Kısa tut."
+  },
+  "compactTooltip": {
+    "message": "Önbelleğin süresi doldu, bu yüzden sonraki mesajınız $1 tokenin tamamını tam fiyattan yeniden okur. Bu, yeni bir sohbete taşıyabileceğiniz bir devir özeti isteği hazırlar."
   }
 }

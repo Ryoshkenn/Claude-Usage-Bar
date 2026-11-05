@@ -11,7 +11,7 @@ const CheckIcon = () => (
   </svg>
 );
 
-const insertIntoComposer = (text: string) => {
+export const insertIntoComposer = (text: string) => {
   const editable = document.querySelector<HTMLElement>('[contenteditable="true"][role="textbox"]');
   if (editable) {
     editable.focus();

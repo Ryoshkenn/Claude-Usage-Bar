@@ -2,6 +2,18 @@
 
 All notable changes since the 1.0.0 Chrome Web Store release are documented here.
 
+## [Unreleased]
+
+### Added
+- A thin marker on the 5-hour and weekly tracks shows where an even pace would put you by now. It follows the Pacing switch.
+- The usage bar breathes slowly once it reaches 80%, so getting close to a limit is noticed without reading the number. It stops at 100%, and with reduced motion on.
+- A Beta section in Usage Bar settings. Beta features are off until you turn them on there:
+  - Learned pace marker: the weekly marker follows the hours you usually use Claude instead of a straight line, once a week of learning is in.
+  - Compact button: once a chat passes 250K tokens and its cache has expired, a Compact chip beside the context ring drafts a request for a handoff summary to carry into a new chat.
+
+### Changed
+- The thread view switch moved from Sidebar to Beta. The tour and the one-time card still offer it.
+
 ## [1.7.0] - 2026-10-31
 
 ### Added

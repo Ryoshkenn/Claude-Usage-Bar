@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CacheTimer, ContentApp } from "../content/ContentApp";
 import type { ChatUsage, Settings } from "../shared/types";
@@ -28,6 +28,8 @@ const settings: Settings = {
   resetBannerScope: "claude",
   threadSidebar: false,
   threadSidebarSort: "edited",
+  betaLearnedPace: false,
+  betaCompactButton: false,
 };
 
 const hoverContext = () => {
@@ -240,6 +242,65 @@ describe("ContentApp", () => {
     );
 
     expect(document.querySelector(".cub-usage-pace")).toBeNull();
+  });
+
+  it("breathes the bar from 80% until the limit is hit", () => {
+    const snapshot = (percentageUsed: number) => ({
+      source: "real" as const,
+      capturedAt: Date.now(),
+      percentageUsed,
+      sessionResetsAt: Date.now() + 2 * 60 * 60_000,
+    });
+    const nearLimit = () => document.querySelector(".cub-meter")?.getAttribute("data-near-limit");
+
+    const { rerender } = render(
+      <ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot(79)} />,
+    );
+    expect(nearLimit()).toBeNull();
+    rerender(<ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot(80)} />);
+    expect(nearLimit()).toBe("true");
+    rerender(<ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot(95)} />);
+    expect(nearLimit()).toBe("true");
+    rerender(<ContentApp settings={settings} chatUsage={baseChatUsage} realUsageSnapshot={snapshot(100)} />);
+    expect(nearLimit()).toBeNull();
+  });
+
+  it("offers Compact (beta) only past 250K tokens once the cache has expired", () => {
+    const bigChat = (cacheExpiresAt: number | undefined, tokens = 300_000): ChatUsage => ({
+      ...baseChatUsage,
+      estimatedTokens: tokens,
+      currentContextTokens: tokens,
+      cacheExpiresAt,
+    });
+    const compact = () => screen.queryByRole("button", { name: /Compact this chat/ });
+    const beta = { ...settings, betaCompactButton: true };
+
+    const { rerender } = render(<ContentApp settings={beta} chatUsage={bigChat(Date.now() - 1_000)} />);
+    expect(compact()).toBeInTheDocument();
+
+    rerender(<ContentApp settings={beta} chatUsage={bigChat(Date.now() + 60_000)} />);
+    expect(compact()).toBeNull();
+    rerender(<ContentApp settings={beta} chatUsage={bigChat(Date.now() - 1_000, 200_000)} />);
+    expect(compact()).toBeNull();
+    rerender(<ContentApp settings={beta} chatUsage={bigChat(undefined)} />);
+    expect(compact()).toBeNull();
+    rerender(<ContentApp settings={settings} chatUsage={bigChat(Date.now() - 1_000)} />);
+    expect(compact()).toBeNull();
+  });
+
+  it("shows Compact when the cache lapses while the chat is open", () => {
+    vi.useFakeTimers();
+    const chat: ChatUsage = {
+      ...baseChatUsage,
+      currentContextTokens: 300_000,
+      cacheExpiresAt: Date.now() + 30_000,
+    };
+    render(<ContentApp settings={{ ...settings, betaCompactButton: true }} chatUsage={chat} />);
+    expect(screen.queryByRole("button", { name: /Compact this chat/ })).toBeNull();
+    act(() => {
+      vi.advanceTimersByTime(31_000);
+    });
+    expect(screen.getByRole("button", { name: /Compact this chat/ })).toBeInTheDocument();
   });
 
   it("fills the bar from the Fable weekly-scoped limit when barMetric is weekly_fable", () => {

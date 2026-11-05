@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Öppen"
   },
-  "setSecSidebar": {
-    "message": "Sidopanel"
-  },
   "setThreadSidebar": {
     "message": "Trådvy"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Ditt sidofält som kort: trådar som behöver dig kommer först, sedan klart arbete, därefter arbete som fortfarande pågår, och resten fälls in under Undanlagda. Den fungerar även i Code, och du kan slå på eller av den när som helst i Inställningar under Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Inlärd tempomarkering"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Den veckovisa tempomarkeringen följer de timmar du brukar använda Claude i stället för en rak linje. Den är rak tills en vecka har lärts in."
+  },
+  "setBetaCompact": {
+    "message": "Komprimera-knapp"
+  },
+  "setBetaCompactDesc": {
+    "message": "När en chatt passerar 250K tokens och dess cache har gått ut skriver en Komprimera-knapp en begäran om en överlämningssammanfattning att starta en ny chatt med."
+  },
+  "compactButton": {
+    "message": "Komprimera"
+  },
+  "compactAria": {
+    "message": "Komprimera den här chatten: skriv en överlämningssammanfattning för en ny chatt"
+  },
+  "compactPrompt": {
+    "message": "Sammanfatta den här konversationen som en kompakt överlämning jag kan klistra in i en ny chatt: målet, viktiga beslut, nuvarande läge, öppna frågor och all kod eller fakta jag fortfarande behöver. Håll det kortfattat."
+  },
+  "compactTooltip": {
+    "message": "Cachen har gått ut, så ditt nästa meddelande läser om alla $1 tokens till fullt pris. Detta skriver en begäran om en överlämningssammanfattning att ta med till en ny chatt."
   }
 }

@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "열림"
   },
-  "setSecSidebar": {
-    "message": "사이드바"
-  },
   "setThreadSidebar": {
     "message": "스레드 보기"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "사이드바가 카드 형태로 표시됩니다. 확인이 필요한 스레드가 맨 먼저 오고, 완료된 작업과 작업 중인 항목이 이어지며, 나머지는 완료됨 아래로 접힙니다. Code에서도 작동하며, 설정의 Usage Bar에서 언제든 켜거나 끌 수 있습니다."
+  },
+  "setSecBeta": {
+    "message": "베타"
+  },
+  "setBetaLearnedPace": {
+    "message": "학습된 페이스 표시"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "주간 페이스 표시가 직선 대신 평소 Claude를 사용하는 시간대를 따라갑니다. 일주일치 학습이 쌓일 때까지는 직선입니다."
+  },
+  "setBetaCompact": {
+    "message": "압축 버튼"
+  },
+  "setBetaCompactDesc": {
+    "message": "채팅이 250K 토큰을 넘고 캐시가 만료되면, 압축 버튼이 새 채팅을 시작할 인계 요약 요청을 작성합니다."
+  },
+  "compactButton": {
+    "message": "압축"
+  },
+  "compactAria": {
+    "message": "이 채팅 압축: 새 채팅용 인계 요약 작성"
+  },
+  "compactPrompt": {
+    "message": "이 대화를 새 채팅에 붙여넣을 수 있는 간결한 인계 요약으로 정리해 줘: 목표, 주요 결정, 현재 상태, 남은 질문, 그리고 앞으로도 필요한 코드나 사실. 간결하게."
+  },
+  "compactTooltip": {
+    "message": "캐시가 만료되어 다음 메시지는 $1 토큰 전체를 정가로 다시 읽습니다. 새 채팅으로 가져갈 인계 요약 요청을 작성합니다."
   }
 }

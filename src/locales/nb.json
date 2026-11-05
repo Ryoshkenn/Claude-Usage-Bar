@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Åpen"
   },
-  "setSecSidebar": {
-    "message": "Sidefelt"
-  },
   "setThreadSidebar": {
     "message": "Trådvisning"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Sidefeltet ditt som kort: tråder som venter på deg kommer først, deretter ferdig arbeid, så arbeid som fortsatt kjører, og resten samles under Lagret. Det fungerer også i Code, og du kan slå det av eller på når som helst i innstillingene under Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Lært tempomarkør"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Den ukentlige tempomarkøren følger timene du vanligvis bruker Claude i stedet for en rett linje. Den er rett til en uke er lært."
+  },
+  "setBetaCompact": {
+    "message": "Komprimer-knapp"
+  },
+  "setBetaCompactDesc": {
+    "message": "Når en chat passerer 250K tokens og hurtigbufferen har utløpt, skriver en Komprimer-knapp en forespørsel om et overleveringssammendrag å starte en ny chat med."
+  },
+  "compactButton": {
+    "message": "Komprimer"
+  },
+  "compactAria": {
+    "message": "Komprimer denne chatten: skriv et overleveringssammendrag for en ny chat"
+  },
+  "compactPrompt": {
+    "message": "Oppsummer denne samtalen som en kompakt overlevering jeg kan lime inn i en ny chat: målet, viktige beslutninger, nåværende status, åpne spørsmål og all kode eller fakta jeg fortsatt trenger. Hold det kort."
+  },
+  "compactTooltip": {
+    "message": "Hurtigbufferen har utløpt, så neste melding leser alle $1 tokens på nytt til full pris. Dette skriver en forespørsel om et overleveringssammendrag du kan ta med til en ny chat."
   }
 }

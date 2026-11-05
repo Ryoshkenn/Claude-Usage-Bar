@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Đang mở"
   },
-  "setSecSidebar": {
-    "message": "Thanh bên"
-  },
   "setThreadSidebar": {
     "message": "Chế độ xem luồng"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Thanh bên dưới dạng thẻ: các luồng cần bạn phản hồi đứng đầu, tiếp đến là việc đã xong, việc đang xử lý, và phần còn lại thu gọn vào mục Đã xếp gọn. Tính năng này cũng hoạt động trong Code, và bạn có thể bật hoặc tắt bất cứ lúc nào trong Cài đặt tại mục Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Mốc nhịp độ đã học"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Mốc nhịp độ hằng tuần đi theo những giờ bạn thường dùng Claude thay vì một đường thẳng. Vẫn là đường thẳng cho đến khi học đủ một tuần."
+  },
+  "setBetaCompact": {
+    "message": "Nút Thu gọn"
+  },
+  "setBetaCompactDesc": {
+    "message": "Khi một cuộc trò chuyện vượt 250K token và bộ nhớ đệm đã hết hạn, nút Thu gọn sẽ soạn yêu cầu tóm tắt bàn giao để bắt đầu cuộc trò chuyện mới."
+  },
+  "compactButton": {
+    "message": "Thu gọn"
+  },
+  "compactAria": {
+    "message": "Thu gọn cuộc trò chuyện: soạn bản tóm tắt bàn giao cho cuộc trò chuyện mới"
+  },
+  "compactPrompt": {
+    "message": "Hãy tóm tắt cuộc trò chuyện này thành một bản bàn giao ngắn gọn để tôi dán vào cuộc trò chuyện mới: mục tiêu, các quyết định chính, tình trạng hiện tại, câu hỏi còn mở và mọi đoạn mã hay dữ kiện tôi vẫn cần. Giữ ngắn gọn."
+  },
+  "compactTooltip": {
+    "message": "Bộ nhớ đệm đã hết hạn nên tin nhắn tiếp theo sẽ đọc lại toàn bộ $1 token với giá đầy đủ. Thao tác này soạn yêu cầu tóm tắt bàn giao để mang sang cuộc trò chuyện mới."
   }
 }

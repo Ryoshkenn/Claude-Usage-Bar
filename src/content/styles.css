@@ -108,6 +108,28 @@ body.cub-tour-bar-open #claude-usage-bar-root {
   background: linear-gradient(90deg, rgb(204 124 94 / 35%) 0%, rgb(204 124 94) 100%);
 }
 
+/* Near the limit (80–99%) the fill breathes: a slow, calm fade in and out. */
+.cub-meter[data-near-limit="true"] > .cub-meter-fill {
+  animation: cub-meter-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes cub-meter-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cub-meter[data-near-limit="true"] > .cub-meter-fill {
+    animation: none;
+  }
+}
+
 /* ── Bar cell (bar + optional inline label) ───────────────── */
 
 .cub-bar-cell {
@@ -188,6 +210,25 @@ button.cub-ctx-percent:focus-visible {
   background: rgb(255 255 255 / 8%);
   color: rgb(245 245 241);
   outline: none;
+}
+
+/* Beta compact button: same chip as the context percent, in the accent color. */
+button.cub-ctx-percent.cub-compact-btn {
+  color: rgb(217 119 87);
+}
+
+button.cub-ctx-percent.cub-compact-btn:hover,
+button.cub-ctx-percent.cub-compact-btn:focus-visible {
+  color: rgb(232 140 110);
+}
+
+.cub-compact-btn .cub-token-tooltip {
+  width: 260px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  white-space: normal;
 }
 
 /* Ring display: same 24px button, square so the hover chip stays a tile. */
@@ -681,6 +722,15 @@ button.cub-ctx-percent[data-loading="true"] {
 
 #claude-usage-bar-root.cub-theme-light button.cub-ctx-percent {
   color: rgb(80 78 72);
+}
+
+#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent.cub-compact-btn {
+  color: rgb(181 85 52);
+}
+
+#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent.cub-compact-btn:hover,
+#claude-usage-bar-root.cub-theme-light button.cub-ctx-percent.cub-compact-btn:focus-visible {
+  color: rgb(150 66 38);
 }
 
 #claude-usage-bar-root.cub-theme-light button.cub-ctx-percent:hover,

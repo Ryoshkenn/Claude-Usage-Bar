@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Open"
   },
-  "setSecSidebar": {
-    "message": "Sidebar"
-  },
   "setThreadSidebar": {
     "message": "Thread view"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Your sidebar as cards: threads that need you come first, then finished work, then work still running, and the rest fold under Settled. It works in Code too, and you can turn it on or off any time in Settings under Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Learned pace marker"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "The weekly pace marker follows the hours you usually use Claude instead of a straight line. Uses a straight line until a week of learning is in."
+  },
+  "setBetaCompact": {
+    "message": "Compact button"
+  },
+  "setBetaCompactDesc": {
+    "message": "Once a chat passes 250K tokens and its cache has expired, a Compact button drafts a request for a handoff summary to start a new chat with."
+  },
+  "compactButton": {
+    "message": "Compact"
+  },
+  "compactAria": {
+    "message": "Compact this chat: draft a handoff summary for a new chat"
+  },
+  "compactPrompt": {
+    "message": "Summarize this conversation as a compact handoff I can paste into a new chat: the goal, key decisions, current state, open questions, and any code or facts I'll still need. Keep it concise."
+  },
+  "compactTooltip": {
+    "message": "The cache has expired, so your next message re-reads all $1 tokens at full cost. This drafts a request for a handoff summary you can carry into a new chat."
   }
 }

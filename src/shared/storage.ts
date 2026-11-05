@@ -92,6 +92,9 @@ export const DEFAULT_SETTINGS: Settings = {
   resetBannerScope: "claude",
   threadSidebar: false,
   threadSidebarSort: "edited",
+  // Beta features are always off until turned on under Settings → Beta.
+  betaLearnedPace: false,
+  betaCompactButton: false,
 };
 
 // Rewrite settings persisted by older versions onto the current schema. The
