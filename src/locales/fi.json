@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Avoinna"
   },
-  "setSecSidebar": {
-    "message": "Sivupalkki"
-  },
   "setThreadSidebar": {
     "message": "Ketjunäkymä"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Sivupalkkisi kortteina: huomiotasi vaativat ketjut näkyvät ensin, sitten valmiit, sitten käynnissä olevat ja loput taittuvat Kuitatut-ryhmään. Se toimii myös Codessa, ja voit ottaa sen käyttöön tai poistaa käytöstä milloin tahansa asetuksista kohdasta Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Opittu tahtimerkki"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Viikoittainen tahtimerkki seuraa tunteja, joina yleensä käytät Claudea, suoran viivan sijaan. Se on suora, kunnes viikko on opittu."
+  },
+  "setBetaCompact": {
+    "message": "Tiivistä-painike"
+  },
+  "setBetaCompactDesc": {
+    "message": "Kun keskustelu ylittää 250K tokenia ja sen välimuisti on vanhentunut, Tiivistä-painike laatii pyynnön siirtoyhteenvedosta uuden keskustelun aloittamiseen."
+  },
+  "compactButton": {
+    "message": "Tiivistä"
+  },
+  "compactAria": {
+    "message": "Tiivistä tämä keskustelu: laadi siirtoyhteenveto uutta keskustelua varten"
+  },
+  "compactPrompt": {
+    "message": "Tiivistä tämä keskustelu siirtoyhteenvedoksi, jonka voin liittää uuteen keskusteluun: tavoite, keskeiset päätökset, nykytilanne, avoimet kysymykset sekä kaikki koodi tai tiedot, joita vielä tarvitsen. Pidä se lyhyenä."
+  },
+  "compactTooltip": {
+    "message": "Välimuisti on vanhentunut, joten seuraava viestisi lukee kaikki $1 tokenia uudelleen täyteen hintaan. Tämä laatii pyynnön siirtoyhteenvedosta, jonka voit viedä uuteen keskusteluun."
   }
 }

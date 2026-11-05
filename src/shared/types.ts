@@ -62,6 +62,12 @@ export interface Settings {
   threadSidebar: boolean;
   // Thread order: by last activity (a reply moves a thread up) or by creation.
   threadSidebarSort: ThreadSort;
+  // Beta (Settings → Beta). Beta features stay off until turned on there.
+  // The weekly pace marker follows the learned week instead of a straight line.
+  betaLearnedPace: boolean;
+  // A Compact chip beside the context ring once a chat is past 250K tokens and
+  // its prompt cache has expired; it drafts a handoff-summary request.
+  betaCompactButton: boolean;
 }
 
 export type ThreadSort = "edited" | "created";

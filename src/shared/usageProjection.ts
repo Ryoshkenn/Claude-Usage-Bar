@@ -250,6 +250,47 @@ export const buildWeeklyUsageMetrics = (history: UsageLogEntry[], now = Date.now
   };
 };
 
+/**
+ * The weekly pace marker shaped by when you actually use Claude: the share of
+ * this window's learned activity (day-hour slots, weighted by how often each
+ * was active) that has already passed. Hours you're usually away count for
+ * nothing, so the marker holds still overnight instead of drifting ahead.
+ * Null until learning is ready or there's no activity to weight by, so the
+ * caller can fall back to the even marker.
+ */
+export const computeLearnedWeeklyPacePercent = (
+  resetsAt: number | undefined,
+  now: number,
+  metrics: WeeklyUsageMetrics | undefined,
+): number | null => {
+  if (typeof resetsAt !== "number" || !Number.isFinite(resetsAt) || metrics?.confidence !== "ready") {
+    return null;
+  }
+  const buckets = metrics.activeSlotBuckets ?? {};
+  const windowStart = resetsAt - WEEKLY_WINDOW_MS;
+  let total = 0;
+  let elapsed = 0;
+  const cursor = new Date(windowStart);
+  cursor.setMinutes(0, 0, 0);
+  while (cursor.getTime() < resetsAt) {
+    const hourStart = cursor.getTime();
+    const hourEnd = hourStart + 3_600_000;
+    const weight = buckets[`${cursor.getDay()}:${cursor.getHours()}`] ?? 0;
+    if (weight > 0) {
+      const start = Math.max(windowStart, hourStart);
+      const end = Math.min(resetsAt, hourEnd);
+      if (end > start) {
+        total += weight * (end - start);
+        const doneEnd = Math.min(end, now);
+        if (doneEnd > start) elapsed += weight * (doneEnd - start);
+      }
+    }
+    cursor.setTime(hourEnd);
+  }
+  if (total <= 0) return null;
+  return Math.max(0, Math.min(100, (elapsed / total) * 100));
+};
+
 const getMatchingWeeklyHistory = (history: UsageLogEntry[], resetAt: number): UsageLogEntry[] =>
   history.filter(
     (e) =>

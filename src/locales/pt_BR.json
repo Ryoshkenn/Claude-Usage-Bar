@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Aberta"
   },
-  "setSecSidebar": {
-    "message": "Barra lateral"
-  },
   "setThreadSidebar": {
     "message": "Visão de conversas"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Sua barra lateral em cartões: as conversas que precisam de você vêm primeiro, depois as tarefas concluídas, as que ainda estão em andamento e o restante fica recolhido em Concluídas. Funciona no Code também, e você pode ativar ou desativar quando quiser nas Configurações, em Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Marcador de ritmo aprendido"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "O marcador de ritmo semanal segue as horas em que você costuma usar o Claude em vez de uma linha reta. Fica reto até haver uma semana de aprendizado."
+  },
+  "setBetaCompact": {
+    "message": "Botão Compactar"
+  },
+  "setBetaCompactDesc": {
+    "message": "Quando um chat passa de 250K tokens e o cache expirou, um botão Compactar redige um pedido de resumo de passagem para começar um novo chat."
+  },
+  "compactButton": {
+    "message": "Compactar"
+  },
+  "compactAria": {
+    "message": "Compactar este chat: redigir um resumo de passagem para um novo chat"
+  },
+  "compactPrompt": {
+    "message": "Resuma esta conversa como uma passagem compacta que eu possa colar em um novo chat: o objetivo, as decisões principais, o estado atual, as questões em aberto e qualquer código ou fato de que eu ainda vá precisar. Seja conciso."
+  },
+  "compactTooltip": {
+    "message": "O cache expirou, então sua próxima mensagem relê todos os $1 tokens pelo preço cheio. Isto redige um pedido de resumo de passagem para levar a um novo chat."
   }
 }

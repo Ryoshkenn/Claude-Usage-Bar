@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Aperta"
   },
-  "setSecSidebar": {
-    "message": "Barra laterale"
-  },
   "setThreadSidebar": {
     "message": "Vista conversazioni"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "La barra laterale in schede: prima le conversazioni che richiedono la tua attenzione, poi quelle completate, quelle in corso e il resto raccolto in Concluse. Funziona anche in Code e puoi attivarla o disattivarla in qualsiasi momento nelle Impostazioni sotto Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Indicatore di ritmo appreso"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "L'indicatore di ritmo settimanale segue le ore in cui usi di solito Claude invece di una linea retta. Resta lineare finché non c'è una settimana di apprendimento."
+  },
+  "setBetaCompact": {
+    "message": "Pulsante Compatta"
+  },
+  "setBetaCompactDesc": {
+    "message": "Quando una chat supera i 250K token e la sua cache è scaduta, un pulsante Compatta prepara una richiesta di riepilogo di passaggio per iniziare una nuova chat."
+  },
+  "compactButton": {
+    "message": "Compatta"
+  },
+  "compactAria": {
+    "message": "Compatta questa chat: prepara un riepilogo di passaggio per una nuova chat"
+  },
+  "compactPrompt": {
+    "message": "Riassumi questa conversazione come un passaggio compatto da incollare in una nuova chat: l'obiettivo, le decisioni chiave, lo stato attuale, le domande aperte e qualsiasi codice o fatto che mi servirà ancora. Sii conciso."
+  },
+  "compactTooltip": {
+    "message": "La cache è scaduta, quindi il prossimo messaggio rileggerà tutti i $1 token a prezzo pieno. Questo prepara una richiesta di riepilogo di passaggio da portare in una nuova chat."
   }
 }

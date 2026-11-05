@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "A buɗe"
   },
-  "setSecSidebar": {
-    "message": "Gefen shafi"
-  },
   "setThreadSidebar": {
     "message": "Jerin zare"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Gefen shafinka a matsayin katuna: zare da ke jiranka su ke gaba, sai aikin da aka gama, sai aikin da ke gudana, sauran kuma a ninke su a ƙarƙashin An adana. Yana aiki a Code ma, kuma za ka iya kunnawa ko kashewa a kowane lokaci a Saituna ƙarƙashin Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Alamar saurin da aka koya"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Alamar saurin mako tana bin awannin da kake yawan amfani da Claude maimakon layi madaidaici. Tana nan madaidaiciya har sai an koyi mako ɗaya."
+  },
+  "setBetaCompact": {
+    "message": "Maɓallin Taƙaita"
+  },
+  "setBetaCompactDesc": {
+    "message": "Idan hira ta wuce tokens 250K kuma ma'ajiyarta ta ƙare, maɓallin Taƙaita yana shirya roƙon taƙaitaccen bayanin miƙawa don fara sabuwar hira."
+  },
+  "compactButton": {
+    "message": "Taƙaita"
+  },
+  "compactAria": {
+    "message": "Taƙaita wannan hirar: shirya taƙaitaccen bayanin miƙawa don sabuwar hira"
+  },
+  "compactPrompt": {
+    "message": "Taƙaita wannan tattaunawa a matsayin gajeren bayanin miƙawa da zan iya liƙawa a sabuwar hira: manufa, muhimman shawarwari, halin da ake ciki, tambayoyin da suka rage, da duk wani code ko bayani da zan buƙata har yanzu. A taƙaice."
+  },
+  "compactTooltip": {
+    "message": "Ma'ajiya ta ƙare, don haka saƙonka na gaba zai sake karanta duk tokens $1 a cikakken farashi. Wannan yana shirya roƙon taƙaitaccen bayanin miƙawa da za ka kai sabuwar hira."
   }
 }

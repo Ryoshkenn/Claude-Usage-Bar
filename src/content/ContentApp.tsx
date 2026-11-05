@@ -12,11 +12,13 @@ import type {
 import { STORAGE_KEYS } from "../shared/constants";
 import { t } from "../shared/i18n";
 import { formatResetsIn } from "../shared/resetText";
+import { formatCompactNumber } from "../shared/formatNumber";
 
 const STORE_URL =
   "https://chromewebstore.google.com/detail/claude-usage-bar/eiddfcnlmiebkbnaopcgambdbnlangai";
 import {
   computeEvenPacePercent,
+  computeLearnedWeeklyPacePercent,
   computeSessionProjection,
   computeWeeklyProjection,
   formatEta,
@@ -29,7 +31,7 @@ import {
   getContextLimitTokens,
   normalizeModelFamily,
 } from "../shared/modelUsage";
-import { PromptClipboard } from "./PromptClipboard";
+import { insertIntoComposer, PromptClipboard } from "./PromptClipboard";
 import { ContextBreakdownPanel } from "./ContextBreakdownPanel";
 import { openUsageBarSettings } from "./settingsPage";
 
@@ -355,6 +357,59 @@ const ringMetricLabel = (metric: string): string | undefined => {
   }
 };
 
+// Beta: past this size, a chat whose prompt cache has lapsed re-reads the whole
+// context at full price on the next message. That's when a fresh chat seeded
+// with a handoff summary is worth offering.
+export const COMPACT_MIN_TOKENS = 250_000;
+
+interface CompactButtonProps {
+  cacheExpiresAt?: number;
+  contextTokens?: number;
+}
+
+export const CompactButton = ({ cacheExpiresAt, contextTokens }: CompactButtonProps) => {
+  // Only forces a re-render when the cache lapses; expiry is read off the clock.
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    if (typeof cacheExpiresAt !== "number") return;
+    const wait = cacheExpiresAt - Date.now();
+    if (wait <= 0) return;
+    const id = window.setTimeout(() => setTick((n) => n + 1), wait + 50);
+    return () => window.clearTimeout(id);
+  }, [cacheExpiresAt]);
+
+  if (typeof contextTokens !== "number" || contextTokens < COMPACT_MIN_TOKENS) return null;
+  if (typeof cacheExpiresAt !== "number" || cacheExpiresAt > Date.now()) return null;
+
+  const tokens = formatCompactNumber(contextTokens);
+  return (
+    <button
+      type="button"
+      className="cub-ctx-percent cub-compact-btn"
+      data-display="text"
+      aria-label={t("compactAria", "Compact this chat: draft a handoff summary for a new chat")}
+      onClick={() => {
+        insertIntoComposer(
+          t(
+            "compactPrompt",
+            "Summarize this conversation as a compact handoff I can paste into a new chat: the goal, key decisions, current state, open questions, and any code or facts I'll still need. Keep it concise.",
+          ),
+        );
+      }}
+    >
+      {t("compactButton", "Compact")}
+      <span className="cub-token-tooltip" role="tooltip">
+        {t(
+          "compactTooltip",
+          "The cache has expired, so your next message re-reads all $1 tokens at full cost. This drafts a request for a handoff summary you can carry into a new chat.",
+          tokens,
+        )}
+      </span>
+    </button>
+  );
+};
+
 export const ContentApp = ({
   settings,
   chatUsage,
@@ -448,6 +503,9 @@ export const ContentApp = ({
   const barPercentage = getMetricPercentage(barMetric, realUsageSnapshot, chatUsage, contextLimit);
   const barWidth = typeof barPercentage === "number" ? barPercentage : 0;
   const barDisplay = typeof barPercentage === "number" ? `${barPercentage}%` : "—";
+  // A slow breathe on the fill from 80% up, so getting close is noticed without
+  // a glance at the number. At 100% there's nothing left to warn about.
+  const barNearLimit = typeof barPercentage === "number" && barPercentage >= 80 && barPercentage < 100;
 
   const ringPercentage =
     ringTarget === "hidden" ? 0 : (getMetricPercentage(ringTarget, realUsageSnapshot, chatUsage, contextLimit) ?? 0);
@@ -557,8 +615,13 @@ export const ContentApp = ({
   const sessionEvenPace = showPace
     ? computeEvenPacePercent(realUsageSnapshot?.sessionResetsAt, SESSION_WINDOW_MS, nowMs)
     : null;
+  // Beta: the weekly marker can follow the learned week instead of a straight
+  // line. It falls back to even pace until learning is ready.
   const weeklyEvenPace = showPace
-    ? computeEvenPacePercent(realUsageSnapshot?.weeklyAllModelsResetsAt, WEEKLY_WINDOW_MS, nowMs)
+    ? (settings.betaLearnedPace === true && settings.weeklyMetricsEnabled !== false
+        ? computeLearnedWeeklyPacePercent(realUsageSnapshot?.weeklyAllModelsResetsAt, nowMs, weeklyUsageMetrics)
+        : null) ??
+      computeEvenPacePercent(realUsageSnapshot?.weeklyAllModelsResetsAt, WEEKLY_WINDOW_MS, nowMs)
     : null;
   const showWeeklyLearningNotice =
     settings.weeklyMetricsEnabled !== false &&
@@ -585,6 +648,7 @@ export const ContentApp = ({
           )}
           <div
             className={`cub-meter${detailsDismissed ? " cub-meter--dismissed" : ""}`}
+            data-near-limit={barNearLimit ? "true" : undefined}
             aria-label={`${ringMetricLabel(barMetric) ?? t("usage", "Usage")} ${barDisplay}`}
             role="button"
             tabIndex={0}
@@ -764,6 +828,9 @@ export const ContentApp = ({
             />
           )}
         </span>
+      )}
+      {settings.betaCompactButton === true && (
+        <CompactButton cacheExpiresAt={chatUsage.cacheExpiresAt} contextTokens={contextLengthTokens} />
       )}
       {showClipboard && <PromptClipboard />}
     </aside>

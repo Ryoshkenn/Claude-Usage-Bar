@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Wazi"
   },
-  "setSecSidebar": {
-    "message": "Upau wa pembeni"
-  },
   "setThreadSidebar": {
     "message": "Mwonekano wa mijadala"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Upau wako wa pembeni kama kadi: mijadala inayokuhitaji huja kwanza, kisha kazi iliyokamilika, kisha kazi inayoendelea, na iliyobaki hukunjwa chini ya Iliyotulia. Inafanya kazi kwenye Code pia, na unaweza kuiwasha au kuizima wakati wowote kwenye Mipangilio chini ya Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Alama ya kasi iliyojifunzwa"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Alama ya kasi ya kila wiki hufuata saa unazotumia Claude kwa kawaida badala ya mstari ulionyooka. Inabaki imenyooka hadi wiki moja ya kujifunza ikamilike."
+  },
+  "setBetaCompact": {
+    "message": "Kitufe cha Fupisha"
+  },
+  "setBetaCompactDesc": {
+    "message": "Gumzo likipita tokeni 250K na akiba yake ikiisha muda, kitufe cha Fupisha huandaa ombi la muhtasari wa makabidhiano ili kuanza gumzo jipya."
+  },
+  "compactButton": {
+    "message": "Fupisha"
+  },
+  "compactAria": {
+    "message": "Fupisha gumzo hili: andaa muhtasari wa makabidhiano kwa gumzo jipya"
+  },
+  "compactPrompt": {
+    "message": "Fupisha mazungumzo haya kama makabidhiano mafupi ninayoweza kubandika kwenye gumzo jipya: lengo, maamuzi muhimu, hali ya sasa, maswali yaliyobaki, na msimbo au ukweli wowote nitakaouhitaji bado. Iwe fupi."
+  },
+  "compactTooltip": {
+    "message": "Akiba imeisha muda, kwa hiyo ujumbe wako unaofuata utasoma tena tokeni zote $1 kwa bei kamili. Hii huandaa ombi la muhtasari wa makabidhiano utakaoupeleka kwenye gumzo jipya."
   }
 }

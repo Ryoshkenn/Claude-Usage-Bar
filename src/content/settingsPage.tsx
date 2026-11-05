@@ -954,41 +954,6 @@ const SettingsPage = () => {
         </Row>
       </Section>
 
-      <Section id="cub-section-sidebar" title={t("setSecSidebar", "Sidebar")}>
-        <MetricGroup>
-          <Row
-            labelId={id("thread-sidebar")}
-            label={t("setThreadSidebar", "Thread view")}
-            description={t(
-              "setThreadSidebarDesc",
-              "Your latest chats start as cards and the rest as settled. A thread becomes a card when it has new activity, until you settle it. Works in Code too.",
-            )}
-          >
-            <Switch
-              labelledBy={id("thread-sidebar")}
-              checked={settings.threadSidebar === true}
-              onChange={(v) => update({ threadSidebar: v })}
-            />
-          </Row>
-          <NestGroup open={settings.threadSidebar === true}>
-            <NestItem>
-              <Row
-                labelId={id("thread-sort")}
-                label={t("setThreadSort", "Order")}
-                description={t("setThreadSortDesc", "Newest edited moves a thread up when it changes or Claude replies.")}
-              >
-                <CdsSelect
-                  labelId={id("thread-sort")}
-                  value={settings.threadSidebarSort ?? "edited"}
-                  options={threadSortOptions()}
-                  onChange={(v) => update({ threadSidebarSort: v as ThreadSort })}
-                />
-              </Row>
-            </NestItem>
-          </NestGroup>
-        </MetricGroup>
-      </Section>
-
       <Section id="cub-section-pacing" title={t("setSecPacing", "Pacing")}>
         <MetricGroup>
           <Row
@@ -1057,6 +1022,73 @@ const SettingsPage = () => {
             />
           </div>
         </Row>
+      </Section>
+
+      <Section id="cub-section-beta" title={t("setSecBeta", "Beta")}>
+        <MetricGroup>
+          <Row
+            labelId={id("thread-sidebar")}
+            label={t("setThreadSidebar", "Thread view")}
+            description={t(
+              "setThreadSidebarDesc",
+              "Your latest chats start as cards and the rest as settled. A thread becomes a card when it has new activity, until you settle it. Works in Code too.",
+            )}
+          >
+            <Switch
+              labelledBy={id("thread-sidebar")}
+              checked={settings.threadSidebar === true}
+              onChange={(v) => update({ threadSidebar: v })}
+            />
+          </Row>
+          <NestGroup open={settings.threadSidebar === true}>
+            <NestItem>
+              <Row
+                labelId={id("thread-sort")}
+                label={t("setThreadSort", "Order")}
+                description={t("setThreadSortDesc", "Newest edited moves a thread up when it changes or Claude replies.")}
+              >
+                <CdsSelect
+                  labelId={id("thread-sort")}
+                  value={settings.threadSidebarSort ?? "edited"}
+                  options={threadSortOptions()}
+                  onChange={(v) => update({ threadSidebarSort: v as ThreadSort })}
+                />
+              </Row>
+            </NestItem>
+          </NestGroup>
+        </MetricGroup>
+        <MetricGroup>
+          <Row
+            labelId={id("beta-learned-pace")}
+            label={t("setBetaLearnedPace", "Learned pace marker")}
+            description={t(
+              "setBetaLearnedPaceDesc",
+              "The weekly pace marker follows the hours you usually use Claude instead of a straight line. Uses a straight line until a week of learning is in.",
+            )}
+          >
+            <Switch
+              labelledBy={id("beta-learned-pace")}
+              checked={settings.betaLearnedPace === true}
+              onChange={(v) => update({ betaLearnedPace: v })}
+            />
+          </Row>
+        </MetricGroup>
+        <MetricGroup>
+          <Row
+            labelId={id("beta-compact")}
+            label={t("setBetaCompact", "Compact button")}
+            description={t(
+              "setBetaCompactDesc",
+              "Once a chat passes 250K tokens and its cache has expired, a Compact button drafts a request for a handoff summary to start a new chat with.",
+            )}
+          >
+            <Switch
+              labelledBy={id("beta-compact")}
+              checked={settings.betaCompactButton === true}
+              onChange={(v) => update({ betaCompactButton: v })}
+            />
+          </Row>
+        </MetricGroup>
       </Section>
 
       <Section id="cub-section-general" title={t("setSecGeneral", "General")}>

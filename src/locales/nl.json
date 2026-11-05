@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Open"
   },
-  "setSecSidebar": {
-    "message": "Zijbalk"
-  },
   "setThreadSidebar": {
     "message": "Gespreksweergave"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Je zijbalk als kaarten: gesprekken die op je wachten staan bovenaan, gevolgd door afgerond werk en werk dat nog bezig is, en de rest wordt ingeklapt onder Afgehandeld. Het werkt ook in Code, en je kunt het altijd aan- of uitzetten in de instellingen onder Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Bèta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Geleerde tempomarkering"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "De wekelijkse tempomarkering volgt de uren waarop je Claude meestal gebruikt in plaats van een rechte lijn. Recht totdat er een week is geleerd."
+  },
+  "setBetaCompact": {
+    "message": "Compact-knop"
+  },
+  "setBetaCompactDesc": {
+    "message": "Zodra een chat boven 250K tokens komt en de cache is verlopen, stelt een Compact-knop een verzoek op voor een overdrachtssamenvatting om een nieuwe chat mee te beginnen."
+  },
+  "compactButton": {
+    "message": "Compact"
+  },
+  "compactAria": {
+    "message": "Deze chat compact maken: een overdrachtssamenvatting voor een nieuwe chat opstellen"
+  },
+  "compactPrompt": {
+    "message": "Vat dit gesprek samen als een compacte overdracht die ik in een nieuwe chat kan plakken: het doel, belangrijke beslissingen, de huidige stand, open vragen en alle code of feiten die ik nog nodig heb. Houd het beknopt."
+  },
+  "compactTooltip": {
+    "message": "De cache is verlopen, dus je volgende bericht leest alle $1 tokens opnieuw tegen de volle prijs. Dit stelt een verzoek op voor een overdrachtssamenvatting voor een nieuwe chat."
   }
 }

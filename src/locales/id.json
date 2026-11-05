@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Terbuka"
   },
-  "setSecSidebar": {
-    "message": "Bilah sisi"
-  },
   "setThreadSidebar": {
     "message": "Tampilan utas"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Bilah sisi Anda kini tampil sebagai kartu: utas yang memerlukan respons Anda berada di urutan pertama, diikuti tugas yang selesai, lalu tugas yang masih berjalan, dan sisanya dilipat di bawah Tersimpan. Fitur ini juga berfungsi di Code, dan Anda dapat mengaktifkan atau menonaktifkannya kapan saja di Pengaturan pada bagian Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Penanda laju yang dipelajari"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Penanda laju mingguan mengikuti jam-jam Anda biasa memakai Claude, bukan garis lurus. Tetap lurus sampai satu minggu pembelajaran terkumpul."
+  },
+  "setBetaCompact": {
+    "message": "Tombol Ringkas"
+  },
+  "setBetaCompactDesc": {
+    "message": "Saat chat melewati 250K token dan cache-nya kedaluwarsa, tombol Ringkas menyusun permintaan ringkasan serah terima untuk memulai chat baru."
+  },
+  "compactButton": {
+    "message": "Ringkas"
+  },
+  "compactAria": {
+    "message": "Ringkas chat ini: susun ringkasan serah terima untuk chat baru"
+  },
+  "compactPrompt": {
+    "message": "Ringkas percakapan ini menjadi serah terima singkat yang bisa saya tempel ke chat baru: tujuan, keputusan penting, keadaan saat ini, pertanyaan terbuka, dan kode atau fakta apa pun yang masih saya perlukan. Buat singkat."
+  },
+  "compactTooltip": {
+    "message": "Cache sudah kedaluwarsa, jadi pesan berikutnya membaca ulang semua $1 token dengan harga penuh. Ini menyusun permintaan ringkasan serah terima untuk dibawa ke chat baru."
   }
 }

@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "已打开"
   },
-  "setSecSidebar": {
-    "message": "侧边栏"
-  },
   "setThreadSidebar": {
     "message": "对话视图"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "侧边栏现以卡片形式呈现：需要你处理的对话排在最前，其次是已完成和进行中的任务，其余对话则收起在“已完成”下。该功能同样支持 Code，你可以随时在“设置”的 Usage Bar 中开启或关闭。"
+  },
+  "setSecBeta": {
+    "message": "测试版"
+  },
+  "setBetaLearnedPace": {
+    "message": "学习型节奏标记"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "每周节奏标记会跟随你平时使用 Claude 的时段，而不是一条直线。在学满一周之前保持直线。"
+  },
+  "setBetaCompact": {
+    "message": "压缩按钮"
+  },
+  "setBetaCompactDesc": {
+    "message": "当对话超过 250K 个 token 且缓存已过期时，压缩按钮会起草一份交接摘要请求，用来开启新对话。"
+  },
+  "compactButton": {
+    "message": "压缩"
+  },
+  "compactAria": {
+    "message": "压缩此对话：为新对话起草交接摘要"
+  },
+  "compactPrompt": {
+    "message": "请把这段对话总结成一份简洁的交接说明，方便我粘贴到新对话中：目标、关键决定、当前状态、未解决的问题，以及我之后仍需要的代码或事实。请保持简洁。"
+  },
+  "compactTooltip": {
+    "message": "缓存已过期，因此你的下一条消息会以全价重新读取全部 $1 个 token。这会起草一份交接摘要请求，供你带到新对话中。"
   }
 }

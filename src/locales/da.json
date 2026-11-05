@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Åben"
   },
-  "setSecSidebar": {
-    "message": "Sidepanel"
-  },
   "setThreadSidebar": {
     "message": "Trådvisning"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Dit sidepanel som kort: tråde, der har brug for dig, kommer først, derefter færdigt arbejde, så arbejde, der stadig kører, og resten samles under Henlagte. Det virker også i Code, og du kan til enhver tid slå det til eller fra i Indstillinger under Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Lært tempomarkør"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Den ugentlige tempomarkør følger de timer, hvor du plejer at bruge Claude, i stedet for en lige linje. Den er lige, indtil der er lært en uge."
+  },
+  "setBetaCompact": {
+    "message": "Komprimér-knap"
+  },
+  "setBetaCompactDesc": {
+    "message": "Når en chat passerer 250K tokens, og dens cache er udløbet, skriver en Komprimér-knap en anmodning om et overdragelsesresumé til at starte en ny chat med."
+  },
+  "compactButton": {
+    "message": "Komprimér"
+  },
+  "compactAria": {
+    "message": "Komprimér denne chat: skriv et overdragelsesresumé til en ny chat"
+  },
+  "compactPrompt": {
+    "message": "Opsummer denne samtale som en kompakt overdragelse, jeg kan indsætte i en ny chat: målet, vigtige beslutninger, nuværende status, åbne spørgsmål og al kode eller fakta, jeg stadig får brug for. Hold det kort."
+  },
+  "compactTooltip": {
+    "message": "Cachen er udløbet, så din næste besked genlæser alle $1 tokens til fuld pris. Dette skriver en anmodning om et overdragelsesresumé, du kan tage med til en ny chat."
   }
 }

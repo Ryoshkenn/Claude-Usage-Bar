@@ -98,6 +98,8 @@ describe("storage helpers", () => {
       resetBannerScope: "claude",
       threadSidebar: false,
       threadSidebarSort: "edited",
+      betaLearnedPace: false,
+      betaCompactButton: false,
     });
     expect(state.dailyUsage.messagesUsed).toBe(0);
     expect(state.chatUsage.estimatedTokens).toBe(0);
@@ -221,6 +223,8 @@ describe("storage helpers", () => {
       resetBannerScope: "claude",
       threadSidebar: false,
       threadSidebarSort: "edited",
+      betaLearnedPace: false,
+      betaCompactButton: false,
     });
     expect(adapter.data.settings).toEqual(settings);
   });

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { UsageLogEntry } from "../shared/types";
 import {
   computeEvenPacePercent,
+  computeLearnedWeeklyPacePercent,
   SESSION_WINDOW_MS,
   WEEKLY_WINDOW_MS,
   buildWeeklyUsageMetrics,
@@ -506,5 +507,43 @@ describe("computeEvenPacePercent", () => {
     expect(computeEvenPacePercent(NOW - HOUR, SESSION_WINDOW_MS, NOW)).toBe(100);
     expect(computeEvenPacePercent(NOW + 6 * HOUR, SESSION_WINDOW_MS, NOW)).toBe(0);
     expect(computeEvenPacePercent(undefined, SESSION_WINDOW_MS, NOW)).toBeNull();
+  });
+});
+
+describe("computeLearnedWeeklyPacePercent", () => {
+  // Monday 1 June 2026, local midnight: a week with no DST change.
+  const start = new Date(2026, 5, 1, 0, 0, 0).getTime();
+  const resetsAt = start + WEEKLY_WINDOW_MS;
+  const at = (day: number, hour: number, minute = 0) => new Date(2026, 5, 1 + day, hour, minute).getTime();
+  const metrics = (confidence: "ready" | "learning", buckets: Record<string, number>) => ({
+    startedAt: start - WEEKLY_WINDOW_MS,
+    lastUpdatedAt: start,
+    sampleCount: 40,
+    activeDayBuckets: {},
+    activeHourBuckets: {},
+    activeSlotBuckets: buckets,
+    averageActiveHoursPerDay: 1,
+    confidence,
+  });
+
+  it("advances only through the hours you usually use Claude", () => {
+    // Active Monday 10:00 and Wednesday 10:00, equally often.
+    const m = metrics("ready", { "1:10": 3, "3:10": 3 });
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(0, 10, 30), m)).toBeCloseTo(25);
+    // Holds still through Monday night and all of Tuesday.
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(0, 23), m)).toBeCloseTo(50);
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(1, 18), m)).toBeCloseTo(50);
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(3, 12), m)).toBeCloseTo(100);
+  });
+
+  it("weights hours by how often they were active", () => {
+    const m = metrics("ready", { "1:10": 1, "3:10": 3 });
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(1, 0), m)).toBeCloseTo(25);
+  });
+
+  it("gives way to the even marker until learning is ready", () => {
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(1, 0), metrics("learning", { "1:10": 3 }))).toBeNull();
+    expect(computeLearnedWeeklyPacePercent(resetsAt, at(1, 0), metrics("ready", {}))).toBeNull();
+    expect(computeLearnedWeeklyPacePercent(undefined, at(1, 0), metrics("ready", { "1:10": 3 }))).toBeNull();
   });
 });

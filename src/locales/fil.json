@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Bukas"
   },
-  "setSecSidebar": {
-    "message": "Sidebar"
-  },
   "setThreadSidebar": {
     "message": "View ng thread"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Ang sidebar mo bilang mga card: mauuna ang mga thread na kailangan ka, sunod ang tapos nang gawa, tapos ang gumagawa pa, at nakatiklop ang iba sa ilalim ng Naitabi. Gumagana rin ito sa Code, at puwede mo itong i-on o i-off anumang oras sa Settings sa ilalim ng Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Beta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Natutunang marka ng bilis"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Sinusundan ng lingguhang marka ng bilis ang mga oras na karaniwan mong ginagamit ang Claude sa halip na tuwid na linya. Tuwid ito hanggang may isang linggong natutunan."
+  },
+  "setBetaCompact": {
+    "message": "Button na I-compact"
+  },
+  "setBetaCompactDesc": {
+    "message": "Kapag lumampas ang chat sa 250K token at nag-expire na ang cache nito, gagawa ang button na I-compact ng kahilingan para sa buod ng pagpapasa upang magsimula ng bagong chat."
+  },
+  "compactButton": {
+    "message": "I-compact"
+  },
+  "compactAria": {
+    "message": "I-compact ang chat na ito: gumawa ng buod ng pagpapasa para sa bagong chat"
+  },
+  "compactPrompt": {
+    "message": "Ibuod ang usapang ito bilang maikling pagpapasa na mai-paste ko sa bagong chat: ang layunin, mahahalagang desisyon, kasalukuyang kalagayan, mga bukas na tanong, at anumang code o impormasyong kakailanganin ko pa. Panatilihing maikli."
+  },
+  "compactTooltip": {
+    "message": "Nag-expire na ang cache, kaya babasahin muli ng susunod mong mensahe ang lahat ng $1 token sa buong halaga. Gagawa ito ng kahilingan para sa buod ng pagpapasa na madadala mo sa bagong chat."
   }
 }

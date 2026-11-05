@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "Ouverte"
   },
-  "setSecSidebar": {
-    "message": "Barre latérale"
-  },
   "setThreadSidebar": {
     "message": "Vue des conversations"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "Votre barre latérale sous forme de cartes : les conversations qui vous attendent apparaissent en premier, suivies de celles terminées, puis de celles en cours, et le reste est regroupé sous Terminées. Elle fonctionne aussi dans Code, et vous pouvez l'activer ou la désactiver à tout moment dans Paramètres, sous Usage Bar."
+  },
+  "setSecBeta": {
+    "message": "Bêta"
+  },
+  "setBetaLearnedPace": {
+    "message": "Repère de rythme appris"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "Le repère de rythme hebdomadaire suit les heures où vous utilisez Claude d'habitude au lieu d'une ligne droite. Il reste droit tant qu'une semaine d'apprentissage n'est pas faite."
+  },
+  "setBetaCompact": {
+    "message": "Bouton Compacter"
+  },
+  "setBetaCompactDesc": {
+    "message": "Quand une discussion dépasse 250K tokens et que son cache a expiré, un bouton Compacter rédige une demande de résumé de passation pour démarrer une nouvelle discussion."
+  },
+  "compactButton": {
+    "message": "Compacter"
+  },
+  "compactAria": {
+    "message": "Compacter cette discussion : rédiger un résumé de passation pour une nouvelle discussion"
+  },
+  "compactPrompt": {
+    "message": "Résume cette conversation sous forme de passation compacte que je peux coller dans une nouvelle discussion : l'objectif, les décisions clés, l'état actuel, les questions ouvertes et tout code ou fait dont j'aurai encore besoin. Reste concis."
+  },
+  "compactTooltip": {
+    "message": "Le cache a expiré : votre prochain message relira les $1 tokens au plein tarif. Ceci rédige une demande de résumé de passation à reprendre dans une nouvelle discussion."
   }
 }

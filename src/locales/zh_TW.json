@@ -422,9 +422,6 @@
   "threadStatusOpen": {
     "message": "開啟"
   },
-  "setSecSidebar": {
-    "message": "側邊欄"
-  },
   "setThreadSidebar": {
     "message": "對話串檢視"
   },
@@ -628,5 +625,32 @@
   },
   "introThreadBody": {
     "message": "將側邊欄改為卡片樣式：待您處理的對話串會排在最前面，接著是已完成與執行中的工作，其餘則收合在「已完成」下方。這項功能也支援 Code，您可以隨時在「設定」的 Usage Bar 中開啟或關閉。"
+  },
+  "setSecBeta": {
+    "message": "測試版"
+  },
+  "setBetaLearnedPace": {
+    "message": "學習型節奏標記"
+  },
+  "setBetaLearnedPaceDesc": {
+    "message": "每週節奏標記會跟隨你平時使用 Claude 的時段，而不是一條直線。在學滿一週之前維持直線。"
+  },
+  "setBetaCompact": {
+    "message": "壓縮按鈕"
+  },
+  "setBetaCompactDesc": {
+    "message": "當對話超過 250K 個 token 且快取已過期時，壓縮按鈕會草擬一份交接摘要請求，用來開啟新對話。"
+  },
+  "compactButton": {
+    "message": "壓縮"
+  },
+  "compactAria": {
+    "message": "壓縮此對話：為新對話草擬交接摘要"
+  },
+  "compactPrompt": {
+    "message": "請把這段對話整理成一份簡潔的交接說明，方便我貼到新對話中：目標、關鍵決定、目前狀態、未解決的問題，以及我之後仍需要的程式碼或事實。請保持簡潔。"
+  },
+  "compactTooltip": {
+    "message": "快取已過期，因此你的下一則訊息會以全價重新讀取全部 $1 個 token。這會草擬一份交接摘要請求，供你帶到新對話中。"
   }
 }
